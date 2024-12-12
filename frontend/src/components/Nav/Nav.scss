@@ -1,0 +1,23 @@
+@import '~/scss/mixins';
+@import '~/scss/variables';
+
+.Nav {
+  @include shadow-md;
+  background-color: white;
+
+  &__content {
+    align-items: center;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    padding: 0.75rem 0;
+  }
+
+  &__logo {
+    height: 40px;
+  }
+
+  &__spacer {
+    flex: 1;
+  }
+}

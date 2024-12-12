@@ -1,0 +1,21 @@
+@import '~/scss/mixins';
+@import '~/scss/variables';
+
+.StyleGuide {
+  &__example {
+    display: flex;
+
+    &__content {
+      @include radius-sm;
+      align-items: center;
+      border: 1px solid $border;
+      display: flex;
+      flex: 1;
+      flex-direction: column;
+      justify-content: center;
+      padding: 1rem;
+      min-height: 16rem;
+      min-width: 16rem;
+    }
+  }
+}

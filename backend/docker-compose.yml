@@ -1,0 +1,21 @@
+services:
+  backend:
+    build: .
+    image: schedule_builder
+    command: bash /schedule_builder/server/django_devserver.sh
+    volumes:
+      - .:/schedule_builder
+    ports:
+      - 8000:8000
+    environment:
+      DJANGO_SETTINGS_MODULE: "schedule_builder.settings.dev"
+  keydb:
+    image: bitnami/keydb:latest
+    environment:
+      ALLOW_EMPTY_PASSWORD: "yes"
+  celery_worker:
+    build: .
+    environment:
+      DJANGO_SETTINGS_MODULE: "schedule_builder.settings.dev"
+    image: schedule_builder
+    command: bash /schedule_builder/server/celery_worker.sh

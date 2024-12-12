@@ -1,0 +1,205 @@
+// Typography
+@mixin sans {
+  font-family: 'Inter', Helvetica, Arial, sans-serif;
+}
+
+// Font weight
+@mixin font-light {
+  font-weight: 300;
+}
+@mixin font-normal {
+  font-weight: 400;
+}
+@mixin font-medium {
+  font-weight: 500;
+}
+@mixin font-semi-bold {
+  font-weight: 700;
+}
+@mixin font-bold {
+  font-weight: 700;
+}
+@mixin font-black {
+  font-weight: 900;
+}
+
+// Shadow
+@mixin shadow-none {
+  box-shadow: none;
+}
+@mixin shadow-xs {
+  box-shadow: 0 0.0625rem 0.125rem 0 rgba(0, 0, 0, 0.25);
+}
+@mixin shadow-sm {
+  box-shadow: 0 0.125rem 0.25rem 0 rgba(0, 0, 0, 0.25);
+}
+@mixin shadow-md {
+  box-shadow: 0 0.25rem 0.5rem 0 rgba(0, 0, 0, 0.25);
+}
+@mixin shadow-lg {
+  box-shadow: 0 0.5rem 1rem 0 rgba(0, 0, 0, 0.25);
+}
+@mixin shadow-xl {
+  box-shadow: 0 1rem 2rem 0 rgba(0, 0, 0, 0.25);
+}
+
+// Border radius
+@mixin radius-none {
+  border-radius: 0;
+}
+@mixin radius-full {
+  border-radius: 100%;
+}
+@mixin radius-xs {
+  border-radius: 0.125rem;
+}
+@mixin radius-sm {
+  border-radius: 0.25rem;
+}
+@mixin radius-md {
+  border-radius: 0.375rem;
+}
+@mixin radius-lg {
+  border-radius: 0.5rem;
+}
+@mixin radius-xl {
+  border-radius: 0.75rem;
+}
+@mixin radius-2xl {
+  border-radius: 1rem;
+}
+@mixin radius-3xl {
+  border-radius: 1.25rem;
+}
+@mixin radius-4xl {
+  border-radius: 1.75rem;
+}
+@mixin radius-5xl {
+  border-radius: 2rem;
+}
+
+// Transition
+@mixin transition {
+  transition: all 0.3s ease;
+}
+@mixin transition-fast {
+  transition: all 0.15s ease;
+}
+@mixin transition-slow {
+  transition: all 0.5s ease;
+}
+
+// Flex
+@mixin flex-center {
+  align-items: center;
+  display: flex;
+  justify-content: center;
+}
+@mixin flex-column {
+  display: flex;
+  flex-direction: column;
+}
+@mixin flex-row {
+  display: flex;
+  flex-direction: row;
+}
+
+// Placeholder
+@mixin optional-at-root($sel) {
+  @at-root #{if(not &, $sel, selector-append(&, $sel))} {
+    @content;
+  }
+}
+
+@mixin placeholder {
+  @include optional-at-root('::-webkit-input-placeholder') {
+    @content;
+  }
+  @include optional-at-root(':-moz-placeholder') {
+    @content;
+  }
+  @include optional-at-root('::-moz-placeholder') {
+    @content;
+  }
+  @include optional-at-root(':-ms-input-placeholder') {
+    @content;
+  }
+}
+
+// Scrollbar
+@mixin scrollbar {
+  &::-webkit-scrollbar {
+    height: 0.5rem;
+    width: 0.5rem;
+  }
+
+  &::-webkit-scrollbar-track {
+    @include radius-md;
+    background-color: rgba(0, 0, 0, 0.1);
+  }
+
+  &::-webkit-scrollbar-thumb {
+    @include radius-md;
+    background-color: rgba(0, 0, 0, 0.25);
+  }
+
+  &::-webkit-scrollbar-thumb:hover {
+    background-color: rgba(0, 0, 0, 0.5);
+  }
+}
+
+// Text
+@mixin text-truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+// Breakpoints
+
+$breakpoints: (
+  'xxs': 320px,
+  'xs': 480px,
+  'sm': 768px,
+  'md': 1024px,
+  'lg': 1280px,
+  'xl': 1440px,
+  'xxl': 1920px,
+);
+
+@mixin breakpoint($size) {
+  @if map_has_key($breakpoints, $size) {
+    $width: map_get($breakpoints, $size);
+
+    @media only screen and (max-width: $width) {
+      @content;
+    }
+  }
+}
+
+// Responsive typography
+
+@mixin font-range($min-size, $max-size, $min-width: 320px, $max-width: 1920px) {
+  $min-size-strip: strip-unit($min-size);
+  $max-size-strip: strip-unit($max-size);
+  $min-width-strip: strip-unit($min-width);
+  $max-width-strip: strip-unit($max-width);
+
+  & {
+    font-size: $min-size-rem;
+  }
+
+  @media (min-width: $min-width-rem) and (max-width: $max-width-rem) {
+    & {
+      font-size: calc(
+        #{$min-size} + (#{$max-size-strip} - #{$min-size-strip}) * (100vw - #{$min-width}) / (#{$max-width-strip} - #{$min-width-strip})
+      );
+    }
+  }
+
+  @media (min-width: $max-width-rem) {
+    & {
+      font-size: $max-size-rem;
+    }
+  }
+}

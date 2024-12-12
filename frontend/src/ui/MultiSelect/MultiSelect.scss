@@ -1,0 +1,12 @@
+@import '~/scss/mixins';
+@import '~/scss/variables';
+
+.MultiSelect {
+  min-width: 8rem;
+
+  &__options {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+}

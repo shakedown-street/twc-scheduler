@@ -1,0 +1,102 @@
+@import '~/scss/mixins';
+@import '~/scss/variables';
+
+@mixin radio-size($base) {
+  $box-size: $base * 1.5;
+
+  font-size: $base;
+  height: $box-size;
+  line-height: $box-size;
+  padding-left: calc($box-size + 0.5rem);
+
+  .Radio__mark {
+    height: $box-size;
+    width: $box-size;
+  }
+
+  .Radio {
+    &:checked ~ .Radio__mark:after {
+      height: calc($box-size * 0.25);
+      width: calc($box-size * 0.25);
+    }
+  }
+}
+
+.Radio__container {
+  @include radio-size(1rem);
+  cursor: pointer;
+  display: block;
+  position: relative;
+  user-select: none;
+
+  input {
+    display: none;
+  }
+
+  &:hover {
+    .Radio:not(:checked):not(:disabled) ~ .Radio__mark {
+      border-color: $tw-gray-400;
+    }
+  }
+
+  &:focus,
+  &:active {
+    .Radio:not(:checked):not(:disabled) ~ .Radio__mark {
+      background-color: $primary-600;
+      border-color: $primary-600;
+    }
+  }
+
+  &.Radio__container--size--xs {
+    @include radio-size(0.75rem);
+  }
+
+  &.Radio__container--size--sm {
+    @include radio-size(0.875rem);
+  }
+
+  &.Radio__container--size--md {
+    @include radio-size(1rem);
+  }
+
+  &.Radio__container--size--lg {
+    @include radio-size(1.125rem);
+  }
+
+  &.Radio__container--size--xl {
+    @include radio-size(1.25rem);
+  }
+}
+
+.Radio {
+  &:checked ~ .Radio__mark {
+    background-color: $primary-600;
+    border-color: $primary-600;
+  }
+
+  &:checked ~ .Radio__mark:after {
+    @include radius-full;
+    background-color: white;
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transition: all 0.1s ease-in-out;
+    transform: translate(-50%, -50%);
+  }
+
+  &:disabled ~ .Radio__mark {
+    background-color: $tw-slate-100;
+    border-color: $tw-slate-200;
+    cursor: not-allowed;
+  }
+}
+
+.Radio__mark {
+  @include radius-full;
+  border: 1px solid $border;
+  position: absolute;
+  top: 0;
+  left: 0;
+  transition: all 0.1s ease-in-out;
+}

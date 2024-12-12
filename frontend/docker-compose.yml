@@ -1,0 +1,11 @@
+version: "3"
+
+services:
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    args:
+      - MODE=:development
+    environment:
+      NODE_ENV: development

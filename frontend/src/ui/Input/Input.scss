@@ -1,0 +1,219 @@
+@import '~/scss/mixins';
+@import '~/scss/variables';
+
+@mixin input-container-size($base) {
+  .iconLeading {
+    font-size: calc($base * 1.25);
+  }
+
+  .iconTrailing {
+    font-size: calc($base * 1.25);
+  }
+
+  label {
+    font-size: calc($base * 0.875);
+  }
+}
+
+@mixin input-size($base) {
+  font-size: $base;
+  padding-left: $base;
+  padding-right: $base;
+  padding-top: calc($base * 0.5);
+  padding-bottom: calc($base * 0.5);
+
+  &.Input--iconLeading {
+    padding-left: calc($base * 2.25);
+  }
+
+  &.Input--iconTrailing {
+    padding-right: calc($base * 2.25);
+  }
+}
+
+@mixin input-base {
+  @include input-size(1rem);
+  @include sans;
+  background: transparent;
+  outline: none;
+  transition: all 0.1s ease-in-out;
+
+  @include placeholder {
+    color: $tw-gray-500;
+    user-select: none;
+  }
+
+  &:disabled {
+    background-color: $tw-slate-100;
+    border-color: $tw-slate-200;
+    cursor: not-allowed;
+  }
+
+  &.Input--fluid {
+    width: 100%;
+  }
+
+  &.Input--size--xs {
+    @include input-size(0.75rem);
+  }
+
+  &.Input--size--sm {
+    @include input-size(0.875rem);
+  }
+
+  &.Input--size--md {
+    @include input-size(1rem);
+  }
+
+  &.Input--size--lg {
+    @include input-size(1.125rem);
+  }
+
+  &.Input--size--xl {
+    @include input-size(1.25rem);
+  }
+}
+
+.Input__container {
+  @include input-container-size(1rem);
+  display: inline-block;
+  position: relative;
+
+  .Input__inner {
+    position: relative;
+  }
+
+  &.Input__container--fluid {
+    width: 100%;
+  }
+
+  .material-icons,
+  .material-symbols,
+  .material-symbols-outlined {
+    display: block;
+  }
+
+  .iconLeading {
+    left: 0;
+    margin: 0;
+    position: absolute;
+    top: 50%;
+    transform: translate(50%, -50%);
+    pointer-events: none;
+
+    &--textarea {
+      top: 0;
+      transform: translate(50%, 50%);
+    }
+  }
+
+  .iconTrailing {
+    margin: 0;
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+
+    &--textarea {
+      top: 0;
+      transform: translate(-50%, 50%);
+    }
+  }
+
+  label {
+    @include font-medium;
+    color: $tw-black;
+    display: block;
+    margin-bottom: 0.25rem;
+  }
+
+  &.Input__container--size--xs {
+    @include input-container-size(0.75rem);
+  }
+
+  &.Input__container--size--sm {
+    @include input-container-size(0.875rem);
+  }
+
+  &.Input__container--size--md {
+    @include input-container-size(1rem);
+  }
+
+  &.Input__container--size--lg {
+    @include input-container-size(1.125rem);
+  }
+
+  &.Input__container--size--xl {
+    @include input-container-size(1.25rem);
+  }
+}
+
+// Default variant
+
+.Input--variant--default {
+  @include input-base;
+  border: 1px solid $border;
+
+  &:not(:disabled) {
+    &:hover {
+      border-color: $tw-gray-400;
+    }
+
+    &:focus,
+    &:active {
+      border-color: $primary-600;
+    }
+
+    &:invalid {
+      background-color: $tw-red-50;
+      border-color: $tw-red-600;
+    }
+  }
+}
+
+// Underline variant
+
+.Input--variant--underline {
+  @include input-base;
+  border-radius: 0 !important;
+  border-bottom: 1px solid $border;
+
+  &:not(:disabled) {
+    &:hover {
+      border-color: $tw-gray-400;
+    }
+
+    &:focus,
+    &:active {
+      border-color: $primary-600;
+    }
+
+    &:invalid {
+      background-color: $tw-red-50;
+      border-color: $tw-red-600;
+    }
+  }
+}
+
+// Filled variant
+
+.Input--variant--filled {
+  @include input-base;
+  background-color: $tw-gray-100;
+  border: 1px solid $border;
+
+  &:not(:disabled) {
+    &:hover,
+    &:focus,
+    &:active {
+      background-color: $tw-gray-200;
+      border-color: $primary-600;
+    }
+
+    &:invalid {
+      background-color: $tw-red-50;
+      border-color: $tw-red-600;
+    }
+  }
+}

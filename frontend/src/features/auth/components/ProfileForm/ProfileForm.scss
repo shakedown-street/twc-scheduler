@@ -1,0 +1,21 @@
+@import '~/scss/mixins';
+
+.ProfileForm {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+
+  &__field {
+    flex: 1;
+
+    &--center {
+      align-self: center;
+    }
+  }
+
+  &__actions {
+    align-items: center;
+    display: flex;
+    justify-content: flex-end;
+  }
+}

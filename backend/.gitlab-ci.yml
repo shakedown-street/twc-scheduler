@@ -1,0 +1,67 @@
+variables:
+  # Production docker-compose scripts
+  PROD_FRONT_COMPOSE: docker-compose -p schedule_builder_prod_frontend -f /opt/containers/schedule_builder/frontend/docker-compose.yml
+  PROD_BACK_COMPOSE: docker-compose -p schedule_builder_prod_backend -f /opt/containers/schedule_builder/backend/docker-compose.prod.yml
+
+  # Staging docker-compose scripts
+  STG_FRONT_COMPOSE: docker-compose -p schedule_builder_stg_frontend -f $CI_PROJECT_DIR/frontend/docker-compose.stg.yml
+  STG_BACK_COMPOSE: docker-compose -p schedule_builder_stg_backend -f $CI_PROJECT_DIR/backend/docker-compose.stg.yml
+
+stages:
+  - code_check
+  - deploy
+
+frontend_code_check:
+  stage: code_check
+  allow_failure: true
+  when: manual
+  tags:
+    - staging-runner
+  before_script:
+    - $STG_FRONT_COMPOSE down
+    - $STG_FRONT_COMPOSE build
+  script:
+    # Test
+    - $STG_FRONT_COMPOSE run -T frontend npm test
+    # Run
+    - $STG_FRONT_COMPOSE up -d
+
+backend_code_check:
+  stage: code_check
+  allow_failure: true
+  when: manual
+  tags:
+    - staging-runner
+  before_script:
+    - $STG_BACK_COMPOSE down
+    - $STG_BACK_COMPOSE build
+    - $STG_BACK_COMPOSE up -d
+  script:
+    # Flake8
+    - $STG_BACK_COMPOSE exec -T backend flake8 apps/
+    # Run `bandit` security test on all non-tests files
+    - $STG_BACK_COMPOSE exec -T backend bandit -r apps/
+    # Test
+    - $STG_BACK_COMPOSE exec -T backend python manage.py test
+
+frontend_deploy_prod:
+  stage: deploy
+  script:
+    - cd /opt/containers/project-name
+    - git fetch
+    - git pull origin main
+    - git checkout $CI_COMMIT_SHA
+    - $PROD_FRONT_COMPOSE build
+    - $PROD_FRONT_COMPOSE up -d
+  when: manual
+
+backend_deploy_prod:
+  stage: deploy
+  script:
+    - cd /opt/containers/schedule_builder
+    - git fetch
+    - git pull origin main
+    - git checkout $CI_COMMIT_SHA
+    - $PROD_BACK_COMPOSE build
+    - $PROD_BACK_COMPOSE up -d
+  when: manual

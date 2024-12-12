@@ -1,0 +1,43 @@
+@import '~/scss/mixins';
+@import '~/scss/variables';
+
+.Toaster {
+  bottom: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  max-width: 20rem;
+  min-width: 20rem;
+  position: fixed;
+  right: 2rem;
+  z-index: 100;
+
+  &__toast {
+    @include radius-md;
+    @include shadow-md;
+    align-items: center;
+    background-color: white;
+    border-left: 0.75rem solid $tw-gray-600;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    padding: 1rem;
+    width: 100%;
+
+    &--success {
+      border-left-color: $tw-green-600;
+    }
+
+    &--error {
+      border-left-color: $tw-red-600;
+    }
+
+    &--warning {
+      border-left-color: $tw-orange-400;
+    }
+
+    &--info {
+      border-left-color: $tw-blue-600;
+    }
+  }
+}

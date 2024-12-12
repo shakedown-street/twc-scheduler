@@ -1,0 +1,46 @@
+@import '~/scss/mixins';
+@import '~/scss/variables';
+
+.Tabs {
+  align-items: center;
+  display: flex;
+  overflow-x: hidden;
+
+  &__container {
+    position: relative;
+  }
+
+  &__navigate {
+    align-items: center;
+    appearance: none;
+    background-color: white;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    position: absolute;
+    bottom: 0;
+    top: 0;
+    width: 2rem;
+
+    .material-icons,
+    .material-symbols,
+    .material-symbols-outlined {
+      font-size: 1.25rem;
+    }
+
+    &--left {
+      left: 0;
+    }
+
+    &--right {
+      right: 0;
+    }
+  }
+
+  &.Tabs--fluid {
+    .TabItem {
+      width: 100%;
+    }
+  }
+}

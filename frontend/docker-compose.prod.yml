@@ -1,0 +1,11 @@
+version: "3"
+
+services:
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    args:
+      - MODE=:production
+    environment:
+      NODE_ENV: production

@@ -1,0 +1,10 @@
+{% extends 'schedule_builder/email/base.html' %}
+
+{% block content %}
+<p>You're receiving this email because an account was created with your email address on {{ settings.SITE_NAME }}.</p>
+<p>If you did not create an account, please ignore this email.</p>
+<p>Please go to the following page to verify your email address:</p>
+<p><a href="{{ settings.FRONTEND_URL }}/verify-email/{{ uid }}/{{ token }}">{{ settings.FRONTEND_URL }}/verify-email/{{ uid }}/{{ token }}</a></p>
+<p>Thanks for using our site!</p>
+<p>The {{ settings.SITE_NAME }} team</p>
+{% endblock %}
