@@ -1,9 +1,3 @@
-from django.conf import settings
-from django.contrib import admin
-from django.urls import include, path
-from knox import views as knox_views
-from rest_framework import routers
-
 from apps.accounts.views import (
     EmailUserViewSet,
     LoginView,
@@ -14,9 +8,26 @@ from apps.accounts.views import (
     VerifyEmailAPIView,
     social_auth,
 )
+from apps.appointments.views import (
+    AppointmentViewSet,
+    AvailabilityViewSet,
+    BlockViewSet,
+    ClientViewSet,
+    TechnicianViewSet,
+)
+from django.conf import settings
+from django.contrib import admin
+from django.urls import include, path
+from knox import views as knox_views
+from rest_framework import routers
 
 router = routers.DefaultRouter()
 router.register(r"users", EmailUserViewSet, "user")
+router.register(r"appointments", AppointmentViewSet, "appointment")
+router.register(r"availabilities", AvailabilityViewSet, "availability")
+router.register(r"blocks", BlockViewSet, "block")
+router.register(r"clients", ClientViewSet, "client")
+router.register(r"technicians", TechnicianViewSet, "technician")
 
 
 # Enable Stripe API endpoints if the secret key is set

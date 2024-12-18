@@ -1,7 +1,11 @@
 from .models import Block, Client, Technician
 
 
-def find_available_technicians(client: Client, day: int, block: Block):
+def find_available_technicians(
+    client: Client,
+    day: int,
+    block: Block,
+) -> list[Technician]:
     """
     This checks:
 

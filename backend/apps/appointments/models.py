@@ -6,15 +6,18 @@ from django.db import models
 from schedule_builder.mixins import TimestampMixin, UUIDPrimaryKeyMixin
 
 
-class Employee(UUIDPrimaryKeyMixin, TimestampMixin):
+class Technician(UUIDPrimaryKeyMixin, TimestampMixin):
     first_name = models.CharField(max_length=30)
     last_name = models.CharField(max_length=30)
     color = ColorField(default="#000000")
+    requested_hours = models.IntegerField(default=0)
     skill_level = models.IntegerField(
         default=1, validators=[MinValueValidator(1), MaxValueValidator(3)]
     )
     spanish_speaking = models.BooleanField(default=False)
     notes = models.TextField(blank=True)
+
+    # generic relation to availabilities
     availabilities = GenericRelation("Availability")
 
     def __str__(self):
@@ -22,25 +25,20 @@ class Employee(UUIDPrimaryKeyMixin, TimestampMixin):
 
     class Meta:
         ordering = ["first_name", "last_name"]
-        abstract = True
-
-
-class Technician(Employee):
-    pass
-
-
-class Therapist(Employee):
-    pass
 
 
 class Client(UUIDPrimaryKeyMixin, TimestampMixin):
     first_name = models.CharField(max_length=30)
     last_name = models.CharField(max_length=30)
+    eval_done = models.BooleanField(default=False)
+    prescribed_hours = models.IntegerField(default=0)
     req_skill_level = models.IntegerField(
         default=1, validators=[MinValueValidator(1), MaxValueValidator(3)]
     )
     req_spanish_speaking = models.BooleanField(default=False)
     notes = models.TextField(blank=True)
+
+    # generic relation to availabilities
     availabilities = GenericRelation("Availability")
 
     def __str__(self):
@@ -85,10 +83,11 @@ class Appointment(UUIDPrimaryKeyMixin, TimestampMixin):
     day = models.IntegerField(
         default=0, validators=[MinValueValidator(0), MaxValueValidator(6)]
     )
-    block = models.ForeignKey(Block, on_delete=models.CASCADE)
+    start_time = models.TimeField()
+    end_time = models.TimeField()
 
     def __str__(self):
-        return f"{self.client} - {self.technician} - D{self.day} B{self.block}"
+        return f"{self.client} - {self.technician} - D{self.day} {self.start_time} - {self.end_time}"
 
     class Meta:
-        ordering = ["client", "technician", "day", "block"]
+        ordering = ["client", "technician", "day", "start_time"]

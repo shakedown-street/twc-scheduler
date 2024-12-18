@@ -1,6 +1,17 @@
 from django.contrib import admin
 
-from .models import Availability, Block, Client, Technician, Therapist
+from .models import Appointment, Availability, Block, Client, Technician
+
+
+@admin.register(Appointment)
+class Appointment(admin.ModelAdmin):
+    list_display = (
+        "client",
+        "technician",
+        "day",
+        "start_time",
+        "end_time",
+    )
 
 
 @admin.register(Availability)
@@ -33,16 +44,6 @@ class ClientAdmin(admin.ModelAdmin):
 
 @admin.register(Technician)
 class TechnicianAdmin(admin.ModelAdmin):
-    list_display = (
-        "first_name",
-        "last_name",
-        "skill_level",
-        "spanish_speaking",
-    )
-
-
-@admin.register(Therapist)
-class TherapistAdmin(admin.ModelAdmin):
     list_display = (
         "first_name",
         "last_name",
