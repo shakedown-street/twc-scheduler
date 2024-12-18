@@ -2,7 +2,7 @@ from django.contrib.contenttypes.models import ContentType
 from django.test import TestCase
 
 from .matcher import find_available_technicians
-from .models import Availability, Block, Client, Technician
+from .models import Appointment, Availability, Block, Client, Technician
 
 
 class AvailabilityTestCase(TestCase):
@@ -49,24 +49,34 @@ class AvailabilityTestCase(TestCase):
             block=self.block_1,
         )
 
-    def test_block_availability(self):
+    def test_req_skill_level(self):
         """
-        Assert that a technician is only returned if they are available for the
-        given day and block.
+        Assert that an otherwise available technician is not returned if the
+        client requires a skill level above the technician's skill level.
         """
 
-        # Find available technicians
+        # Technician is available
         block_1_technicians = find_available_technicians(self.client, 0, self.block_1)
-        block_2_technicians = find_available_technicians(self.client, 0, self.block_2)
-
-        # Assert that the technician is available for block 1
         self.assertIn(self.technician, block_1_technicians)
         self.assertEqual(len(block_1_technicians), 1)
-        self.assertEqual(block_1_technicians[0], self.technician)
 
-        # Assert that the technician is not available for block 2
-        self.assertNotIn(self.technician, block_2_technicians)
-        self.assertEqual(len(block_2_technicians), 0)
+        # Make client require skill level 2
+        self.client.req_skill_level = 2
+        self.client.save()
+
+        # Technician is no longer available
+        block_1_technicians = find_available_technicians(self.client, 0, self.block_1)
+        self.assertNotIn(self.technician, block_1_technicians)
+        self.assertEqual(len(block_1_technicians), 0)
+
+        # Make technician skill level 2
+        self.technician.skill_level = 2
+        self.technician.save()
+
+        # Technician is available again
+        block_1_technicians = find_available_technicians(self.client, 0, self.block_1)
+        self.assertIn(self.technician, block_1_technicians)
+        self.assertEqual(len(block_1_technicians), 1)
 
     def test_req_spanish_speaking(self):
         """
@@ -98,31 +108,51 @@ class AvailabilityTestCase(TestCase):
         self.assertIn(self.technician, block_1_technicians)
         self.assertEqual(len(block_1_technicians), 1)
 
-    def test_req_skill_level(self):
+    def test_block_availability(self):
         """
-        Assert that an otherwise available technician is not returned if the
-        client requires a skill level above the technician's skill level.
+        Assert that a technician is only returned if they are available for the
+        given day and block.
         """
 
-        # Technician is available
+        # Find available technicians
         block_1_technicians = find_available_technicians(self.client, 0, self.block_1)
+        block_2_technicians = find_available_technicians(self.client, 0, self.block_2)
+
+        # Assert that the technician is available for block 1
         self.assertIn(self.technician, block_1_technicians)
         self.assertEqual(len(block_1_technicians), 1)
+        self.assertEqual(block_1_technicians[0], self.technician)
 
-        # Make client require skill level 2
-        self.client.req_skill_level = 2
-        self.client.save()
+        # Assert that the technician is not available for block 2
+        self.assertNotIn(self.technician, block_2_technicians)
+        self.assertEqual(len(block_2_technicians), 0)
 
-        # Technician is no longer available
+    def test_appointment_overlap(self):
+        """
+        Assert that a technician is only returned if they are not already booked
+        for the given day and block.
+        """
+
+        # Find available technicians
         block_1_technicians = find_available_technicians(self.client, 0, self.block_1)
+
+        # Assert that the technician is available for block 1
+        self.assertIn(self.technician, block_1_technicians)
+        self.assertEqual(len(block_1_technicians), 1)
+        self.assertEqual(block_1_technicians[0], self.technician)
+
+        # Create an appointment for the technician
+        Appointment.objects.create(
+            client=self.client,
+            technician=self.technician,
+            day=0,
+            start_time=self.block_1.start_time,
+            end_time=self.block_1.end_time,
+        )
+
+        # Find available technicians
+        block_1_technicians = find_available_technicians(self.client, 0, self.block_1)
+
+        # Assert that the technician is not available for block 1
         self.assertNotIn(self.technician, block_1_technicians)
         self.assertEqual(len(block_1_technicians), 0)
-
-        # Make technician skill level 2
-        self.technician.skill_level = 2
-        self.technician.save()
-
-        # Technician is available again
-        block_1_technicians = find_available_technicians(self.client, 0, self.block_1)
-        self.assertIn(self.technician, block_1_technicians)
-        self.assertEqual(len(block_1_technicians), 1)

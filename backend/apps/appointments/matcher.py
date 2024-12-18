@@ -7,25 +7,28 @@ def find_available_technicians(
     block: Block,
 ) -> list[Technician]:
     """
-    This checks:
-
-    - Technician must be available on the given day and block
-    - Technician must have the required skill level
-    - If the client requires a Spanish speaking technician, the technician must be Spanish speaking
-
-    It does __not__ check:
-
-    - If the client is available on the given day and block
-    - If there are any schedule conflicts with existing appointments
+    filter out technicians who:
+    - don't meet the clients skill and language requirements
+    - are not available on the given day and block
+    - are already booked on the given day and block
     """
 
+    # filter out technicians who don't meet the client's skill and language
+    # requirements
     technicians = Technician.objects.filter(skill_level__gte=client.req_skill_level)
     if client.req_spanish_speaking:
         technicians = technicians.filter(spanish_speaking=True)
 
-    available_technicians = []
-    for technician in technicians:
-        if technician.availabilities.filter(day=day, block=block).exists():
-            available_technicians.append(technician)
+    # filter out technicians who are not available on the given day and block
+    available_technicians = technicians.filter(
+        availabilities__day=day, availabilities__block=block
+    )
 
-    return available_technicians
+    # exclude technicians who are already booked on the given day and block
+    available_technicians = available_technicians.exclude(
+        appointment__day=day,
+        appointment__start_time__lt=block.end_time,
+        appointment__end_time__gt=block.start_time,
+    )
+
+    return available_technicians.all()

@@ -1,4 +1,4 @@
-from rest_framework import viewsets
+from rest_framework import exceptions, viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
 
@@ -36,7 +36,12 @@ class ClientViewSet(viewsets.ModelViewSet):
     def available_techs(self, request, pk=None):
         client = self.get_object()
         day = request.query_params.get("day")
-        block = request.query_params.get("block")
+        block_id = request.query_params.get("block")
+
+        try:
+            block = Block.objects.get(id=block_id)
+        except Block.DoesNotExist:
+            return exceptions.NotFound("Block not found")
 
         available_technicians = find_available_technicians(client, day, block)
         serializer = TechnicianSerializer(
