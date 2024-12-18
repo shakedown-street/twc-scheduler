@@ -1,0 +1,50 @@
+@import '~/scss/variables';
+
+.TechAvailability {
+  &__table {
+    table-layout: fixed;
+    width: 100%;
+
+    thead {
+      tr {
+        th {
+          border: 1px solid black;
+          font-size: 0.625rem;
+          padding: 0.25rem;
+          text-align: left;
+        }
+      }
+    }
+
+    tbody {
+      tr {
+        td {
+          border: 1px solid black;
+          font-size: 0.75rem;
+          padding: 0.25rem;
+          text-align: left;
+        }
+      }
+    }
+
+    tfoot {
+      tr {
+        td {
+          border: 1px solid black;
+          font-size: 0.625rem;
+          padding: 0.25rem;
+          text-align: left;
+        }
+      }
+    }
+
+    &__block {
+      background-color: $tw-gray-600;
+      cursor: pointer;
+
+      &--available {
+        background-color: $tw-green-700;
+      }
+    }
+  }
+}

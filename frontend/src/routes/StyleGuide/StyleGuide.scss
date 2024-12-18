@@ -2,6 +2,18 @@
 @import '~/scss/variables';
 
 .StyleGuide {
+  &__container {
+    display: flex;
+  }
+
+  &__sidebar {
+    width: 240px;
+  }
+
+  &__main {
+    flex: 1;
+  }
+
   &__example {
     display: flex;
 
