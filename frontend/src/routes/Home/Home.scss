@@ -1,5 +1,4 @@
 .TimeSlotTable {
-  table-layout: fixed;
   width: 100%;
 
   thead {
@@ -22,5 +21,9 @@
         text-align: left;
       }
     }
+  }
+
+  &__slot {
+    width: 2rem;
   }
 }

@@ -1,35 +1,13 @@
 import React from 'react';
 import { Helmet } from 'react-helmet';
-import { Link } from 'react-router-dom';
 import { AppointmentModel, BlockModel, ClientModel } from '~/api';
-import { useAuth } from '~/features/auth/contexts/AuthContext';
 import { Appointment } from '~/types/Appointment';
-import { Availability } from '~/types/Availability';
 import { Block } from '~/types/Block';
 import { Client } from '~/types/Client';
 import { Technician } from '~/types/Technician';
 import { Button, Container, RadixDialog, RadixDialogProps, Select, TabItem, Tabs } from '~/ui';
-import { formatTime } from '~/utils/format';
+import { formatTimeTimeline, isBetweenInclusiveStart, isOnTheHour } from '~/utils/time';
 import './Home.scss';
-
-function generateTimeSlots(startTime: string, endTime: string, interval: number) {
-  const timeSlots: string[] = [];
-  let currentTime = startTime;
-  while (currentTime < endTime) {
-    timeSlots.push(currentTime);
-    let [hours, minutes, seconds] = currentTime.split(':').map(Number);
-    minutes += interval;
-    if (minutes >= 60) {
-      hours += 1;
-      minutes -= 60;
-    }
-    currentTime = `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(
-      2,
-      '0'
-    )}`;
-  }
-  return timeSlots;
-}
 
 export type TimeSlotTableProps = {
   day: number;
@@ -47,36 +25,61 @@ export const TimeSlotTable = ({ day, clients, onClickBlockSlot }: TimeSlotTableP
     });
   }, []);
 
-  function isSlotBlock(time: string) {
-    return blocks.some((block) => time >= block.start_time && time < block.end_time);
+  function generateTimeSlots(startTime: string, endTime: string, interval: number) {
+    const timeSlots: string[] = [];
+    let currentTime = startTime;
+    while (currentTime < endTime) {
+      timeSlots.push(currentTime);
+      let [hours, minutes, seconds] = currentTime.split(':').map(Number);
+      minutes += interval;
+      if (minutes >= 60) {
+        hours += 1;
+        minutes -= 60;
+      }
+      currentTime = `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(
+        2,
+        '0'
+      )}`;
+    }
+    return timeSlots;
   }
 
-  function isSlotAvailable(time: string, availabilities: Availability[]) {
-    return availabilities
-      .filter((a) => a.day === day)
+  function isSlotBlock(time: string) {
+    return blocks.some((block) => {
+      return isBetweenInclusiveStart(time, block.start_time, block.end_time);
+    });
+  }
+
+  function isSlotAvailable(time: string, client: Client) {
+    return client.availabilities
+      ?.filter((a) => a.day === day)
       .some((availability) => {
         const block = blocks.find((block) => block.id === availability.block);
         if (!block) {
           return false;
         }
-        return time >= block?.start_time && time < block?.end_time;
+        return isBetweenInclusiveStart(time, block.start_time, block.end_time);
       });
   }
 
   function isSlotAppointment(time: string, appointments: Appointment[]) {
     return appointments
       .filter((a) => a.day === day)
-      .some((appointment) => time >= appointment.start_time && time < appointment.end_time);
+      .some((appointment) => {
+        return isBetweenInclusiveStart(time, appointment.start_time, appointment.end_time);
+      });
   }
 
   function slotColor(time: string, client: Client) {
     if (isSlotAppointment(time, client.appointments || [])) {
-      const appointment = client.appointments?.find(
-        (appointment) => time >= appointment.start_time && time < appointment.end_time
-      );
+      const appointment = client.appointments
+        ?.filter((a) => a.day === day)
+        .find((appointment) => {
+          return isBetweenInclusiveStart(time, appointment.start_time, appointment.end_time);
+        });
       return appointment?.technician_color || 'white';
     }
-    if (isSlotAvailable(time, client.availabilities || [])) {
+    if (isSlotAvailable(time, client)) {
       return 'lightgray';
     }
     if (isSlotBlock(time)) {
@@ -87,7 +90,7 @@ export const TimeSlotTable = ({ day, clients, onClickBlockSlot }: TimeSlotTableP
 
   function clickSlot(client: Client, time: string) {
     if (isSlotBlock(time)) {
-      const block = blocks.find((block) => time >= block.start_time && time < block.end_time);
+      const block = blocks.find((block) => isBetweenInclusiveStart(time, block.start_time, block.end_time));
       if (!block) {
         return;
       }
@@ -101,7 +104,16 @@ export const TimeSlotTable = ({ day, clients, onClickBlockSlot }: TimeSlotTableP
         <tr>
           <th>Client</th>
           {timeSlots.map((slot) => (
-            <th key={slot}>{formatTime(slot)}</th>
+            <th
+              key={slot}
+              style={{
+                borderLeft: isOnTheHour(slot) ? '2px solid black' : undefined,
+                backgroundColor: isSlotBlock(slot) ? 'white' : 'gray',
+                fontWeight: isOnTheHour(slot) ? 'bold' : 'light',
+              }}
+            >
+              {formatTimeTimeline(slot)}
+            </th>
           ))}
         </tr>
       </thead>
@@ -114,7 +126,11 @@ export const TimeSlotTable = ({ day, clients, onClickBlockSlot }: TimeSlotTableP
             {timeSlots.map((slot) => (
               <td
                 key={slot}
-                style={{ backgroundColor: slotColor(slot, client), textAlign: 'center' }}
+                className="TimeSlotTable__slot"
+                style={{
+                  borderLeft: isOnTheHour(slot) ? '2px solid black' : undefined,
+                  backgroundColor: slotColor(slot, client),
+                }}
                 onClick={() => {
                   clickSlot(client, slot);
                 }}
@@ -228,8 +244,6 @@ export const Home = () => {
     title: 'Create Appointment',
   });
 
-  const { user } = useAuth();
-
   React.useEffect(() => {
     ClientModel.all({
       expand_appointments: true,
@@ -245,25 +259,6 @@ export const Home = () => {
         <title>Home | Schedule Builder</title>
       </Helmet>
       <Container>
-        <div className="mt-12 text-center">
-          <h1 className="mb-4">Welcome to Schedule Builder!</h1>
-          {user && <p className="mb-4">{user.email}</p>}
-          <p>
-            <Link to="/style-guide">Click here</Link> to view the style guide
-          </p>
-        </div>
-
-        <div>
-          <ul>
-            <li>
-              <Link to="/client-availability">Client Availability</Link>
-            </li>
-            <li>
-              <Link to="/tech-availability">Technician Availability</Link>
-            </li>
-          </ul>
-        </div>
-
         <Tabs className="my-4">
           <TabItem active={day === 0} onClick={() => setDay(0)}>
             Monday
