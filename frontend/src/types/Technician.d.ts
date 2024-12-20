@@ -9,7 +9,7 @@ export type Technician = {
   color: string;
   requested_hours: number;
   skill_level: number;
-  spansih_speaking: boolean;
+  spanish_speaking: boolean;
   notes: string;
 
   // Sometimes available
