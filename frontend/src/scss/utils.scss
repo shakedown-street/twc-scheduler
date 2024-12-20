@@ -147,6 +147,14 @@ $text-weights: (
   'black': 900,
 );
 
+.text-color-red {
+  color: $tw-red-700;
+}
+
+.text-color-green {
+  color: $tw-green-700;
+}
+
 .text {
   &-left {
     text-align: left;
