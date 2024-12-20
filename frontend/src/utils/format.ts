@@ -1,5 +1,3 @@
-import { format, parse } from 'date-fns';
-
 /**
  * Formats a phone number to the format (XXX) XXX-XXXX
  */
@@ -40,16 +38,4 @@ export function formatBytes(value: number, decimals = 2): string {
   const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
   const i = Math.floor(Math.log(value) / Math.log(k));
   return parseFloat((value / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
-}
-
-/**
- * Formats a timestamp such as "09:00:00" to "9" or "9:30:00" to "9:30"
- */
-export function formatTime(time: string) {
-  const parsedTime = parse(time, 'HH:mm:ss', new Date());
-  if (format(parsedTime, 'mm') === '00') {
-    return format(parsedTime, 'h');
-  } else {
-    return format(parsedTime, 'h:mm');
-  }
 }
