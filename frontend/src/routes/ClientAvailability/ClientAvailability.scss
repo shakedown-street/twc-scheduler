@@ -2,13 +2,12 @@
 
 .ClientAvailability {
   &__table {
-    table-layout: fixed;
     width: 100%;
 
     thead {
       tr {
         th {
-          border: 1px solid black;
+          border: 1px solid $tw-gray-900;
           font-size: 0.625rem;
           padding: 0.25rem;
           text-align: left;
@@ -19,10 +18,14 @@
     tbody {
       tr {
         td {
-          border: 1px solid black;
+          border: 1px solid $tw-gray-900;
           font-size: 0.75rem;
           padding: 0.25rem;
           text-align: left;
+        }
+
+        &:nth-child(even) {
+          background-color: $tw-gray-200;
         }
       }
     }
@@ -30,7 +33,7 @@
     tfoot {
       tr {
         td {
-          border: 1px solid black;
+          border: 1px solid $tw-gray-900;
           font-size: 0.625rem;
           padding: 0.25rem;
           text-align: left;
@@ -38,12 +41,27 @@
       }
     }
 
-    &__block {
-      background-color: $tw-gray-600;
-      cursor: pointer;
+    &__boldBorder {
+      border: 2px solid $tw-gray-900 !important;
+    }
 
-      &--available {
-        background-color: $tw-green-700;
+    &__block {
+      background-color: $tw-gray-400;
+      cursor: pointer;
+      width: 4.5rem;
+
+      &--first {
+        border-left: 2px solid $tw-gray-900 !important;
+      }
+
+      &--last {
+        border-right: 2px solid $tw-gray-900 !important;
+      }
+
+      &__count {
+        background-color: $tw-green-100 !important;
+        border-top: 2px solid $tw-gray-900 !important;
+        background-color: white;
       }
     }
   }

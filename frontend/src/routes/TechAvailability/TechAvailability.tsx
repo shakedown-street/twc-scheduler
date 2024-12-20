@@ -4,7 +4,7 @@ import { AvailabilityModel, BlockModel, TechnicianModel } from '~/api';
 import { Block } from '~/types/Block';
 import { Technician } from '~/types/Technician';
 import { Card, Container } from '~/ui';
-import { formatTime } from '~/utils/format';
+import { formatTimeShort } from '~/utils/time';
 import './TechAvailability.scss';
 
 export const TechAvailability = () => {
@@ -65,26 +65,26 @@ export const TechAvailability = () => {
     return technicians.filter((technician) => isBlockAvailable(technician, day, block)).length;
   }
 
-  function renderBlockHeaders() {
-    return days.map(() =>
-      blocks.map((block) => (
-        <th key={block.id}>
-          {formatTime(block.start_time)}-{formatTime(block.end_time)}
-        </th>
-      ))
-    );
-  }
-
   function renderAvailabilities(technician: Technician) {
     return days.map((day) =>
-      blocks.map((block) => (
+      blocks.map((block, index) => (
         <td
           key={block.id}
           className={clsx('TechAvailability__table__block', {
-            'TechAvailability__table__block--available': isBlockAvailable(technician, day, block),
+            'TechAvailability__table__block--first': index === 0,
+            'TechAvailability__table__block--last': index === blocks.length - 1,
           })}
+          style={{
+            backgroundColor: isBlockAvailable(technician, day, block) ? block.color : undefined,
+          }}
           onClick={() => toggleAvailability(technician, day, block)}
-        ></td>
+        >
+          {isBlockAvailable(technician, day, block) && (
+            <>
+              {formatTimeShort(block.start_time)}-{formatTimeShort(block.end_time)}
+            </>
+          )}
+        </td>
       ))
     );
   }
@@ -92,7 +92,14 @@ export const TechAvailability = () => {
   function renderBlockTotals() {
     return days.map((day) =>
       blocks.map((block) => (
-        <td key={block.id} className="TechAvailability__table__block__count">
+        <td
+          key={block.id}
+          className={clsx('TechAvailability__table__block__count', {
+            'TechAvailability__table__block--first': block.id === 1,
+            'TechAvailability__table__block--last': block.id === blocks.length,
+          })}
+          style={{ textAlign: 'right' }}
+        >
           {countTechniciansAvailableForBlock(day, block)}
         </td>
       ))
@@ -111,16 +118,11 @@ export const TechAvailability = () => {
                 <th>Rating</th>
                 <th>Spanish</th>
                 {days.map((day) => (
-                  <th key={day} colSpan={3}>
+                  <th key={day} colSpan={blocks.length}>
                     {['Mon', 'Tue', 'Wed', 'Thu', 'Fri'][day]}
                   </th>
                 ))}
                 <th>Req Hrs</th>
-              </tr>
-              <tr>
-                <th colSpan={3}></th>
-                {renderBlockHeaders()}
-                <th></th>
               </tr>
             </thead>
             <tbody>
@@ -133,10 +135,20 @@ export const TechAvailability = () => {
                   >
                     {technician.first_name} {technician.last_name}
                   </td>
-                  <td>{technician.skill_level}</td>
-                  <td>{technician.spansih_speaking ? 'Yes' : 'No'}</td>
+                  <td
+                    style={{
+                      textAlign: 'right',
+                    }}
+                  >
+                    {technician.skill_level}
+                  </td>
+                  <td style={{ textAlign: 'center' }}>
+                    {technician.spanish_speaking && (
+                      <span className="material-symbols-outlined text-color-green">check</span>
+                    )}
+                  </td>
                   {renderAvailabilities(technician)}
-                  <td>{technician.requested_hours}</td>
+                  <td style={{ textAlign: 'right' }}>{technician.requested_hours}</td>
                 </tr>
               ))}
             </tbody>
@@ -144,7 +156,7 @@ export const TechAvailability = () => {
               <tr>
                 <td colSpan={3}></td>
                 {renderBlockTotals()}
-                <td>{totalRequestedHours()}</td>
+                <td style={{ textAlign: 'right' }}>{totalRequestedHours()}</td>
               </tr>
             </tfoot>
           </table>

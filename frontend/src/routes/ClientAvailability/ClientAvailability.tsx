@@ -4,7 +4,7 @@ import { AvailabilityModel, BlockModel, ClientModel } from '~/api';
 import { Block } from '~/types/Block';
 import { Client } from '~/types/Client';
 import { Card, Container } from '~/ui';
-import { formatTime } from '~/utils/format';
+import { formatTimeShort } from '~/utils/time';
 import './ClientAvailability.scss';
 
 export const ClientAvailability = () => {
@@ -63,26 +63,26 @@ export const ClientAvailability = () => {
     return clients.filter((client) => isBlockAvailable(client, day, block)).length;
   }
 
-  function renderBlockHeaders() {
-    return days.map(() =>
-      blocks.map((block) => (
-        <th key={block.id}>
-          {formatTime(block.start_time)}-{formatTime(block.end_time)}
-        </th>
-      ))
-    );
-  }
-
   function renderAvailabilities(client: Client) {
     return days.map((day) =>
-      blocks.map((block) => (
+      blocks.map((block, index) => (
         <td
           key={block.id}
           className={clsx('ClientAvailability__table__block', {
-            'ClientAvailability__table__block--available': isBlockAvailable(client, day, block),
+            'ClientAvailability__table__block--first': index === 0,
+            'ClientAvailability__table__block--last': index === blocks.length - 1,
           })}
+          style={{
+            backgroundColor: isBlockAvailable(client, day, block) ? block.color : undefined,
+          }}
           onClick={() => toggleAvailability(client, day, block)}
-        ></td>
+        >
+          {isBlockAvailable(client, day, block) && (
+            <>
+              {formatTimeShort(block.start_time)}-{formatTimeShort(block.end_time)}
+            </>
+          )}
+        </td>
       ))
     );
   }
@@ -90,7 +90,14 @@ export const ClientAvailability = () => {
   function renderBlockTotals() {
     return days.map((day) =>
       blocks.map((block) => (
-        <td key={block.id} className="ClientAvailability__table__block__count">
+        <td
+          key={block.id}
+          className={clsx('ClientAvailability__table__block__count', {
+            'ClientAvailability__table__block--first': block.id === 1,
+            'ClientAvailability__table__block--last': block.id === blocks.length,
+          })}
+          style={{ textAlign: 'right' }}
+        >
           {countClientsAvailableForBlock(day, block)}
         </td>
       ))
@@ -110,16 +117,11 @@ export const ClientAvailability = () => {
                 <th>Spanish</th>
                 <th>Eval</th>
                 {days.map((day) => (
-                  <th key={day} colSpan={3}>
+                  <th className="ClientAvailability__table__boldBorder" key={day} colSpan={blocks.length}>
                     {['Mon', 'Tue', 'Wed', 'Thu', 'Fri'][day]}
                   </th>
                 ))}
                 <th>Rx Hrs</th>
-              </tr>
-              <tr>
-                <th colSpan={4}></th>
-                {renderBlockHeaders()}
-                <th></th>
               </tr>
             </thead>
             <tbody>
@@ -128,11 +130,23 @@ export const ClientAvailability = () => {
                   <td>
                     {client.first_name} {client.last_name}
                   </td>
-                  <td>{client.req_skill_level}</td>
-                  <td>{client.req_spanish_speaking ? 'Yes' : 'No'}</td>
-                  <td>{client.eval_done ? 'Yes' : 'No'}</td>
+                  <td
+                    style={{
+                      textAlign: 'right',
+                    }}
+                  >
+                    {client.req_skill_level}
+                  </td>
+                  <td style={{ textAlign: 'center' }}>
+                    {client.req_spanish_speaking && (
+                      <span className="material-symbols-outlined text-color-green">check</span>
+                    )}
+                  </td>
+                  <td style={{ textAlign: 'center' }}>
+                    {client.eval_done && <span className="material-symbols-outlined text-color-green">check</span>}
+                  </td>
                   {renderAvailabilities(client)}
-                  <td>{client.prescribed_hours}</td>
+                  <td style={{ textAlign: 'right' }}>{client.prescribed_hours}</td>
                 </tr>
               ))}
             </tbody>
@@ -140,7 +154,7 @@ export const ClientAvailability = () => {
               <tr>
                 <td colSpan={4}></td>
                 {renderBlockTotals()}
-                <td>{totalPrescribedHours()}</td>
+                <td style={{ textAlign: 'right' }}>{totalPrescribedHours()}</td>
               </tr>
             </tfoot>
           </table>
