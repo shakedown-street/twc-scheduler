@@ -10,7 +10,6 @@ class AppointmentSerializer(serializers.ModelSerializer):
 
     def to_representation(self, instance):
         data = super().to_representation(instance)
-        request = self.context.get("request")
 
         data["technician_color"] = instance.technician.color
 
@@ -40,14 +39,14 @@ class ClientSerializer(serializers.ModelSerializer):
 
         if request and request.query_params.get("expand_appointments"):
             data["appointments"] = AppointmentSerializer(
-                instance.appointment_set,
+                instance.appointments.all(),
                 many=True,
                 context=self.context,
             ).data
 
         if request and request.query_params.get("expand_availabilities"):
             data["availabilities"] = AvailabilitySerializer(
-                instance.availabilities,
+                instance.availabilities.all(),
                 many=True,
                 context=self.context,
             ).data

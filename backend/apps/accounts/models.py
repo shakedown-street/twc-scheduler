@@ -4,8 +4,8 @@ from django.db import models
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 
-from schedule_builder.mixins import UUIDPrimaryKeyMixin
 from apps.accounts.managers import EmailUserManager
+from schedule_builder.mixins import UUIDPrimaryKeyMixin
 
 
 def email_user_image_upload_to(user, filename):

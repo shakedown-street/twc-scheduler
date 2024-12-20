@@ -3,6 +3,7 @@ from django.contrib.contenttypes.fields import GenericForeignKey, GenericRelatio
 from django.contrib.contenttypes.models import ContentType
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
+
 from schedule_builder.mixins import TimestampMixin, UUIDPrimaryKeyMixin
 
 
@@ -49,6 +50,7 @@ class Client(UUIDPrimaryKeyMixin, TimestampMixin):
 
 
 class Block(models.Model):
+    color = ColorField(default="#000000")
     start_time = models.TimeField()
     end_time = models.TimeField()
 
@@ -66,7 +68,11 @@ class Availability(UUIDPrimaryKeyMixin, TimestampMixin):
     day = models.IntegerField(
         default=0, validators=[MinValueValidator(0), MaxValueValidator(6)]
     )
-    block = models.ForeignKey(Block, on_delete=models.CASCADE)
+    block = models.ForeignKey(
+        Block,
+        related_name="availabilities",
+        on_delete=models.CASCADE,
+    )
 
     def __str__(self):
         return f"{self.object} - D{self.day} B{self.block}"
@@ -78,8 +84,12 @@ class Availability(UUIDPrimaryKeyMixin, TimestampMixin):
 
 
 class Appointment(UUIDPrimaryKeyMixin, TimestampMixin):
-    client = models.ForeignKey(Client, on_delete=models.CASCADE)
-    technician = models.ForeignKey(Technician, on_delete=models.CASCADE)
+    client = models.ForeignKey(
+        Client, related_name="appointments", on_delete=models.CASCADE
+    )
+    technician = models.ForeignKey(
+        Technician, related_name="appointments", on_delete=models.CASCADE
+    )
     day = models.IntegerField(
         default=0, validators=[MinValueValidator(0), MaxValueValidator(6)]
     )
