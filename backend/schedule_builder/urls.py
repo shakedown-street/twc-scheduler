@@ -1,3 +1,9 @@
+from django.conf import settings
+from django.contrib import admin
+from django.urls import include, path
+from knox import views as knox_views
+from rest_framework import routers
+
 from apps.accounts.views import (
     EmailUserViewSet,
     LoginView,
@@ -15,11 +21,6 @@ from apps.appointments.views import (
     ClientViewSet,
     TechnicianViewSet,
 )
-from django.conf import settings
-from django.contrib import admin
-from django.urls import include, path
-from knox import views as knox_views
-from rest_framework import routers
 
 router = routers.DefaultRouter()
 router.register(r"users", EmailUserViewSet, "user")

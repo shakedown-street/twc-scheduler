@@ -10,12 +10,12 @@ app.autodiscover_tasks(settings.INSTALLED_APPS)
 
 # Schedule tasks here
 app.conf.beat_schedule = {
-#    "Task Description": {
-#        "task": "apps.name.tasks.task_name",
-#        "args": ("arg1", "arg2"),
-#        "schedule": crontab(
-#            hour="*/12",
-#            minute=0,
-#        ),
-#    },
+    #    "Task Description": {
+    #        "task": "apps.name.tasks.task_name",
+    #        "args": ("arg1", "arg2"),
+    #        "schedule": crontab(
+    #            hour="*/12",
+    #            minute=0,
+    #        ),
+    #    },
 }

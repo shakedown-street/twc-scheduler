@@ -15,20 +15,22 @@ def find_available_technicians(
 
     # filter out technicians who don't meet the client's skill and language
     # requirements
-    technicians = Technician.objects.filter(skill_level__gte=client.req_skill_level)
+    qs = Technician.objects.prefetch_related("appointments", "availabilities").filter(
+        skill_level__gte=client.req_skill_level
+    )
     if client.req_spanish_speaking:
-        technicians = technicians.filter(spanish_speaking=True)
+        qs = qs.filter(spanish_speaking=True)
 
     # filter out technicians who are not available on the given day and block
-    available_technicians = technicians.filter(
-        availabilities__day=day, availabilities__block=block
-    )
+    qs = qs.filter(availabilities__day=day, availabilities__block=block)
 
-    # exclude technicians who are already booked on the given day and block
-    available_technicians = available_technicians.exclude(
-        appointment__day=day,
-        appointment__start_time__lt=block.end_time,
-        appointment__end_time__gt=block.start_time,
-    )
+    # filter out technicians who are already booked on the given day and block
+    for tech in qs:
+        appointments = tech.appointments.filter(day=day)
 
-    return available_technicians.all()
+        if appointments.filter(
+            start_time__lt=block.end_time, end_time__gt=block.start_time
+        ).exists():
+            qs = qs.exclude(pk=tech.pk)
+
+    return qs.distinct()
