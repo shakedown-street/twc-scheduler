@@ -2,11 +2,11 @@ import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { BillingSessionModel } from '~/api';
-import logo from '~/assets/logo.svg';
+import logo from '~/assets/logo.avif';
 import { ImpersonateDialog } from '~/features/auth/components/ImpersonateDialog/ImpersonateDialog';
 import { useAuth } from '~/features/auth/contexts/AuthContext';
 import { http } from '~/http';
-import { Button, Container, IconButton, RadixDialog, useToast } from '~/ui';
+import { Button, Container, IconButton, RadixDialog, RadixPopover, useToast } from '~/ui';
 import './Nav.scss';
 
 export const Nav = () => {
@@ -108,6 +108,25 @@ export const Nav = () => {
             <Link to="/">
               <img className="Nav__logo" src={logo} />
             </Link>
+            <Button navigateTo="/" size="sm">
+              Schedule
+            </Button>
+            <RadixPopover align="start" close={false} trigger={<Button size="sm">Availability</Button>}>
+              <div className="p-2">
+                <ul>
+                  <li>
+                    <Button fluid navigateTo="/client-availability" size="xs" style={{ textAlign: 'left' }}>
+                      Clients
+                    </Button>
+                  </li>
+                  <li>
+                    <Button fluid navigateTo="/tech-availability" size="xs" style={{ textAlign: 'left' }}>
+                      Technicians
+                    </Button>
+                  </li>
+                </ul>
+              </div>
+            </RadixPopover>
             <div className="Nav__spacer"></div>
             {!user ? renderAuthLinks() : renderUserMenu()}
           </div>
