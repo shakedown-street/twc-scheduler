@@ -30,6 +30,7 @@ isort
 black
 bandit
 coverage
+djlint
 
 # production
 psycopg2-binary==2.9.10
