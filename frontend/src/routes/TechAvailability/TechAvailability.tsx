@@ -1,15 +1,23 @@
 import clsx from 'clsx';
 import React from 'react';
 import { AvailabilityModel, BlockModel, TechnicianModel } from '~/api';
+import { TechnicianForm } from '~/components/TechnicianForm/TechnicianForm';
 import { Block } from '~/types/Block';
 import { Technician } from '~/types/Technician';
-import { Card, Container } from '~/ui';
+import { Button, Card, Container, RadixDialog } from '~/ui';
 import { formatTimeShort } from '~/utils/time';
 import './TechAvailability.scss';
 
 export const TechAvailability = () => {
   const [blocks, setBlocks] = React.useState<Block[]>([]);
   const [technicians, setTechnicians] = React.useState<Technician[]>([]);
+  const [technicianForm, setTechnicianForm] = React.useState<{
+    open: boolean;
+    technician: Technician | undefined;
+  }>({
+    open: false,
+    technician: undefined,
+  });
 
   const days = [0, 1, 2, 3, 4];
 
@@ -23,6 +31,31 @@ export const TechAvailability = () => {
       setTechnicians(technicians);
     });
   }, []);
+
+  function openTechnicianForm(technician: Technician | undefined = undefined) {
+    setTechnicianForm({
+      ...technicianForm,
+      open: true,
+      technician,
+    });
+  }
+
+  function onCreate(technician: Technician) {
+    const copySorted = [...technicians, technician].sort((a, b) => a.first_name.localeCompare(b.first_name));
+
+    setTechnicians(copySorted);
+    setTechnicianForm({ ...technicianForm, open: false, technician: undefined });
+  }
+
+  function onUpdate(updated: Technician) {
+    setTechnicians(technicians.map((c) => (c.id === updated.id ? Object.assign({}, c, updated) : c)));
+    setTechnicianForm({ ...technicianForm, open: false, technician: undefined });
+  }
+
+  function onDelete(deleted: Technician) {
+    setTechnicians(technicians.filter((c) => c.id !== deleted.id));
+    setTechnicianForm({ ...technicianForm, open: false, technician: undefined });
+  }
 
   function totalRequestedHours() {
     return technicians.reduce((total, technician) => total + (technician.requested_hours || 0), 0);
@@ -109,7 +142,12 @@ export const TechAvailability = () => {
   return (
     <>
       <Container>
-        <h1 className="my-8">Technician Availability</h1>
+        <div className="flex align-center justify-between gap-4 my-8">
+          <h1>Technician Availability</h1>
+          <Button color="primary" onClick={() => setTechnicianForm({ ...technicianForm, open: true })} variant="raised">
+            Create Technician
+          </Button>
+        </div>
         <Card fluid>
           <table className="TechAvailability__table">
             <thead>
@@ -133,7 +171,9 @@ export const TechAvailability = () => {
                       backgroundColor: technician.color,
                     }}
                   >
-                    {technician.first_name} {technician.last_name}
+                    <a href="#" onClick={() => openTechnicianForm(technician)} style={{ color: 'black' }}>
+                      {technician.first_name} {technician.last_name}
+                    </a>
                   </td>
                   <td
                     style={{
@@ -162,6 +202,24 @@ export const TechAvailability = () => {
           </table>
         </Card>
       </Container>
+      <RadixDialog
+        title={`${technicianForm.technician ? 'Update' : 'Create'} Technician`}
+        open={technicianForm.open}
+        onOpenChange={(open) => setTechnicianForm({ ...technicianForm, open, technician: undefined })}
+      >
+        <div className="p-6">
+          <h3 className="mb-4">{technicianForm.technician ? 'Update' : 'Create'} Technician</h3>
+          <TechnicianForm
+            technician={technicianForm.technician}
+            onCancel={() => {
+              setTechnicianForm({ ...technicianForm, open: false, technician: undefined });
+            }}
+            onCreate={onCreate}
+            onDelete={onDelete}
+            onUpdate={onUpdate}
+          />
+        </div>
+      </RadixDialog>
     </>
   );
 };

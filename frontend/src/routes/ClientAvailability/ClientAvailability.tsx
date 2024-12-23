@@ -1,15 +1,23 @@
 import clsx from 'clsx';
 import React from 'react';
 import { AvailabilityModel, BlockModel, ClientModel } from '~/api';
+import { ClientForm } from '~/components/ClientForm/ClientForm';
 import { Block } from '~/types/Block';
 import { Client } from '~/types/Client';
-import { Card, Container } from '~/ui';
+import { Button, Card, Container, RadixDialog } from '~/ui';
 import { formatTimeShort } from '~/utils/time';
 import './ClientAvailability.scss';
 
 export const ClientAvailability = () => {
   const [blocks, setBlocks] = React.useState<Block[]>([]);
   const [clients, setClients] = React.useState<Client[]>([]);
+  const [clientForm, setClientForm] = React.useState<{
+    open: boolean;
+    client: Client | undefined;
+  }>({
+    open: false,
+    client: undefined,
+  });
 
   const days = [0, 1, 2, 3, 4];
 
@@ -23,6 +31,31 @@ export const ClientAvailability = () => {
       setClients(clients);
     });
   }, []);
+
+  function openClientForm(client: Client | undefined = undefined) {
+    setClientForm({
+      ...clientForm,
+      open: true,
+      client,
+    });
+  }
+
+  function onCreate(client: Client) {
+    const copySorted = [...clients, client].sort((a, b) => a.first_name.localeCompare(b.first_name));
+
+    setClients(copySorted);
+    setClientForm({ ...clientForm, open: false, client: undefined });
+  }
+
+  function onUpdate(updated: Client) {
+    setClients(clients.map((c) => (c.id === updated.id ? Object.assign({}, c, updated) : c)));
+    setClientForm({ ...clientForm, open: false, client: undefined });
+  }
+
+  function onDelete(deleted: Client) {
+    setClients(clients.filter((c) => c.id !== deleted.id));
+    setClientForm({ ...clientForm, open: false, client: undefined });
+  }
 
   function totalPrescribedHours() {
     return clients.reduce((total, client) => total + (client.prescribed_hours || 0), 0);
@@ -107,7 +140,12 @@ export const ClientAvailability = () => {
   return (
     <>
       <Container>
-        <h1 className="my-8">Client Availability</h1>
+        <div className="flex align-center justify-between gap-4 my-8">
+          <h1>Client Availability</h1>
+          <Button color="primary" onClick={() => setClientForm({ ...clientForm, open: true })} variant="raised">
+            Create Client
+          </Button>
+        </div>
         <Card fluid>
           <table className="ClientAvailability__table">
             <thead>
@@ -128,7 +166,9 @@ export const ClientAvailability = () => {
               {clients.map((client) => (
                 <tr key={client.id}>
                   <td>
-                    {client.first_name} {client.last_name}
+                    <a href="#" onClick={() => openClientForm(client)}>
+                      {client.first_name} {client.last_name}
+                    </a>
                   </td>
                   <td
                     style={{
@@ -160,6 +200,24 @@ export const ClientAvailability = () => {
           </table>
         </Card>
       </Container>
+      <RadixDialog
+        title={`${clientForm.client ? 'Update' : 'Create'} Client`}
+        open={clientForm.open}
+        onOpenChange={(open) => setClientForm({ ...clientForm, open, client: undefined })}
+      >
+        <div className="p-6">
+          <h3 className="mb-4">{clientForm.client ? 'Update' : 'Create'} Client</h3>
+          <ClientForm
+            client={clientForm.client}
+            onCancel={() => {
+              setClientForm({ ...clientForm, open: false, client: undefined });
+            }}
+            onCreate={onCreate}
+            onDelete={onDelete}
+            onUpdate={onUpdate}
+          />
+        </div>
+      </RadixDialog>
     </>
   );
 };
