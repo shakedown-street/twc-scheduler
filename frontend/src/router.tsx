@@ -40,10 +40,6 @@ export const routes: RouteObject[] = [
     element: <App />,
     children: [
       {
-        path: '/',
-        element: <Home />,
-      },
-      {
         path: '/login',
         element: <Login />,
       },
@@ -66,6 +62,14 @@ export const routes: RouteObject[] = [
       {
         path: '/verify-email/:uid/:token',
         element: <VerifyEmail />,
+      },
+      {
+        path: '/',
+        element: (
+          <AuthGuard>
+            <Home />
+          </AuthGuard>
+        ),
       },
       {
         path: '/profile',
