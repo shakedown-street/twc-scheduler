@@ -10,18 +10,20 @@ import { formatTimeTimeline, isBetweenInclusiveStart, isOnTheHour } from '~/util
 import './Home.scss';
 
 export type TimeSlotTableProps = {
-  day: number;
   clients: Client[];
+  day: number;
   onClickBlockSlot: (args: { client: Client; block: Block }) => void;
+  onDeleteAppointment?: (appointment: Appointment) => void;
 };
 
-export const TimeSlotTable = ({ day, clients, onClickBlockSlot }: TimeSlotTableProps) => {
+export const TimeSlotTable = ({ clients, day, onClickBlockSlot, onDeleteAppointment }: TimeSlotTableProps) => {
   const [blocks, setBlocks] = React.useState<Block[]>([]);
-  const timeSlots = generateTimeSlots('08:00:00', '19:00:00', 15);
+  const [timeSlots, setTimeSlots] = React.useState<string[]>([]);
 
   React.useEffect(() => {
     BlockModel.all().then((blocks) => {
       setBlocks(blocks);
+      setTimeSlots(generateTimeSlots(blocks[0].start_time, blocks[blocks.length - 1].end_time, 15));
     });
   }, []);
 
@@ -89,12 +91,26 @@ export const TimeSlotTable = ({ day, clients, onClickBlockSlot }: TimeSlotTableP
   }
 
   function clickSlot(client: Client, time: string) {
+    if (isSlotAppointment(time, client.appointments || [])) {
+      const appointment = client.appointments
+        ?.filter((a) => a.day === day)
+        .find((appointment) => {
+          return isBetweenInclusiveStart(time, appointment.start_time, appointment.end_time);
+        });
+      if (!appointment) {
+        return;
+      }
+
+      onDeleteAppointment?.(appointment);
+      return;
+    }
     if (isSlotBlock(time)) {
       const block = blocks.find((block) => isBetweenInclusiveStart(time, block.start_time, block.end_time));
       if (!block) {
         return;
       }
       onClickBlockSlot?.({ client, block });
+      return;
     }
   }
 
@@ -158,6 +174,7 @@ export const CreateAppointment = ({ client, day, block, onSuccess, ...rest }: Cr
     if (!client || !block) {
       return;
     }
+    setSelectedTechnicianId('');
     ClientModel.detailAction(
       client.id,
       'available_techs',
@@ -212,7 +229,7 @@ export const CreateAppointment = ({ client, day, block, onSuccess, ...rest }: Cr
           ))}
         </Select>
         <div className="mt-4 flex justify-end">
-          <Button color="primary" type="submit" variant="raised">
+          <Button color="primary" disabled={!selectedTechnicianId} type="submit" variant="raised">
             Create Appointment
           </Button>
         </div>
@@ -289,6 +306,16 @@ export const Home = () => {
               block,
             })
           }
+          onDeleteAppointment={(appointment) => {
+            AppointmentModel.delete(appointment.id).then(() => {
+              ClientModel.all({
+                expand_appointments: true,
+                expand_availabilities: true,
+              }).then((clients) => {
+                setClients(clients);
+              });
+            });
+          }}
         />
       </Container>
       <CreateAppointment {...createAppointmentDialog} />
