@@ -5,6 +5,7 @@ from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 
 from schedule_builder.mixins import TimestampMixin, UUIDPrimaryKeyMixin
+from .utils import get_difference_in_minutes
 
 
 class Technician(UUIDPrimaryKeyMixin, TimestampMixin):
@@ -27,6 +28,39 @@ class Technician(UUIDPrimaryKeyMixin, TimestampMixin):
     class Meta:
         ordering = ["first_name", "last_name"]
 
+    @property
+    def total_hours_by_day(self):
+        hours = []
+
+        for day in range(7):
+            total_minutes = sum(
+                [
+                    get_difference_in_minutes(
+                        appointment.start_time, appointment.end_time
+                    )
+                    for appointment in self.appointments.filter(day=day)
+                ]
+            )
+            hours.append(round(total_minutes / 60, 2))
+
+        return hours
+
+    @property
+    def total_hours(self):
+        total_minutes = sum(
+            [
+                get_difference_in_minutes(appointment.start_time, appointment.end_time)
+                for appointment in self.appointments.all()
+            ]
+        )
+        return round(total_minutes / 60, 2)
+
+    @property
+    def is_maxed_on_sessions(self):
+        return (
+            self.total_hours > self.requested_hours - 3
+        )  # -3 since that's how long blocks are
+
 
 class Client(UUIDPrimaryKeyMixin, TimestampMixin):
     first_name = models.CharField(max_length=30)
@@ -47,6 +81,39 @@ class Client(UUIDPrimaryKeyMixin, TimestampMixin):
 
     class Meta:
         ordering = ["first_name", "last_name"]
+
+    @property
+    def total_hours_by_day(self):
+        hours = []
+
+        for day in range(7):
+            total_minutes = sum(
+                [
+                    get_difference_in_minutes(
+                        appointment.start_time, appointment.end_time
+                    )
+                    for appointment in self.appointments.filter(day=day)
+                ]
+            )
+            hours.append(round(total_minutes / 60, 2))
+
+        return hours
+
+    @property
+    def total_hours(self):
+        total_minutes = sum(
+            [
+                get_difference_in_minutes(appointment.start_time, appointment.end_time)
+                for appointment in self.appointments.all()
+            ]
+        )
+        return round(total_minutes / 60, 2)
+
+    @property
+    def is_maxed_on_sessions(self):
+        return (
+            self.total_hours > self.prescribed_hours - 3
+        )  # -3 since that's how long blocks are
 
 
 class Block(models.Model):
@@ -95,6 +162,7 @@ class Appointment(UUIDPrimaryKeyMixin, TimestampMixin):
     )
     start_time = models.TimeField()
     end_time = models.TimeField()
+    in_clinic = models.BooleanField(default=False)
 
     def __str__(self):
         return f"{self.client} - {self.technician} - D{self.day} {self.start_time} - {self.end_time}"

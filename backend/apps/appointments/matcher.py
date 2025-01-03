@@ -21,6 +21,11 @@ def find_available_technicians(
     if client.req_spanish_speaking:
         qs = qs.filter(spanish_speaking=True)
 
+    # filter out technicians who are maxed out on appointments for the week
+    for tech in qs:
+        if tech.is_maxed_on_sessions:
+            qs = qs.exclude(pk=tech.pk)
+
     # filter out technicians who are not available on the given day and block
     qs = qs.filter(availabilities__day=day, availabilities__block=block)
 

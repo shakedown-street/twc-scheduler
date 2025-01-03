@@ -26,6 +26,7 @@ class AvailabilityTestCase(TestCase):
             last_name="Technician",
             skill_level=1,
             spanish_speaking=False,
+            requested_hours=3,
         )
 
         # Make client available for both blocks
@@ -131,6 +132,36 @@ class AvailabilityTestCase(TestCase):
         """
         Assert that a technician is only returned if they are not already booked
         for the given day and block.
+        """
+
+        # Find available technicians
+        block_1_technicians = find_available_technicians(self.client, 0, self.block_1)
+
+        # Assert that the technician is available for block 1
+        self.assertIn(self.technician, block_1_technicians)
+        self.assertEqual(len(block_1_technicians), 1)
+        self.assertEqual(block_1_technicians[0], self.technician)
+
+        # Create an appointment for the technician
+        Appointment.objects.create(
+            client=self.client,
+            technician=self.technician,
+            day=0,
+            start_time=self.block_1.start_time,
+            end_time=self.block_1.end_time,
+        )
+
+        # Find available technicians
+        block_1_technicians = find_available_technicians(self.client, 0, self.block_1)
+
+        # Assert that the technician is not available for block 1
+        self.assertNotIn(self.technician, block_1_technicians)
+        self.assertEqual(len(block_1_technicians), 0)
+
+    def test_maxed_on_sessions(self):
+        """
+        Assert that a technician is only returned if they are not maxed out on
+        sessions for the week.
         """
 
         # Find available technicians

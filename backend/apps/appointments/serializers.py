@@ -37,6 +37,10 @@ class ClientSerializer(serializers.ModelSerializer):
         data = super().to_representation(instance)
         request = self.context.get("request")
 
+        data["total_hours"] = instance.total_hours
+        data["total_hours_by_day"] = instance.total_hours_by_day
+        data["is_maxed_on_sessions"] = instance.is_maxed_on_sessions
+
         if request and request.query_params.get("expand_appointments"):
             data["appointments"] = AppointmentSerializer(
                 instance.appointments.all(),
@@ -62,6 +66,17 @@ class TechnicianSerializer(serializers.ModelSerializer):
     def to_representation(self, instance):
         data = super().to_representation(instance)
         request = self.context.get("request")
+
+        data["total_hours"] = instance.total_hours
+        data["total_hours_by_day"] = instance.total_hours_by_day
+        data["is_maxed_on_sessions"] = instance.is_maxed_on_sessions
+
+        if request and request.query_params.get("expand_appointments"):
+            data["appointments"] = AppointmentSerializer(
+                instance.appointments,
+                many=True,
+                context=self.context,
+            ).data
 
         if request and request.query_params.get("expand_availabilities"):
             data["availabilities"] = AvailabilitySerializer(
