@@ -1,4 +1,4 @@
-import { parse, isBefore, isAfter, format } from 'date-fns';
+import { differenceInMinutes, format, isAfter, isBefore, parse } from 'date-fns';
 
 export function parseTime(time: string) {
   return parse(time, 'HH:mm:ss', new Date());
@@ -59,4 +59,11 @@ export function formatTimeTimeline(time: string) {
   const parsedTime = parse(time, 'HH:mm:ss', new Date());
 
   return isOnTheHour(time) ? format(parsedTime, 'h') : format(parsedTime, 'm');
+}
+
+export function differenceInHoursFractional(startTime: string, endTime: string) {
+  const start = parseTime(startTime);
+  const end = parseTime(endTime);
+  const difference = differenceInMinutes(end, start) / 60;
+  return parseFloat(difference.toFixed(2));
 }
