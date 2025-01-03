@@ -12,6 +12,7 @@ import { CheckoutSuccess } from './features/payments/routes/CheckoutSuccess/Chec
 import { ClientAvailability } from './routes/ClientAvailability/ClientAvailability';
 import { Home } from './routes/Home/Home';
 import { NotFound } from './routes/NotFound/NotFound';
+import { Sheet1 } from './routes/Sheet1/Sheet1';
 import { StyleGuide } from './routes/StyleGuide/StyleGuide';
 import { TechAvailability } from './routes/TechAvailability/TechAvailability';
 
@@ -92,6 +93,14 @@ export const routes: RouteObject[] = [
         element: (
           <AuthGuard>
             <CheckoutSuccess />
+          </AuthGuard>
+        ),
+      },
+      {
+        path: '/sheet1',
+        element: (
+          <AuthGuard>
+            <Sheet1 />
           </AuthGuard>
         ),
       },

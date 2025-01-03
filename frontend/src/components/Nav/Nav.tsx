@@ -111,6 +111,9 @@ export const Nav = () => {
             <Button navigateTo="/" size="sm">
               Schedule
             </Button>
+            <Button navigateTo="/sheet1" size="sm">
+              Sheet 1
+            </Button>
             <RadixPopover align="start" close={false} trigger={<Button size="sm">Availability</Button>}>
               <div className="p-2">
                 <ul>
