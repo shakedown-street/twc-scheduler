@@ -39,3 +39,24 @@ def find_available_technicians(
             qs = qs.exclude(pk=tech.pk)
 
     return qs.distinct()
+
+
+def get_warnings(client: Client, tech: Technician, day: int, block: Block) -> list[str]:
+    warnings = []
+
+    # check if technician meets the client's skill and language requirements
+    if tech.skill_level < client.req_skill_level:
+        warnings.append(f"{tech} does not meet the client's skill level requirement")
+
+    if client.req_spanish_speaking and not tech.spanish_speaking:
+        warnings.append(f"{tech} does not speak Spanish")
+
+    # check if the technician is available on the given day and block
+    if not tech.availabilities.filter(day=day, block=block).exists():
+        warnings.append(f"{tech} is not available on {day} at {block}")
+
+    # check if the technician is maxed out on appointments for the week
+    if tech.is_maxed_on_sessions:
+        warnings.append(f"{tech} is maxed out on appointments for the week")
+
+    return warnings

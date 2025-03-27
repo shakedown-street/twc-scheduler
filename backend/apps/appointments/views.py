@@ -2,7 +2,7 @@ from rest_framework import exceptions, viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
 
-from .matcher import find_available_technicians
+from .matcher import find_available_technicians, get_warnings
 from .models import Appointment, Availability, Block, Client, Technician
 from .serializers import (
     AppointmentSerializer,
@@ -50,6 +50,26 @@ class ClientViewSet(viewsets.ModelViewSet):
             context={"request": request},
         )
         return Response(serializer.data)
+
+    @action(detail=True, methods=["get"])
+    def warning(self, request, pk=None):
+        client = self.get_object()
+        tech_id = request.query_params.get("tech_id")
+        day = request.query_params.get("day")
+        block_id = request.query_params.get("block")
+
+        try:
+            block = Block.objects.get(id=block_id)
+        except Block.DoesNotExist:
+            return exceptions.NotFound("Block not found")
+
+        try:
+            technician = Technician.objects.get(id=tech_id)
+        except Technician.DoesNotExist:
+            return exceptions.NotFound("Technician not found")
+
+        warnings = get_warnings(client, technician, day, block)
+        return Response(warnings)
 
 
 class TechnicianViewSet(viewsets.ModelViewSet):
