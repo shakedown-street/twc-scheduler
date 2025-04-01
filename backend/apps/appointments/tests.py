@@ -20,6 +20,7 @@ class AvailabilityTestCase(TestCase):
             last_name="Client",
             req_skill_level=1,
             req_spanish_speaking=False,
+            prescribed_hours=3,
         )
         self.technician = Technician.objects.create(
             first_name="Test",
@@ -34,20 +35,23 @@ class AvailabilityTestCase(TestCase):
             content_type=ContentType.objects.get_for_model(Client),
             object_id=self.client.id,
             day=0,
-            block=self.block_1,
+            start_time=self.block_1.start_time,
+            end_time=self.block_1.end_time,
         )
         Availability.objects.create(
             content_type=ContentType.objects.get_for_model(Client),
             object_id=self.client.id,
             day=0,
-            block=self.block_2,
+            start_time=self.block_2.start_time,
+            end_time=self.block_2.end_time,
         )
         # Make technician only available for block 1
         Availability.objects.create(
             content_type=ContentType.objects.get_for_model(Technician),
             object_id=self.technician.id,
             day=0,
-            block=self.block_1,
+            start_time=self.block_1.start_time,
+            end_time=self.block_1.end_time,
         )
 
     def test_req_skill_level(self):
@@ -172,6 +176,9 @@ class AvailabilityTestCase(TestCase):
         self.assertEqual(len(block_1_technicians), 1)
         self.assertEqual(block_1_technicians[0], self.technician)
 
+        # Assert that client is not maxed out on sessions
+        self.assertEqual(self.client.is_maxed_on_sessions, False)
+
         # Create an appointment for the technician
         Appointment.objects.create(
             client=self.client,
@@ -187,3 +194,88 @@ class AvailabilityTestCase(TestCase):
         # Assert that the technician is not available for block 1
         self.assertNotIn(self.technician, block_1_technicians)
         self.assertEqual(len(block_1_technicians), 0)
+
+        # Assert that the client is maxed out on sessions
+        self.assertEqual(self.client.is_maxed_on_sessions, True)
+
+    def test_total_hours_by_day(self):
+        """
+        Assert that the total hours for a client and technician are
+        calculated correctly for each day.
+        """
+
+        Appointment.objects.create(
+            client=self.client,
+            technician=self.technician,
+            day=0,
+            start_time=self.block_1.start_time,
+            end_time=self.block_1.end_time,
+        )
+        Appointment.objects.create(
+            client=self.client,
+            technician=self.technician,
+            day=0,
+            start_time="15:30:00",
+            end_time="18:30:00",
+        )
+        Appointment.objects.create(
+            client=self.client,
+            technician=self.technician,
+            day=1,
+            start_time="18:30:00",
+            end_time="21:00:00",
+        )
+        Appointment.objects.create(
+            client=self.client,
+            technician=self.technician,
+            day=3,
+            start_time="09:30:00",
+            end_time="12:30:00",
+        )
+
+        self.assertEqual(self.client.total_hours_by_day[0], 6)
+        self.assertEqual(self.client.total_hours_by_day[1], 2.5)
+        self.assertEqual(self.client.total_hours_by_day[2], 0)
+        self.assertEqual(self.client.total_hours_by_day[3], 3)
+        self.assertEqual(self.technician.total_hours_by_day[0], 6)
+        self.assertEqual(self.technician.total_hours_by_day[1], 2.5)
+        self.assertEqual(self.technician.total_hours_by_day[2], 0)
+        self.assertEqual(self.technician.total_hours_by_day[3], 3)
+
+    def test_total_hours(self):
+        """
+        Assert that the total hours for a client and technician are
+        calculated correctly.
+        """
+
+        Appointment.objects.create(
+            client=self.client,
+            technician=self.technician,
+            day=0,
+            start_time=self.block_1.start_time,
+            end_time=self.block_1.end_time,
+        )
+        Appointment.objects.create(
+            client=self.client,
+            technician=self.technician,
+            day=0,
+            start_time="15:30:00",
+            end_time="18:30:00",
+        )
+        Appointment.objects.create(
+            client=self.client,
+            technician=self.technician,
+            day=1,
+            start_time="18:30:00",
+            end_time="21:00:00",
+        )
+        Appointment.objects.create(
+            client=self.client,
+            technician=self.technician,
+            day=3,
+            start_time="09:30:00",
+            end_time="12:30:00",
+        )
+
+        self.assertEqual(self.client.total_hours, 11.5)
+        self.assertEqual(self.client.total_hours, 11.5)

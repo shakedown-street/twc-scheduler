@@ -14,7 +14,7 @@ from .serializers import (
 
 
 class AppointmentViewSet(viewsets.ModelViewSet):
-    queryset = Appointment.objects.all()
+    queryset = Appointment.objects.select_related("technician").all()
     serializer_class = AppointmentSerializer
 
 
@@ -31,6 +31,21 @@ class BlockViewSet(viewsets.ModelViewSet):
 class ClientViewSet(viewsets.ModelViewSet):
     queryset = Client.objects.all()
     serializer_class = ClientSerializer
+
+    def get_queryset(self):
+        qs = super().get_queryset()
+        request = self.request
+
+        prefetch_relations = []
+        if request.query_params.get("expand_appointments"):
+            prefetch_relations.append("appointments")
+        if request.query_params.get("expand_availabilities"):
+            prefetch_relations.append("availabilities")
+
+        if prefetch_relations:
+            qs = qs.prefetch_related(*prefetch_relations)
+
+        return qs
 
     @action(detail=True, methods=["get"])
     def available_techs(self, request, pk=None):
@@ -75,3 +90,18 @@ class ClientViewSet(viewsets.ModelViewSet):
 class TechnicianViewSet(viewsets.ModelViewSet):
     queryset = Technician.objects.all()
     serializer_class = TechnicianSerializer
+
+    def get_queryset(self):
+        qs = super().get_queryset()
+        request = self.request
+
+        prefetch_relations = []
+        if request.query_params.get("expand_appointments"):
+            prefetch_relations.append("appointments")
+        if request.query_params.get("expand_availabilities"):
+            prefetch_relations.append("availabilities")
+
+        if prefetch_relations:
+            qs = qs.prefetch_related(*prefetch_relations)
+
+        return qs

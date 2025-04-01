@@ -11,6 +11,7 @@ export const Sheet1 = () => {
       </Helmet>
       <Container className="my-12">
         <TechnicianHours />
+        <div className="my-8"></div>
         <ClientHours />
       </Container>
     </>

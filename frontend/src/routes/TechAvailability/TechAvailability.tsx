@@ -63,14 +63,20 @@ export const TechAvailability = () => {
 
   function isBlockAvailable(technician: Technician, day: number, block: Block) {
     return technician.availabilities?.some(
-      (availability) => availability.day === day && availability.block === block.id
+      (availability) =>
+        availability.day === day &&
+        availability.start_time === block.start_time &&
+        availability.end_time === block.end_time
     );
   }
 
   function toggleAvailability(technician: Technician, day: number, block: Block) {
     if (isBlockAvailable(technician, day, block)) {
       const availability = technician.availabilities?.find(
-        (availability) => availability.day === day && availability.block === block.id
+        (availability) =>
+          availability.day === day &&
+          availability.start_time === block.start_time &&
+          availability.end_time === block.end_time
       );
 
       if (!availability) {
@@ -86,7 +92,8 @@ export const TechAvailability = () => {
         content_type: 14, // TODO: don't hardcode this!!!
         object_id: technician.id,
         day: day,
-        block: block.id,
+        start_time: block.start_time,
+        end_time: block.end_time,
       }).then((availability) => {
         technician.availabilities = [...(technician.availabilities || []), availability.data];
         setTechnicians([...technicians]);

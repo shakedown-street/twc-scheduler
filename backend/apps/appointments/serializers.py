@@ -11,6 +11,8 @@ class AppointmentSerializer(serializers.ModelSerializer):
     def to_representation(self, instance):
         data = super().to_representation(instance)
 
+        data["technician_first_name"] = instance.technician.first_name
+        data["technician_last_name"] = instance.technician.last_name
         data["technician_color"] = instance.technician.color
 
         return data

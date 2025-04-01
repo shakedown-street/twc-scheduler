@@ -23,7 +23,11 @@ export const TechnicianHours = () => {
 
   function isAvailable(technician: Technician, day: number, block: Block) {
     return technician.availabilities?.some((availability) => {
-      return availability.day === day && availability.block === block.id;
+      return (
+        availability.day === day &&
+        availability.start_time === block.start_time &&
+        availability.end_time === block.end_time
+      );
     });
   }
 

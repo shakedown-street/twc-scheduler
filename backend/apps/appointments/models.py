@@ -3,8 +3,8 @@ from django.contrib.contenttypes.fields import GenericForeignKey, GenericRelatio
 from django.contrib.contenttypes.models import ContentType
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
-
 from schedule_builder.mixins import TimestampMixin, UUIDPrimaryKeyMixin
+
 from .utils import get_difference_in_minutes
 
 
@@ -57,9 +57,8 @@ class Technician(UUIDPrimaryKeyMixin, TimestampMixin):
 
     @property
     def is_maxed_on_sessions(self):
-        return (
-            self.total_hours > self.requested_hours - 3
-        )  # -3 since that's how long blocks are
+        # TODO: Do not hard code the -3.  This is how long blocks are.
+        return self.total_hours > self.requested_hours - 3
 
 
 class Client(UUIDPrimaryKeyMixin, TimestampMixin):
@@ -111,9 +110,8 @@ class Client(UUIDPrimaryKeyMixin, TimestampMixin):
 
     @property
     def is_maxed_on_sessions(self):
-        return (
-            self.total_hours > self.prescribed_hours - 3
-        )  # -3 since that's how long blocks are
+        # TODO: Do not hard code the -3.  This is how long blocks are.
+        return self.total_hours > self.prescribed_hours - 3
 
 
 class Block(models.Model):
@@ -135,19 +133,16 @@ class Availability(UUIDPrimaryKeyMixin, TimestampMixin):
     day = models.IntegerField(
         default=0, validators=[MinValueValidator(0), MaxValueValidator(6)]
     )
-    block = models.ForeignKey(
-        Block,
-        related_name="availabilities",
-        on_delete=models.CASCADE,
-    )
+    start_time = models.TimeField()
+    end_time = models.TimeField()
 
     def __str__(self):
-        return f"{self.object} - D{self.day} B{self.block}"
+        return f"{self.object} - D{self.day} ({self.start_time}-{self.end_time})"
 
     class Meta:
-        ordering = ["content_type", "object_id", "day", "block"]
+        ordering = ["content_type", "object_id", "day", "start_time"]
         verbose_name_plural = "Availabilities"
-        unique_together = ["content_type", "object_id", "day", "block"]
+        unique_together = ["content_type", "object_id", "day", "start_time"]
 
 
 class Appointment(UUIDPrimaryKeyMixin, TimestampMixin):

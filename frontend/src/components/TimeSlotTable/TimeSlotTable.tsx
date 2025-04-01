@@ -53,7 +53,9 @@ export const TimeSlotTable = ({ clients, day, onClickBlockSlot, onDeleteAppointm
     return client.availabilities
       ?.filter((a) => a.day === day)
       .some((availability) => {
-        const block = blocks.find((block) => block.id === availability.block);
+        const block = blocks.find(
+          (block) => block.start_time === availability.start_time && block.end_time === availability.end_time
+        );
         if (!block) {
           return false;
         }

@@ -20,7 +20,8 @@ class AvailabilityAdmin(admin.ModelAdmin):
         "object",
         "content_type",
         "day",
-        "block",
+        "start_time",
+        "end_time",
     )
 
 

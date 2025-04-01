@@ -5,5 +5,6 @@ export type Availability = {
   content_type: number;
   object_id: string;
   day: number;
-  block: number;
+  start_time: string;
+  end_time: string;
 };

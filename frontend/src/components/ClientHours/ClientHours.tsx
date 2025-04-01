@@ -23,7 +23,11 @@ export const ClientHours = () => {
 
   function isAvailable(client: Client, day: number, block: Block) {
     return client.availabilities?.some((availability) => {
-      return availability.day === day && availability.block === block.id;
+      return (
+        availability.day === day &&
+        availability.start_time === block.start_time &&
+        availability.end_time === block.end_time
+      );
     });
   }
 

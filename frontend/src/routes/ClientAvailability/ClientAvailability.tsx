@@ -62,13 +62,21 @@ export const ClientAvailability = () => {
   }
 
   function isBlockAvailable(client: Client, day: number, block: Block) {
-    return client.availabilities?.some((availability) => availability.day === day && availability.block === block.id);
+    return client.availabilities?.some(
+      (availability) =>
+        availability.day === day &&
+        availability.start_time === block.start_time &&
+        availability.end_time === block.end_time
+    );
   }
 
   function toggleAvailability(client: Client, day: number, block: Block) {
     if (isBlockAvailable(client, day, block)) {
       const availability = client.availabilities?.find(
-        (availability) => availability.day === day && availability.block === block.id
+        (availability) =>
+          availability.day === day &&
+          availability.start_time === block.start_time &&
+          availability.end_time === block.end_time
       );
 
       if (!availability) {
@@ -84,7 +92,8 @@ export const ClientAvailability = () => {
         content_type: 13, // TODO: don't hardcode this!!!
         object_id: client.id,
         day: day,
-        block: block.id,
+        start_time: block.start_time,
+        end_time: block.end_time,
       }).then((availability) => {
         client.availabilities = [...(client.availabilities || []), availability.data];
         setClients([...clients]);

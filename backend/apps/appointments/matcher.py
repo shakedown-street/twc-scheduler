@@ -27,7 +27,11 @@ def find_available_technicians(
             qs = qs.exclude(pk=tech.pk)
 
     # filter out technicians who are not available on the given day and block
-    qs = qs.filter(availabilities__day=day, availabilities__block=block)
+    qs = qs.filter(
+        availabilities__day=day,
+        availabilities__start_time__lte=block.start_time,
+        availabilities__end_time__gte=block.end_time,
+    )
 
     # filter out technicians who are already booked on the given day and block
     for tech in qs:
@@ -52,7 +56,11 @@ def get_warnings(client: Client, tech: Technician, day: int, block: Block) -> li
         warnings.append(f"{tech} does not speak Spanish")
 
     # check if the technician is available on the given day and block
-    if not tech.availabilities.filter(day=day, block=block).exists():
+    if not tech.availabilities.filter(
+        day=day,
+        start_time__lte=block.start_time,
+        end_time__gte=block.end_time,
+    ).exists():
         warnings.append(f"{tech} is not available on {day} at {block}")
 
     # check if the technician is maxed out on appointments for the week
