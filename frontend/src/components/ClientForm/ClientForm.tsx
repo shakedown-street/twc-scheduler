@@ -2,7 +2,7 @@ import React from 'react';
 import { useForm } from 'react-hook-form';
 import { ClientModel } from '~/api';
 import { Client } from '~/types/Client';
-import { Button, Input, Textarea, Toggle } from '~/ui';
+import { Button, Input, Textarea, Toggle, useToast } from '~/ui';
 import './ClientForm.scss';
 
 export type ClientFormProps = {
@@ -37,6 +37,7 @@ export const ClientForm = ({ client, onCancel, onCreate, onDelete, onUpdate }: C
       notes: client?.notes ?? '',
     },
   });
+  const toast = useToast();
 
   React.useEffect(() => {
     if (!client) {
@@ -61,22 +62,34 @@ export const ClientForm = ({ client, onCancel, onCreate, onDelete, onUpdate }: C
     if (!client) {
       return;
     }
-    ClientModel.delete(client.id).then(() => {
-      onDelete?.(client);
-      setConfirmDelete(false);
-    });
+    ClientModel.delete(client.id)
+      .then(() => {
+        onDelete?.(client);
+        setConfirmDelete(false);
+      })
+      .catch((err) => {
+        toast.errorResponse(err);
+      });
   }
 
   function onSubmit(data: ClientFormData) {
     if (client) {
-      ClientModel.update(client.id, data).then((updated) => {
-        onUpdate?.(updated.data);
-      });
+      ClientModel.update(client.id, data)
+        .then((updated) => {
+          onUpdate?.(updated.data);
+        })
+        .catch((err) => {
+          toast.errorResponse(err);
+        });
       return;
     }
-    ClientModel.create(data).then((created) => {
-      onCreate?.(created.data);
-    });
+    ClientModel.create(data)
+      .then((created) => {
+        onCreate?.(created.data);
+      })
+      .catch((err) => {
+        toast.errorResponse(err);
+      });
   }
 
   if (confirmDelete) {

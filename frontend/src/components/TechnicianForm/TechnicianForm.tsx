@@ -2,7 +2,7 @@ import React from 'react';
 import { useForm } from 'react-hook-form';
 import { TechnicianModel } from '~/api';
 import { Technician } from '~/types/Technician';
-import { Button, Input, Textarea, Toggle } from '~/ui';
+import { Button, Input, Textarea, Toggle, useToast } from '~/ui';
 import './TechnicianForm.scss';
 
 export type TechnicianFormProps = {
@@ -37,6 +37,7 @@ export const TechnicianForm = ({ technician, onCancel, onCreate, onDelete, onUpd
       notes: technician?.notes ?? '',
     },
   });
+  const toast = useToast();
 
   React.useEffect(() => {
     if (!technician) {
@@ -61,22 +62,34 @@ export const TechnicianForm = ({ technician, onCancel, onCreate, onDelete, onUpd
     if (!technician) {
       return;
     }
-    TechnicianModel.delete(technician.id).then(() => {
-      onDelete?.(technician);
-      setConfirmDelete(false);
-    });
+    TechnicianModel.delete(technician.id)
+      .then(() => {
+        onDelete?.(technician);
+        setConfirmDelete(false);
+      })
+      .catch((err) => {
+        toast.errorResponse(err);
+      });
   }
 
   function onSubmit(data: TechnicianFormData) {
     if (technician) {
-      TechnicianModel.update(technician.id, data).then((updated) => {
-        onUpdate?.(updated.data);
-      });
+      TechnicianModel.update(technician.id, data)
+        .then((updated) => {
+          onUpdate?.(updated.data);
+        })
+        .catch((err) => {
+          toast.errorResponse(err);
+        });
       return;
     }
-    TechnicianModel.create(data).then((created) => {
-      onCreate?.(created.data);
-    });
+    TechnicianModel.create(data)
+      .then((created) => {
+        onCreate?.(created.data);
+      })
+      .catch((err) => {
+        toast.errorResponse(err);
+      });
   }
 
   if (confirmDelete) {
