@@ -61,7 +61,12 @@ class AvailabilityTestCase(TestCase):
         """
 
         # Technician is available
-        block_1_technicians = find_available_technicians(self.client, 0, self.block_1)
+        block_1_technicians = find_available_technicians(
+            self.client,
+            0,
+            self.block_1.start_time,
+            self.block_1.end_time,
+        )
         self.assertIn(self.technician, block_1_technicians)
         self.assertEqual(len(block_1_technicians), 1)
 
@@ -70,7 +75,12 @@ class AvailabilityTestCase(TestCase):
         self.client.save()
 
         # Technician is no longer available
-        block_1_technicians = find_available_technicians(self.client, 0, self.block_1)
+        block_1_technicians = find_available_technicians(
+            self.client,
+            0,
+            self.block_1.start_time,
+            self.block_1.end_time,
+        )
         self.assertNotIn(self.technician, block_1_technicians)
         self.assertEqual(len(block_1_technicians), 0)
 
@@ -79,7 +89,12 @@ class AvailabilityTestCase(TestCase):
         self.technician.save()
 
         # Technician is available again
-        block_1_technicians = find_available_technicians(self.client, 0, self.block_1)
+        block_1_technicians = find_available_technicians(
+            self.client,
+            0,
+            self.block_1.start_time,
+            self.block_1.end_time,
+        )
         self.assertIn(self.technician, block_1_technicians)
         self.assertEqual(len(block_1_technicians), 1)
 
@@ -91,7 +106,12 @@ class AvailabilityTestCase(TestCase):
         """
 
         # Technician is available
-        block_1_technicians = find_available_technicians(self.client, 0, self.block_1)
+        block_1_technicians = find_available_technicians(
+            self.client,
+            0,
+            self.block_1.start_time,
+            self.block_1.end_time,
+        )
         self.assertIn(self.technician, block_1_technicians)
         self.assertEqual(len(block_1_technicians), 1)
 
@@ -100,7 +120,12 @@ class AvailabilityTestCase(TestCase):
         self.client.save()
 
         # Technician is no longer available
-        block_1_technicians = find_available_technicians(self.client, 0, self.block_1)
+        block_1_technicians = find_available_technicians(
+            self.client,
+            0,
+            self.block_1.start_time,
+            self.block_1.end_time,
+        )
         self.assertNotIn(self.technician, block_1_technicians)
         self.assertEqual(len(block_1_technicians), 0)
 
@@ -109,7 +134,12 @@ class AvailabilityTestCase(TestCase):
         self.technician.save()
 
         # Technician is available again
-        block_1_technicians = find_available_technicians(self.client, 0, self.block_1)
+        block_1_technicians = find_available_technicians(
+            self.client,
+            0,
+            self.block_1.start_time,
+            self.block_1.end_time,
+        )
         self.assertIn(self.technician, block_1_technicians)
         self.assertEqual(len(block_1_technicians), 1)
 
@@ -120,8 +150,18 @@ class AvailabilityTestCase(TestCase):
         """
 
         # Find available technicians
-        block_1_technicians = find_available_technicians(self.client, 0, self.block_1)
-        block_2_technicians = find_available_technicians(self.client, 0, self.block_2)
+        block_1_technicians = find_available_technicians(
+            self.client,
+            0,
+            self.block_1.start_time,
+            self.block_1.end_time,
+        )
+        block_2_technicians = find_available_technicians(
+            self.client,
+            0,
+            self.block_2.start_time,
+            self.block_2.end_time,
+        )
 
         # Assert that the technician is available for block 1
         self.assertIn(self.technician, block_1_technicians)
@@ -139,7 +179,12 @@ class AvailabilityTestCase(TestCase):
         """
 
         # Find available technicians
-        block_1_technicians = find_available_technicians(self.client, 0, self.block_1)
+        block_1_technicians = find_available_technicians(
+            self.client,
+            0,
+            self.block_1.start_time,
+            self.block_1.end_time,
+        )
 
         # Assert that the technician is available for block 1
         self.assertIn(self.technician, block_1_technicians)
@@ -156,7 +201,12 @@ class AvailabilityTestCase(TestCase):
         )
 
         # Find available technicians
-        block_1_technicians = find_available_technicians(self.client, 0, self.block_1)
+        block_1_technicians = find_available_technicians(
+            self.client,
+            0,
+            self.block_1.start_time,
+            self.block_1.end_time,
+        )
 
         # Assert that the technician is not available for block 1
         self.assertNotIn(self.technician, block_1_technicians)
@@ -169,7 +219,12 @@ class AvailabilityTestCase(TestCase):
         """
 
         # Find available technicians
-        block_1_technicians = find_available_technicians(self.client, 0, self.block_1)
+        block_1_technicians = find_available_technicians(
+            self.client,
+            0,
+            self.block_1.start_time,
+            self.block_1.end_time,
+        )
 
         # Assert that the technician is available for block 1
         self.assertIn(self.technician, block_1_technicians)
@@ -189,7 +244,12 @@ class AvailabilityTestCase(TestCase):
         )
 
         # Find available technicians
-        block_1_technicians = find_available_technicians(self.client, 0, self.block_1)
+        block_1_technicians = find_available_technicians(
+            self.client,
+            0,
+            self.block_1.start_time,
+            self.block_1.end_time,
+        )
 
         # Assert that the technician is not available for block 1
         self.assertNotIn(self.technician, block_1_technicians)
