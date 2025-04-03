@@ -158,6 +158,7 @@ class Appointment(UUIDPrimaryKeyMixin, TimestampMixin):
     start_time = models.TimeField()
     end_time = models.TimeField()
     in_clinic = models.BooleanField(default=False)
+    notes = models.TextField(blank=True)
 
     def __str__(self):
         return f"{self.client} - {self.technician} - D{self.day} {self.start_time} - {self.end_time}"
