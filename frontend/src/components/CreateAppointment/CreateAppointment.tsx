@@ -1,9 +1,9 @@
 import React from 'react';
-import { Controller, useForm } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import { AppointmentModel, ClientModel } from '~/api';
 import { Client } from '~/types/Client';
 import { Technician } from '~/types/Technician';
-import { Button, Checkbox, Input, RadixDialog, RadixDialogProps, Select, Textarea } from '~/ui';
+import { Button, Checkbox, Input, RadixDialog, RadixDialogProps, Select, Textarea, useToast } from '~/ui';
 import './CreateAppointment.scss';
 
 export type CreateAppointmentProps = RadixDialogProps & {
@@ -18,7 +18,7 @@ export type CreateAppointmentForm = {
   start_time: string;
   end_time: string;
   technician: string;
-  repeats?: number[];
+  // repeats?: number[];
   notes?: string;
   in_clinic?: boolean;
 };
@@ -34,6 +34,7 @@ export const CreateAppointment = ({
   const [availableTechnicians, setAvailableTechnicians] = React.useState<Technician[]>([]);
 
   const form = useForm<CreateAppointmentForm>();
+  const toast = useToast();
 
   const startTime = form.watch('start_time');
   const endTime = form.watch('end_time');
@@ -83,9 +84,13 @@ export const CreateAppointment = ({
       client: client?.id,
       day,
       ...data,
-    }).then(() => {
-      onSuccess?.();
-    });
+    })
+      .then(() => {
+        onSuccess?.();
+      })
+      .catch((err) => {
+        toast.errorResponse(err);
+      });
   }
 
   return (
@@ -105,7 +110,7 @@ export const CreateAppointment = ({
               </option>
             ))}
           </Select>
-          <Controller
+          {/* <Controller
             control={form.control}
             name="repeats"
             render={({ field }) => (
@@ -134,7 +139,7 @@ export const CreateAppointment = ({
                 </div>
               </div>
             )}
-          />
+          /> */}
           <Textarea fluid label="Notes" {...form.register('notes')} />
           <Checkbox label="In clinic" {...form.register('in_clinic')} />
           <div className="CreateAppointment__form__actions">
