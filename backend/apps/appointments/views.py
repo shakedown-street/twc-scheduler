@@ -51,14 +51,15 @@ class ClientViewSet(viewsets.ModelViewSet):
     def available_techs(self, request, pk=None):
         client = self.get_object()
         day = request.query_params.get("day")
-        block_id = request.query_params.get("block")
+        start_time = request.query_params.get("start_time")
+        end_time = request.query_params.get("end_time")
 
-        try:
-            block = Block.objects.get(id=block_id)
-        except Block.DoesNotExist:
-            return exceptions.NotFound("Block not found")
+        if not day or not start_time or not end_time:
+            return exceptions.ParseError("Missing required parameters")
 
-        available_technicians = find_available_technicians(client, day, block)
+        available_technicians = find_available_technicians(
+            client, day, start_time, end_time
+        )
         serializer = TechnicianSerializer(
             available_technicians,
             many=True,
@@ -71,19 +72,18 @@ class ClientViewSet(viewsets.ModelViewSet):
         client = self.get_object()
         tech_id = request.query_params.get("tech_id")
         day = request.query_params.get("day")
-        block_id = request.query_params.get("block")
+        start_time = request.query_params.get("start_time")
+        end_time = request.query_params.get("end_time")
 
-        try:
-            block = Block.objects.get(id=block_id)
-        except Block.DoesNotExist:
-            return exceptions.NotFound("Block not found")
+        if not tech_id or not day or not start_time or not end_time:
+            return exceptions.ParseError("Missing required parameters")
 
         try:
             technician = Technician.objects.get(id=tech_id)
         except Technician.DoesNotExist:
             return exceptions.NotFound("Technician not found")
 
-        warnings = get_warnings(client, technician, day, block)
+        warnings = get_warnings(client, technician, day, start_time, end_time)
         return Response(warnings)
 
 
