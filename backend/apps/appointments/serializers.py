@@ -22,6 +22,10 @@ class AvailabilitySerializer(serializers.ModelSerializer):
     class Meta:
         model = Availability
         fields = "__all__"
+        read_only_fields = [
+            "content_type",
+            "object_id",
+        ]
 
 
 class BlockSerialzier(serializers.ModelSerializer):

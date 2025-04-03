@@ -57,8 +57,7 @@ class Technician(UUIDPrimaryKeyMixin, TimestampMixin):
 
     @property
     def is_maxed_on_sessions(self):
-        # TODO: Do not hard code the -3.  This is how long blocks are.
-        return self.total_hours > self.requested_hours - 3
+        return self.total_hours >= self.requested_hours
 
 
 class Client(UUIDPrimaryKeyMixin, TimestampMixin):
@@ -110,8 +109,7 @@ class Client(UUIDPrimaryKeyMixin, TimestampMixin):
 
     @property
     def is_maxed_on_sessions(self):
-        # TODO: Do not hard code the -3.  This is how long blocks are.
-        return self.total_hours > self.prescribed_hours - 3
+        return self.total_hours >= self.prescribed_hours
 
 
 class Block(models.Model):
