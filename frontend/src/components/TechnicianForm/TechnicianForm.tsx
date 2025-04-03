@@ -113,11 +113,17 @@ export const TechnicianForm = ({ technician, onCancel, onCreate, onDelete, onUpd
   return (
     <form className="TechnicianForm" onSubmit={form.handleSubmit(onSubmit)}>
       <div className="TechnicianForm__row">
-        <Input fluid id="first_name" label="First Name" {...form.register('first_name')} />
-        <Input fluid id="last_name" label="Last Name" {...form.register('last_name')} />
+        <Input fluid id="first_name" label="First Name" {...form.register('first_name', { required: true })} />
+        <Input fluid id="last_name" label="Last Name" {...form.register('last_name', { required: true })} />
       </div>
       <div className="TechnicianForm__row">
-        <Input fluid id="requested_hours" label="Requested Hours" type="number" {...form.register('requested_hours')} />
+        <Input
+          fluid
+          id="requested_hours"
+          label="Requested Hours"
+          type="number"
+          {...form.register('requested_hours', { required: true })}
+        />
         <Input
           fluid
           id="skill_level"
@@ -125,12 +131,12 @@ export const TechnicianForm = ({ technician, onCancel, onCreate, onDelete, onUpd
           min={1}
           max={3}
           type="number"
-          {...form.register('skill_level')}
+          {...form.register('skill_level', { required: true })}
         />
       </div>
       <div className="Input__container">
         <label htmlFor="color">Color</label>
-        <input id="color" type="color" {...form.register('color')} />
+        <input id="color" type="color" {...form.register('color', { required: true })} />
       </div>
       <Toggle label="Spanish Speaking" {...form.register('spanish_speaking')} />
       <Textarea rows={4} fluid label="Notes" style={{ resize: 'none' }} {...form.register('notes')} />
@@ -142,7 +148,7 @@ export const TechnicianForm = ({ technician, onCancel, onCreate, onDelete, onUpd
         )}
         <div className="flex-1"></div>
         <Button onClick={() => onCancel?.()}>Cancel</Button>
-        <Button color="primary" type="submit" variant="raised">
+        <Button color="primary" disabled={!form.formState.isValid} type="submit" variant="raised">
           Save
         </Button>
       </div>

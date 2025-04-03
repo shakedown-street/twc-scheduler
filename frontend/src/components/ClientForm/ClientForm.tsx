@@ -113,12 +113,24 @@ export const ClientForm = ({ client, onCancel, onCreate, onDelete, onUpdate }: C
   return (
     <form className="ClientForm" onSubmit={form.handleSubmit(onSubmit)}>
       <div className="ClientForm__row">
-        <Input fluid label="First Name" id="first_name" {...form.register('first_name')} />
-        <Input fluid label="Last Name" id="last_name" {...form.register('last_name')} />
+        <Input fluid label="First Name" id="first_name" {...form.register('first_name', { required: true })} />
+        <Input fluid label="Last Name" id="last_name" {...form.register('last_name', { required: true })} />
       </div>
       <div className="ClientForm__row">
-        <Input fluid label="Prescribed Hours" type="number" {...form.register('prescribed_hours')} />
-        <Input fluid label="Required Skill Level" min={1} max={3} type="number" {...form.register('req_skill_level')} />
+        <Input
+          fluid
+          label="Prescribed Hours"
+          type="number"
+          {...form.register('prescribed_hours', { required: true })}
+        />
+        <Input
+          fluid
+          label="Required Skill Level"
+          min={1}
+          max={3}
+          type="number"
+          {...form.register('req_skill_level', { required: true })}
+        />
       </div>
       <Toggle label="Evaluation Done" {...form.register('eval_done')} />
       <Toggle label="Require Spanish Speaking" {...form.register('req_spanish_speaking')} />
@@ -131,7 +143,7 @@ export const ClientForm = ({ client, onCancel, onCreate, onDelete, onUpdate }: C
         )}
         <div className="flex-1"></div>
         <Button onClick={() => onCancel?.()}>Cancel</Button>
-        <Button color="primary" type="submit" variant="raised">
+        <Button color="primary" disabled={!form.formState.isValid} type="submit" variant="raised">
           Save
         </Button>
       </div>
