@@ -1,6 +1,7 @@
 import React from 'react';
 import { BlockModel } from '~/api';
 import { Appointment } from '~/types/Appointment';
+import { Availability } from '~/types/Availability';
 import { Block } from '~/types/Block';
 import { Client } from '~/types/Client';
 import { formatTimeTimeline, isBetweenInclusiveStart, isOnTheHour } from '~/utils/time';
@@ -9,11 +10,11 @@ import './TimeSlotTable.scss';
 export type TimeSlotTableProps = {
   clients: Client[];
   day: number;
-  onClickBlockSlot: (args: { client: Client; block: Block }) => void;
+  onClickAvailabilitySlot: (args: { client: Client; availability: Availability }) => void;
   onDeleteAppointment?: (appointment: Appointment) => void;
 };
 
-export const TimeSlotTable = ({ clients, day, onClickBlockSlot, onDeleteAppointment }: TimeSlotTableProps) => {
+export const TimeSlotTable = ({ clients, day, onClickAvailabilitySlot, onDeleteAppointment }: TimeSlotTableProps) => {
   const [blocks, setBlocks] = React.useState<Block[]>([]);
   const [timeSlots, setTimeSlots] = React.useState<string[]>([]);
 
@@ -43,74 +44,74 @@ export const TimeSlotTable = ({ clients, day, onClickBlockSlot, onDeleteAppointm
     return timeSlots;
   }
 
-  function isSlotBlock(time: string) {
-    return blocks.some((block) => {
+  function getSlotBlock(time: string) {
+    return blocks.find((block) => {
       return isBetweenInclusiveStart(time, block.start_time, block.end_time);
     });
   }
 
-  function isSlotAvailable(time: string, client: Client) {
-    return client.availabilities
-      ?.filter((a) => a.day === day)
-      .some((availability) => {
-        const block = blocks.find(
-          (block) => block.start_time === availability.start_time && block.end_time === availability.end_time
-        );
-        if (!block) {
-          return false;
-        }
-        return isBetweenInclusiveStart(time, block.start_time, block.end_time);
+  function getSlotAvailability(time: string, availabilities: Availability[]) {
+    if (!availabilities || availabilities.length === 0) {
+      return undefined;
+    }
+
+    return availabilities
+      .filter((a) => a.day === day)
+      .find((availability) => {
+        return isBetweenInclusiveStart(time, availability.start_time, availability.end_time);
       });
   }
 
-  function isSlotAppointment(time: string, appointments: Appointment[]) {
+  function getSlotAppointment(time: string, appointments: Appointment[]) {
+    if (!appointments || appointments.length === 0) {
+      return undefined;
+    }
+
     return appointments
       .filter((a) => a.day === day)
-      .some((appointment) => {
+      .find((appointment) => {
         return isBetweenInclusiveStart(time, appointment.start_time, appointment.end_time);
       });
   }
 
-  function slotColor(time: string, client: Client) {
-    if (isSlotAppointment(time, client.appointments || [])) {
-      const appointment = client.appointments
-        ?.filter((a) => a.day === day)
-        .find((appointment) => {
-          return isBetweenInclusiveStart(time, appointment.start_time, appointment.end_time);
-        });
-      return appointment?.technician_color || 'white';
+  function slotBackground(time: string, client: Client) {
+    const slotAppointment = getSlotAppointment(time, client.appointments || []);
+    const slotAvailability = getSlotAvailability(time, client.availabilities || []);
+    const slotBlock = getSlotBlock(time);
+
+    if (slotAppointment) {
+      if (slotAppointment.in_clinic) {
+        const color = slotAppointment.technician_color || 'white';
+        return `repeating-linear-gradient(45deg, white, white 4px, ${color} 4px, ${color} 8px)`;
+      }
+      return slotAppointment.technician_color || 'white';
     }
-    if (isSlotAvailable(time, client)) {
-      return 'lightgray';
+    if (slotAvailability) {
+      return '#cbd5e1'; // tw-slate-300
     }
-    if (isSlotBlock(time)) {
+    if (slotBlock) {
       return 'white';
     }
-    return 'gray';
+    return '#404040'; // tw-neutral-700
   }
 
   function clickSlot(client: Client, time: string) {
-    if (isSlotAppointment(time, client.appointments || [])) {
-      const appointment = client.appointments
-        ?.filter((a) => a.day === day)
-        .find((appointment) => {
-          return isBetweenInclusiveStart(time, appointment.start_time, appointment.end_time);
-        });
-      if (!appointment) {
-        return;
-      }
+    const slotAppointment = getSlotAppointment(time, client.appointments || []);
+    const slotAvailability = getSlotAvailability(time, client.availabilities || []);
+    // const slotBlock = getSlotBlock(time);
 
-      onDeleteAppointment?.(appointment);
+    if (slotAppointment) {
+      onDeleteAppointment?.(slotAppointment);
       return;
     }
-    if (isSlotBlock(time)) {
-      const block = blocks.find((block) => isBetweenInclusiveStart(time, block.start_time, block.end_time));
-      if (!block) {
-        return;
-      }
-      onClickBlockSlot?.({ client, block });
+    if (slotAvailability) {
+      onClickAvailabilitySlot?.({ client, availability: slotAvailability });
       return;
     }
+    // if (slotBlock) {
+    //   onClickBlockSlot?.({ client, block: slotBlock });
+    //   return;
+    // }
   }
 
   return (
@@ -123,7 +124,8 @@ export const TimeSlotTable = ({ clients, day, onClickBlockSlot, onDeleteAppointm
               key={slot}
               style={{
                 borderLeft: isOnTheHour(slot) ? '2px solid black' : undefined,
-                backgroundColor: isSlotBlock(slot) ? 'white' : 'gray',
+                backgroundColor: getSlotBlock(slot) ? 'white' : '#404040',
+                color: getSlotBlock(slot) ? 'black' : 'white',
                 fontWeight: isOnTheHour(slot) ? 'bold' : 'light',
               }}
             >
@@ -144,7 +146,7 @@ export const TimeSlotTable = ({ clients, day, onClickBlockSlot, onDeleteAppointm
                 className="TimeSlotTable__slot"
                 style={{
                   borderLeft: isOnTheHour(slot) ? '2px solid black' : undefined,
-                  backgroundColor: slotColor(slot, client),
+                  background: slotBackground(slot, client),
                 }}
                 onClick={() => {
                   clickSlot(client, slot);

@@ -1,11 +1,37 @@
-- override techs on create appointment
-  - should be able to put in any technician, even if it doesn't necessarily make sense. It should display warnings explaining why this person wasn't recommended to be scheduled for this appointment.
-- notes on create appointment
-- "in clinic" on client availability create
-- indicate that session is in clinic on schedule
-- hover card on appointments on schedule
-- "in clinic" on appointment create
+Target June 19th
+
+Suggested by Lyssa:
+
+- on _client_ availability, you should be able to indicate that the client is available for in clinic
+- should be able to hover over appointments on the schedule to see details about the appointment
+- clicking an appointment on the schedule should open the appointment details and allow you to edit or delete the appointment
+- when creating or editing an appointment, you should be able to override to select any technician for the appointment, even if they are not recommended, and see warnings about potential issues
 - on sheet one, hover card to see client details when hovering over a scheduled block
+- remaining sheet one matrix showing how many times a particular client has been scheduled with a technician
+- legend on sheet one
+
+Requested by Alycen and Amy:
+
+- add for all days "repeats"
+- availability needs to be by start/end time
+- are you sure you want to remove this availability
+- add a read only role
+- add "currently onboarding" field to the client
+- text color as well as background color for techs
+- max hours per day for techs
+- warning about split blocks
+- basic scheduling of OT and speech
+- sub list
+
+Additional info on the schedule:
+
+- tech name | blocks for the day | total hours | requested hours
+
+Done:
+
+- Allow manually setting the start and end time of an appointment
+- indicate that an appointment is in clinic on the schedule
+- indicate that an appointment is in clinic on sheet 1
 
 maybe:
 

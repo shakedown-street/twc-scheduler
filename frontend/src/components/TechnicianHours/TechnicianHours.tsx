@@ -2,6 +2,7 @@ import React from 'react';
 import { BlockModel, TechnicianModel } from '~/api';
 import { Block } from '~/types/Block';
 import { Technician } from '~/types/Technician';
+import { isBetweenInclusiveEnd, isBetweenInclusiveStart } from '~/utils/time';
 import './TechnicianHours.scss';
 
 export const TechnicianHours = () => {
@@ -25,18 +26,18 @@ export const TechnicianHours = () => {
     return technician.availabilities?.some((availability) => {
       return (
         availability.day === day &&
-        availability.start_time === block.start_time &&
-        availability.end_time === block.end_time
+        isBetweenInclusiveStart(availability.start_time, block.start_time, block.end_time) &&
+        isBetweenInclusiveEnd(availability.end_time, block.start_time, block.end_time)
       );
     });
   }
 
-  function hasSession(technician: Technician, day: number, block: Block) {
-    return technician.appointments?.some((appointment) => {
+  function getAppointments(technician: Technician, day: number, block: Block) {
+    return technician.appointments?.filter((appointment) => {
       return (
         appointment.day === day &&
-        appointment.start_time === block.start_time &&
-        appointment.end_time === block.end_time
+        isBetweenInclusiveStart(appointment.start_time, block.start_time, block.end_time) &&
+        isBetweenInclusiveEnd(appointment.end_time, block.start_time, block.end_time)
       );
     });
   }
@@ -44,25 +45,31 @@ export const TechnicianHours = () => {
   function getSkillLevelColor(skillLevel: number) {
     switch (skillLevel) {
       case 1:
-        return '#bbe2cf'; // green
+        return '#bbf7d0'; // tw-green-200
       case 2:
-        return '#fcf4c4'; // yellow
+        return '#fef08a'; // tw-yellow-200
       case 3:
-        return '#f7d1cf'; // red
+        return '#fecaca'; // tw-red-200
       default:
         return 'white';
     }
   }
 
-  function getCellColor(technician: Technician, day: number, block: Block) {
-    if (hasSession(technician, day, block)) {
-      return '#8ab053'; // green
+  function blockBackground(technician: Technician, day: number, block: Block) {
+    const appointments = getAppointments(technician, day, block) || [];
+
+    if (appointments.length > 0) {
+      const appointment = appointments[0];
+      if (appointment.in_clinic) {
+        return `repeating-linear-gradient(45deg, white, white 4px, #15803d 4px, #15803d 8px)`;
+      }
+      return '#15803d'; // tw-green-700
     } else if (isAvailable(technician, day, block) && technician.is_maxed_on_sessions) {
-      return '#8b0a17'; // red
+      return '#b91c1c'; // tw-red-700
     } else if (isAvailable(technician, day, block)) {
-      return '#e7f3ff'; // white
+      return '#cbd5e1'; // tw-slate-300
     } else {
-      return '#3c4656'; // gray
+      return '#404040'; // tw-neutral-700
     }
   }
 
@@ -82,9 +89,9 @@ export const TechnicianHours = () => {
           <col width="96px" />
           <col width="96px" />
           <col width="48px" />
-          {['M', 'T', 'W', 'TH', 'F'].map((day) => (
+          {['M', 'T', 'W', 'TH', 'F'].map(() => (
             <>
-              {blocks.map((block, blockIndex) => (
+              {blocks.map((block) => (
                 <col key={block.id} width="32px" />
               ))}
             </>
@@ -134,7 +141,7 @@ export const TechnicianHours = () => {
               <td>{technician.requested_hours}</td>
               <td
                 style={{
-                  color: technician.is_maxed_on_sessions ? '#c91421' : '#03de1c',
+                  color: technician.is_maxed_on_sessions ? '#dc2626' : '#16a34a',
                 }}
               >
                 {technician.is_maxed_on_sessions ? 'M' : 'A'}
@@ -145,7 +152,7 @@ export const TechnicianHours = () => {
                     <td
                       key={block.id}
                       style={{
-                        backgroundColor: getCellColor(technician, day, block),
+                        background: blockBackground(technician, day, block),
                       }}
                     ></td>
                   ))}

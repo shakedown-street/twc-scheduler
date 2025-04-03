@@ -5,6 +5,8 @@ export type Appointment = {
   day: number;
   start_time: string;
   end_time: string;
+  in_clinic: boolean;
+  notes: string;
   client: string;
   technician: string;
 

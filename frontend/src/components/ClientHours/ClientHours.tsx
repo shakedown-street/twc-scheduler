@@ -2,6 +2,7 @@ import React from 'react';
 import { BlockModel, ClientModel } from '~/api';
 import { Block } from '~/types/Block';
 import { Client } from '~/types/Client';
+import { isBetweenInclusiveEnd, isBetweenInclusiveStart } from '~/utils/time';
 import './ClientHours.scss';
 
 export const ClientHours = () => {
@@ -25,18 +26,18 @@ export const ClientHours = () => {
     return client.availabilities?.some((availability) => {
       return (
         availability.day === day &&
-        availability.start_time === block.start_time &&
-        availability.end_time === block.end_time
+        isBetweenInclusiveStart(availability.start_time, block.start_time, block.end_time) &&
+        isBetweenInclusiveEnd(availability.end_time, block.start_time, block.end_time)
       );
     });
   }
 
-  function getSessions(client: Client, day: number, block: Block) {
+  function getAppointments(client: Client, day: number, block: Block) {
     return client.appointments?.filter((appointment) => {
       return (
         appointment.day === day &&
-        appointment.start_time === block.start_time &&
-        appointment.end_time === block.end_time
+        isBetweenInclusiveStart(appointment.start_time, block.start_time, block.end_time) &&
+        isBetweenInclusiveEnd(appointment.end_time, block.start_time, block.end_time)
       );
     });
   }
@@ -44,28 +45,31 @@ export const ClientHours = () => {
   function getSkillLevelColor(skillLevel: number) {
     switch (skillLevel) {
       case 1:
-        return '#bbe2cf'; // green
+        return '#bbf7d0'; // tw-green-200
       case 2:
-        return '#fcf4c4'; // yellow
+        return '#fef08a'; // tw-yellow-200
       case 3:
-        return '#f7d1cf'; // red
+        return '#fecaca'; // tw-red-200
       default:
         return 'white';
     }
   }
 
-  function getCellColor(client: Client, day: number, block: Block) {
-    const sessions = getSessions(client, day, block) || [];
+  function blockBackground(client: Client, day: number, block: Block) {
+    const appointments = getAppointments(client, day, block) || [];
 
-    if (sessions.length > 0) {
-      return sessions[0].technician_color;
+    if (appointments.length > 0) {
+      const appointment = appointments[0];
+      if (appointment.in_clinic) {
+        const color = appointment.technician_color || 'white';
+        return `repeating-linear-gradient(45deg, white, white 4px, ${color} 4px, ${color} 8px)`;
+      }
+      return appointment.technician_color || 'white';
     }
-
     if (isAvailable(client, day, block)) {
-      return '#e7f3ff'; // white
+      return '#cbd5e1'; // tw-slate-300
     }
-
-    return '#3c4656'; // gray
+    return '#404040'; // tw-neutral-700
   }
 
   return (
@@ -84,9 +88,9 @@ export const ClientHours = () => {
           <col width="96px" />
           <col width="96px" />
           <col width="48px" />
-          {['M', 'T', 'W', 'TH', 'F'].map((day) => (
+          {['M', 'T', 'W', 'TH', 'F'].map(() => (
             <>
-              {blocks.map((block, blockIndex) => (
+              {blocks.map((block) => (
                 <col key={block.id} width="32px" />
               ))}
             </>
@@ -136,7 +140,7 @@ export const ClientHours = () => {
               <td>{client.prescribed_hours}</td>
               <td
                 style={{
-                  color: client.is_maxed_on_sessions ? '#c91421' : '#03de1c',
+                  color: client.is_maxed_on_sessions ? '#dc2626' : '#16a34a',
                 }}
               >
                 {client.is_maxed_on_sessions ? 'M' : 'A'}
@@ -147,7 +151,7 @@ export const ClientHours = () => {
                     <td
                       key={block.id}
                       style={{
-                        backgroundColor: getCellColor(client, day, block),
+                        background: blockBackground(client, day, block),
                       }}
                     ></td>
                   ))}

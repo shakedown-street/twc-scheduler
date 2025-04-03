@@ -1,0 +1,21 @@
+.CreateAppointment {
+  min-width: 24rem;
+  padding: 1.5rem;
+
+  &__form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+
+    &__row {
+      align-items: center;
+      display: flex;
+      gap: 1rem;
+    }
+
+    &__actions {
+      display: flex;
+      justify-content: flex-end;
+    }
+  }
+}

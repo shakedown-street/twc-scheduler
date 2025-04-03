@@ -13,10 +13,17 @@ export const Home = () => {
   const [createAppointmentDialog, setCreateAppointmentDialog] = React.useState<CreateAppointmentProps>({
     client: undefined,
     day: 0,
-    block: undefined,
+    initialStartTime: undefined,
+    initialEndTime: undefined,
     open: false,
     onOpenChange: (open: boolean) => {
-      setCreateAppointmentDialog((prev) => ({ ...prev, open }));
+      setCreateAppointmentDialog((prev) => ({
+        ...prev,
+        open,
+        client: undefined,
+        initialStartTime: undefined,
+        initialEndTime: undefined,
+      }));
     },
     onSuccess: () => {
       ClientModel.all({
@@ -25,7 +32,13 @@ export const Home = () => {
       }).then((clients) => {
         setClients(clients);
       });
-      setCreateAppointmentDialog((prev) => ({ ...prev, open: false }));
+      setCreateAppointmentDialog((prev) => ({
+        ...prev,
+        open: false,
+        client: undefined,
+        initialStartTime: undefined,
+        initialEndTime: undefined,
+      }));
     },
     title: 'Create Appointment',
   });
@@ -66,13 +79,14 @@ export const Home = () => {
         <TimeSlotTable
           clients={clients}
           day={day}
-          onClickBlockSlot={({ client, block }) =>
+          onClickAvailabilitySlot={({ client, availability }) =>
             setCreateAppointmentDialog({
               ...createAppointmentDialog,
               open: true,
               client,
               day,
-              block,
+              initialStartTime: availability.start_time,
+              initialEndTime: availability.end_time,
             })
           }
           onDeleteAppointment={(appointment) => {
