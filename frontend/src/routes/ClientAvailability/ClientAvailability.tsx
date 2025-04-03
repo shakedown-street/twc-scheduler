@@ -4,8 +4,8 @@ import { AvailabilityModel, BlockModel, ClientModel } from '~/api';
 import { ClientForm } from '~/components/ClientForm/ClientForm';
 import { Block } from '~/types/Block';
 import { Client } from '~/types/Client';
-import { Button, Card, Container, RadixDialog } from '~/ui';
-import { formatTimeShort } from '~/utils/time';
+import { Button, Card, Container, RadixDialog, useToast } from '~/ui';
+import { formatTimeShort, isBetweenInclusiveEnd, isBetweenInclusiveStart } from '~/utils/time';
 import './ClientAvailability.scss';
 
 export const ClientAvailability = () => {
@@ -18,6 +18,8 @@ export const ClientAvailability = () => {
     open: false,
     client: undefined,
   });
+
+  const toast = useToast();
 
   const days = [0, 1, 2, 3, 4];
 
@@ -61,71 +63,72 @@ export const ClientAvailability = () => {
     return clients.reduce((total, client) => total + (client.prescribed_hours || 0), 0);
   }
 
-  function isBlockAvailable(client: Client, day: number, block: Block) {
-    return client.availabilities?.some(
+  function getBlockAvailability(client: Client, day: number, block: Block) {
+    return client.availabilities?.find(
       (availability) =>
         availability.day === day &&
-        availability.start_time === block.start_time &&
-        availability.end_time === block.end_time
+        isBetweenInclusiveStart(availability.start_time, block.start_time, block.end_time) &&
+        isBetweenInclusiveEnd(availability.end_time, block.start_time, block.end_time)
     );
   }
 
   function toggleAvailability(client: Client, day: number, block: Block) {
-    if (isBlockAvailable(client, day, block)) {
-      const availability = client.availabilities?.find(
-        (availability) =>
-          availability.day === day &&
-          availability.start_time === block.start_time &&
-          availability.end_time === block.end_time
-      );
+    const blockAvailability = getBlockAvailability(client, day, block);
 
-      if (!availability) {
-        return;
-      }
-
-      AvailabilityModel.delete(availability.id).then(() => {
-        client.availabilities = client.availabilities?.filter((a) => a.id !== availability.id);
-        setClients([...clients]);
-      });
+    if (blockAvailability) {
+      AvailabilityModel.delete(blockAvailability.id)
+        .then(() => {
+          client.availabilities = client.availabilities?.filter((a) => a.id !== blockAvailability.id);
+          setClients([...clients]);
+        })
+        .catch((err) => {
+          toast.errorResponse(err);
+        });
     } else {
-      AvailabilityModel.create({
-        content_type: 13, // TODO: don't hardcode this!!!
-        object_id: client.id,
+      ClientModel.detailAction(client.id, 'create_availability', 'post', {
         day: day,
         start_time: block.start_time,
         end_time: block.end_time,
-      }).then((availability) => {
-        client.availabilities = [...(client.availabilities || []), availability.data];
-        setClients([...clients]);
-      });
+      })
+        .then((availability) => {
+          client.availabilities = [...(client.availabilities || []), availability.data];
+          setClients([...clients]);
+        })
+        .catch((err) => {
+          toast.errorResponse(err);
+        });
     }
   }
 
   function countClientsAvailableForBlock(day: number, block: Block) {
-    return clients.filter((client) => isBlockAvailable(client, day, block)).length;
+    return clients.filter((client) => !!getBlockAvailability(client, day, block)).length;
   }
 
   function renderAvailabilities(client: Client) {
     return days.map((day) =>
-      blocks.map((block, index) => (
-        <td
-          key={block.id}
-          className={clsx('ClientAvailability__table__block', {
-            'ClientAvailability__table__block--first': index === 0,
-            'ClientAvailability__table__block--last': index === blocks.length - 1,
-          })}
-          style={{
-            backgroundColor: isBlockAvailable(client, day, block) ? block.color : undefined,
-          }}
-          onClick={() => toggleAvailability(client, day, block)}
-        >
-          {isBlockAvailable(client, day, block) && (
-            <>
-              {formatTimeShort(block.start_time)}-{formatTimeShort(block.end_time)}
-            </>
-          )}
-        </td>
-      ))
+      blocks.map((block, index) => {
+        const blockAvailability = getBlockAvailability(client, day, block);
+
+        return (
+          <td
+            key={block.id}
+            className={clsx('ClientAvailability__table__block', {
+              'ClientAvailability__table__block--first': index === 0,
+              'ClientAvailability__table__block--last': index === blocks.length - 1,
+            })}
+            style={{
+              backgroundColor: blockAvailability ? block.color : undefined,
+            }}
+            onClick={() => toggleAvailability(client, day, block)}
+          >
+            {blockAvailability && (
+              <>
+                {formatTimeShort(blockAvailability.start_time)}-{formatTimeShort(blockAvailability.end_time)}
+              </>
+            )}
+          </td>
+        );
+      })
     );
   }
 

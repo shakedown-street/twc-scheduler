@@ -4,8 +4,8 @@ import { AvailabilityModel, BlockModel, TechnicianModel } from '~/api';
 import { TechnicianForm } from '~/components/TechnicianForm/TechnicianForm';
 import { Block } from '~/types/Block';
 import { Technician } from '~/types/Technician';
-import { Button, Card, Container, RadixDialog } from '~/ui';
-import { formatTimeShort } from '~/utils/time';
+import { Button, Card, Container, RadixDialog, useToast } from '~/ui';
+import { formatTimeShort, isBetweenInclusiveEnd, isBetweenInclusiveStart } from '~/utils/time';
 import './TechAvailability.scss';
 
 export const TechAvailability = () => {
@@ -18,6 +18,8 @@ export const TechAvailability = () => {
     open: false,
     technician: undefined,
   });
+
+  const toast = useToast();
 
   const days = [0, 1, 2, 3, 4];
 
@@ -61,71 +63,72 @@ export const TechAvailability = () => {
     return technicians.reduce((total, technician) => total + (technician.requested_hours || 0), 0);
   }
 
-  function isBlockAvailable(technician: Technician, day: number, block: Block) {
-    return technician.availabilities?.some(
+  function getBlockAvailability(technician: Technician, day: number, block: Block) {
+    return technician.availabilities?.find(
       (availability) =>
         availability.day === day &&
-        availability.start_time === block.start_time &&
-        availability.end_time === block.end_time
+        isBetweenInclusiveStart(availability.start_time, block.start_time, block.end_time) &&
+        isBetweenInclusiveEnd(availability.end_time, block.start_time, block.end_time)
     );
   }
 
   function toggleAvailability(technician: Technician, day: number, block: Block) {
-    if (isBlockAvailable(technician, day, block)) {
-      const availability = technician.availabilities?.find(
-        (availability) =>
-          availability.day === day &&
-          availability.start_time === block.start_time &&
-          availability.end_time === block.end_time
-      );
+    const blockAvailability = getBlockAvailability(technician, day, block);
 
-      if (!availability) {
-        return;
-      }
-
-      AvailabilityModel.delete(availability.id).then(() => {
-        technician.availabilities = technician.availabilities?.filter((a) => a.id !== availability.id);
-        setTechnicians([...technicians]);
-      });
+    if (blockAvailability) {
+      AvailabilityModel.delete(blockAvailability.id)
+        .then(() => {
+          technician.availabilities = technician.availabilities?.filter((a) => a.id !== blockAvailability.id);
+          setTechnicians([...technicians]);
+        })
+        .catch((err) => {
+          toast.errorResponse(err);
+        });
     } else {
-      AvailabilityModel.create({
-        content_type: 14, // TODO: don't hardcode this!!!
-        object_id: technician.id,
+      TechnicianModel.detailAction(technician.id, 'create_availability', 'post', {
         day: day,
         start_time: block.start_time,
         end_time: block.end_time,
-      }).then((availability) => {
-        technician.availabilities = [...(technician.availabilities || []), availability.data];
-        setTechnicians([...technicians]);
-      });
+      })
+        .then((availability) => {
+          technician.availabilities = [...(technician.availabilities || []), availability.data];
+          setTechnicians([...technicians]);
+        })
+        .catch((err) => {
+          toast.errorResponse(err);
+        });
     }
   }
 
   function countTechniciansAvailableForBlock(day: number, block: Block) {
-    return technicians.filter((technician) => isBlockAvailable(technician, day, block)).length;
+    return technicians.filter((technician) => !!getBlockAvailability(technician, day, block)).length;
   }
 
   function renderAvailabilities(technician: Technician) {
     return days.map((day) =>
-      blocks.map((block, index) => (
-        <td
-          key={block.id}
-          className={clsx('TechAvailability__table__block', {
-            'TechAvailability__table__block--first': index === 0,
-            'TechAvailability__table__block--last': index === blocks.length - 1,
-          })}
-          style={{
-            backgroundColor: isBlockAvailable(technician, day, block) ? block.color : undefined,
-          }}
-          onClick={() => toggleAvailability(technician, day, block)}
-        >
-          {isBlockAvailable(technician, day, block) && (
-            <>
-              {formatTimeShort(block.start_time)}-{formatTimeShort(block.end_time)}
-            </>
-          )}
-        </td>
-      ))
+      blocks.map((block, index) => {
+        const blockAvailability = getBlockAvailability(technician, day, block);
+
+        return (
+          <td
+            key={block.id}
+            className={clsx('TechAvailability__table__block', {
+              'TechAvailability__table__block--first': index === 0,
+              'TechAvailability__table__block--last': index === blocks.length - 1,
+            })}
+            style={{
+              backgroundColor: blockAvailability ? block.color : undefined,
+            }}
+            onClick={() => toggleAvailability(technician, day, block)}
+          >
+            {blockAvailability && (
+              <>
+                {formatTimeShort(blockAvailability.start_time)}-{formatTimeShort(blockAvailability.end_time)}
+              </>
+            )}
+          </td>
+        );
+      })
     );
   }
 
