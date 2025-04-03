@@ -69,6 +69,27 @@ export const TechnicianHours = () => {
   return (
     <>
       <table className="TechnicianHours">
+        <colgroup>
+          <col width="48px" />
+          <col width="48px" />
+          <col width="48px" />
+          <col />
+          <col width="48px" />
+          <col width="48px" />
+          <col width="48px" />
+          <col width="48px" />
+          <col width="48px" />
+          <col width="96px" />
+          <col width="96px" />
+          <col width="48px" />
+          {['M', 'T', 'W', 'TH', 'F'].map((day) => (
+            <>
+              {blocks.map((block, blockIndex) => (
+                <col key={block.id} width="32px" />
+              ))}
+            </>
+          ))}
+        </colgroup>
         <thead>
           <tr>
             <th></th>

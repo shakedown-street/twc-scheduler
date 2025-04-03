@@ -71,10 +71,32 @@ export const ClientHours = () => {
   return (
     <>
       <table className="ClientHours">
+        <colgroup>
+          <col width="48px" />
+          <col width="48px" />
+          <col width="48px" />
+          <col />
+          <col width="48px" />
+          <col width="48px" />
+          <col width="48px" />
+          <col width="48px" />
+          <col width="48px" />
+          <col width="96px" />
+          <col width="96px" />
+          <col width="48px" />
+          {['M', 'T', 'W', 'TH', 'F'].map((day) => (
+            <>
+              {blocks.map((block, blockIndex) => (
+                <col key={block.id} width="32px" />
+              ))}
+            </>
+          ))}
+        </colgroup>
         <thead>
           <tr>
             <th></th>
             <th></th>
+            <th>Spa</th>
             <th>Name</th>
             <th>M</th>
             <th>T</th>
@@ -101,6 +123,7 @@ export const ClientHours = () => {
             <tr key={client.id}>
               <td>{index + 1}</td>
               <td style={{ backgroundColor: getSkillLevelColor(client.req_skill_level) }}>{client.req_skill_level}</td>
+              <td>{client.req_spanish_speaking ? 'yes' : 'no'}</td>
               <td>
                 {client.first_name} {client.last_name}
               </td>
