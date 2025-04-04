@@ -1,10 +1,12 @@
 import clsx from 'clsx';
 import React from 'react';
-import { AvailabilityModel, BlockModel, ClientModel } from '~/api';
+import { BlockModel, ClientModel } from '~/api';
+import { AvailabilityForm } from '~/components/AvailabilityForm/AvailabilityForm';
 import { ClientForm } from '~/components/ClientForm/ClientForm';
+import { Availability } from '~/types/Availability';
 import { Block } from '~/types/Block';
 import { Client } from '~/types/Client';
-import { Button, Card, Container, RadixDialog, useToast } from '~/ui';
+import { Button, Card, Container, RadixDialog } from '~/ui';
 import { formatTimeShort, isBetweenInclusiveEnd, isBetweenInclusiveStart } from '~/utils/time';
 import './ClientAvailability.scss';
 
@@ -13,13 +15,26 @@ export const ClientAvailability = () => {
   const [clients, setClients] = React.useState<Client[]>([]);
   const [clientForm, setClientForm] = React.useState<{
     open: boolean;
-    client: Client | undefined;
+    client?: Client;
   }>({
     open: false,
     client: undefined,
   });
-
-  const toast = useToast();
+  const [availabilityForm, setAvailabilityForm] = React.useState<{
+    open: boolean;
+    object?: Client;
+    day: number;
+    initialStartTime: string;
+    initialEndTime: string;
+    instance?: Availability;
+  }>({
+    open: false,
+    object: undefined,
+    day: 0,
+    initialStartTime: '',
+    initialEndTime: '',
+    instance: undefined,
+  });
 
   const days = [0, 1, 2, 3, 4];
 
@@ -34,31 +49,6 @@ export const ClientAvailability = () => {
     });
   }, []);
 
-  function openClientForm(client: Client | undefined = undefined) {
-    setClientForm({
-      ...clientForm,
-      open: true,
-      client,
-    });
-  }
-
-  function onCreate(client: Client) {
-    const copySorted = [...clients, client].sort((a, b) => a.first_name.localeCompare(b.first_name));
-
-    setClients(copySorted);
-    setClientForm({ ...clientForm, open: false, client: undefined });
-  }
-
-  function onUpdate(updated: Client) {
-    setClients(clients.map((c) => (c.id === updated.id ? Object.assign({}, c, updated) : c)));
-    setClientForm({ ...clientForm, open: false, client: undefined });
-  }
-
-  function onDelete(deleted: Client) {
-    setClients(clients.filter((c) => c.id !== deleted.id));
-    setClientForm({ ...clientForm, open: false, client: undefined });
-  }
-
   function totalPrescribedHours() {
     return clients.reduce((total, client) => total + (client.prescribed_hours || 0), 0);
   }
@@ -72,36 +62,103 @@ export const ClientAvailability = () => {
     );
   }
 
-  function toggleAvailability(client: Client, day: number, block: Block) {
-    const blockAvailability = getBlockAvailability(client, day, block);
-
-    if (blockAvailability) {
-      AvailabilityModel.delete(blockAvailability.id)
-        .then(() => {
-          client.availabilities = client.availabilities?.filter((a) => a.id !== blockAvailability.id);
-          setClients([...clients]);
-        })
-        .catch((err) => {
-          toast.errorResponse(err);
-        });
-    } else {
-      ClientModel.detailAction(client.id, 'create_availability', 'post', {
-        day: day,
-        start_time: block.start_time,
-        end_time: block.end_time,
-      })
-        .then((availability) => {
-          client.availabilities = [...(client.availabilities || []), availability.data];
-          setClients([...clients]);
-        })
-        .catch((err) => {
-          toast.errorResponse(err);
-        });
-    }
-  }
-
   function countClientsAvailableForBlock(day: number, block: Block) {
     return clients.filter((client) => !!getBlockAvailability(client, day, block)).length;
+  }
+
+  function openClientForm(client: Client | undefined = undefined) {
+    setClientForm({
+      ...clientForm,
+      open: true,
+      client,
+    });
+  }
+
+  function closeClientForm() {
+    setClientForm({
+      ...clientForm,
+      open: false,
+      client: undefined,
+    });
+  }
+
+  function onCreateClient(created: Client) {
+    setClients((prev) => {
+      return [...prev, created].sort((a, b) => a.first_name.localeCompare(b.first_name));
+    });
+    closeClientForm();
+  }
+
+  function onUpdateClient(updated: Client) {
+    setClients(clients.map((c) => (c.id === updated.id ? Object.assign({}, c, updated) : c)));
+    closeClientForm();
+  }
+
+  function onDeleteClient(deleted: Client) {
+    setClients(clients.filter((c) => c.id !== deleted.id));
+    closeClientForm();
+  }
+
+  function openAvailabilityForm(
+    client: Client,
+    day: number,
+    block: Block,
+    instance: Availability | undefined = undefined
+  ) {
+    setAvailabilityForm({
+      ...availabilityForm,
+      open: true,
+      object: client,
+      day,
+      initialStartTime: block.start_time,
+      initialEndTime: block.end_time,
+      instance,
+    });
+  }
+
+  function closeAvailabilityForm() {
+    setAvailabilityForm({
+      ...availabilityForm,
+      open: false,
+      object: undefined,
+      instance: undefined,
+    });
+  }
+
+  function onCreateAvailability(client: Client, created: Availability) {
+    setClients((prev) =>
+      prev.map((c) => {
+        if (c.id === client.id) {
+          c.availabilities = [...(c.availabilities || []), created];
+          return c;
+        }
+        return c;
+      })
+    );
+    closeAvailabilityForm();
+  }
+
+  function onUpdateAvailability(client: Client, updated: Availability) {
+    setClients((prev) =>
+      prev.map((c) => {
+        if (c.id === client.id) {
+          c.availabilities = c.availabilities?.map((a) => (a.id === updated.id ? updated : a));
+          return c;
+        }
+        return c;
+      })
+    );
+    closeAvailabilityForm();
+  }
+
+  function onDeleteAvailability(deleted: Availability) {
+    setClients((prev) =>
+      prev.map((c) => {
+        c.availabilities = c.availabilities?.filter((a) => a.id !== deleted.id);
+        return c;
+      })
+    );
+    closeAvailabilityForm();
   }
 
   function renderAvailabilities(client: Client) {
@@ -119,7 +176,13 @@ export const ClientAvailability = () => {
             style={{
               backgroundColor: blockAvailability ? block.color : undefined,
             }}
-            onClick={() => toggleAvailability(client, day, block)}
+            onClick={() => {
+              if (blockAvailability) {
+                openAvailabilityForm(client, day, block, blockAvailability);
+              } else {
+                openAvailabilityForm(client, day, block);
+              }
+            }}
           >
             {blockAvailability && (
               <>
@@ -224,12 +287,25 @@ export const ClientAvailability = () => {
             onCancel={() => {
               setClientForm({ ...clientForm, open: false, client: undefined });
             }}
-            onCreate={onCreate}
-            onDelete={onDelete}
-            onUpdate={onUpdate}
+            onCreate={onCreateClient}
+            onDelete={onDeleteClient}
+            onUpdate={onUpdateClient}
           />
         </div>
       </RadixDialog>
+      <AvailabilityForm
+        title="Set Availability"
+        contentType="client"
+        onCreate={(client, created) => onCreateAvailability(client as Client, created)}
+        onUpdate={(client, updated) => onUpdateAvailability(client as Client, updated)}
+        onDelete={(deleted) => onDeleteAvailability(deleted)}
+        onOpenChange={(open) => {
+          if (!open) {
+            closeAvailabilityForm();
+          }
+        }}
+        {...availabilityForm}
+      />
     </>
   );
 };

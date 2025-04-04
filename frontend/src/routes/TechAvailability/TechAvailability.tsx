@@ -2,24 +2,39 @@ import clsx from 'clsx';
 import React from 'react';
 import { AvailabilityModel, BlockModel, TechnicianModel } from '~/api';
 import { TechnicianForm } from '~/components/TechnicianForm/TechnicianForm';
+import { Availability } from '~/types/Availability';
 import { Block } from '~/types/Block';
 import { Technician } from '~/types/Technician';
 import { Button, Card, Container, RadixDialog, useToast } from '~/ui';
 import { formatTimeShort, isBetweenInclusiveEnd, isBetweenInclusiveStart } from '~/utils/time';
 import './TechAvailability.scss';
+import { AvailabilityForm } from '~/components/AvailabilityForm/AvailabilityForm';
 
 export const TechAvailability = () => {
   const [blocks, setBlocks] = React.useState<Block[]>([]);
   const [technicians, setTechnicians] = React.useState<Technician[]>([]);
   const [technicianForm, setTechnicianForm] = React.useState<{
     open: boolean;
-    technician: Technician | undefined;
+    technician?: Technician;
   }>({
     open: false,
     technician: undefined,
   });
-
-  const toast = useToast();
+  const [availabilityForm, setAvailabilityForm] = React.useState<{
+    open: boolean;
+    object?: Technician;
+    day: number;
+    initialStartTime: string;
+    initialEndTime: string;
+    instance?: Availability;
+  }>({
+    open: false,
+    object: undefined,
+    day: 0,
+    initialStartTime: '',
+    initialEndTime: '',
+    instance: undefined,
+  });
 
   const days = [0, 1, 2, 3, 4];
 
@@ -34,31 +49,6 @@ export const TechAvailability = () => {
     });
   }, []);
 
-  function openTechnicianForm(technician: Technician | undefined = undefined) {
-    setTechnicianForm({
-      ...technicianForm,
-      open: true,
-      technician,
-    });
-  }
-
-  function onCreate(technician: Technician) {
-    const copySorted = [...technicians, technician].sort((a, b) => a.first_name.localeCompare(b.first_name));
-
-    setTechnicians(copySorted);
-    setTechnicianForm({ ...technicianForm, open: false, technician: undefined });
-  }
-
-  function onUpdate(updated: Technician) {
-    setTechnicians(technicians.map((c) => (c.id === updated.id ? Object.assign({}, c, updated) : c)));
-    setTechnicianForm({ ...technicianForm, open: false, technician: undefined });
-  }
-
-  function onDelete(deleted: Technician) {
-    setTechnicians(technicians.filter((c) => c.id !== deleted.id));
-    setTechnicianForm({ ...technicianForm, open: false, technician: undefined });
-  }
-
   function totalRequestedHours() {
     return technicians.reduce((total, technician) => total + (technician.requested_hours || 0), 0);
   }
@@ -72,36 +62,103 @@ export const TechAvailability = () => {
     );
   }
 
-  function toggleAvailability(technician: Technician, day: number, block: Block) {
-    const blockAvailability = getBlockAvailability(technician, day, block);
-
-    if (blockAvailability) {
-      AvailabilityModel.delete(blockAvailability.id)
-        .then(() => {
-          technician.availabilities = technician.availabilities?.filter((a) => a.id !== blockAvailability.id);
-          setTechnicians([...technicians]);
-        })
-        .catch((err) => {
-          toast.errorResponse(err);
-        });
-    } else {
-      TechnicianModel.detailAction(technician.id, 'create_availability', 'post', {
-        day: day,
-        start_time: block.start_time,
-        end_time: block.end_time,
-      })
-        .then((availability) => {
-          technician.availabilities = [...(technician.availabilities || []), availability.data];
-          setTechnicians([...technicians]);
-        })
-        .catch((err) => {
-          toast.errorResponse(err);
-        });
-    }
-  }
-
   function countTechniciansAvailableForBlock(day: number, block: Block) {
     return technicians.filter((technician) => !!getBlockAvailability(technician, day, block)).length;
+  }
+
+  function openTechnicianForm(technician: Technician | undefined = undefined) {
+    setTechnicianForm({
+      ...technicianForm,
+      open: true,
+      technician,
+    });
+  }
+
+  function closeTechnicianForm() {
+    setTechnicianForm({
+      ...technicianForm,
+      open: false,
+      technician: undefined,
+    });
+  }
+
+  function onCreateTechnician(created: Technician) {
+    setTechnicians((prev) => {
+      return [...prev, created].sort((a, b) => a.first_name.localeCompare(b.first_name));
+    });
+    closeTechnicianForm();
+  }
+
+  function onUpdateTechnician(updated: Technician) {
+    setTechnicians(technicians.map((t) => (t.id === updated.id ? Object.assign({}, t, updated) : t)));
+    closeTechnicianForm();
+  }
+
+  function onDeleteTechnician(deleted: Technician) {
+    setTechnicians(technicians.filter((t) => t.id !== deleted.id));
+    closeTechnicianForm();
+  }
+
+  function openAvailabilityForm(
+    technician: Technician,
+    day: number,
+    block: Block,
+    instance: Availability | undefined = undefined
+  ) {
+    setAvailabilityForm({
+      ...availabilityForm,
+      open: true,
+      object: technician,
+      day,
+      initialStartTime: block.start_time,
+      initialEndTime: block.end_time,
+      instance,
+    });
+  }
+
+  function closeAvailabilityForm() {
+    setAvailabilityForm({
+      ...availabilityForm,
+      open: false,
+      object: undefined,
+      instance: undefined,
+    });
+  }
+
+  function onCreateAvailability(technician: Technician, created: Availability) {
+    setTechnicians((prev) =>
+      prev.map((t) => {
+        if (t.id === technician.id) {
+          t.availabilities = [...(t.availabilities || []), created];
+          return t;
+        }
+        return t;
+      })
+    );
+    closeAvailabilityForm();
+  }
+
+  function onUpdateAvailability(technician: Technician, updated: Availability) {
+    setTechnicians((prev) =>
+      prev.map((t) => {
+        if (t.id === technician.id) {
+          t.availabilities = t.availabilities?.map((a) => (a.id === updated.id ? updated : a));
+          return t;
+        }
+        return t;
+      })
+    );
+    closeAvailabilityForm();
+  }
+
+  function onDeleteAvailability(deleted: Availability) {
+    setTechnicians((prev) =>
+      prev.map((t) => {
+        t.availabilities = t.availabilities?.filter((a) => a.id !== deleted.id);
+        return t;
+      })
+    );
+    closeAvailabilityForm();
   }
 
   function renderAvailabilities(technician: Technician) {
@@ -119,7 +176,13 @@ export const TechAvailability = () => {
             style={{
               backgroundColor: blockAvailability ? block.color : undefined,
             }}
-            onClick={() => toggleAvailability(technician, day, block)}
+            onClick={() => {
+              if (blockAvailability) {
+                openAvailabilityForm(technician, day, block, blockAvailability);
+              } else {
+                openAvailabilityForm(technician, day, block);
+              }
+            }}
           >
             {blockAvailability && (
               <>
@@ -224,12 +287,25 @@ export const TechAvailability = () => {
             onCancel={() => {
               setTechnicianForm({ ...technicianForm, open: false, technician: undefined });
             }}
-            onCreate={onCreate}
-            onDelete={onDelete}
-            onUpdate={onUpdate}
+            onCreate={onCreateTechnician}
+            onUpdate={onUpdateTechnician}
+            onDelete={onDeleteTechnician}
           />
         </div>
       </RadixDialog>
+      <AvailabilityForm
+        title="Set Availability"
+        contentType="technician"
+        onCreate={(technician, created) => onCreateAvailability(technician as Technician, created)}
+        onUpdate={(technician, updated) => onUpdateAvailability(technician as Technician, updated)}
+        onDelete={(deleted) => onDeleteAvailability(deleted)}
+        onOpenChange={(open) => {
+          if (!open) {
+            closeAvailabilityForm();
+          }
+        }}
+        {...availabilityForm}
+      />
     </>
   );
 };

@@ -79,7 +79,7 @@ export const Home = () => {
         <TimeSlotTable
           clients={clients}
           day={day}
-          onClickAvailabilitySlot={({ client, availability }) =>
+          onClickAvailabilitySlot={({ client, availability }) => {
             setCreateAppointmentDialog({
               ...createAppointmentDialog,
               open: true,
@@ -87,8 +87,8 @@ export const Home = () => {
               day,
               initialStartTime: availability.start_time,
               initialEndTime: availability.end_time,
-            })
-          }
+            });
+          }}
           onDeleteAppointment={(appointment) => {
             AppointmentModel.delete(appointment.id).then(() => {
               ClientModel.all({

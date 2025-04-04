@@ -102,6 +102,7 @@ export const CreateAppointment = ({
             <Input fluid label="Start time" type="time" {...form.register('start_time', { required: true })} />
             <Input fluid label="End time" type="time" {...form.register('end_time', { required: true })} />
           </div>
+          <Checkbox label="In clinic" {...form.register('in_clinic')} />
           <Select fluid label="Technician" {...form.register('technician', { required: true })}>
             <option value="">Select a technician</option>
             {availableTechnicians.map((technician) => (
@@ -141,7 +142,6 @@ export const CreateAppointment = ({
             )}
           /> */}
           <Textarea fluid label="Notes" {...form.register('notes')} />
-          <Checkbox label="In clinic" {...form.register('in_clinic')} />
           <div className="CreateAppointment__form__actions">
             <Button color="primary" disabled={!form.formState.isValid} type="submit" variant="raised">
               Create Appointment

@@ -1,5 +1,10 @@
 Target June 19th
 
+My suggestions:
+
+- Create custom time input component that only allows 15 minute intervals, and can have a min/max value
+- Need to indicate on the availability blocks if the appointment is in clinic, and if it is not the full block
+
 Suggested by Lyssa:
 
 - on _client_ availability, you should be able to indicate that the client is available for in clinic
@@ -13,7 +18,6 @@ Suggested by Lyssa:
 Requested by Alycen and Amy:
 
 - add for all days "repeats"
-- availability needs to be by start/end time
 - are you sure you want to remove this availability
 - add a read only role
 - add "currently onboarding" field to the client
@@ -30,9 +34,6 @@ Additional info on the schedule:
 Done:
 
 - Allow manually setting the start and end time of an appointment
-- indicate that an appointment is in clinic on the schedule
-- indicate that an appointment is in clinic on sheet 1
-
-maybe:
-
-- on sheet one, potentially let them put in appointments by selecting a _client_.
+- Indicate that an appointment is in clinic on the schedule
+- Indicate that an appointment is in clinic on sheet 1
+- Allow manually setting the start and end time of an availability
