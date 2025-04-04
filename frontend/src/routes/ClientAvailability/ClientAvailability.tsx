@@ -24,13 +24,15 @@ export const ClientAvailability = () => {
     open: boolean;
     instance?: Availability;
     object?: Client;
-    block?: Block;
+    initialStartTime: string;
+    initialEndTime: string;
     day: number;
   }>({
     open: false,
     instance: undefined,
     object: undefined,
-    block: undefined,
+    initialStartTime: '',
+    initialEndTime: '',
     day: 0,
   });
 
@@ -109,7 +111,8 @@ export const ClientAvailability = () => {
       instance,
       object: client,
       day,
-      block,
+      initialStartTime: block.start_time,
+      initialEndTime: block.end_time,
     });
   }
 
@@ -119,7 +122,8 @@ export const ClientAvailability = () => {
       open: false,
       instance: undefined,
       object: undefined,
-      block: undefined,
+      initialStartTime: '',
+      initialEndTime: '',
     });
   }
 
@@ -302,7 +306,7 @@ export const ClientAvailability = () => {
       >
         <div className="p-6">
           <h3 className="mb-4">{availabilityForm.instance ? 'Update' : 'Create'} Availability</h3>
-          {availabilityForm.object && availabilityForm.block && (
+          {availabilityForm.object && (
             <AvailabilityForm
               contentType="client"
               onCreate={(client, created) => onCreateAvailability(client as Client, created)}
@@ -311,7 +315,8 @@ export const ClientAvailability = () => {
               instance={availabilityForm.instance}
               object={availabilityForm.object}
               day={availabilityForm.day}
-              block={availabilityForm.block}
+              initialStartTime={availabilityForm.initialStartTime}
+              initialEndTime={availabilityForm.initialEndTime}
             />
           )}
         </div>

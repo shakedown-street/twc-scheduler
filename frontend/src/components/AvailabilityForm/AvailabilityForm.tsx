@@ -2,7 +2,6 @@ import React from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { AvailabilityModel, ClientModel, TechnicianModel } from '~/api';
 import { Availability } from '~/types/Availability';
-import { Block } from '~/types/Block';
 import { Client } from '~/types/Client';
 import { Technician } from '~/types/Technician';
 import { Button, Checkbox, Textarea, TimeInput, useToast } from '~/ui';
@@ -13,7 +12,8 @@ export type AvailabilityFormProps = {
   contentType: 'client' | 'technician';
   object: Client | Technician;
   day: number;
-  block: Block;
+  initialStartTime: string;
+  initialEndTime: string;
   onCreate?: (object: Client | Technician, created: Availability) => void;
   onUpdate?: (object: Client | Technician, updated: Availability) => void;
   onDelete?: (deleted: Availability) => void;
@@ -31,7 +31,8 @@ export const AvailabilityForm = ({
   contentType,
   object,
   day,
-  block,
+  initialStartTime,
+  initialEndTime,
   onCreate,
   onUpdate,
   onDelete,
@@ -47,13 +48,13 @@ export const AvailabilityForm = ({
         notes: instance.notes,
         in_clinic: instance.in_clinic,
       });
-    } else if (block) {
+    } else {
       form.reset({
-        start_time: block.start_time,
-        end_time: block.end_time,
+        start_time: initialStartTime,
+        end_time: initialEndTime,
       });
     }
-  }, [instance, block]);
+  }, [instance, initialStartTime, initialEndTime]);
 
   function getModelForContentType() {
     if (contentType === 'client') {
@@ -132,8 +133,8 @@ export const AvailabilityForm = ({
                   fluid: true,
                   label: 'Start time',
                 }}
-                min={block.start_time}
-                max={block.end_time}
+                min={initialStartTime}
+                max={initialEndTime}
                 onChange={(value) => {
                   field.onChange(value);
                 }}
@@ -152,8 +153,8 @@ export const AvailabilityForm = ({
                   fluid: true,
                   label: 'End time',
                 }}
-                min={block.start_time}
-                max={block.end_time}
+                min={initialStartTime}
+                max={initialEndTime}
                 onChange={(value) => {
                   field.onChange(value);
                 }}

@@ -4,7 +4,7 @@ import { Appointment } from '~/types/Appointment';
 import { Availability } from '~/types/Availability';
 import { Block } from '~/types/Block';
 import { Client } from '~/types/Client';
-import { formatTimeTimeline, isBetweenInclusiveStart, isOnTheHour } from '~/utils/time';
+import { formatTimeTimeline, generateTimeSlots, isBetweenInclusiveStart, isOnTheHour } from '~/utils/time';
 import './TimeSlotTable.scss';
 
 export type TimeSlotTableProps = {
@@ -24,25 +24,6 @@ export const TimeSlotTable = ({ clients, day, onClickAvailabilitySlot, onDeleteA
       setTimeSlots(generateTimeSlots(blocks[0].start_time, blocks[blocks.length - 1].end_time, 15));
     });
   }, []);
-
-  function generateTimeSlots(startTime: string, endTime: string, interval: number) {
-    const timeSlots: string[] = [];
-    let currentTime = startTime;
-    while (currentTime < endTime) {
-      timeSlots.push(currentTime);
-      let [hours, minutes, seconds] = currentTime.split(':').map(Number);
-      minutes += interval;
-      if (minutes >= 60) {
-        hours += 1;
-        minutes -= 60;
-      }
-      currentTime = `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(
-        2,
-        '0'
-      )}`;
-    }
-    return timeSlots;
-  }
 
   function getSlotBlock(time: string) {
     return blocks.find((block) => {
