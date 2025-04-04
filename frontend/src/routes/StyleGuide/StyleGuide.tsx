@@ -24,6 +24,7 @@ import {
   TabItem,
   Tabs,
   Textarea,
+  TimeInput,
   Toggle,
   useToast,
 } from '~/ui';
@@ -50,6 +51,7 @@ export const StyleGuide = () => {
     'Spinner',
     'Tabs',
     'Textarea',
+    'TimeInput',
     'Toaster',
     'Toggle',
     'Tooltip',
@@ -65,6 +67,7 @@ export const StyleGuide = () => {
 
   const [datePickerValue, setDatePickerValue] = React.useState<Date | undefined>(new Date());
   const [multiSelectValue, setMultiSelectValue] = React.useState<string[]>([]);
+  const [timeInputValue, setTimeInputValue] = React.useState<string>('12:00:00');
   const [searchPopoverSelected, setSearchPopoverSelected] = React.useState<any>();
 
   const [searchParams, setSearchParams] = useSearchParams();
@@ -737,6 +740,22 @@ export const StyleGuide = () => {
                     <Textarea inputSize="md" placeholder="Medium" />
                     <Textarea inputSize="lg" placeholder="Large" />
                     <Textarea inputSize="xl" placeholder="Extra large" />
+                  </div>
+                </div>
+              </>
+            )}
+            {selectedTab === 'TimeInput' && (
+              <>
+                <div className="StyleGuide__example">
+                  <div className="StyleGuide__example__content gap-4">
+                    <TimeInput
+                      min="09:00:00"
+                      max="12:00:00"
+                      onChange={(e) => {
+                        setTimeInputValue(e);
+                      }}
+                      value={timeInputValue}
+                    />
                   </div>
                 </div>
               </>
