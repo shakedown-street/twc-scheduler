@@ -1,16 +1,16 @@
 import React from 'react';
-import { useForm } from 'react-hook-form';
+import { Controller, useForm } from 'react-hook-form';
 import { AppointmentModel, ClientModel } from '~/api';
 import { Client } from '~/types/Client';
 import { Technician } from '~/types/Technician';
-import { Button, Checkbox, Input, RadixDialog, RadixDialogProps, Select, Textarea, useToast } from '~/ui';
+import { Button, Checkbox, RadixDialog, RadixDialogProps, Select, Textarea, TimeInput, useToast } from '~/ui';
 import './CreateAppointment.scss';
 
 export type CreateAppointmentProps = RadixDialogProps & {
   client?: Client;
   day?: number;
-  initialStartTime?: string;
-  initialEndTime?: string;
+  initialStartTime: string;
+  initialEndTime: string;
   onSuccess?: () => void;
 };
 
@@ -99,8 +99,46 @@ export const CreateAppointment = ({
         <h3 className="mb-4">Create Appointment</h3>
         <form className="CreateAppointment__form" onSubmit={form.handleSubmit(createAppointment)}>
           <div className="CreateAppointment__form__row">
-            <Input fluid label="Start time" type="time" {...form.register('start_time', { required: true })} />
-            <Input fluid label="End time" type="time" {...form.register('end_time', { required: true })} />
+            <Controller
+              control={form.control}
+              name="start_time"
+              render={({ field }) => {
+                return (
+                  <TimeInput
+                    inputProps={{
+                      fluid: true,
+                      label: 'Start time',
+                    }}
+                    min={initialStartTime}
+                    max={initialEndTime}
+                    onChange={(value) => {
+                      field.onChange(value);
+                    }}
+                    value={field.value}
+                  />
+                );
+              }}
+            />
+            <Controller
+              control={form.control}
+              name="end_time"
+              render={({ field }) => {
+                return (
+                  <TimeInput
+                    inputProps={{
+                      fluid: true,
+                      label: 'End time',
+                    }}
+                    min={initialStartTime}
+                    max={initialEndTime}
+                    onChange={(value) => {
+                      field.onChange(value);
+                    }}
+                    value={field.value}
+                  />
+                );
+              }}
+            />
           </div>
           <Checkbox label="In clinic" {...form.register('in_clinic')} />
           <Select fluid label="Technician" {...form.register('technician', { required: true })}>
