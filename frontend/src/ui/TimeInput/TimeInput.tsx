@@ -20,9 +20,12 @@ export const TimeInput = ({ inputProps, min, max, onChange, value }: TimeInputPr
   }, [min, max]);
 
   function formattedTime(time: string) {
-    const parsedTime = parse(time, 'HH:mm:ss', new Date());
-
-    return format(parsedTime, 'h:mm a');
+    try {
+      const parsedTime = parse(time, 'HH:mm:ss', new Date());
+      return format(parsedTime, 'h:mm a');
+    } catch (error) {
+      return time;
+    }
   }
 
   return (
