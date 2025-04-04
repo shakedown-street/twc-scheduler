@@ -1,3 +1,5 @@
+@import '~/scss/variables';
+
 .CreateAppointment {
   padding: 1.5rem;
   width: 30rem;
@@ -11,6 +13,13 @@
       align-items: center;
       display: flex;
       gap: 1rem;
+    }
+
+    &__warnings {
+      color: $tw-red-700;
+      font-size: 0.75rem;
+      list-style-type: disc;
+      margin-left: 1rem;
     }
 
     &__actions {

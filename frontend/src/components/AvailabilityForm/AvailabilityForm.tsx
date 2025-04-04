@@ -131,6 +131,7 @@ export const AvailabilityForm = ({
               <TimeInput
                 inputProps={{
                   fluid: true,
+                  id: 'start_time',
                   label: 'Start time',
                 }}
                 min={initialStartTime}
@@ -151,6 +152,7 @@ export const AvailabilityForm = ({
               <TimeInput
                 inputProps={{
                   fluid: true,
+                  id: 'end_time',
                   label: 'End time',
                 }}
                 min={initialStartTime}

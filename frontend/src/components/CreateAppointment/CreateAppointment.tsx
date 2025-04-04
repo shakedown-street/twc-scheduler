@@ -7,8 +7,8 @@ import { Button, Checkbox, RadixDialog, RadixDialogProps, Select, Textarea, Time
 import './CreateAppointment.scss';
 
 export type CreateAppointmentProps = RadixDialogProps & {
-  client?: Client;
-  day?: number;
+  client: Client;
+  day: number;
   initialStartTime: string;
   initialEndTime: string;
   onSuccess?: () => void;
@@ -32,12 +32,14 @@ export const CreateAppointment = ({
   ...rest
 }: CreateAppointmentProps) => {
   const [availableTechnicians, setAvailableTechnicians] = React.useState<Technician[]>([]);
+  const [warnings, setWarnings] = React.useState<string[]>([]);
 
   const form = useForm<CreateAppointmentForm>();
   const toast = useToast();
 
   const startTime = form.watch('start_time');
   const endTime = form.watch('end_time');
+  const technician = form.watch('technician');
 
   React.useEffect(() => {
     if (!startTime || !endTime) {
@@ -53,8 +55,33 @@ export const CreateAppointment = ({
         start_time: initialStartTime,
         end_time: initialEndTime,
       });
+      setWarnings([]);
     }
   }, [rest.open]);
+
+  React.useEffect(() => {
+    if (!rest.open) {
+      return;
+    }
+    console.log(client, technician, day, startTime, endTime);
+    if (!client || !technician || !startTime || !endTime) {
+      return;
+    }
+    ClientModel.detailAction(
+      client?.id,
+      'warning',
+      'get',
+      {},
+      {
+        tech_id: technician,
+        day,
+        start_time: startTime,
+        end_time: endTime,
+      }
+    ).then((warnings) => {
+      setWarnings(warnings.data);
+    });
+  }, [technician, startTime, endTime, client, day, rest.open]);
 
   function getAvailableTechnicians() {
     if (!client) {
@@ -107,6 +134,7 @@ export const CreateAppointment = ({
                   <TimeInput
                     inputProps={{
                       fluid: true,
+                      id: 'start_time',
                       label: 'Start time',
                     }}
                     min={initialStartTime}
@@ -127,6 +155,7 @@ export const CreateAppointment = ({
                   <TimeInput
                     inputProps={{
                       fluid: true,
+                      id: 'end_time',
                       label: 'End time',
                     }}
                     min={initialStartTime}
@@ -180,6 +209,11 @@ export const CreateAppointment = ({
             )}
           /> */}
           <Textarea fluid label="Notes" {...form.register('notes')} />
+          <ul className="CreateAppointment__form__warnings">
+            {warnings.map((warning, index) => (
+              <li key={index}>{warning}</li>
+            ))}
+          </ul>
           <div className="CreateAppointment__form__actions">
             <Button color="primary" disabled={!form.formState.isValid} type="submit" variant="raised">
               Create Appointment
