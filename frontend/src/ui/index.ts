@@ -21,6 +21,7 @@ export * from './Spinner/Spinner';
 export * from './Tabs/TabItem';
 export * from './Tabs/Tabs';
 export * from './Textarea/Textarea';
+export * from './TimeInput/TimeInput';
 export * from './Toaster/ToastContext';
 export * from './Toaster/Toaster';
 export * from './Toggle/Toggle';
