@@ -1,19 +1,19 @@
 import React from 'react';
-import { useForm } from 'react-hook-form';
+import { Controller, useForm } from 'react-hook-form';
 import { AvailabilityModel, ClientModel, TechnicianModel } from '~/api';
 import { Availability } from '~/types/Availability';
+import { Block } from '~/types/Block';
 import { Client } from '~/types/Client';
 import { Technician } from '~/types/Technician';
-import { Button, Checkbox, Input, RadixDialog, RadixDialogProps, Textarea, useToast } from '~/ui';
+import { Button, Checkbox, Textarea, TimeInput, useToast } from '~/ui';
 import './AvailabilityForm.scss';
 
-export type AvailabilityFormProps = RadixDialogProps & {
+export type AvailabilityFormProps = {
+  instance?: Availability;
   contentType: 'client' | 'technician';
-  object?: Client | Technician; //
-  day?: number; //
-  initialStartTime?: string; //
-  initialEndTime?: string; //
-  instance?: Availability; //
+  object: Client | Technician;
+  day: number;
+  block: Block;
   onCreate?: (object: Client | Technician, created: Availability) => void;
   onUpdate?: (object: Client | Technician, updated: Availability) => void;
   onDelete?: (deleted: Availability) => void;
@@ -27,37 +27,33 @@ export type AvailabilityFormData = {
 };
 
 export const AvailabilityForm = ({
+  instance,
   contentType,
   object,
   day,
-  initialStartTime,
-  initialEndTime,
-  instance,
+  block,
   onCreate,
   onUpdate,
   onDelete,
-  ...rest
 }: AvailabilityFormProps) => {
   const form = useForm<AvailabilityFormData>();
   const toast = useToast();
 
   React.useEffect(() => {
-    if (rest.open) {
-      if (instance) {
-        form.reset({
-          start_time: instance.start_time,
-          end_time: instance.end_time,
-          notes: instance.notes,
-          in_clinic: instance.in_clinic,
-        });
-      } else {
-        form.reset({
-          start_time: initialStartTime,
-          end_time: initialEndTime,
-        });
-      }
+    if (instance) {
+      form.reset({
+        start_time: instance.start_time,
+        end_time: instance.end_time,
+        notes: instance.notes,
+        in_clinic: instance.in_clinic,
+      });
+    } else if (block) {
+      form.reset({
+        start_time: block.start_time,
+        end_time: block.end_time,
+      });
     }
-  }, [rest.open]);
+  }, [instance, block]);
 
   function getModelForContentType() {
     if (contentType === 'client') {
@@ -124,34 +120,67 @@ export const AvailabilityForm = ({
   }
 
   return (
-    <RadixDialog {...rest}>
-      <div className="AvailabilityForm">
-        <h3 className="mb-4">{instance ? 'Update' : 'Create'} Availability</h3>
-        <form className="AvailabilityForm__form" onSubmit={form.handleSubmit(onSubmit)}>
-          <div className="AvailabilityForm__form__row">
-            <Input fluid label="Start time" type="time" {...form.register('start_time', { required: true })} />
-            <Input fluid label="End time" type="time" {...form.register('end_time', { required: true })} />
-          </div>
-          {contentType === 'client' && <Checkbox label="In clinic" {...form.register('in_clinic')} />}
-          <Textarea fluid label="Notes" {...form.register('notes')} />
-          <div className="AvailabilityForm__form__actions">
-            {instance && (
-              <Button
-                color="red"
-                onClick={() => {
-                  deleteAvailability();
+    <form className="AvailabilityForm" onSubmit={form.handleSubmit(onSubmit)}>
+      <div className="AvailabilityForm__row">
+        <Controller
+          control={form.control}
+          name="start_time"
+          render={({ field }) => {
+            return (
+              <TimeInput
+                inputProps={{
+                  fluid: true,
+                  label: 'Start time',
                 }}
-              >
-                Delete
-              </Button>
-            )}
-            <div className="flex-1"></div>
-            <Button color="primary" disabled={!form.formState.isValid} type="submit" variant="raised">
-              {instance ? 'Update' : 'Create'}
-            </Button>
-          </div>
-        </form>
+                min={block.start_time}
+                max={block.end_time}
+                onChange={(value) => {
+                  field.onChange(value);
+                }}
+                value={field.value}
+              />
+            );
+          }}
+        />
+        <Controller
+          control={form.control}
+          name="end_time"
+          render={({ field }) => {
+            return (
+              <TimeInput
+                inputProps={{
+                  fluid: true,
+                  label: 'End time',
+                }}
+                min={block.start_time}
+                max={block.end_time}
+                onChange={(value) => {
+                  field.onChange(value);
+                }}
+                value={field.value}
+              />
+            );
+          }}
+        />
       </div>
-    </RadixDialog>
+      {contentType === 'client' && <Checkbox label="In clinic" {...form.register('in_clinic')} />}
+      <Textarea fluid label="Notes" {...form.register('notes')} />
+      <div className="AvailabilityForm__actions">
+        {instance && (
+          <Button
+            color="red"
+            onClick={() => {
+              deleteAvailability();
+            }}
+          >
+            Delete
+          </Button>
+        )}
+        <div className="flex-1"></div>
+        <Button color="primary" disabled={!form.formState.isValid} type="submit" variant="raised">
+          {instance ? 'Update' : 'Create'}
+        </Button>
+      </div>
+    </form>
   );
 };

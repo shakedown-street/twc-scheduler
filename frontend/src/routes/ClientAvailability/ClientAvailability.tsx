@@ -22,18 +22,16 @@ export const ClientAvailability = () => {
   });
   const [availabilityForm, setAvailabilityForm] = React.useState<{
     open: boolean;
-    object?: Client;
-    day: number;
-    initialStartTime: string;
-    initialEndTime: string;
     instance?: Availability;
+    object?: Client;
+    block?: Block;
+    day: number;
   }>({
     open: false,
-    object: undefined,
-    day: 0,
-    initialStartTime: '',
-    initialEndTime: '',
     instance: undefined,
+    object: undefined,
+    block: undefined,
+    day: 0,
   });
 
   const days = [0, 1, 2, 3, 4];
@@ -108,11 +106,10 @@ export const ClientAvailability = () => {
     setAvailabilityForm({
       ...availabilityForm,
       open: true,
+      instance,
       object: client,
       day,
-      initialStartTime: block.start_time,
-      initialEndTime: block.end_time,
-      instance,
+      block,
     });
   }
 
@@ -120,8 +117,9 @@ export const ClientAvailability = () => {
     setAvailabilityForm({
       ...availabilityForm,
       open: false,
-      object: undefined,
       instance: undefined,
+      object: undefined,
+      block: undefined,
     });
   }
 
@@ -293,19 +291,31 @@ export const ClientAvailability = () => {
           />
         </div>
       </RadixDialog>
-      <AvailabilityForm
-        title="Set Availability"
-        contentType="client"
-        onCreate={(client, created) => onCreateAvailability(client as Client, created)}
-        onUpdate={(client, updated) => onUpdateAvailability(client as Client, updated)}
-        onDelete={(deleted) => onDeleteAvailability(deleted)}
+      <RadixDialog
+        title={`${availabilityForm.instance ? 'Update' : 'Create'} Availability`}
+        open={availabilityForm.open}
         onOpenChange={(open) => {
           if (!open) {
             closeAvailabilityForm();
           }
         }}
-        {...availabilityForm}
-      />
+      >
+        <div className="p-6">
+          <h3 className="mb-4">{availabilityForm.instance ? 'Update' : 'Create'} Availability</h3>
+          {availabilityForm.object && availabilityForm.block && (
+            <AvailabilityForm
+              contentType="client"
+              onCreate={(client, created) => onCreateAvailability(client as Client, created)}
+              onUpdate={(client, updated) => onUpdateAvailability(client as Client, updated)}
+              onDelete={(deleted) => onDeleteAvailability(deleted)}
+              instance={availabilityForm.instance}
+              object={availabilityForm.object}
+              day={availabilityForm.day}
+              block={availabilityForm.block}
+            />
+          )}
+        </div>
+      </RadixDialog>
     </>
   );
 };

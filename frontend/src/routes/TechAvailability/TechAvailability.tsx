@@ -1,14 +1,14 @@
 import clsx from 'clsx';
 import React from 'react';
-import { AvailabilityModel, BlockModel, TechnicianModel } from '~/api';
+import { BlockModel, TechnicianModel } from '~/api';
+import { AvailabilityForm } from '~/components/AvailabilityForm/AvailabilityForm';
 import { TechnicianForm } from '~/components/TechnicianForm/TechnicianForm';
 import { Availability } from '~/types/Availability';
 import { Block } from '~/types/Block';
 import { Technician } from '~/types/Technician';
-import { Button, Card, Container, RadixDialog, useToast } from '~/ui';
+import { Button, Card, Container, RadixDialog } from '~/ui';
 import { formatTimeShort, isBetweenInclusiveEnd, isBetweenInclusiveStart } from '~/utils/time';
 import './TechAvailability.scss';
-import { AvailabilityForm } from '~/components/AvailabilityForm/AvailabilityForm';
 
 export const TechAvailability = () => {
   const [blocks, setBlocks] = React.useState<Block[]>([]);
@@ -22,18 +22,16 @@ export const TechAvailability = () => {
   });
   const [availabilityForm, setAvailabilityForm] = React.useState<{
     open: boolean;
-    object?: Technician;
-    day: number;
-    initialStartTime: string;
-    initialEndTime: string;
     instance?: Availability;
+    object?: Technician;
+    block?: Block;
+    day: number;
   }>({
     open: false,
-    object: undefined,
-    day: 0,
-    initialStartTime: '',
-    initialEndTime: '',
     instance: undefined,
+    object: undefined,
+    block: undefined,
+    day: 0,
   });
 
   const days = [0, 1, 2, 3, 4];
@@ -108,11 +106,10 @@ export const TechAvailability = () => {
     setAvailabilityForm({
       ...availabilityForm,
       open: true,
+      instance,
       object: technician,
       day,
-      initialStartTime: block.start_time,
-      initialEndTime: block.end_time,
-      instance,
+      block,
     });
   }
 
@@ -120,8 +117,9 @@ export const TechAvailability = () => {
     setAvailabilityForm({
       ...availabilityForm,
       open: false,
-      object: undefined,
       instance: undefined,
+      object: undefined,
+      block: undefined,
     });
   }
 
@@ -293,19 +291,31 @@ export const TechAvailability = () => {
           />
         </div>
       </RadixDialog>
-      <AvailabilityForm
-        title="Set Availability"
-        contentType="technician"
-        onCreate={(technician, created) => onCreateAvailability(technician as Technician, created)}
-        onUpdate={(technician, updated) => onUpdateAvailability(technician as Technician, updated)}
-        onDelete={(deleted) => onDeleteAvailability(deleted)}
+      <RadixDialog
+        title={`${availabilityForm.instance ? 'Update' : 'Create'} Availability`}
+        open={availabilityForm.open}
         onOpenChange={(open) => {
           if (!open) {
             closeAvailabilityForm();
           }
         }}
-        {...availabilityForm}
-      />
+      >
+        <div className="p-6">
+          <h3 className="mb-4">{availabilityForm.instance ? 'Update' : 'Create'} Availability</h3>
+          {availabilityForm.object && availabilityForm.block && (
+            <AvailabilityForm
+              contentType="technician"
+              onCreate={(technician, created) => onCreateAvailability(technician as Technician, created)}
+              onUpdate={(technician, updated) => onUpdateAvailability(technician as Technician, updated)}
+              onDelete={(deleted) => onDeleteAvailability(deleted)}
+              instance={availabilityForm.instance}
+              object={availabilityForm.object}
+              day={availabilityForm.day}
+              block={availabilityForm.block}
+            />
+          )}
+        </div>
+      </RadixDialog>
     </>
   );
 };
