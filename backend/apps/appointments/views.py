@@ -144,6 +144,10 @@ class TechnicianViewSet(viewsets.ModelViewSet):
         content_type = ContentType.objects.get_for_model(Technician)
         serializer = AvailabilitySerializer(data=request.data)
         if serializer.is_valid(raise_exception=True):
-            serializer.save(object_id=technician.id, content_type=content_type)
+            serializer.save(
+                object_id=technician.id,
+                content_type=content_type,
+                in_clinic=True,  # NOTE: Technicians always have to be available in clinic
+            )
             return Response(serializer.data, status=201)
         raise exceptions.APIException("Failed to create availability for technician.")
