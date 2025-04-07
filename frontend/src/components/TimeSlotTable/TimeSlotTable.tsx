@@ -10,11 +10,23 @@ import './TimeSlotTable.scss';
 export type TimeSlotTableProps = {
   clients: Client[];
   day: number;
-  onClickAvailabilitySlot: (args: { client: Client; availability: Availability }) => void;
-  onDeleteAppointment?: (appointment: Appointment) => void;
+  onClickBlockSlot?: (client: Client, block: Block) => void;
+  onClickAvailabilitySlot: (client: Client, availability: Availability, block: Block | undefined) => void;
+  onClickAppointmentSlot?: (
+    client: Client,
+    appointment: Appointment,
+    availability: Availability | undefined,
+    block: Block | undefined
+  ) => void;
 };
 
-export const TimeSlotTable = ({ clients, day, onClickAvailabilitySlot, onDeleteAppointment }: TimeSlotTableProps) => {
+export const TimeSlotTable = ({
+  clients,
+  day,
+  onClickBlockSlot,
+  onClickAvailabilitySlot,
+  onClickAppointmentSlot,
+}: TimeSlotTableProps) => {
   const [blocks, setBlocks] = React.useState<Block[]>([]);
   const [timeSlots, setTimeSlots] = React.useState<string[]>([]);
 
@@ -79,20 +91,20 @@ export const TimeSlotTable = ({ clients, day, onClickAvailabilitySlot, onDeleteA
   function clickSlot(client: Client, time: string) {
     const slotAppointment = getSlotAppointment(time, client.appointments || []);
     const slotAvailability = getSlotAvailability(time, client.availabilities || []);
-    // const slotBlock = getSlotBlock(time);
+    const slotBlock = getSlotBlock(time);
 
     if (slotAppointment) {
-      onDeleteAppointment?.(slotAppointment);
+      onClickAppointmentSlot?.(client, slotAppointment, slotAvailability, slotBlock);
       return;
     }
     if (slotAvailability) {
-      onClickAvailabilitySlot?.({ client, availability: slotAvailability });
+      onClickAvailabilitySlot?.(client, slotAvailability, slotBlock);
       return;
     }
-    // if (slotBlock) {
-    //   onClickBlockSlot?.({ client, block: slotBlock });
-    //   return;
-    // }
+    if (slotBlock) {
+      onClickBlockSlot?.(client, slotBlock);
+      return;
+    }
   }
 
   return (

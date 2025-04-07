@@ -3,7 +3,10 @@ from rest_framework import exceptions, mixins, permissions, viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
 
-from .matcher import find_available_technicians, get_warnings
+from .matcher import (
+    find_available_technicians,
+    get_appointment_warnings,
+)
 from .models import Appointment, Availability, Block, Client, Technician
 from .serializers import (
     AppointmentSerializer,
@@ -20,6 +23,31 @@ class AppointmentViewSet(viewsets.ModelViewSet):
     permission_classes = [
         permissions.IsAuthenticated,
     ]
+
+    @action(detail=True, methods=["get"])
+    def get_update_warnings(self, request, pk=None):
+        appointment = self.get_object()
+        tech_id = request.query_params.get("tech_id")
+        start_time = request.query_params.get("start_time")
+        end_time = request.query_params.get("end_time")
+
+        if not appointment or not tech_id or not start_time or not end_time:
+            raise exceptions.ParseError("Missing required parameters")
+
+        try:
+            technician = Technician.objects.get(id=tech_id)
+        except Technician.DoesNotExist:
+            raise exceptions.NotFound("Technician not found")
+
+        warnings = get_appointment_warnings(
+            appointment.client,
+            technician,
+            appointment.day,
+            start_time,
+            end_time,
+            instance=appointment,
+        )
+        return Response(warnings)
 
 
 class AvailabilityViewSet(
@@ -82,12 +110,24 @@ class ClientViewSet(viewsets.ModelViewSet):
         day = request.query_params.get("day")
         start_time = request.query_params.get("start_time")
         end_time = request.query_params.get("end_time")
+        appointment = None
+        appointment_id = request.query_params.get("appointment")
 
         if not day or not start_time or not end_time:
             raise exceptions.ParseError("Missing required parameters")
 
+        if appointment_id:
+            try:
+                appointment = Appointment.objects.get(id=appointment_id)
+            except Appointment.DoesNotExist:
+                raise exceptions.NotFound("Appointment not found")
+
         available_technicians = find_available_technicians(
-            client, day, start_time, end_time
+            client,
+            day,
+            start_time,
+            end_time,
+            appointment=appointment if appointment else None,
         )
         serializer = TechnicianSerializer(
             available_technicians,
@@ -97,7 +137,7 @@ class ClientViewSet(viewsets.ModelViewSet):
         return Response(serializer.data)
 
     @action(detail=True, methods=["get"])
-    def warning(self, request, pk=None):
+    def get_create_warnings(self, request, pk=None):
         client = self.get_object()
         tech_id = request.query_params.get("tech_id")
         day = request.query_params.get("day")
@@ -112,7 +152,13 @@ class ClientViewSet(viewsets.ModelViewSet):
         except Technician.DoesNotExist:
             raise exceptions.NotFound("Technician not found")
 
-        warnings = get_warnings(client, technician, day, start_time, end_time)
+        warnings = get_appointment_warnings(
+            client,
+            technician,
+            day,
+            start_time,
+            end_time,
+        )
         return Response(warnings)
 
 

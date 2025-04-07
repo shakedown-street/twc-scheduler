@@ -3,7 +3,6 @@ Target June 19th
 Suggested by Lyssa:
 
 - should be able to hover over appointments on the schedule to see basic details about the appointment
-- clicking an appointment on the schedule should open the appointment details and allow you to edit or delete the appointment
 - when creating or editing an appointment, you should be able to override to select any technician for the appointment, even if they are not recommended, and see warnings about potential issues
 - on sheet one, hover card to see client details when hovering over a scheduled block
 - remaining sheet one matrix showing how many times a particular client has been scheduled with a technician
@@ -13,8 +12,6 @@ Requested by Alycen and Amy:
 
 - add for all days "repeats"
   - can only select days that are not already scheduled at that time
-- "are you sure" when deleting appointment
-- add ability to edit appointment
 - add a read only role
   - BCBAs can see the full schedule but not edit it
 - add "currently onboarding" field to the client
@@ -47,3 +44,5 @@ Done:
 - Add ability to to set "in clinic" for client availability
 - Add warning about creating split blocks for techs or clients
 - Add confirmation when deleting an availability
+- Add ability to edit appointments, including recalculating warnings
+- Add confirmation when deleting an appointment

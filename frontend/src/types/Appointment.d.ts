@@ -12,4 +12,6 @@ export type Appointment = {
 
   // Sometimes available
   technician_color?: string;
+  technician_first_name?: string;
+  technician_last_name?: string;
 };
