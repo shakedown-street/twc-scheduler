@@ -193,6 +193,9 @@ def get_appointment_warnings(
     block_2 = Block.objects.order_by("start_time")[1]
     block_3 = Block.objects.order_by("start_time").last()
 
+    new_appt_is_block_1 = (
+        parsed_start_time >= block_1.start_time and parsed_end_time <= block_1.end_time
+    )
     new_appt_is_block_3 = (
         parsed_start_time >= block_3.start_time and parsed_end_time <= block_3.end_time
     )
@@ -206,6 +209,17 @@ def get_appointment_warnings(
         start_time__gte=block_2.start_time,
         end_time__lte=block_2.end_time,
     ).exists()
+    client_has_block_3_appt = client.appointments.filter(
+        day=day,
+        start_time__gte=block_3.start_time,
+        end_time__lte=block_3.end_time,
+    ).exists()
+
+    if new_appt_is_block_1 and client_has_block_3_appt and not client_has_block_2_appt:
+        warnings.append(f"This appointment will create a split block for {client}")
+    if new_appt_is_block_3 and client_has_block_1_appt and not client_has_block_2_appt:
+        warnings.append(f"This appointment will create a split block for {client}")
+
     tech_has_block_1_appt = tech.appointments.filter(
         day=day,
         start_time__gte=block_1.start_time,
@@ -216,11 +230,15 @@ def get_appointment_warnings(
         start_time__gte=block_2.start_time,
         end_time__lte=block_2.end_time,
     ).exists()
-
-    if new_appt_is_block_3 and client_has_block_1_appt and not client_has_block_2_appt:
-        warnings.append(f"This appointment will create a split block for {client}")
+    tech_has_block_3_appt = tech.appointments.filter(
+        day=day,
+        start_time__gte=block_3.start_time,
+        end_time__lte=block_3.end_time,
+    ).exists()
 
     if new_appt_is_block_3 and tech_has_block_1_appt and not tech_has_block_2_appt:
+        warnings.append(f"This appointment will create a split block for {tech}")
+    if new_appt_is_block_1 and tech_has_block_3_appt and not tech_has_block_2_appt:
         warnings.append(f"This appointment will create a split block for {tech}")
 
     return warnings
