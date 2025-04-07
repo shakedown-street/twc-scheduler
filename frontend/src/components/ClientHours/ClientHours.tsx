@@ -88,12 +88,12 @@ export const ClientHours = () => {
           <col width="96px" />
           <col width="96px" />
           <col width="48px" />
-          {['M', 'T', 'W', 'TH', 'F'].map(() => (
-            <>
+          {['M', 'T', 'W', 'TH', 'F'].map((day) => (
+            <React.Fragment key={day}>
               {blocks.map((block) => (
                 <col key={block.id} width="32px" />
               ))}
-            </>
+            </React.Fragment>
           ))}
         </colgroup>
         <thead>
@@ -111,14 +111,14 @@ export const ClientHours = () => {
             <th>Rx</th>
             <th></th>
             {['M', 'T', 'W', 'TH', 'F'].map((day) => (
-              <>
+              <React.Fragment key={day}>
                 {blocks.map((block, blockIndex) => (
                   <th key={block.id}>
                     {day}
                     {blockIndex + 1}
                   </th>
                 ))}
-              </>
+              </React.Fragment>
             ))}
           </tr>
         </thead>
@@ -146,7 +146,7 @@ export const ClientHours = () => {
                 {client.is_maxed_on_sessions ? 'M' : 'A'}
               </td>
               {days.map((day) => (
-                <>
+                <React.Fragment key={day}>
                   {blocks.map((block) => (
                     <td
                       key={block.id}
@@ -155,7 +155,7 @@ export const ClientHours = () => {
                       }}
                     ></td>
                   ))}
-                </>
+                </React.Fragment>
               ))}
             </tr>
           ))}
