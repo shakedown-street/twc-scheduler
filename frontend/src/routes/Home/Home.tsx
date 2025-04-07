@@ -78,7 +78,7 @@ export const Home = () => {
   function onCreateAppointment(created: Appointment) {
     setClients((prev) =>
       prev.map((c) => {
-        if (c.id === created.client) {
+        if (c.id === created.client?.id) {
           c.appointments = [...(c.appointments || []), created];
           return c;
         }
@@ -91,7 +91,7 @@ export const Home = () => {
   function onUpdateAppointment(updated: Appointment) {
     setClients((prev) =>
       prev.map((c) => {
-        if (c.id === updated.client) {
+        if (c.id === updated.client?.id) {
           c.appointments = c.appointments?.map((a) => (a.id === updated.id ? updated : a));
           return c;
         }

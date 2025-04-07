@@ -59,7 +59,7 @@ export const AppointmentForm = ({
       form.reset({
         start_time: instance.start_time,
         end_time: instance.end_time,
-        technician: instance.technician,
+        technician: instance.technician?.id,
         notes: instance.notes,
         in_clinic: instance.in_clinic,
       });
