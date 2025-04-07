@@ -1,4 +1,5 @@
 from django.contrib.contenttypes.models import ContentType
+from django.db.models import Prefetch
 from rest_framework import exceptions, mixins, permissions, viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
@@ -18,7 +19,7 @@ from .serializers import (
 
 
 class AppointmentViewSet(viewsets.ModelViewSet):
-    queryset = Appointment.objects.select_related("technician").all()
+    queryset = Appointment.objects.select_related("client", "technician").all()
     serializer_class = AppointmentSerializer
     permission_classes = [
         permissions.IsAuthenticated,
@@ -85,7 +86,14 @@ class ClientViewSet(viewsets.ModelViewSet):
 
         prefetch_relations = []
         if request.query_params.get("expand_appointments"):
-            prefetch_relations.append("appointments")
+            # prefetch_relations.append("appointments")
+            # TODO: Prefetching here could be a bit more efficient
+            prefetch_relations.append(
+                Prefetch(
+                    "appointments",
+                    queryset=Appointment.objects.select_related("client", "technician"),
+                )
+            )
         if request.query_params.get("expand_availabilities"):
             prefetch_relations.append("availabilities")
 
@@ -175,7 +183,14 @@ class TechnicianViewSet(viewsets.ModelViewSet):
 
         prefetch_relations = []
         if request.query_params.get("expand_appointments"):
-            prefetch_relations.append("appointments")
+            # prefetch_relations.append("appointments")
+            # TODO: Prefetching here could be a bit more efficient
+            prefetch_relations.append(
+                Prefetch(
+                    "appointments",
+                    queryset=Appointment.objects.select_related("client", "technician"),
+                )
+            )
         if request.query_params.get("expand_availabilities"):
             prefetch_relations.append("availabilities")
 

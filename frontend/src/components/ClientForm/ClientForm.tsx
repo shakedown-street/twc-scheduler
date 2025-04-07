@@ -17,6 +17,7 @@ export type ClientFormData = {
   first_name: string;
   last_name: string;
   eval_done: boolean;
+  is_onboarding: boolean;
   prescribed_hours: number;
   req_skill_level: number;
   req_spanish_speaking: boolean;
@@ -31,6 +32,7 @@ export const ClientForm = ({ client, onCancel, onCreate, onDelete, onUpdate }: C
       first_name: client?.first_name ?? '',
       last_name: client?.last_name ?? '',
       eval_done: client?.eval_done ?? false,
+      is_onboarding: client?.is_onboarding ?? false,
       prescribed_hours: client?.prescribed_hours ?? 0,
       req_skill_level: client?.req_skill_level ?? 1,
       req_spanish_speaking: client?.req_spanish_speaking ?? false,
@@ -47,6 +49,7 @@ export const ClientForm = ({ client, onCancel, onCreate, onDelete, onUpdate }: C
       first_name: client.first_name,
       last_name: client.last_name,
       eval_done: client.eval_done,
+      is_onboarding: client.is_onboarding,
       prescribed_hours: client.prescribed_hours,
       req_skill_level: client.req_skill_level,
       req_spanish_speaking: client.req_spanish_speaking,
@@ -134,6 +137,7 @@ export const ClientForm = ({ client, onCancel, onCreate, onDelete, onUpdate }: C
       </div>
       <Toggle label="Evaluation Done" {...form.register('eval_done')} />
       <Toggle label="Require Spanish Speaking" {...form.register('req_spanish_speaking')} />
+      <Toggle label="Currently Onboarding" {...form.register('is_onboarding')} />
       <Textarea rows={4} fluid label="Notes" style={{ resize: 'none' }} {...form.register('notes')} />
       <div className="ClientForm__actions">
         {client && (

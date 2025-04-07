@@ -60,10 +60,11 @@ export const TechnicianHours = () => {
 
     if (appointments.length > 0) {
       const appointment = appointments[0];
+      const color = appointment.client?.is_onboarding ? '#eab308' : '#15803d'; // tw-yellow-500 : tw-green-700
       if (appointment.in_clinic) {
-        return `repeating-linear-gradient(45deg, white, white 4px, #15803d 4px, #15803d 8px)`;
+        return `repeating-linear-gradient(45deg, white, white 4px, ${color} 4px, ${color} 8px)`;
       }
-      return '#15803d'; // tw-green-700
+      return `${color}`;
     } else if (isAvailable(technician, day, block) && technician.is_maxed_on_sessions) {
       return '#b91c1c'; // tw-red-700
     } else if (isAvailable(technician, day, block)) {

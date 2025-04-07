@@ -61,10 +61,10 @@ export const ClientHours = () => {
     if (appointments.length > 0) {
       const appointment = appointments[0];
       if (appointment.in_clinic) {
-        const color = appointment.technician_color || 'white';
+        const color = appointment.technician?.color || 'white';
         return `repeating-linear-gradient(45deg, white, white 4px, ${color} 4px, ${color} 8px)`;
       }
-      return appointment.technician_color || 'white';
+      return appointment.technician?.color || 'white';
     }
     if (isAvailable(client, day, block)) {
       return '#cbd5e1'; // tw-slate-300

@@ -1,3 +1,6 @@
+import { Client } from './Client';
+import { Technician } from './Technician';
+
 export type Appointment = {
   id: string;
   created_at: string;
@@ -7,11 +10,8 @@ export type Appointment = {
   end_time: string;
   in_clinic: boolean;
   notes: string;
-  client: string;
-  technician: string;
 
   // Sometimes available
-  technician_color?: string;
-  technician_first_name?: string;
-  technician_last_name?: string;
+  technician?: Technician;
+  client?: Client;
 };

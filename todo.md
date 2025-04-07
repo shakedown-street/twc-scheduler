@@ -14,8 +14,6 @@ Requested by Alycen and Amy:
   - can only select days that are not already scheduled at that time
 - add a read only role
   - BCBAs can see the full schedule but not edit it
-- add "currently onboarding" field to the client
-  - when checked, their appointments on sheet 1 should be yellow instead of green
 - text color as well as background color for techs
 - warning about max hours per day for techs
   - set max hours per day when adding/updating a tech
@@ -46,3 +44,5 @@ Done:
 - Add confirmation when deleting an availability
 - Add ability to edit appointments, including recalculating warnings
 - Add confirmation when deleting an appointment
+- Add "is_onboarding" field to client that is set when creating/updating a client
+- When a client is marked as "is_onboarding", their appointments are displayed as yellow instead of green on sheet 1

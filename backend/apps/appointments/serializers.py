@@ -3,6 +3,18 @@ from rest_framework import serializers
 from .models import Appointment, Availability, Block, Client, Technician
 
 
+class AppointmentClientSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Client
+        fields = "__all__"
+
+
+class AppointmentTechnicianSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Technician
+        fields = "__all__"
+
+
 class AppointmentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Appointment
@@ -11,9 +23,12 @@ class AppointmentSerializer(serializers.ModelSerializer):
     def to_representation(self, instance):
         data = super().to_representation(instance)
 
-        data["technician_first_name"] = instance.technician.first_name
-        data["technician_last_name"] = instance.technician.last_name
-        data["technician_color"] = instance.technician.color
+        data["client"] = AppointmentClientSerializer(
+            instance.client, context=self.context
+        ).data
+        data["technician"] = AppointmentTechnicianSerializer(
+            instance.technician, context=self.context
+        ).data
 
         return data
 

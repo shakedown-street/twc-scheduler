@@ -64,6 +64,7 @@ class Client(UUIDPrimaryKeyMixin, TimestampMixin):
     first_name = models.CharField(max_length=30)
     last_name = models.CharField(max_length=30)
     eval_done = models.BooleanField(default=False)
+    is_onboarding = models.BooleanField(default=False)
     prescribed_hours = models.IntegerField(default=0)
     req_skill_level = models.IntegerField(
         default=1, validators=[MinValueValidator(1), MaxValueValidator(3)]

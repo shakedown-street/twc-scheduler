@@ -74,10 +74,10 @@ export const TimeSlotTable = ({
 
     if (slotAppointment) {
       if (slotAppointment.in_clinic) {
-        const color = slotAppointment.technician_color || 'white';
+        const color = slotAppointment.technician?.color || 'white';
         return `repeating-linear-gradient(45deg, white, white 4px, ${color} 4px, ${color} 8px)`;
       }
-      return slotAppointment.technician_color || 'white';
+      return slotAppointment.technician?.color || 'white';
     }
     if (slotAvailability) {
       return '#cbd5e1'; // tw-slate-300

@@ -8,6 +8,7 @@ export type Client = {
   first_name: string;
   last_name: string;
   eval_done: boolean;
+  is_onboarding: boolean;
   prescribed_hours: number;
   req_skill_level: number;
   req_spanish_speaking: boolean;
