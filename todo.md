@@ -13,7 +13,6 @@ Requested by Alycen and Amy:
 
 - add for all days "repeats"
   - can only select days that are not already scheduled at that time
-- "are you sure" when deleting availability
 - "are you sure" when deleting appointment
 - add ability to edit appointment
 - add a read only role
@@ -47,3 +46,4 @@ Done:
 - Create custom time input component that only allows 15 minute intervals between a min and max value
 - Add ability to to set "in clinic" for client availability
 - Add warning about creating split blocks for techs or clients
+- Add confirmation when deleting an availability

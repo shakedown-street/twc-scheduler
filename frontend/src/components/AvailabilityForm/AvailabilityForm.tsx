@@ -37,6 +37,8 @@ export const AvailabilityForm = ({
   onUpdate,
   onDelete,
 }: AvailabilityFormProps) => {
+  const [confirmDelete, setConfirmDelete] = React.useState(false);
+
   const form = useForm<AvailabilityFormData>();
   const toast = useToast();
 
@@ -99,25 +101,48 @@ export const AvailabilityForm = ({
       });
   }
 
-  function deleteAvailability() {
-    if (!object || !instance) {
-      return;
-    }
-    AvailabilityModel.delete(instance.id)
-      .then(() => {
-        onDelete?.(instance);
-      })
-      .catch((err) => {
-        toast.errorResponse(err);
-      });
-  }
-
   function onSubmit(data: AvailabilityFormData) {
     if (instance) {
       updateAvailability(data);
     } else {
       createAvailability(data);
     }
+  }
+
+  function clickDelete() {
+    setConfirmDelete(true);
+  }
+
+  function clickConfirmDelete() {
+    if (!instance) {
+      return;
+    }
+    AvailabilityModel.delete(instance.id)
+      .then(() => {
+        onDelete?.(instance);
+        setConfirmDelete(false);
+      })
+      .catch((err) => {
+        toast.errorResponse(err);
+      });
+  }
+
+  if (confirmDelete) {
+    return (
+      <div className="AvailabilityForm__confirmDelete">
+        <p>
+          Are you sure you want to delete this availability?
+          <br />
+          This action cannot be undone.
+        </p>
+        <div className="AvailabilityForm__confirmDelete__actions">
+          <Button onClick={() => setConfirmDelete(false)}>Cancel</Button>
+          <Button color="red" onClick={clickConfirmDelete} variant="raised">
+            Delete
+          </Button>
+        </div>
+      </div>
+    );
   }
 
   return (
@@ -173,7 +198,7 @@ export const AvailabilityForm = ({
           <Button
             color="red"
             onClick={() => {
-              deleteAvailability();
+              clickDelete();
             }}
           >
             Delete
