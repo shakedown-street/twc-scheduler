@@ -15,7 +15,7 @@ export type AppointmentFormProps = {
   initialEndTime: string;
   minTime: string;
   maxTime: string;
-  onCreate?: (created: Appointment) => void;
+  onCreate?: (created: Appointment[]) => void;
   onUpdate?: (updated: Appointment) => void;
   onDelete?: (deleted: Appointment) => void;
 };
@@ -24,7 +24,7 @@ export type AppointmentFormData = {
   start_time: string;
   end_time: string;
   technician: string;
-  // repeats?: number[];
+  repeats?: number[];
   notes?: string;
   in_clinic?: boolean;
 };
@@ -42,6 +42,7 @@ export const AppointmentForm = ({
   onDelete,
 }: AppointmentFormProps) => {
   const [availableTechnicians, setAvailableTechnicians] = React.useState<Technician[]>([]);
+  const [repeatableAppointmentDays, setRepeatableAppointmentDays] = React.useState<number[]>([]);
   const [warnings, setWarnings] = React.useState<string[]>([]);
   const [confirmDelete, setConfirmDelete] = React.useState(false);
 
@@ -82,6 +83,7 @@ export const AppointmentForm = ({
     if (!client || !technician || !startTime || !endTime) {
       return;
     }
+    getRepeatableAppointmentDays();
     getWarnings();
   }, [technician, startTime, endTime, client, day]);
 
@@ -103,6 +105,21 @@ export const AppointmentForm = ({
       }
     ).then((technicians) => {
       setAvailableTechnicians(technicians.data as Technician[]);
+    });
+  }
+
+  function getRepeatableAppointmentDays() {
+    if (!client) {
+      return;
+    }
+    ClientModel.detailAction(
+      client.id,
+      'get_repeatable_appointment_days',
+      'get',
+      {},
+      { day, start_time: startTime, end_time: endTime, tech_id: technician }
+    ).then((days) => {
+      setRepeatableAppointmentDays(days.data);
     });
   }
 
@@ -161,7 +178,9 @@ export const AppointmentForm = ({
       ...data,
     })
       .then((created) => {
-        onCreate?.(created.data);
+        // NOTE: The appointment create endpoint returns an array instead of a single
+        // appointment, to support repeat appointments
+        onCreate?.(created.data as any as Appointment[]);
       })
       .catch((err) => {
         toast.errorResponse(err);
@@ -284,36 +303,44 @@ export const AppointmentForm = ({
           </option>
         ))}
       </Select>
-      {/* <Controller
-        control={form.control}
-        name="repeats"
-        render={({ field }) => (
-          <div className="Input__container">
-            <label>Repeats</label>
-            <div className="flex gap-1">
-              {['M', 'T', 'W', 'TH', 'F'].map((day, index) => (
-                <Button
-                  key={index}
-                  color="primary"
-                  onClick={() => {
-                    const selectedDays = field.value || [];
-                    if (selectedDays.includes(index)) {
-                      field.onChange(selectedDays.filter((d) => d !== index));
-                    } else {
-                      field.onChange([...selectedDays, index]);
-                    }
-                  }}
-                  radius="sm"
-                  size="xs"
-                  variant={field.value?.includes(index) ? 'raised' : 'default'}
-                >
-                  {day}
-                </Button>
-              ))}
+      {!instance && technician && (
+        <Controller
+          control={form.control}
+          name="repeats"
+          render={({ field }) => (
+            <div className="Input__container">
+              <label>Repeats</label>
+              <div className="flex gap-1">
+                {['Mon', 'Tue', 'Wed', 'Thur', 'Fri'].map(
+                  (dayStr, index) =>
+                    index !== day && (
+                      <Button
+                        key={index}
+                        color="primary"
+                        disabled={!repeatableAppointmentDays.includes(index)}
+                        onClick={() => {
+                          const selectedDays = field.value || [];
+                          if (selectedDays.includes(index)) {
+                            field.onChange(selectedDays.filter((d) => d !== index));
+                          } else {
+                            field.onChange([...selectedDays, index]);
+                          }
+                        }}
+                        radius="sm"
+                        size="xs"
+                        title={!repeatableAppointmentDays.includes(index) ? 'Not available' : ''}
+                        variant={field.value?.includes(index) ? 'raised' : 'default'}
+                      >
+                        {dayStr}
+                      </Button>
+                    )
+                )}
+              </div>
+              <p className="hint mt-2">Note: Warnings are only shown for the current appointment!</p>
             </div>
-          </div>
-        )}
-      /> */}
+          )}
+        />
+      )}
       <Textarea fluid label="Notes" rows={6} {...form.register('notes')} />
       <ul className="AppointmentForm__warnings">
         {warnings.map((warning, index) => (

@@ -10,8 +10,6 @@ Suggested by Lyssa:
 
 Requested by Alycen and Amy:
 
-- add for all days "repeats"
-  - can only select days that are not already scheduled at that time
 - add a read only role
   - BCBAs can see the full schedule but not edit it
 - text color as well as background color for techs
@@ -46,3 +44,4 @@ Done:
 - Add confirmation when deleting an appointment
 - Add "is_onboarding" field to client that is set when creating/updating a client
 - When a client is marked as "is_onboarding", their appointments are displayed as yellow instead of green on sheet 1
+- Support creating "repeated" appointments

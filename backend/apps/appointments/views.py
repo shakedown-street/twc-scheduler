@@ -6,6 +6,7 @@ from rest_framework.response import Response
 
 from .matcher import (
     find_available_technicians,
+    find_repeatable_appointment_days,
     get_appointment_warnings,
 )
 from .models import Appointment, Availability, Block, Client, Technician
@@ -24,6 +25,17 @@ class AppointmentViewSet(viewsets.ModelViewSet):
     permission_classes = [
         permissions.IsAuthenticated,
     ]
+
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        created = serializer.save()
+        response_data = AppointmentSerializer(
+            created,
+            many=True,
+            context={"request": request},
+        ).data
+        return Response(response_data, status=201)
 
     @action(detail=True, methods=["get"])
     def get_update_warnings(self, request, pk=None):
@@ -135,7 +147,7 @@ class ClientViewSet(viewsets.ModelViewSet):
             day,
             start_time,
             end_time,
-            appointment=appointment if appointment else None,
+            instance=appointment if appointment else None,
         )
         serializer = TechnicianSerializer(
             available_technicians,
@@ -168,6 +180,31 @@ class ClientViewSet(viewsets.ModelViewSet):
             end_time,
         )
         return Response(warnings)
+
+    @action(detail=True, methods=["get"])
+    def get_repeatable_appointment_days(self, request, pk=None):
+        client = self.get_object()
+        tech_id = request.query_params.get("tech_id")
+        day = request.query_params.get("day")
+        start_time = request.query_params.get("start_time")
+        end_time = request.query_params.get("end_time")
+
+        if not tech_id or not day or not start_time or not end_time:
+            raise exceptions.ParseError("Missing required parameters")
+
+        try:
+            technician = Technician.objects.get(id=tech_id)
+        except Technician.DoesNotExist:
+            raise exceptions.NotFound("Technician not found")
+
+        repeatable_days = find_repeatable_appointment_days(
+            client,
+            technician,
+            day,
+            start_time,
+            end_time,
+        )
+        return Response(repeatable_days)
 
 
 class TechnicianViewSet(viewsets.ModelViewSet):

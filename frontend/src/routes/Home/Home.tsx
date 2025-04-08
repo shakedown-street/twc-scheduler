@@ -75,11 +75,13 @@ export const Home = () => {
     });
   }
 
-  function onCreateAppointment(created: Appointment) {
+  function onCreateAppointment(created: Appointment[]) {
+    const clientId = created[0].client?.id;
+
     setClients((prev) =>
       prev.map((c) => {
-        if (c.id === created.client?.id) {
-          c.appointments = [...(c.appointments || []), created];
+        if (c.id === clientId) {
+          c.appointments = [...(c.appointments || []), ...created];
           return c;
         }
         return c;

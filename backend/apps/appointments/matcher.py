@@ -8,7 +8,7 @@ def find_available_technicians(
     day: int,
     start_time: str,
     end_time: str,
-    appointment: Appointment | None = None,
+    instance: Appointment | None = None,
 ) -> list[Technician]:
     """
     Filter out technicians who:
@@ -53,10 +53,40 @@ def find_available_technicians(
             qs = qs.exclude(pk=tech.pk)
 
     # Add the existing appointment technician to the queryset
-    if appointment:
-        qs = qs | Technician.objects.filter(pk=appointment.technician.pk)
+    if instance:
+        qs = qs | Technician.objects.filter(pk=instance.technician.pk)
 
     return qs.distinct()
+
+
+def find_repeatable_appointment_days(
+    client: Client,
+    tech: Technician,
+    day: int,
+    start_time: str,
+    end_time: str,
+) -> list[int]:
+    """
+    Return an array of days (int) that the given technician
+    is able to repeat this appointment.
+    """
+    days = []
+
+    for i in range(5):
+        if i == day:
+            continue
+
+        available_techs = find_available_technicians(
+            client,
+            i,
+            start_time,
+            end_time,
+        )
+
+        if tech in available_techs:
+            days.append(i)
+
+    return days
 
 
 def get_appointment_warnings(

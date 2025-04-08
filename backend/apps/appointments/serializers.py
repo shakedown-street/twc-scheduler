@@ -16,6 +16,12 @@ class AppointmentTechnicianSerializer(serializers.ModelSerializer):
 
 
 class AppointmentSerializer(serializers.ModelSerializer):
+    repeats = serializers.ListField(
+        child=serializers.IntegerField(),
+        allow_empty=True,
+        required=False,
+    )
+
     class Meta:
         model = Appointment
         fields = "__all__"
@@ -31,6 +37,27 @@ class AppointmentSerializer(serializers.ModelSerializer):
         ).data
 
         return data
+
+    def validate_repeats(self, value):
+        if not all(0 <= day <= 6 for day in value):
+            raise serializers.ValidationError("Repeats must contain valid days (0-6).")
+        return value
+
+    def create(self, validated_data):
+        repeats = validated_data.pop("repeats", None)
+        created = []
+
+        instance = super().create(validated_data)
+        created.append(instance)
+
+        if repeats is not None:
+            for repeat_day in repeats:
+                repeat_data = validated_data.copy()
+                repeat_data["day"] = repeat_day
+                repeat_instance = super().create(repeat_data)
+                created.append(repeat_instance)
+
+        return created
 
 
 class AvailabilitySerializer(serializers.ModelSerializer):
