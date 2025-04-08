@@ -231,6 +231,7 @@ export const ClientAvailability = () => {
                 <th>Rating</th>
                 <th>Spanish</th>
                 <th>Eval</th>
+                <th>Onboarding</th>
                 {days.map((day) => (
                   <th className="ClientAvailability__table__boldBorder" key={day} colSpan={blocks.length}>
                     {['Mon', 'Tue', 'Wed', 'Thu', 'Fri'][day]}
@@ -262,6 +263,9 @@ export const ClientAvailability = () => {
                   <td style={{ textAlign: 'center' }}>
                     {client.eval_done && <span className="material-symbols-outlined text-color-green">check</span>}
                   </td>
+                  <td style={{ textAlign: 'center' }}>
+                    {client.is_onboarding && <span className="material-symbols-outlined text-color-green">check</span>}
+                  </td>
                   {renderAvailabilities(client)}
                   <td style={{ textAlign: 'right' }}>{client.prescribed_hours}</td>
                 </tr>
@@ -269,7 +273,7 @@ export const ClientAvailability = () => {
             </tbody>
             <tfoot>
               <tr>
-                <td colSpan={4}></td>
+                <td colSpan={5}></td>
                 {renderBlockTotals()}
                 <td style={{ textAlign: 'right' }}>{totalPrescribedHours()}</td>
               </tr>
