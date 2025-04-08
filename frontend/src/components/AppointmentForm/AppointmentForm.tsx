@@ -108,7 +108,9 @@ export const AppointmentForm = ({
       return;
     }
     if (onlyShowRecommendedTechs && !isTechnicianAvailable(technician)) {
-      form.setValue('technician', '');
+      form.setValue('technician', '', {
+        shouldValidate: true,
+      });
     }
   }, [onlyShowRecommendedTechs]);
 
@@ -130,7 +132,9 @@ export const AppointmentForm = ({
       return;
     }
 
-    form.setValue('technician', instance.technician.id);
+    form.setValue('technician', instance.technician.id, {
+      shouldValidate: true,
+    });
     setInitialTechnicianSet(true);
   }, [availableTechnicians, instance]);
 
