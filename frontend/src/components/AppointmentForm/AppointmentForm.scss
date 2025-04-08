@@ -19,6 +19,12 @@
     margin-left: 1rem;
   }
 
+  &__technician {
+    &--unavailable {
+      color: $tw-red-700;
+    }
+  }
+
   &__actions {
     align-items: center;
     display: flex;

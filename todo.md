@@ -3,7 +3,6 @@ Target June 19th
 Suggested by Lyssa:
 
 - should be able to hover over appointments on the schedule to see basic details about the appointment
-- when creating or editing an appointment, you should be able to override to select any technician for the appointment, even if they are not recommended, and see warnings about potential issues
 - on sheet one, hover card to see client details when hovering over a scheduled block
 - remaining sheet one matrix showing how many times a particular client has been scheduled with a technician
 - legend on sheet one
@@ -45,3 +44,4 @@ Done:
 - Add "is_onboarding" field to client that is set when creating/updating a client
 - When a client is marked as "is_onboarding", their appointments are displayed as yellow instead of green on sheet 1
 - Support creating "repeated" appointments
+- When creating or editing an appointment, allow "overriding" and selecting a tech that is not recommended, show warnings

@@ -1,10 +1,11 @@
+import clsx from 'clsx';
 import React from 'react';
 import { Controller, useForm } from 'react-hook-form';
-import { AppointmentModel, ClientModel } from '~/api';
+import { AppointmentModel, ClientModel, TechnicianModel } from '~/api';
 import { Appointment } from '~/types/Appointment';
 import { Client } from '~/types/Client';
 import { Technician } from '~/types/Technician';
-import { Button, Checkbox, Select, Textarea, TimeInput, useToast } from '~/ui';
+import { Button, IconButton, RadixTooltip, Select, Textarea, TimeInput, Toggle, useToast } from '~/ui';
 import './AppointmentForm.scss';
 
 export type AppointmentFormProps = {
@@ -42,9 +43,14 @@ export const AppointmentForm = ({
   onDelete,
 }: AppointmentFormProps) => {
   const [availableTechnicians, setAvailableTechnicians] = React.useState<Technician[]>([]);
+  const [availableTechniciansLoaded, setAvailableTechniciansLoaded] = React.useState(false);
+  const [showAllTechnicians, setShowAllTechnicians] = React.useState(false);
+  const [allTechnicians, setAllTechnicians] = React.useState<Technician[]>([]);
   const [repeatableAppointmentDays, setRepeatableAppointmentDays] = React.useState<number[]>([]);
   const [warnings, setWarnings] = React.useState<string[]>([]);
   const [confirmDelete, setConfirmDelete] = React.useState(false);
+
+  const [initialTechnicianSet, setInitialTechnicianSet] = React.useState(false);
 
   const form = useForm<AppointmentFormData>();
   const toast = useToast();
@@ -54,13 +60,16 @@ export const AppointmentForm = ({
   const technician = form.watch('technician');
 
   React.useEffect(() => {
+    // Fetch all technicians on mount
+    getAllTechnicians();
+  }, []);
+
+  React.useEffect(() => {
+    // Reset form values when the instance changes
     if (instance) {
-      // TODO: Technician should be selected by default, currently this is a race condition
-      // since available technicians need to be fetched first
       form.reset({
         start_time: instance.start_time,
         end_time: instance.end_time,
-        technician: instance.technician?.id,
         notes: instance.notes,
         in_clinic: instance.in_clinic,
       });
@@ -73,6 +82,7 @@ export const AppointmentForm = ({
   }, [instance, initialStartTime, initialEndTime]);
 
   React.useEffect(() => {
+    // Get available technicians when any of the relevant values change
     if (!startTime || !endTime) {
       return;
     }
@@ -80,6 +90,10 @@ export const AppointmentForm = ({
   }, [client, day, startTime, endTime]);
 
   React.useEffect(() => {
+    // Get repeatable appointment days and warnings when any of the relevant values change
+    setRepeatableAppointmentDays([]);
+    setWarnings([]);
+    form.setValue('repeats', []);
     if (!client || !technician || !startTime || !endTime) {
       return;
     }
@@ -87,11 +101,44 @@ export const AppointmentForm = ({
     getWarnings();
   }, [technician, startTime, endTime, client, day]);
 
+  React.useEffect(() => {
+    // Clear selected technician when show all technicians is toggled
+    // and the selected technician is not available
+    if (!technician) {
+      return;
+    }
+    if (!showAllTechnicians && !isTechnicianAvailable(technician)) {
+      form.setValue('technician', '');
+    }
+  }, [showAllTechnicians]);
+
+  React.useEffect(() => {
+    // Set the form technician value on load if not editing
+
+    // If not editing, do not do anything
+    if (!instance || !instance.technician) {
+      return;
+    }
+
+    // If we've already set the technician, do not do anything
+    if (initialTechnicianSet) {
+      return;
+    }
+
+    // Wait until we have fetched available technicians
+    if (!availableTechniciansLoaded) {
+      return;
+    }
+
+    form.setValue('technician', instance.technician.id);
+    setInitialTechnicianSet(true);
+  }, [availableTechnicians, instance]);
+
   function getAvailableTechnicians() {
     if (!client) {
       return;
     }
-
+    setAvailableTechniciansLoaded(false);
     ClientModel.detailAction(
       client.id,
       'available_techs',
@@ -103,8 +150,18 @@ export const AppointmentForm = ({
         end_time: endTime,
         appointment: instance ? instance.id : undefined,
       }
-    ).then((technicians) => {
-      setAvailableTechnicians(technicians.data as Technician[]);
+    )
+      .then((technicians) => {
+        setAvailableTechnicians(technicians.data as Technician[]);
+      })
+      .finally(() => {
+        setAvailableTechniciansLoaded(true);
+      });
+  }
+
+  function getAllTechnicians() {
+    TechnicianModel.all().then((technicians) => {
+      setAllTechnicians(technicians);
     });
   }
 
@@ -230,6 +287,10 @@ export const AppointmentForm = ({
       });
   }
 
+  function isTechnicianAvailable(technicianId: string) {
+    return availableTechnicians.some((t) => t.id === technicianId);
+  }
+
   if (confirmDelete) {
     return (
       <div className="AppointmentForm__confirmDelete">
@@ -294,12 +355,24 @@ export const AppointmentForm = ({
           }}
         />
       </div>
-      <Checkbox label="In clinic" {...form.register('in_clinic')} />
+      <Toggle labelPosition="right" label="In clinic" {...form.register('in_clinic')} />
+      <Toggle
+        checked={showAllTechnicians}
+        label="Show all technicians"
+        labelPosition="right"
+        onChange={() => setShowAllTechnicians(!showAllTechnicians)}
+      />
       <Select fluid label="Technician" {...form.register('technician', { required: true })}>
         <option value="">Select a technician</option>
-        {availableTechnicians.map((technician) => (
-          <option key={technician.id} value={technician.id}>
-            {technician.first_name} {technician.last_name}
+        {(showAllTechnicians ? allTechnicians : availableTechnicians).map((tech) => (
+          <option
+            key={tech.id}
+            className={clsx({
+              'AppointmentForm__technician--unavailable': !isTechnicianAvailable(tech.id),
+            })}
+            value={tech.id}
+          >
+            {tech.first_name} {tech.last_name} {!isTechnicianAvailable(tech.id) ? '⚠' : ''}
           </option>
         ))}
       </Select>
@@ -309,7 +382,25 @@ export const AppointmentForm = ({
           name="repeats"
           render={({ field }) => (
             <div className="Input__container">
-              <label>Repeats</label>
+              <label style={{ display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
+                Repeats
+                <RadixTooltip
+                  side="right"
+                  portal
+                  trigger={
+                    <IconButton radius="full" size="xs">
+                      <span className="material-symbols-outlined">help</span>
+                    </IconButton>
+                  }
+                >
+                  <div className="text-size-xs" style={{ lineHeight: '1.5', width: '24rem' }}>
+                    <strong>Note</strong>: Warnings are only shown for the current appointment!
+                    <br />
+                    Creating repeated appointments can result in unintended conflicts such as over booking the
+                    technician or client.
+                  </div>
+                </RadixTooltip>
+              </label>
               <div className="flex gap-1">
                 {['Mon', 'Tue', 'Wed', 'Thur', 'Fri'].map(
                   (dayStr, index) =>
@@ -336,7 +427,6 @@ export const AppointmentForm = ({
                     )
                 )}
               </div>
-              <p className="hint mt-2">Note: Warnings are only shown for the current appointment!</p>
             </div>
           )}
         />
