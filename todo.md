@@ -2,8 +2,6 @@ Target June 19th
 
 Suggested by Lyssa:
 
-- should be able to hover over appointments on the schedule to see basic details about the appointment
-- on sheet one, hover card to see client details when hovering over a scheduled block
 - remaining sheet one matrix showing how many times a particular client has been scheduled with a technician
 - legend on sheet one
 
@@ -45,3 +43,4 @@ Done:
 - When a client is marked as "is_onboarding", their appointments are displayed as yellow instead of green on sheet 1
 - Support creating "repeated" appointments
 - When creating or editing an appointment, allow "overriding" and selecting a tech that is not recommended, show warnings
+- Add hover card on schedule and sheet one to see appointment details
