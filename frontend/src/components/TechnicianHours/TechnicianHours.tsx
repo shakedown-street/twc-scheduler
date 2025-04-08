@@ -76,26 +76,60 @@ export const TechnicianHours = () => {
     }
   }
 
+  function renderLegend() {
+    return (
+      <div className="TechnicianHours__legend">
+        <div className="TechnicianHours__legend__example">
+          <div className="TechnicianHours__legend__example__color" style={{ background: '#404040' }}></div>
+          <span>Unavailable</span>
+        </div>
+        <div className="TechnicianHours__legend__example">
+          <div className="TechnicianHours__legend__example__color" style={{ background: '#cbd5e1' }}></div>
+          <span>Available</span>
+        </div>
+        <div className="TechnicianHours__legend__example">
+          <div className="TechnicianHours__legend__example__color" style={{ background: '#b91c1c' }}></div>
+          <span>Maxed on Sessions</span>
+        </div>
+        <div className="TechnicianHours__legend__example">
+          <div className="TechnicianHours__legend__example__color" style={{ background: '#15803d' }}></div>
+          <span>Has Session</span>
+        </div>
+        <div className="TechnicianHours__legend__example">
+          <div className="TechnicianHours__legend__example__color" style={{ background: '#eab308' }}></div>
+          <span>Onboarding</span>
+        </div>
+        <div className="TechnicianHours__legend__example">
+          <div
+            className="TechnicianHours__legend__example__color"
+            style={{ background: 'repeating-linear-gradient(45deg, white, white 4px, black 4px, black 8px)' }}
+          ></div>
+          <span>In Clinic</span>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <>
       <table className="TechnicianHours">
         <colgroup>
-          <col width="48px" />
-          <col width="48px" />
-          <col width="48px" />
+          <col width="24px" />
+          <col width="24px" />
+          <col width="32px" />
           <col />
+          <col width="32px" />
+          <col width="32px" />
+          <col width="32px" />
+          <col width="32px" />
+          <col width="32px" />
           <col width="48px" />
           <col width="48px" />
-          <col width="48px" />
-          <col width="48px" />
-          <col width="48px" />
-          <col width="96px" />
-          <col width="96px" />
-          <col width="48px" />
+          <col width="24px" />
           {['M', 'T', 'W', 'TH', 'F'].map((day) => (
             <React.Fragment key={day}>
               {blocks.map((block) => (
-                <col key={block.id} width="32px" />
+                <col key={block.id} width="28px" />
               ))}
             </React.Fragment>
           ))}
@@ -131,7 +165,16 @@ export const TechnicianHours = () => {
             <tr key={technician.id}>
               <td style={{ backgroundColor: technician.color }}>{index + 1}</td>
               <td style={{ backgroundColor: getSkillLevelColor(technician.skill_level) }}>{technician.skill_level}</td>
-              <td>{technician.spanish_speaking ? 'yes' : 'no'}</td>
+              <td
+                style={{
+                  textAlign: 'center',
+                  verticalAlign: 'middle',
+                }}
+              >
+                {technician.spanish_speaking && (
+                  <span className="material-symbols-outlined text-color-green text-size-sm display-block">check</span>
+                )}
+              </td>
               <td style={{ backgroundColor: technician.color }}>
                 {technician.first_name} {technician.last_name}
               </td>
@@ -188,6 +231,7 @@ export const TechnicianHours = () => {
           ))}
         </tbody>
       </table>
+      {renderLegend()}
     </>
   );
 };
