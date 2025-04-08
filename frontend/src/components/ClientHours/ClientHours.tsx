@@ -78,22 +78,22 @@ export const ClientHours = () => {
     <>
       <table className="ClientHours">
         <colgroup>
-          <col width="48px" />
-          <col width="48px" />
-          <col width="48px" />
+          <col width="24px" />
+          <col width="24px" />
+          <col width="32px" />
           <col />
+          <col width="32px" />
+          <col width="32px" />
+          <col width="32px" />
+          <col width="32px" />
+          <col width="32px" />
           <col width="48px" />
           <col width="48px" />
-          <col width="48px" />
-          <col width="48px" />
-          <col width="48px" />
-          <col width="96px" />
-          <col width="96px" />
-          <col width="48px" />
+          <col width="24px" />
           {['M', 'T', 'W', 'TH', 'F'].map((day) => (
             <React.Fragment key={day}>
               {blocks.map((block) => (
-                <col key={block.id} width="32px" />
+                <col key={block.id} width="28px" />
               ))}
             </React.Fragment>
           ))}
@@ -129,7 +129,16 @@ export const ClientHours = () => {
             <tr key={client.id}>
               <td>{index + 1}</td>
               <td style={{ backgroundColor: getSkillLevelColor(client.req_skill_level) }}>{client.req_skill_level}</td>
-              <td>{client.req_spanish_speaking ? 'yes' : 'no'}</td>
+              <td
+                style={{
+                  textAlign: 'center',
+                  verticalAlign: 'middle',
+                }}
+              >
+                {client.req_spanish_speaking && (
+                  <span className="material-symbols-outlined text-color-green text-size-sm display-block">check</span>
+                )}
+              </td>
               <td>
                 {client.first_name} {client.last_name}
               </td>
