@@ -44,7 +44,7 @@ export const AppointmentForm = ({
 }: AppointmentFormProps) => {
   const [availableTechnicians, setAvailableTechnicians] = React.useState<Technician[]>([]);
   const [availableTechniciansLoaded, setAvailableTechniciansLoaded] = React.useState(false);
-  const [showAllTechnicians, setShowAllTechnicians] = React.useState(false);
+  const [onlyShowRecommendedTechs, setOnlyShowRecommendedTechs] = React.useState(true);
   const [allTechnicians, setAllTechnicians] = React.useState<Technician[]>([]);
   const [repeatableAppointmentDays, setRepeatableAppointmentDays] = React.useState<number[]>([]);
   const [warnings, setWarnings] = React.useState<string[]>([]);
@@ -107,10 +107,10 @@ export const AppointmentForm = ({
     if (!technician) {
       return;
     }
-    if (!showAllTechnicians && !isTechnicianAvailable(technician)) {
+    if (onlyShowRecommendedTechs && !isTechnicianAvailable(technician)) {
       form.setValue('technician', '');
     }
-  }, [showAllTechnicians]);
+  }, [onlyShowRecommendedTechs]);
 
   React.useEffect(() => {
     // Set the form technician value on load if not editing
@@ -357,14 +357,14 @@ export const AppointmentForm = ({
       </div>
       <Toggle labelPosition="right" label="In clinic" {...form.register('in_clinic')} />
       <Toggle
-        checked={showAllTechnicians}
-        label="Show all technicians"
+        checked={onlyShowRecommendedTechs}
+        label="Recommended Techs Only"
         labelPosition="right"
-        onChange={() => setShowAllTechnicians(!showAllTechnicians)}
+        onChange={() => setOnlyShowRecommendedTechs(!onlyShowRecommendedTechs)}
       />
       <Select fluid label="Technician" {...form.register('technician', { required: true })}>
         <option value="">Select a technician</option>
-        {(showAllTechnicians ? allTechnicians : availableTechnicians).map((tech) => (
+        {(onlyShowRecommendedTechs ? availableTechnicians : allTechnicians).map((tech) => (
           <option
             key={tech.id}
             className={clsx({

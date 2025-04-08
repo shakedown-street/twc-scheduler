@@ -2,7 +2,9 @@ import React from 'react';
 import { BlockModel, ClientModel } from '~/api';
 import { Block } from '~/types/Block';
 import { Client } from '~/types/Client';
+import { RadixHoverCard } from '~/ui/RadixHoverCard/RadixHoverCard';
 import { isBetweenInclusiveEnd, isBetweenInclusiveStart } from '~/utils/time';
+import { AppointmentHover } from '../AppointmentHover/AppointmentHover';
 import './ClientHours.scss';
 
 export const ClientHours = () => {
@@ -147,14 +149,37 @@ export const ClientHours = () => {
               </td>
               {days.map((day) => (
                 <React.Fragment key={day}>
-                  {blocks.map((block) => (
-                    <td
-                      key={block.id}
-                      style={{
-                        background: blockBackground(client, day, block),
-                      }}
-                    ></td>
-                  ))}
+                  {blocks.map((block) => {
+                    const blockAppointments = getAppointments(client, day, block) || [];
+
+                    if (blockAppointments.length > 0) {
+                      const appointment = blockAppointments[0];
+                      return (
+                        <RadixHoverCard
+                          key={block.id}
+                          portal
+                          trigger={
+                            <td
+                              style={{
+                                background: blockBackground(client, day, block),
+                              }}
+                            ></td>
+                          }
+                        >
+                          <AppointmentHover appointment={appointment} />
+                        </RadixHoverCard>
+                      );
+                    }
+
+                    return (
+                      <td
+                        key={block.id}
+                        style={{
+                          background: blockBackground(client, day, block),
+                        }}
+                      ></td>
+                    );
+                  })}
                 </React.Fragment>
               ))}
             </tr>

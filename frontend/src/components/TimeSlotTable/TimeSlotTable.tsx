@@ -6,6 +6,8 @@ import { Block } from '~/types/Block';
 import { Client } from '~/types/Client';
 import { formatTimeTimeline, generateTimeSlots, isBetweenInclusiveStart, isOnTheHour } from '~/utils/time';
 import './TimeSlotTable.scss';
+import { RadixHoverCard } from '~/ui/RadixHoverCard/RadixHoverCard';
+import { AppointmentHover } from '../AppointmentHover/AppointmentHover';
 
 export type TimeSlotTableProps = {
   clients: Client[];
@@ -133,19 +135,46 @@ export const TimeSlotTable = ({
             <td>
               {client.first_name} {client.last_name}
             </td>
-            {timeSlots.map((slot) => (
-              <td
-                key={slot}
-                className="TimeSlotTable__slot"
-                style={{
-                  borderLeft: isOnTheHour(slot) ? '2px solid black' : undefined,
-                  background: slotBackground(slot, client),
-                }}
-                onClick={() => {
-                  clickSlot(client, slot);
-                }}
-              ></td>
-            ))}
+            {timeSlots.map((slot) => {
+              const slotAppointment = getSlotAppointment(slot, client.appointments || []);
+
+              if (slotAppointment) {
+                return (
+                  <RadixHoverCard
+                    key={slot}
+                    portal
+                    trigger={
+                      <td
+                        className="TimeSlotTable__slot"
+                        style={{
+                          borderLeft: isOnTheHour(slot) ? '2px solid black' : undefined,
+                          background: slotBackground(slot, client),
+                        }}
+                        onClick={() => {
+                          clickSlot(client, slot);
+                        }}
+                      ></td>
+                    }
+                  >
+                    <AppointmentHover appointment={slotAppointment} />
+                  </RadixHoverCard>
+                );
+              }
+
+              return (
+                <td
+                  key={slot}
+                  className="TimeSlotTable__slot"
+                  style={{
+                    borderLeft: isOnTheHour(slot) ? '2px solid black' : undefined,
+                    background: slotBackground(slot, client),
+                  }}
+                  onClick={() => {
+                    clickSlot(client, slot);
+                  }}
+                ></td>
+              );
+            })}
           </tr>
         ))}
       </tbody>

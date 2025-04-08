@@ -2,7 +2,9 @@ import React from 'react';
 import { BlockModel, TechnicianModel } from '~/api';
 import { Block } from '~/types/Block';
 import { Technician } from '~/types/Technician';
+import { RadixHoverCard } from '~/ui/RadixHoverCard/RadixHoverCard';
 import { isBetweenInclusiveEnd, isBetweenInclusiveStart } from '~/utils/time';
+import { AppointmentHover } from '../AppointmentHover/AppointmentHover';
 import './TechnicianHours.scss';
 
 export const TechnicianHours = () => {
@@ -149,14 +151,37 @@ export const TechnicianHours = () => {
               </td>
               {days.map((day) => (
                 <React.Fragment key={day}>
-                  {blocks.map((block) => (
-                    <td
-                      key={block.id}
-                      style={{
-                        background: blockBackground(technician, day, block),
-                      }}
-                    ></td>
-                  ))}
+                  {blocks.map((block) => {
+                    const blockAppointments = getAppointments(technician, day, block) || [];
+
+                    if (blockAppointments.length > 0) {
+                      const appointment = blockAppointments[0];
+                      return (
+                        <RadixHoverCard
+                          key={block.id}
+                          portal
+                          trigger={
+                            <td
+                              style={{
+                                background: blockBackground(technician, day, block),
+                              }}
+                            ></td>
+                          }
+                        >
+                          <AppointmentHover appointment={appointment} />
+                        </RadixHoverCard>
+                      );
+                    }
+
+                    return (
+                      <td
+                        key={block.id}
+                        style={{
+                          background: blockBackground(technician, day, block),
+                        }}
+                      ></td>
+                    );
+                  })}
                 </React.Fragment>
               ))}
             </tr>
