@@ -12,7 +12,7 @@ import { CheckoutSuccess } from './features/payments/routes/CheckoutSuccess/Chec
 import { ClientAvailability } from './routes/ClientAvailability/ClientAvailability';
 import { Home } from './routes/Home/Home';
 import { NotFound } from './routes/NotFound/NotFound';
-import { Sheet1 } from './routes/Sheet1/Sheet1';
+import { Overview } from './routes/Overview/Overview';
 import { StyleGuide } from './routes/StyleGuide/StyleGuide';
 import { TechAvailability } from './routes/TechAvailability/TechAvailability';
 
@@ -97,10 +97,10 @@ export const routes: RouteObject[] = [
         ),
       },
       {
-        path: '/sheet1',
+        path: '/overview',
         element: (
           <AuthGuard>
-            <Sheet1 />
+            <Overview />
           </AuthGuard>
         ),
       },
