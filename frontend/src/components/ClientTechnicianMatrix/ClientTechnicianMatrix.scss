@@ -1,0 +1,25 @@
+.ClientTechnicianMatrix {
+  thead {
+    tr {
+      th {
+        border: 1px solid black;
+        font-size: 0.625rem;
+        padding: 0.25rem;
+        // transform: rotate(180deg);
+        text-align: left;
+        writing-mode: vertical-rl;
+      }
+    }
+  }
+
+  tbody {
+    tr {
+      td {
+        border: 1px solid black;
+        font-size: 0.75rem;
+        padding: 0.25rem;
+        text-align: center;
+      }
+    }
+  }
+}
