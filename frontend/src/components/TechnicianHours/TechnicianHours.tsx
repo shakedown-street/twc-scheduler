@@ -3,7 +3,8 @@ import { BlockModel, TechnicianModel } from '~/api';
 import { Block } from '~/types/Block';
 import { Technician } from '~/types/Technician';
 import { RadixHoverCard } from '~/ui/RadixHoverCard/RadixHoverCard';
-import { isBetweenInclusiveEnd, isBetweenInclusiveStart } from '~/utils/time';
+import { getBlockAppointments, getBlockAvailabilities } from '~/utils/appointments';
+import { dayColor, skillLevelColor } from '~/utils/color';
 import { AppointmentHover } from '../AppointmentHover/AppointmentHover';
 import './TechnicianHours.scss';
 
@@ -24,41 +25,9 @@ export const TechnicianHours = () => {
     });
   }, []);
 
-  function isAvailable(technician: Technician, day: number, block: Block) {
-    return technician.availabilities?.some((availability) => {
-      return (
-        availability.day === day &&
-        isBetweenInclusiveStart(availability.start_time, block.start_time, block.end_time) &&
-        isBetweenInclusiveEnd(availability.end_time, block.start_time, block.end_time)
-      );
-    });
-  }
-
-  function getAppointments(technician: Technician, day: number, block: Block) {
-    return technician.appointments?.filter((appointment) => {
-      return (
-        appointment.day === day &&
-        isBetweenInclusiveStart(appointment.start_time, block.start_time, block.end_time) &&
-        isBetweenInclusiveEnd(appointment.end_time, block.start_time, block.end_time)
-      );
-    });
-  }
-
-  function getSkillLevelColor(skillLevel: number) {
-    switch (skillLevel) {
-      case 1:
-        return '#bbf7d0'; // tw-green-200
-      case 2:
-        return '#fef08a'; // tw-yellow-200
-      case 3:
-        return '#fecaca'; // tw-red-200
-      default:
-        return 'white';
-    }
-  }
-
   function blockBackground(technician: Technician, day: number, block: Block) {
-    const appointments = getAppointments(technician, day, block) || [];
+    const appointments = getBlockAppointments(technician.appointments || [], day, block) || [];
+    const availabilities = getBlockAvailabilities(technician.availabilities || [], day, block) || [];
 
     if (appointments.length > 0) {
       const appointment = appointments[0];
@@ -67,9 +36,9 @@ export const TechnicianHours = () => {
         return `repeating-linear-gradient(45deg, white, white 4px, ${color} 4px, ${color} 8px)`;
       }
       return `${color}`;
-    } else if (isAvailable(technician, day, block) && technician.is_maxed_on_sessions) {
+    } else if (availabilities.length > 0 && technician.is_maxed_on_sessions) {
       return '#b91c1c'; // tw-red-700
-    } else if (isAvailable(technician, day, block)) {
+    } else if (availabilities.length > 0) {
       return '#cbd5e1'; // tw-slate-300
     } else {
       return '#404040'; // tw-neutral-700
@@ -117,7 +86,7 @@ export const TechnicianHours = () => {
           <col width="24px" />
           <col width="24px" />
           <col width="32px" />
-          <col />
+          <col width="192px" />
           <col width="32px" />
           <col width="32px" />
           <col width="32px" />
@@ -148,10 +117,17 @@ export const TechnicianHours = () => {
             <th>Hrs</th>
             <th>Wanted</th>
             <th></th>
-            {['M', 'T', 'W', 'TH', 'F'].map((day) => (
+            {['M', 'T', 'W', 'TH', 'F'].map((day, dayIndex) => (
               <React.Fragment key={day}>
                 {blocks.map((block, blockIndex) => (
-                  <th key={block.id}>
+                  <th
+                    key={block.id}
+                    style={{
+                      background: dayColor(dayIndex),
+                      borderLeftWidth: blockIndex === 0 ? '6px' : '1px',
+                      borderRightWidth: blockIndex === blocks.length - 1 ? '6px' : '1px',
+                    }}
+                  >
                     {day}
                     {blockIndex + 1}
                   </th>
@@ -164,7 +140,7 @@ export const TechnicianHours = () => {
           {technicians.map((technician, index) => (
             <tr key={technician.id}>
               <td style={{ backgroundColor: technician.color }}>{index + 1}</td>
-              <td style={{ backgroundColor: getSkillLevelColor(technician.skill_level) }}>{technician.skill_level}</td>
+              <td style={{ backgroundColor: skillLevelColor(technician.skill_level) }}>{technician.skill_level}</td>
               <td
                 style={{
                   textAlign: 'center',
@@ -194,8 +170,8 @@ export const TechnicianHours = () => {
               </td>
               {days.map((day) => (
                 <React.Fragment key={day}>
-                  {blocks.map((block) => {
-                    const blockAppointments = getAppointments(technician, day, block) || [];
+                  {blocks.map((block, blockIndex) => {
+                    const blockAppointments = getBlockAppointments(technician.appointments || [], day, block) || [];
 
                     if (blockAppointments.length > 0) {
                       const appointment = blockAppointments[0];
@@ -207,6 +183,8 @@ export const TechnicianHours = () => {
                             <td
                               style={{
                                 background: blockBackground(technician, day, block),
+                                borderLeftWidth: blockIndex === 0 ? '6px' : '1px',
+                                borderRightWidth: blockIndex === blocks.length - 1 ? '6px' : '1px',
                               }}
                             ></td>
                           }
@@ -221,6 +199,8 @@ export const TechnicianHours = () => {
                         key={block.id}
                         style={{
                           background: blockBackground(technician, day, block),
+                          borderLeftWidth: blockIndex === 0 ? '6px' : '1px',
+                          borderRightWidth: blockIndex === blocks.length - 1 ? '6px' : '1px',
                         }}
                       ></td>
                     );

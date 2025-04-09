@@ -1,10 +1,5 @@
 Target June 19th
 
-Suggested by Lyssa:
-
-- remaining sheet one matrix showing how many times a particular client has been scheduled with a technician
-- legend on sheet one
-
 Requested by Alycen and Amy:
 
 - add a read only role
@@ -45,3 +40,5 @@ Done:
 - Support creating "repeated" appointments
 - When creating or editing an appointment, allow "overriding" and selecting a tech that is not recommended, show warnings
 - Add hover card on schedule and sheet one to see appointment details
+- Add legend to sheet one tables
+- Add sheet one matrix showing how many times a client is scheduled with each tech, and the total number of techs they're scheduled with

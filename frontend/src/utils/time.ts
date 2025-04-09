@@ -67,6 +67,18 @@ export function isBetweenInclusiveEnd(time: string, start: string, end: string) 
 }
 
 /**
+ * Format a time string in the format "HH:mm:ss" to "h:mm a"
+ */
+export function formatTime(time: string) {
+  try {
+    const parsedTime = parse(time, 'HH:mm:ss', new Date());
+    return format(parsedTime, 'h:mm a');
+  } catch (error) {
+    return time;
+  }
+}
+
+/**
  * Formats a timestamp such as "09:00:00" to "9" or "9:30:00" to "9:30"
  */
 export function formatTimeShort(time: string) {
@@ -121,4 +133,24 @@ export function generateTimeSlots(startTime: string, endTime: string, interval: 
     timeSlots.push(endTime);
   }
   return timeSlots;
+}
+
+/**
+ * Day to string
+ */
+export function dayToString(day: number, format: 'long' | 'medium' | 'short' = 'long') {
+  const long = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+  const medium = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+  const short = ['M', 'T', 'W', 'TH', 'F', 'SA', 'SU'];
+
+  switch (format) {
+    case 'long':
+      return long[day];
+    case 'medium':
+      return medium[day];
+    case 'short':
+      return short[day];
+    default:
+      return long[day];
+  }
 }
