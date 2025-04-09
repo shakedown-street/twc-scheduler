@@ -23,6 +23,7 @@ Other:
   - should default to in clinic as well if the client is available in clinic
 - How can we optimize the load times further? What sort of caching can we do?
 - Add loading spinners
+- Highlight the current page on nav bar
 
 Done:
 

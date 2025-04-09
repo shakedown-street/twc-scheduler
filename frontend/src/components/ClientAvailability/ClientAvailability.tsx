@@ -43,6 +43,7 @@ export const ClientAvailability = () => {
       setBlocks(blocks);
     });
     ClientModel.all({
+      page_size: 1000,
       expand_availabilities: true,
     }).then((clients) => {
       setClients(clients);

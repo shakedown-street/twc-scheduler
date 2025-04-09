@@ -15,6 +15,7 @@ export const TechnicianHours = () => {
 
   React.useEffect(() => {
     TechnicianModel.all({
+      page_size: 1000,
       expand_appointments: true,
       expand_availabilities: true,
     }).then((technicians) => {

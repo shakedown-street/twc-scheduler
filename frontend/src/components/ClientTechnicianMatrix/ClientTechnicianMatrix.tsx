@@ -10,11 +10,14 @@ export const ClientTechnicianMatrix = () => {
 
   React.useEffect(() => {
     ClientModel.all({
+      page_size: 1000,
       expand_appointments: true,
     }).then((clients) => {
       setClients(clients);
     });
-    TechnicianModel.all().then((technicians) => {
+    TechnicianModel.all({
+      page_size: 1000,
+    }).then((technicians) => {
       setTechnicians(technicians);
     });
   }, []);

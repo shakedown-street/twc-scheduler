@@ -164,7 +164,9 @@ export const AppointmentForm = ({
   }
 
   function getAllTechnicians() {
-    TechnicianModel.all().then((technicians) => {
+    TechnicianModel.all({
+      page_size: 1000,
+    }).then((technicians) => {
       setAllTechnicians(technicians);
     });
   }

@@ -43,6 +43,7 @@ export const TechAvailability = () => {
       setBlocks(blocks);
     });
     TechnicianModel.all({
+      page_size: 1000,
       expand_availabilities: true,
     }).then((technicians) => {
       setTechnicians(technicians);
