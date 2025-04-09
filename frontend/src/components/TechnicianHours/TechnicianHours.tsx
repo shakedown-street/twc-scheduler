@@ -85,17 +85,17 @@ export const TechnicianHours = () => {
         <colgroup>
           <col width="24px" />
           <col width="24px" />
-          <col width="32px" />
+          <col />
           <col width="192px" />
-          <col width="32px" />
-          <col width="32px" />
-          <col width="32px" />
-          <col width="32px" />
-          <col width="32px" />
-          <col width="48px" />
-          <col width="48px" />
+          <col />
+          <col />
+          <col />
+          <col />
+          <col />
+          <col />
+          <col />
           <col width="24px" />
-          {['M', 'T', 'W', 'TH', 'F'].map((day) => (
+          {['Mon', 'Tue', 'Wed', 'Thu', 'Fri'].map((day) => (
             <React.Fragment key={day}>
               {blocks.map((block) => (
                 <col key={block.id} width="28px" />
@@ -106,17 +106,17 @@ export const TechnicianHours = () => {
         <thead>
           <tr>
             <th></th>
-            <th></th>
-            <th>Spa</th>
-            <th>Name</th>
-            <th>M</th>
-            <th>T</th>
-            <th>W</th>
-            <th>TH</th>
-            <th>F</th>
-            <th>Hrs</th>
-            <th>Wanted</th>
-            <th></th>
+            <th title="Skill level"></th>
+            <th title="Spanish speaker">Spa</th>
+            <th title="Name"></th>
+            <th>Mon</th>
+            <th>Tue</th>
+            <th>Wed</th>
+            <th>Thu</th>
+            <th>Fri</th>
+            <th title="Hours scheduled">Hrs</th>
+            <th title="Hours requested">Req</th>
+            <th title="Available"></th>
             {['M', 'T', 'W', 'TH', 'F'].map((day, dayIndex) => (
               <React.Fragment key={day}>
                 {blocks.map((block, blockIndex) => (
@@ -139,8 +139,10 @@ export const TechnicianHours = () => {
         <tbody>
           {technicians.map((technician, index) => (
             <tr key={technician.id}>
-              <td style={{ backgroundColor: technician.color }}>{index + 1}</td>
-              <td style={{ backgroundColor: skillLevelColor(technician.skill_level) }}>{technician.skill_level}</td>
+              <td style={{ backgroundColor: technician.color, textAlign: 'center' }}>{index + 1}</td>
+              <td style={{ backgroundColor: skillLevelColor(technician.skill_level), textAlign: 'center' }}>
+                {technician.skill_level}
+              </td>
               <td
                 style={{
                   textAlign: 'center',
@@ -154,16 +156,19 @@ export const TechnicianHours = () => {
               <td style={{ backgroundColor: technician.color }}>
                 {technician.first_name} {technician.last_name}
               </td>
-              <td>{technician.total_hours_by_day[0]}</td>
-              <td>{technician.total_hours_by_day[1]}</td>
-              <td>{technician.total_hours_by_day[2]}</td>
-              <td>{technician.total_hours_by_day[3]}</td>
-              <td>{technician.total_hours_by_day[4]}</td>
-              <td>{technician.total_hours}</td>
-              <td>{technician.requested_hours}</td>
+              <td style={{ textAlign: 'center' }}>{technician.total_hours_by_day[0]}</td>
+              <td style={{ textAlign: 'center' }}>{technician.total_hours_by_day[1]}</td>
+              <td style={{ textAlign: 'center' }}>{technician.total_hours_by_day[2]}</td>
+              <td style={{ textAlign: 'center' }}>{technician.total_hours_by_day[3]}</td>
+              <td style={{ textAlign: 'center' }}>{technician.total_hours_by_day[4]}</td>
+              <td style={{ textAlign: 'center' }}>{technician.total_hours}</td>
+              <td style={{ textAlign: 'center' }}>{technician.requested_hours}</td>
               <td
                 style={{
-                  color: technician.is_maxed_on_sessions ? '#dc2626' : '#16a34a',
+                  backgroundColor: 'black',
+                  color: technician.is_maxed_on_sessions ? '#ef4444' : '#22c55e', // tw-red-500 : tw-green-500
+                  fontWeight: 'bold',
+                  textAlign: 'center',
                 }}
               >
                 {technician.is_maxed_on_sessions ? 'M' : 'A'}
@@ -210,6 +215,34 @@ export const TechnicianHours = () => {
             </tr>
           ))}
         </tbody>
+        <tfoot>
+          <tr>
+            <td colSpan={4} style={{ textAlign: 'center' }}>
+              Total
+            </td>
+            <td style={{ textAlign: 'center' }}>
+              {technicians.reduce((acc, technician) => acc + technician.total_hours_by_day[0], 0)}
+            </td>
+            <td style={{ textAlign: 'center' }}>
+              {technicians.reduce((acc, technician) => acc + technician.total_hours_by_day[1], 0)}
+            </td>
+            <td style={{ textAlign: 'center' }}>
+              {technicians.reduce((acc, technician) => acc + technician.total_hours_by_day[2], 0)}
+            </td>
+            <td style={{ textAlign: 'center' }}>
+              {technicians.reduce((acc, technician) => acc + technician.total_hours_by_day[3], 0)}
+            </td>
+            <td style={{ textAlign: 'center' }}>
+              {technicians.reduce((acc, technician) => acc + technician.total_hours_by_day[4], 0)}
+            </td>
+            <td style={{ textAlign: 'center' }}>
+              {technicians.reduce((acc, technician) => acc + technician.total_hours, 0)}
+            </td>
+            <td style={{ textAlign: 'center' }}>
+              {technicians.reduce((acc, technician) => acc + technician.requested_hours, 0)}
+            </td>
+          </tr>
+        </tfoot>
       </table>
       {renderLegend()}
     </>

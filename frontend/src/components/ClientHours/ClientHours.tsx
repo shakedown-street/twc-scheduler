@@ -77,15 +77,15 @@ export const ClientHours = () => {
         <colgroup>
           <col width="24px" />
           <col width="24px" />
-          <col width="32px" />
+          <col />
           <col width="192px" />
-          <col width="32px" />
-          <col width="32px" />
-          <col width="32px" />
-          <col width="32px" />
-          <col width="32px" />
-          <col width="48px" />
-          <col width="48px" />
+          <col />
+          <col />
+          <col />
+          <col />
+          <col />
+          <col />
+          <col />
           <col width="24px" />
           {['M', 'T', 'W', 'TH', 'F'].map((day) => (
             <React.Fragment key={day}>
@@ -98,17 +98,17 @@ export const ClientHours = () => {
         <thead>
           <tr>
             <th></th>
-            <th></th>
-            <th>Spa</th>
-            <th>Name</th>
-            <th>M</th>
-            <th>T</th>
-            <th>W</th>
-            <th>TH</th>
-            <th>F</th>
-            <th>Wk Hr</th>
-            <th>Rx</th>
-            <th></th>
+            <th title="Skill level"></th>
+            <th title="Spanish speaker">Spa</th>
+            <th title="Name"></th>
+            <th>Mon</th>
+            <th>Tue</th>
+            <th>Wed</th>
+            <th>Thu</th>
+            <th>Fri</th>
+            <th title="Hours scheduled">Hrs</th>
+            <th title="Hours prescribed">Rx</th>
+            <th title="Available"></th>
             {['M', 'T', 'W', 'TH', 'F'].map((day, dayIndex) => (
               <React.Fragment key={day}>
                 {blocks.map((block, blockIndex) => (
@@ -131,8 +131,10 @@ export const ClientHours = () => {
         <tbody>
           {clients.map((client, index) => (
             <tr key={client.id}>
-              <td>{index + 1}</td>
-              <td style={{ backgroundColor: skillLevelColor(client.req_skill_level) }}>{client.req_skill_level}</td>
+              <td style={{ textAlign: 'center' }}>{index + 1}</td>
+              <td style={{ backgroundColor: skillLevelColor(client.req_skill_level), textAlign: 'center' }}>
+                {client.req_skill_level}
+              </td>
               <td
                 style={{
                   textAlign: 'center',
@@ -146,16 +148,19 @@ export const ClientHours = () => {
               <td>
                 {client.first_name} {client.last_name}
               </td>
-              <td>{client.total_hours_by_day[0]}</td>
-              <td>{client.total_hours_by_day[1]}</td>
-              <td>{client.total_hours_by_day[2]}</td>
-              <td>{client.total_hours_by_day[3]}</td>
-              <td>{client.total_hours_by_day[4]}</td>
-              <td>{client.total_hours}</td>
-              <td>{client.prescribed_hours}</td>
+              <td style={{ textAlign: 'center' }}>{client.total_hours_by_day[0]}</td>
+              <td style={{ textAlign: 'center' }}>{client.total_hours_by_day[1]}</td>
+              <td style={{ textAlign: 'center' }}>{client.total_hours_by_day[2]}</td>
+              <td style={{ textAlign: 'center' }}>{client.total_hours_by_day[3]}</td>
+              <td style={{ textAlign: 'center' }}>{client.total_hours_by_day[4]}</td>
+              <td style={{ textAlign: 'center' }}>{client.total_hours}</td>
+              <td style={{ textAlign: 'center' }}>{client.prescribed_hours}</td>
               <td
                 style={{
-                  color: client.is_maxed_on_sessions ? '#dc2626' : '#16a34a',
+                  backgroundColor: 'black',
+                  color: client.is_maxed_on_sessions ? '#ef4444' : '#22c55e', // tw-red-500 : tw-green-500
+                  fontWeight: 'bold',
+                  textAlign: 'center',
                 }}
               >
                 {client.is_maxed_on_sessions ? 'M' : 'A'}
@@ -202,6 +207,30 @@ export const ClientHours = () => {
             </tr>
           ))}
         </tbody>
+        <tfoot>
+          <tr>
+            <td colSpan={4} style={{ textAlign: 'center' }}>
+              Total
+            </td>
+            <td style={{ textAlign: 'center' }}>
+              {clients.reduce((acc, client) => acc + client.total_hours_by_day[0], 0)}
+            </td>
+            <td style={{ textAlign: 'center' }}>
+              {clients.reduce((acc, client) => acc + client.total_hours_by_day[1], 0)}
+            </td>
+            <td style={{ textAlign: 'center' }}>
+              {clients.reduce((acc, client) => acc + client.total_hours_by_day[2], 0)}
+            </td>
+            <td style={{ textAlign: 'center' }}>
+              {clients.reduce((acc, client) => acc + client.total_hours_by_day[3], 0)}
+            </td>
+            <td style={{ textAlign: 'center' }}>
+              {clients.reduce((acc, client) => acc + client.total_hours_by_day[4], 0)}
+            </td>
+            <td style={{ textAlign: 'center' }}>{clients.reduce((acc, client) => acc + client.total_hours, 0)}</td>
+            <td style={{ textAlign: 'center' }}>{clients.reduce((acc, client) => acc + client.prescribed_hours, 0)}</td>
+          </tr>
+        </tfoot>
       </table>
       {renderLegend()}
     </>
