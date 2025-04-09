@@ -16,7 +16,8 @@ export type TechnicianFormProps = {
 export type TechnicianFormData = {
   first_name: string;
   last_name: string;
-  color: string;
+  bg_color: string;
+  text_color: string;
   requested_hours: number;
   skill_level: number;
   spanish_speaking: boolean;
@@ -30,7 +31,8 @@ export const TechnicianForm = ({ technician, onCancel, onCreate, onDelete, onUpd
     defaultValues: {
       first_name: technician?.first_name ?? '',
       last_name: technician?.last_name ?? '',
-      color: technician?.color ?? '',
+      bg_color: technician?.bg_color ?? '',
+      text_color: technician?.text_color ?? '',
       requested_hours: technician?.requested_hours ?? 0,
       skill_level: technician?.skill_level ?? 1,
       spanish_speaking: technician?.spanish_speaking ?? false,
@@ -46,7 +48,8 @@ export const TechnicianForm = ({ technician, onCancel, onCreate, onDelete, onUpd
     form.reset({
       first_name: technician.first_name,
       last_name: technician.last_name,
-      color: technician.color,
+      bg_color: technician.bg_color,
+      text_color: technician.text_color,
       requested_hours: technician.requested_hours,
       skill_level: technician.skill_level,
       spanish_speaking: technician.spanish_speaking,
@@ -135,8 +138,12 @@ export const TechnicianForm = ({ technician, onCancel, onCreate, onDelete, onUpd
         />
       </div>
       <div className="Input__container">
-        <label htmlFor="color">Color</label>
-        <input id="color" type="color" {...form.register('color', { required: true })} />
+        <label htmlFor="color">Background Color</label>
+        <input id="color" type="color" {...form.register('bg_color', { required: true })} />
+      </div>
+      <div className="Input__container">
+        <label htmlFor="text_color">Font Color</label>
+        <input id="text_color" type="color" {...form.register('text_color', { required: true })} />
       </div>
       <Toggle label="Spanish Speaking" {...form.register('spanish_speaking')} />
       <Textarea rows={4} fluid label="Notes" style={{ resize: 'none' }} {...form.register('notes')} />

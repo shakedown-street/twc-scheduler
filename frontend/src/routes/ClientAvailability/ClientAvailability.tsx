@@ -176,7 +176,7 @@ export const ClientAvailability = () => {
               'ClientAvailability__table__block--last': index === blocks.length - 1,
             })}
             style={{
-              backgroundColor: blockAvailability ? block.color : undefined,
+              background: blockAvailability ? block.color : undefined,
             }}
             onClick={() => {
               if (blockAvailability) {

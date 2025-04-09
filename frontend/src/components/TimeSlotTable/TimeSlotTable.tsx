@@ -76,10 +76,11 @@ export const TimeSlotTable = ({
 
     if (slotAppointment) {
       if (slotAppointment.in_clinic) {
-        const color = slotAppointment.technician?.color || 'white';
-        return `repeating-linear-gradient(45deg, white, white 4px, ${color} 4px, ${color} 8px)`;
+        const bgColor = slotAppointment.technician?.bg_color || 'white';
+        const textColor = slotAppointment.technician?.text_color || 'black';
+        return `repeating-linear-gradient(45deg, ${textColor}, ${textColor} 4px, ${bgColor} 4px, ${bgColor} 8px)`;
       }
-      return slotAppointment.technician?.color || 'white';
+      return slotAppointment.technician?.bg_color || 'white';
     }
     if (slotAvailability) {
       return '#cbd5e1'; // tw-slate-300
@@ -119,7 +120,7 @@ export const TimeSlotTable = ({
               key={slot}
               style={{
                 borderLeft: isOnTheHour(slot) ? '2px solid black' : undefined,
-                backgroundColor: getSlotBlock(slot) ? 'white' : '#404040',
+                background: getSlotBlock(slot) ? 'white' : '#404040',
                 color: getSlotBlock(slot) ? 'black' : 'white',
                 fontWeight: isOnTheHour(slot) ? 'bold' : 'light',
               }}

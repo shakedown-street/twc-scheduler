@@ -7,7 +7,8 @@ export type Technician = {
   updated_at: string;
   first_name: string;
   last_name: string;
-  color: string;
+  bg_color: string;
+  text_color: string;
   requested_hours: number;
   skill_level: number;
   spanish_speaking: boolean;

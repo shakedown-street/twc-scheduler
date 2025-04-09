@@ -59,7 +59,8 @@ export const ClientTechnicianMatrix = () => {
               <th
                 key={technician.id}
                 style={{
-                  background: technician.color,
+                  background: technician.bg_color,
+                  color: technician.text_color,
                 }}
               >
                 {technician.first_name} {technician.last_name}
@@ -84,7 +85,8 @@ export const ClientTechnicianMatrix = () => {
                     return (
                       <td
                         style={{
-                          background: count > 0 ? technician.color : undefined,
+                          background: count > 0 ? technician.bg_color : undefined,
+                          color: count > 0 ? technician.text_color : undefined,
                         }}
                       >
                         {count}

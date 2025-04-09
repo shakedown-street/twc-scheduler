@@ -11,7 +11,8 @@ from .utils import get_difference_in_minutes
 class Technician(UUIDPrimaryKeyMixin, TimestampMixin):
     first_name = models.CharField(max_length=30)
     last_name = models.CharField(max_length=30)
-    color = ColorField(default="#000000")
+    bg_color = ColorField(default="#ffffff")
+    text_color = ColorField(default="#000000")
     requested_hours = models.IntegerField(default=0)
     skill_level = models.IntegerField(
         default=1, validators=[MinValueValidator(1), MaxValueValidator(3)]

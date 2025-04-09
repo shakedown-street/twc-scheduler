@@ -27,7 +27,8 @@ export const AppointmentHover = ({ appointment }: AppointmentHoverProps) => {
           radius="sm"
           size="sm"
           style={{
-            background: appointment.technician?.color,
+            background: appointment.technician?.bg_color,
+            color: appointment.technician?.text_color,
           }}
         >
           {appointment.technician?.first_name} {appointment.technician?.last_name}

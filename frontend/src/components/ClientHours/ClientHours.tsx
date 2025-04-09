@@ -32,10 +32,11 @@ export const ClientHours = () => {
     if (appointments.length > 0) {
       const appointment = appointments[0];
       if (appointment.in_clinic) {
-        const color = appointment.technician?.color || 'white';
-        return `repeating-linear-gradient(45deg, white, white 4px, ${color} 4px, ${color} 8px)`;
+        const bgColor = appointment.technician?.bg_color || 'white';
+        const textColor = appointment.technician?.text_color || 'black';
+        return `repeating-linear-gradient(45deg, ${textColor}, ${textColor} 4px, ${bgColor} 4px, ${bgColor} 8px)`;
       }
-      return appointment.technician?.color || 'white';
+      return appointment.technician?.bg_color || 'white';
     } else if (availabilities.length > 0 && client.is_maxed_on_sessions) {
       return '#b91c1c'; // tw-red-700
     } else if (availabilities.length > 0) {
@@ -83,7 +84,7 @@ export const ClientHours = () => {
         <div className="ClientHours__legend__example">
           <div
             className="ClientHours__legend__example__color"
-            style={{ background: 'repeating-linear-gradient(45deg, white, white 4px, black 4px, black 8px)' }}
+            style={{ background: 'repeating-linear-gradient(45deg, black, black 4px, white 4px, white 8px)' }}
           ></div>
           <span>In Clinic</span>
         </div>
@@ -152,7 +153,7 @@ export const ClientHours = () => {
           {clients.map((client, index) => (
             <tr key={client.id}>
               <td style={{ textAlign: 'center' }}>{index + 1}</td>
-              <td style={{ backgroundColor: skillLevelColor(client.req_skill_level), textAlign: 'center' }}>
+              <td style={{ background: skillLevelColor(client.req_skill_level), textAlign: 'center' }}>
                 {client.req_skill_level}
               </td>
               <td
@@ -177,7 +178,7 @@ export const ClientHours = () => {
               <td style={{ textAlign: 'center' }}>{client.prescribed_hours}</td>
               <td
                 style={{
-                  backgroundColor: 'black',
+                  background: 'black',
                   color: client.is_maxed_on_sessions ? '#ef4444' : '#22c55e', // tw-red-500 : tw-green-500
                   fontWeight: 'bold',
                   textAlign: 'center',

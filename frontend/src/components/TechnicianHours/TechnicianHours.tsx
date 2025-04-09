@@ -31,11 +31,11 @@ export const TechnicianHours = () => {
 
     if (appointments.length > 0) {
       const appointment = appointments[0];
-      const color = appointment.client?.is_onboarding ? '#eab308' : '#15803d'; // tw-yellow-500 : tw-green-700
+      const bgColor = appointment.client?.is_onboarding ? '#eab308' : '#15803d'; // tw-yellow-500 : tw-green-700
       if (appointment.in_clinic) {
-        return `repeating-linear-gradient(45deg, white, white 4px, ${color} 4px, ${color} 8px)`;
+        return `repeating-linear-gradient(45deg, black, black 4px, ${bgColor} 4px, ${bgColor} 8px)`;
       }
-      return `${color}`;
+      return `${bgColor}`;
     } else if (availabilities.length > 0 && technician.is_maxed_on_sessions) {
       return '#b91c1c'; // tw-red-700
     } else if (availabilities.length > 0) {
@@ -91,7 +91,7 @@ export const TechnicianHours = () => {
         <div className="TechnicianHours__legend__example">
           <div
             className="TechnicianHours__legend__example__color"
-            style={{ background: 'repeating-linear-gradient(45deg, white, white 4px, black 4px, black 8px)' }}
+            style={{ background: 'repeating-linear-gradient(45deg, black, black 4px, white 4px, white 8px)' }}
           ></div>
           <span>In Clinic</span>
         </div>
@@ -159,8 +159,10 @@ export const TechnicianHours = () => {
         <tbody>
           {technicians.map((technician, index) => (
             <tr key={technician.id}>
-              <td style={{ backgroundColor: technician.color, textAlign: 'center' }}>{index + 1}</td>
-              <td style={{ backgroundColor: skillLevelColor(technician.skill_level), textAlign: 'center' }}>
+              <td style={{ background: technician.bg_color, color: technician.text_color, textAlign: 'center' }}>
+                {index + 1}
+              </td>
+              <td style={{ background: skillLevelColor(technician.skill_level), textAlign: 'center' }}>
                 {technician.skill_level}
               </td>
               <td
@@ -173,7 +175,7 @@ export const TechnicianHours = () => {
                   <span className="material-symbols-outlined text-color-green text-size-sm display-block">check</span>
                 )}
               </td>
-              <td style={{ backgroundColor: technician.color }}>
+              <td style={{ background: technician.bg_color, color: technician.text_color }}>
                 {technician.first_name} {technician.last_name}
               </td>
               <td style={{ textAlign: 'center' }}>{technician.total_hours_by_day[0]}</td>
@@ -185,7 +187,7 @@ export const TechnicianHours = () => {
               <td style={{ textAlign: 'center' }}>{technician.requested_hours}</td>
               <td
                 style={{
-                  backgroundColor: 'black',
+                  background: 'black',
                   color: technician.is_maxed_on_sessions ? '#ef4444' : '#22c55e', // tw-red-500 : tw-green-500
                   fontWeight: 'bold',
                   textAlign: 'center',

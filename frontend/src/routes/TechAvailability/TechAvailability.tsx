@@ -176,7 +176,7 @@ export const TechAvailability = () => {
               'TechAvailability__table__block--last': index === blocks.length - 1,
             })}
             style={{
-              backgroundColor: blockAvailability ? block.color : undefined,
+              background: blockAvailability ? block.color : undefined,
             }}
             onClick={() => {
               if (blockAvailability) {
@@ -243,10 +243,10 @@ export const TechAvailability = () => {
                 <tr key={technician.id}>
                   <td
                     style={{
-                      backgroundColor: technician.color,
+                      background: technician.bg_color,
                     }}
                   >
-                    <a href="#" onClick={() => openTechnicianForm(technician)} style={{ color: 'black' }}>
+                    <a href="#" onClick={() => openTechnicianForm(technician)} style={{ color: technician.text_color }}>
                       {technician.first_name} {technician.last_name}
                     </a>
                   </td>
