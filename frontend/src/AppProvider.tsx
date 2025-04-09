@@ -1,5 +1,6 @@
 import * as Tooltip from '@radix-ui/react-tooltip';
 import { GoogleOAuthProvider } from '@react-oauth/google';
+import { BlocksProvider } from './contexts/BlocksContext';
 import { AuthProvider } from './features/auth/contexts/AuthContext';
 import { ToastProvider } from './ui';
 
@@ -12,7 +13,9 @@ export const AppProvider = ({ children }: AppProviderProps) => {
     <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_OAUTH2_CLIENT_ID}>
       <AuthProvider>
         <Tooltip.Provider>
-          <ToastProvider>{children}</ToastProvider>
+          <ToastProvider>
+            <BlocksProvider>{children}</BlocksProvider>
+          </ToastProvider>
         </Tooltip.Provider>
       </AuthProvider>
     </GoogleOAuthProvider>

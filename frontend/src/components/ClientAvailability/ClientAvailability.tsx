@@ -1,8 +1,9 @@
 import clsx from 'clsx';
 import React from 'react';
-import { BlockModel, ClientModel } from '~/api';
+import { ClientModel } from '~/api';
 import { AvailabilityForm } from '~/components/AvailabilityForm/AvailabilityForm';
 import { ClientForm } from '~/components/ClientForm/ClientForm';
+import { useBlocks } from '~/contexts/BlocksContext';
 import { Availability } from '~/types/Availability';
 import { Block } from '~/types/Block';
 import { Client } from '~/types/Client';
@@ -11,8 +12,6 @@ import { formatTimeShort, isBetweenInclusiveEnd, isBetweenInclusiveStart } from 
 import './ClientAvailability.scss';
 
 export const ClientAvailability = () => {
-  const [blocks, setBlocks] = React.useState<Block[]>([]);
-  const [blocksLoading, setBlocksLoading] = React.useState(true);
   const [clients, setClients] = React.useState<Client[]>([]);
   const [clientsLoading, setClientsLoading] = React.useState(true);
   const [clientForm, setClientForm] = React.useState<{
@@ -38,16 +37,12 @@ export const ClientAvailability = () => {
     day: 0,
   });
 
+  const { blocks } = useBlocks();
+
   const days = [0, 1, 2, 3, 4];
 
   React.useEffect(() => {
-    BlockModel.all()
-      .then((blocks) => {
-        setBlocks(blocks);
-      })
-      .finally(() => {
-        setBlocksLoading(false);
-      });
+    setClientsLoading(true);
     ClientModel.all({
       page_size: 1000,
       expand_availabilities: true,
@@ -225,7 +220,7 @@ export const ClientAvailability = () => {
     );
   }
 
-  if (blocksLoading || clientsLoading) {
+  if (clientsLoading) {
     return <Spinner className="mt-8" message="Loading clients..." />;
   }
 

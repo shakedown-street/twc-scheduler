@@ -92,7 +92,7 @@ export const ClientTechnicianMatrix = () => {
             const total = totalTechs(client);
 
             return (
-              <>
+              <React.Fragment key={client.id}>
                 <tr>
                   <td>{index + 1}</td>
                   <td key={client.id}>
@@ -102,6 +102,7 @@ export const ClientTechnicianMatrix = () => {
                     const count = countAppointments(client, technician);
                     return (
                       <td
+                        key={technician.id}
                         style={{
                           background: count > 0 ? technician.bg_color : undefined,
                           color: count > 0 ? technician.text_color : undefined,
@@ -119,7 +120,7 @@ export const ClientTechnicianMatrix = () => {
                     {total}
                   </td>
                 </tr>
-              </>
+              </React.Fragment>
             );
           })}
         </tbody>

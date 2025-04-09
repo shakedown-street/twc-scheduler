@@ -9,10 +9,9 @@ import { Block } from '~/types/Block';
 import { Client } from '~/types/Client';
 import { Container, RadixDialog, Spinner, TabItem, Tabs } from '~/ui';
 import './Schedule.scss';
+import { useBlocks } from '~/contexts/BlocksContext';
 
 export const Schedule = () => {
-  const [blocks, setBlocks] = React.useState<Block[]>([]);
-  const [blocksLoading, setBlocksLoading] = React.useState(true);
   const [clients, setClients] = React.useState<Client[]>([]);
   const [clientsLoading, setClientsLoading] = React.useState(true);
   const [appointmentForm, setAppointmentForm] = React.useState<{
@@ -36,6 +35,7 @@ export const Schedule = () => {
   });
 
   const [searchParams, setSearchParams] = useSearchParams();
+  const { blocks } = useBlocks();
 
   function getDay() {
     const day = searchParams.get('day');
@@ -48,15 +48,7 @@ export const Schedule = () => {
   }
 
   React.useEffect(() => {
-    setBlocksLoading(true);
     setClientsLoading(true);
-    BlockModel.all()
-      .then((blocks) => {
-        setBlocks(blocks);
-      })
-      .finally(() => {
-        setBlocksLoading(false);
-      });
     ClientModel.all({
       page_size: 1000,
       expand_appointments: true,
@@ -143,7 +135,7 @@ export const Schedule = () => {
     closeAppointmentForm();
   }
 
-  if (blocksLoading || clientsLoading) {
+  if (clientsLoading) {
     return <Spinner className="mt-8" message="Loading schedule..." />;
   }
 

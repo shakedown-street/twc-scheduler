@@ -1,8 +1,9 @@
 import clsx from 'clsx';
 import React from 'react';
-import { BlockModel, TechnicianModel } from '~/api';
+import { TechnicianModel } from '~/api';
 import { AvailabilityForm } from '~/components/AvailabilityForm/AvailabilityForm';
 import { TechnicianForm } from '~/components/TechnicianForm/TechnicianForm';
+import { useBlocks } from '~/contexts/BlocksContext';
 import { Availability } from '~/types/Availability';
 import { Block } from '~/types/Block';
 import { Technician } from '~/types/Technician';
@@ -11,8 +12,6 @@ import { formatTimeShort, isBetweenInclusiveEnd, isBetweenInclusiveStart } from 
 import './TechAvailability.scss';
 
 export const TechAvailability = () => {
-  const [blocks, setBlocks] = React.useState<Block[]>([]);
-  const [blocksLoading, setBlocksLoading] = React.useState(true);
   const [technicians, setTechnicians] = React.useState<Technician[]>([]);
   const [techniciansLoading, setTechniciansLoading] = React.useState(true);
   const [technicianForm, setTechnicianForm] = React.useState<{
@@ -38,16 +37,12 @@ export const TechAvailability = () => {
     day: 0,
   });
 
+  const { blocks } = useBlocks();
+
   const days = [0, 1, 2, 3, 4];
 
   React.useEffect(() => {
-    BlockModel.all()
-      .then((blocks) => {
-        setBlocks(blocks);
-      })
-      .finally(() => {
-        setBlocksLoading(false);
-      });
+    setTechniciansLoading(true);
     TechnicianModel.all({
       page_size: 1000,
       expand_availabilities: true,
@@ -225,7 +220,7 @@ export const TechAvailability = () => {
     );
   }
 
-  if (blocksLoading || techniciansLoading) {
+  if (techniciansLoading) {
     return <Spinner className="mt-8" message="Loading technicians" />;
   }
 

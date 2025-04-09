@@ -1,5 +1,6 @@
 import React from 'react';
-import { BlockModel, ClientModel } from '~/api';
+import { ClientModel } from '~/api';
+import { useBlocks } from '~/contexts/BlocksContext';
 import { Block } from '~/types/Block';
 import { Client } from '~/types/Client';
 import { Spinner } from '~/ui';
@@ -10,22 +11,15 @@ import { AppointmentHover } from '../AppointmentHover/AppointmentHover';
 import './ClientHours.scss';
 
 export const ClientHours = () => {
-  const [blocks, setBlocks] = React.useState<Block[]>([]);
-  const [blocksLoading, setBlocksLoading] = React.useState(true);
   const [clients, setClients] = React.useState<Client[]>([]);
   const [clientsLoading, setClientsLoading] = React.useState(true);
+
+  const { blocks } = useBlocks();
+
   const days = [0, 1, 2, 3, 4];
 
   React.useEffect(() => {
-    setBlocksLoading(true);
     setClientsLoading(true);
-    BlockModel.all()
-      .then((blocks) => {
-        setBlocks(blocks);
-      })
-      .finally(() => {
-        setBlocksLoading(false);
-      });
     ClientModel.all({
       page_size: 1000,
       expand_appointments: true,
@@ -106,7 +100,7 @@ export const ClientHours = () => {
     );
   }
 
-  if (blocksLoading || clientsLoading) {
+  if (clientsLoading) {
     return <Spinner className="mt-8" message="Loading clients..." />;
   }
 

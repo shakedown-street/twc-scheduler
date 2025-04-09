@@ -1,31 +1,25 @@
 import React from 'react';
-import { BlockModel, TechnicianModel } from '~/api';
+import { TechnicianModel } from '~/api';
+import { useBlocks } from '~/contexts/BlocksContext';
 import { Block } from '~/types/Block';
 import { Technician } from '~/types/Technician';
+import { Spinner } from '~/ui';
 import { RadixHoverCard } from '~/ui/RadixHoverCard/RadixHoverCard';
 import { getBlockAppointments, getBlockAvailabilities } from '~/utils/appointments';
 import { dayColor, skillLevelColor } from '~/utils/color';
 import { AppointmentHover } from '../AppointmentHover/AppointmentHover';
 import './TechnicianHours.scss';
-import { Spinner } from '~/ui';
 
 export const TechnicianHours = () => {
-  const [blocks, setBlocks] = React.useState<Block[]>([]);
-  const [blocksLoading, setBlocksLoading] = React.useState(true);
   const [technicians, setTechnicians] = React.useState<Technician[]>([]);
   const [techniciansLoading, setTechniciansLoading] = React.useState(true);
+
+  const { blocks } = useBlocks();
+
   const days = [0, 1, 2, 3, 4];
 
   React.useEffect(() => {
-    setBlocksLoading(true);
     setTechniciansLoading(true);
-    BlockModel.all()
-      .then((blocks) => {
-        setBlocks(blocks);
-      })
-      .finally(() => {
-        setBlocksLoading(false);
-      });
     TechnicianModel.all({
       page_size: 1000,
       expand_appointments: true,
@@ -113,7 +107,7 @@ export const TechnicianHours = () => {
     );
   }
 
-  if (blocksLoading || techniciansLoading) {
+  if (techniciansLoading) {
     return <Spinner className="mt-8" message="Loading technicians..." />;
   }
 
