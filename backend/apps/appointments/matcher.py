@@ -124,7 +124,7 @@ def get_appointment_warnings(
     ]
 
     # check if this appointment will exceed the client's prescribed hours
-    if client.prescribed_hours > 0:
+    if client.prescribed_hours >= 0:
         total_hours = client.total_hours
         if instance:
             # subtract the existing appointment time from the total hours
@@ -147,7 +147,7 @@ def get_appointment_warnings(
             )
 
     # check if this appointment will exceed the technician's requested hours
-    if tech.requested_hours > 0:
+    if tech.requested_hours >= 0:
         total_hours = tech.total_hours
         if instance:
             # subtract the existing appointment time from the total hours
