@@ -4,7 +4,6 @@ Requested by Alycen and Amy:
 
 - add a read only role
   - BCBAs can see the full schedule but not edit it
-- text color as well as background color for techs
 - warning about max hours per day for techs
   - set max hours per day when adding/updating a tech
 - basic scheduling of OT and speech
@@ -22,6 +21,8 @@ Other:
 - Need to indicate on the availability blocks if the appointment is in clinic, and if it is not the full block
 - Display warning if client is not available for in clinic and it is checked
   - should default to in clinic as well if the client is available in clinic
+- How can we optimize the load times further? What sort of caching can we do?
+- Add loading spinners
 
 Done:
 
@@ -42,3 +43,4 @@ Done:
 - Add hover card on schedule and sheet one to see appointment details
 - Add legend to sheet one tables
 - Add sheet one matrix showing how many times a client is scheduled with each tech, and the total number of techs they're scheduled with
+- Allow setting both a background and text color for techs

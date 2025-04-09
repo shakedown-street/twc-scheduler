@@ -9,12 +9,11 @@ import { SignUp } from './features/auth/routes/SignUp/SignUp';
 import { VerifyEmail } from './features/auth/routes/VerifyEmail/VerifyEmail';
 import { Checkout } from './features/payments/routes/Checkout/Checkout';
 import { CheckoutSuccess } from './features/payments/routes/CheckoutSuccess/CheckoutSuccess';
-import { ClientAvailability } from './routes/ClientAvailability/ClientAvailability';
+import { AvailabilityRoute } from './routes/AvailabilityRoute/AvailabilityRoute';
 import { Home } from './routes/Home/Home';
 import { NotFound } from './routes/NotFound/NotFound';
 import { Overview } from './routes/Overview/Overview';
 import { StyleGuide } from './routes/StyleGuide/StyleGuide';
-import { TechAvailability } from './routes/TechAvailability/TechAvailability';
 
 export type AuthGuardProps = {
   children: React.ReactNode;
@@ -105,18 +104,10 @@ export const routes: RouteObject[] = [
         ),
       },
       {
-        path: '/client-availability',
+        path: '/availability',
         element: (
           <AuthGuard>
-            <ClientAvailability />
-          </AuthGuard>
-        ),
-      },
-      {
-        path: '/tech-availability',
-        element: (
-          <AuthGuard>
-            <TechAvailability />
+            <AvailabilityRoute />
           </AuthGuard>
         ),
       },

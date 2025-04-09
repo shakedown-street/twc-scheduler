@@ -216,71 +216,69 @@ export const ClientAvailability = () => {
 
   return (
     <>
-      <Container>
-        <div className="flex align-center justify-between gap-4 my-8">
-          <h1>Client Availability</h1>
+      <Card fluid>
+        <div className="flex align-center justify-between gap-4 mb-4">
+          <h2>Clients</h2>
           <Button color="primary" onClick={() => setClientForm({ ...clientForm, open: true })} variant="raised">
             Create Client
           </Button>
         </div>
-        <Card fluid>
-          <table className="ClientAvailability__table">
-            <thead>
-              <tr>
-                <th>Name</th>
-                <th>Rating</th>
-                <th>Spanish</th>
-                <th>Eval</th>
-                <th>Onboarding</th>
-                {days.map((day) => (
-                  <th className="ClientAvailability__table__boldBorder" key={day} colSpan={blocks.length}>
-                    {['Mon', 'Tue', 'Wed', 'Thu', 'Fri'][day]}
-                  </th>
-                ))}
-                <th>Rx Hrs</th>
-              </tr>
-            </thead>
-            <tbody>
-              {clients.map((client) => (
-                <tr key={client.id}>
-                  <td>
-                    <a href="#" onClick={() => openClientForm(client)}>
-                      {client.first_name} {client.last_name}
-                    </a>
-                  </td>
-                  <td
-                    style={{
-                      textAlign: 'right',
-                    }}
-                  >
-                    {client.req_skill_level}
-                  </td>
-                  <td style={{ textAlign: 'center' }}>
-                    {client.req_spanish_speaking && (
-                      <span className="material-symbols-outlined text-color-green">check</span>
-                    )}
-                  </td>
-                  <td style={{ textAlign: 'center' }}>
-                    {client.eval_done && <span className="material-symbols-outlined text-color-green">check</span>}
-                  </td>
-                  <td style={{ textAlign: 'center' }}>
-                    {client.is_onboarding && <span className="material-symbols-outlined text-color-green">check</span>}
-                  </td>
-                  {renderAvailabilities(client)}
-                  <td style={{ textAlign: 'right' }}>{client.prescribed_hours}</td>
-                </tr>
+        <table className="ClientAvailability__table">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Rating</th>
+              <th>Spanish</th>
+              <th>Eval</th>
+              <th>Onboarding</th>
+              {days.map((day) => (
+                <th className="ClientAvailability__table__boldBorder" key={day} colSpan={blocks.length}>
+                  {['Mon', 'Tue', 'Wed', 'Thu', 'Fri'][day]}
+                </th>
               ))}
-            </tbody>
-            <tfoot>
-              <tr>
-                <td colSpan={5}></td>
-                {renderBlockTotals()}
-                <td style={{ textAlign: 'right' }}>{totalPrescribedHours()}</td>
+              <th>Rx Hrs</th>
+            </tr>
+          </thead>
+          <tbody>
+            {clients.map((client) => (
+              <tr key={client.id}>
+                <td>
+                  <a href="#" onClick={() => openClientForm(client)}>
+                    {client.first_name} {client.last_name}
+                  </a>
+                </td>
+                <td
+                  style={{
+                    textAlign: 'right',
+                  }}
+                >
+                  {client.req_skill_level}
+                </td>
+                <td style={{ textAlign: 'center' }}>
+                  {client.req_spanish_speaking && (
+                    <span className="material-symbols-outlined text-color-green">check</span>
+                  )}
+                </td>
+                <td style={{ textAlign: 'center' }}>
+                  {client.eval_done && <span className="material-symbols-outlined text-color-green">check</span>}
+                </td>
+                <td style={{ textAlign: 'center' }}>
+                  {client.is_onboarding && <span className="material-symbols-outlined text-color-green">check</span>}
+                </td>
+                {renderAvailabilities(client)}
+                <td style={{ textAlign: 'right' }}>{client.prescribed_hours}</td>
               </tr>
-            </tfoot>
-          </table>
-        </Card>
-      </Container>
+            ))}
+          </tbody>
+          <tfoot>
+            <tr>
+              <td colSpan={5}></td>
+              {renderBlockTotals()}
+              <td style={{ textAlign: 'right' }}>{totalPrescribedHours()}</td>
+            </tr>
+          </tfoot>
+        </table>
+      </Card>
       <RadixDialog
         title={`${clientForm.client ? 'Update' : 'Create'} Client`}
         open={clientForm.open}

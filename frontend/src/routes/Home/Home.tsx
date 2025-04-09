@@ -131,41 +131,44 @@ export const Home = () => {
         <title>Home | Schedule Builder</title>
       </Helmet>
       <Container>
-        <Tabs className="my-4">
-          <TabItem active={getDay() === 0} onClick={() => setDay(0)}>
-            Monday
-          </TabItem>
-          <TabItem active={getDay() === 1} onClick={() => setDay(1)}>
-            Tuesday
-          </TabItem>
-          <TabItem active={getDay() === 2} onClick={() => setDay(2)}>
-            Wednesday
-          </TabItem>
-          <TabItem active={getDay() === 3} onClick={() => setDay(3)}>
-            Thursday
-          </TabItem>
-          <TabItem active={getDay() === 4} onClick={() => setDay(4)}>
-            Friday
-          </TabItem>
-        </Tabs>
-        <TimeSlotTable
-          clients={clients}
-          day={getDay()}
-          onClickAvailabilitySlot={(client, availability, block) => {
-            openAppointmentForm(client, getDay(), availability.start_time, availability.end_time);
-          }}
-          onClickAppointmentSlot={(client, appointment, availability, block) => {
-            openAppointmentForm(
-              client,
-              getDay(),
-              appointment.start_time,
-              appointment.end_time,
-              availability?.start_time || appointment.start_time,
-              availability?.end_time || appointment.end_time,
-              appointment
-            );
-          }}
-        />
+        <div className="mt-4 mb-12">
+          <h1>Schedule</h1>
+          <Tabs className="my-4">
+            <TabItem active={getDay() === 0} onClick={() => setDay(0)}>
+              Monday
+            </TabItem>
+            <TabItem active={getDay() === 1} onClick={() => setDay(1)}>
+              Tuesday
+            </TabItem>
+            <TabItem active={getDay() === 2} onClick={() => setDay(2)}>
+              Wednesday
+            </TabItem>
+            <TabItem active={getDay() === 3} onClick={() => setDay(3)}>
+              Thursday
+            </TabItem>
+            <TabItem active={getDay() === 4} onClick={() => setDay(4)}>
+              Friday
+            </TabItem>
+          </Tabs>
+          <TimeSlotTable
+            clients={clients}
+            day={getDay()}
+            onClickAvailabilitySlot={(client, availability, block) => {
+              openAppointmentForm(client, getDay(), availability.start_time, availability.end_time);
+            }}
+            onClickAppointmentSlot={(client, appointment, availability, block) => {
+              openAppointmentForm(
+                client,
+                getDay(),
+                appointment.start_time,
+                appointment.end_time,
+                availability?.start_time || appointment.start_time,
+                availability?.end_time || appointment.end_time,
+                appointment
+              );
+            }}
+          />
+        </div>
       </Container>
       <RadixDialog
         title={`${appointmentForm.instance ? 'Update' : 'Create'} Appointment`}

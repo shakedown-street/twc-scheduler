@@ -1,11 +1,10 @@
 import { Helmet } from 'react-helmet';
 import { useSearchParams } from 'react-router-dom';
-import { ClientHours } from '~/components/ClientHours/ClientHours';
-import { ClientTechnicianMatrix } from '~/components/ClientTechnicianMatrix/ClientTechnicianMatrix';
-import { TechnicianHours } from '~/components/TechnicianHours/TechnicianHours';
 import { Container, TabItem, Tabs } from '~/ui';
+import { ClientAvailability } from '../ClientAvailability/ClientAvailability';
+import { TechAvailability } from '../TechAvailability/TechAvailability';
 
-export const Overview = () => {
+export const AvailabilityRoute = () => {
   const [searchParams, setSearchParams] = useSearchParams();
 
   function getTab() {
@@ -21,11 +20,11 @@ export const Overview = () => {
   return (
     <>
       <Helmet>
-        <title>Overview | Schedule Builder</title>
+        <title>Availability | Schedule Builder</title>
       </Helmet>
       <Container>
         <div className="mt-4 mb-12">
-          <h1>Overview</h1>
+          <h1>Availability</h1>
           <Tabs className="my-4">
             <TabItem active={getTab() === 'clients'} onClick={() => setTab('clients')}>
               Clients
@@ -33,14 +32,10 @@ export const Overview = () => {
             <TabItem active={getTab() === 'technicians'} onClick={() => setTab('technicians')}>
               Technicians
             </TabItem>
-            <TabItem active={getTab() === 'matrix'} onClick={() => setTab('matrix')}>
-              Matrix
-            </TabItem>
           </Tabs>
           <div>
-            {getTab() === 'clients' && <ClientHours />}
-            {getTab() === 'technicians' && <TechnicianHours />}
-            {getTab() === 'matrix' && <ClientTechnicianMatrix />}
+            {getTab() === 'clients' && <ClientAvailability />}
+            {getTab() === 'technicians' && <TechAvailability />}
           </div>
         </div>
       </Container>

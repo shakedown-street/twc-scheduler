@@ -216,67 +216,65 @@ export const TechAvailability = () => {
 
   return (
     <>
-      <Container>
-        <div className="flex align-center justify-between gap-4 my-8">
-          <h1>Technician Availability</h1>
+      <Card fluid>
+        <div className="flex align-center justify-between gap-4 mb-4">
+          <h2>Technicians</h2>
           <Button color="primary" onClick={() => setTechnicianForm({ ...technicianForm, open: true })} variant="raised">
             Create Technician
           </Button>
         </div>
-        <Card fluid>
-          <table className="TechAvailability__table">
-            <thead>
-              <tr>
-                <th>Name</th>
-                <th>Rating</th>
-                <th>Spanish</th>
-                {days.map((day) => (
-                  <th key={day} colSpan={blocks.length}>
-                    {['Mon', 'Tue', 'Wed', 'Thu', 'Fri'][day]}
-                  </th>
-                ))}
-                <th>Req Hrs</th>
-              </tr>
-            </thead>
-            <tbody>
-              {technicians.map((technician) => (
-                <tr key={technician.id}>
-                  <td
-                    style={{
-                      background: technician.bg_color,
-                    }}
-                  >
-                    <a href="#" onClick={() => openTechnicianForm(technician)} style={{ color: technician.text_color }}>
-                      {technician.first_name} {technician.last_name}
-                    </a>
-                  </td>
-                  <td
-                    style={{
-                      textAlign: 'right',
-                    }}
-                  >
-                    {technician.skill_level}
-                  </td>
-                  <td style={{ textAlign: 'center' }}>
-                    {technician.spanish_speaking && (
-                      <span className="material-symbols-outlined text-color-green">check</span>
-                    )}
-                  </td>
-                  {renderAvailabilities(technician)}
-                  <td style={{ textAlign: 'right' }}>{technician.requested_hours}</td>
-                </tr>
+        <table className="TechAvailability__table">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Rating</th>
+              <th>Spanish</th>
+              {days.map((day) => (
+                <th key={day} colSpan={blocks.length}>
+                  {['Mon', 'Tue', 'Wed', 'Thu', 'Fri'][day]}
+                </th>
               ))}
-            </tbody>
-            <tfoot>
-              <tr>
-                <td colSpan={3}></td>
-                {renderBlockTotals()}
-                <td style={{ textAlign: 'right' }}>{totalRequestedHours()}</td>
+              <th>Req Hrs</th>
+            </tr>
+          </thead>
+          <tbody>
+            {technicians.map((technician) => (
+              <tr key={technician.id}>
+                <td
+                  style={{
+                    background: technician.bg_color,
+                  }}
+                >
+                  <a href="#" onClick={() => openTechnicianForm(technician)} style={{ color: technician.text_color }}>
+                    {technician.first_name} {technician.last_name}
+                  </a>
+                </td>
+                <td
+                  style={{
+                    textAlign: 'right',
+                  }}
+                >
+                  {technician.skill_level}
+                </td>
+                <td style={{ textAlign: 'center' }}>
+                  {technician.spanish_speaking && (
+                    <span className="material-symbols-outlined text-color-green">check</span>
+                  )}
+                </td>
+                {renderAvailabilities(technician)}
+                <td style={{ textAlign: 'right' }}>{technician.requested_hours}</td>
               </tr>
-            </tfoot>
-          </table>
-        </Card>
-      </Container>
+            ))}
+          </tbody>
+          <tfoot>
+            <tr>
+              <td colSpan={3}></td>
+              {renderBlockTotals()}
+              <td style={{ textAlign: 'right' }}>{totalRequestedHours()}</td>
+            </tr>
+          </tfoot>
+        </table>
+      </Card>
       <RadixDialog
         title={`${technicianForm.technician ? 'Update' : 'Create'} Technician`}
         open={technicianForm.open}
