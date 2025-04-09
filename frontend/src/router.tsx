@@ -10,7 +10,7 @@ import { VerifyEmail } from './features/auth/routes/VerifyEmail/VerifyEmail';
 import { Checkout } from './features/payments/routes/Checkout/Checkout';
 import { CheckoutSuccess } from './features/payments/routes/CheckoutSuccess/CheckoutSuccess';
 import { AvailabilityRoute } from './routes/AvailabilityRoute/AvailabilityRoute';
-import { Home } from './routes/Home/Home';
+import { Schedule } from './routes/Schedule/Schedule';
 import { NotFound } from './routes/NotFound/NotFound';
 import { Overview } from './routes/Overview/Overview';
 import { StyleGuide } from './routes/StyleGuide/StyleGuide';
@@ -67,7 +67,7 @@ export const routes: RouteObject[] = [
         path: '/',
         element: (
           <AuthGuard>
-            <Home />
+            <Schedule />
           </AuthGuard>
         ),
       },

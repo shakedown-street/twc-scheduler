@@ -7,9 +7,9 @@ import { TimeSlotTable } from '~/components/TimeSlotTable/TimeSlotTable';
 import { Appointment } from '~/types/Appointment';
 import { Client } from '~/types/Client';
 import { Container, RadixDialog, TabItem, Tabs } from '~/ui';
-import './Home.scss';
+import './Schedule.scss';
 
-export const Home = () => {
+export const Schedule = () => {
   const [clients, setClients] = React.useState<Client[]>([]);
   const [appointmentForm, setAppointmentForm] = React.useState<{
     open: boolean;
@@ -128,7 +128,7 @@ export const Home = () => {
   return (
     <>
       <Helmet>
-        <title>Home | Schedule Builder</title>
+        <title>Schedule | Schedule Builder</title>
       </Helmet>
       <Container>
         <div className="mt-4 mb-12">
