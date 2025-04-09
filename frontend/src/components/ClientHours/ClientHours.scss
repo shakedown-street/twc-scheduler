@@ -24,6 +24,10 @@
         padding: 0.25rem;
         text-align: left;
       }
+
+      &:hover {
+        background-color: $tw-gray-200;
+      }
     }
   }
 
@@ -34,6 +38,10 @@
         font-size: 0.75rem;
         padding: 0.25rem;
         text-align: left;
+      }
+
+      &:hover {
+        background-color: $tw-gray-200;
       }
     }
   }

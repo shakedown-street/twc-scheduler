@@ -24,7 +24,7 @@
           text-align: left;
         }
 
-        &:nth-child(even) {
+        &:hover {
           background-color: $tw-gray-200;
         }
       }
@@ -37,6 +37,10 @@
           font-size: 0.625rem;
           padding: 0.25rem;
           text-align: left;
+        }
+
+        &:hover {
+          background-color: $tw-gray-200;
         }
       }
     }
