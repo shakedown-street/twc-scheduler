@@ -1,16 +1,20 @@
 import React from 'react';
 import { Helmet } from 'react-helmet';
 import { useSearchParams } from 'react-router-dom';
-import { ClientModel } from '~/api';
+import { BlockModel, ClientModel } from '~/api';
 import { AppointmentForm } from '~/components/AppointmentForm/AppointmentForm';
 import { TimeSlotTable } from '~/components/TimeSlotTable/TimeSlotTable';
 import { Appointment } from '~/types/Appointment';
+import { Block } from '~/types/Block';
 import { Client } from '~/types/Client';
-import { Container, RadixDialog, TabItem, Tabs } from '~/ui';
+import { Container, RadixDialog, Spinner, TabItem, Tabs } from '~/ui';
 import './Schedule.scss';
 
 export const Schedule = () => {
+  const [blocks, setBlocks] = React.useState<Block[]>([]);
+  const [blocksLoading, setBlocksLoading] = React.useState(true);
   const [clients, setClients] = React.useState<Client[]>([]);
+  const [clientsLoading, setClientsLoading] = React.useState(true);
   const [appointmentForm, setAppointmentForm] = React.useState<{
     open: boolean;
     instance?: Appointment;
@@ -44,13 +48,26 @@ export const Schedule = () => {
   }
 
   React.useEffect(() => {
+    setBlocksLoading(true);
+    setClientsLoading(true);
+    BlockModel.all()
+      .then((blocks) => {
+        setBlocks(blocks);
+      })
+      .finally(() => {
+        setBlocksLoading(false);
+      });
     ClientModel.all({
       page_size: 1000,
       expand_appointments: true,
       expand_availabilities: true,
-    }).then((clients) => {
-      setClients(clients);
-    });
+    })
+      .then((clients) => {
+        setClients(clients);
+      })
+      .finally(() => {
+        setClientsLoading(false);
+      });
   }, []);
 
   function openAppointmentForm(
@@ -126,6 +143,10 @@ export const Schedule = () => {
     closeAppointmentForm();
   }
 
+  if (blocksLoading || clientsLoading) {
+    return <Spinner className="mt-8" message="Loading schedule..." />;
+  }
+
   return (
     <>
       <Helmet>
@@ -152,6 +173,7 @@ export const Schedule = () => {
             </TabItem>
           </Tabs>
           <TimeSlotTable
+            blocks={blocks}
             clients={clients}
             day={getDay()}
             onClickAvailabilitySlot={(client, availability, block) => {

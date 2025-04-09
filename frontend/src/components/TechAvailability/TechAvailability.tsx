@@ -6,13 +6,15 @@ import { TechnicianForm } from '~/components/TechnicianForm/TechnicianForm';
 import { Availability } from '~/types/Availability';
 import { Block } from '~/types/Block';
 import { Technician } from '~/types/Technician';
-import { Button, Card, Container, RadixDialog } from '~/ui';
+import { Button, Card, RadixDialog, Spinner } from '~/ui';
 import { formatTimeShort, isBetweenInclusiveEnd, isBetweenInclusiveStart } from '~/utils/time';
 import './TechAvailability.scss';
 
 export const TechAvailability = () => {
   const [blocks, setBlocks] = React.useState<Block[]>([]);
+  const [blocksLoading, setBlocksLoading] = React.useState(true);
   const [technicians, setTechnicians] = React.useState<Technician[]>([]);
+  const [techniciansLoading, setTechniciansLoading] = React.useState(true);
   const [technicianForm, setTechnicianForm] = React.useState<{
     open: boolean;
     technician?: Technician;
@@ -39,15 +41,23 @@ export const TechAvailability = () => {
   const days = [0, 1, 2, 3, 4];
 
   React.useEffect(() => {
-    BlockModel.all().then((blocks) => {
-      setBlocks(blocks);
-    });
+    BlockModel.all()
+      .then((blocks) => {
+        setBlocks(blocks);
+      })
+      .finally(() => {
+        setBlocksLoading(false);
+      });
     TechnicianModel.all({
       page_size: 1000,
       expand_availabilities: true,
-    }).then((technicians) => {
-      setTechnicians(technicians);
-    });
+    })
+      .then((technicians) => {
+        setTechnicians(technicians);
+      })
+      .finally(() => {
+        setTechniciansLoading(false);
+      });
   }, []);
 
   function totalRequestedHours() {
@@ -213,6 +223,10 @@ export const TechAvailability = () => {
         </td>
       ))
     );
+  }
+
+  if (blocksLoading || techniciansLoading) {
+    return <Spinner className="mt-8" message="Loading technicians" />;
   }
 
   return (

@@ -3,23 +3,34 @@ import { ClientModel, TechnicianModel } from '~/api';
 import { Client } from '~/types/Client';
 import { Technician } from '~/types/Technician';
 import './ClientTechnicianMatrix.scss';
+import { Spinner } from '~/ui';
 
 export const ClientTechnicianMatrix = () => {
   const [clients, setClients] = React.useState<Client[]>([]);
+  const [loadingClients, setLoadingClients] = React.useState(true);
   const [technicians, setTechnicians] = React.useState<Technician[]>([]);
+  const [loadingTechnicians, setLoadingTechnicians] = React.useState(true);
 
   React.useEffect(() => {
     ClientModel.all({
       page_size: 1000,
       expand_appointments: true,
-    }).then((clients) => {
-      setClients(clients);
-    });
+    })
+      .then((clients) => {
+        setClients(clients);
+      })
+      .finally(() => {
+        setLoadingClients(false);
+      });
     TechnicianModel.all({
       page_size: 1000,
-    }).then((technicians) => {
-      setTechnicians(technicians);
-    });
+    })
+      .then((technicians) => {
+        setTechnicians(technicians);
+      })
+      .finally(() => {
+        setLoadingTechnicians(false);
+      });
   }, []);
 
   function countAppointments(client: Client, technician: Technician) {
@@ -49,6 +60,10 @@ export const ClientTechnicianMatrix = () => {
       return '#bbf7d0'; // tw-green-200
     }
     return undefined;
+  }
+
+  if (loadingClients || loadingTechnicians) {
+    return <Spinner className="mt-8" message="Loading matrix..." />;
   }
 
   return (

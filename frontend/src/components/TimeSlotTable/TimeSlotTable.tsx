@@ -1,15 +1,15 @@
 import React from 'react';
-import { BlockModel } from '~/api';
 import { Appointment } from '~/types/Appointment';
 import { Availability } from '~/types/Availability';
 import { Block } from '~/types/Block';
 import { Client } from '~/types/Client';
-import { formatTimeTimeline, generateTimeSlots, isBetweenInclusiveStart, isOnTheHour } from '~/utils/time';
-import './TimeSlotTable.scss';
 import { RadixHoverCard } from '~/ui/RadixHoverCard/RadixHoverCard';
+import { formatTimeTimeline, generateTimeSlots, isBetweenInclusiveStart, isOnTheHour } from '~/utils/time';
 import { AppointmentHover } from '../AppointmentHover/AppointmentHover';
+import './TimeSlotTable.scss';
 
 export type TimeSlotTableProps = {
+  blocks: Block[];
   clients: Client[];
   day: number;
   onClickBlockSlot?: (client: Client, block: Block) => void;
@@ -23,21 +23,18 @@ export type TimeSlotTableProps = {
 };
 
 export const TimeSlotTable = ({
+  blocks,
   clients,
   day,
   onClickBlockSlot,
   onClickAvailabilitySlot,
   onClickAppointmentSlot,
 }: TimeSlotTableProps) => {
-  const [blocks, setBlocks] = React.useState<Block[]>([]);
   const [timeSlots, setTimeSlots] = React.useState<string[]>([]);
 
   React.useEffect(() => {
-    BlockModel.all().then((blocks) => {
-      setBlocks(blocks);
-      setTimeSlots(generateTimeSlots(blocks[0].start_time, blocks[blocks.length - 1].end_time, 15));
-    });
-  }, []);
+    setTimeSlots(generateTimeSlots(blocks[0].start_time, blocks[blocks.length - 1].end_time, 15));
+  }, [blocks]);
 
   function getSlotBlock(time: string) {
     return blocks.find((block) => {

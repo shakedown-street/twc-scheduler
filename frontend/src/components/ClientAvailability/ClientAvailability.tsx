@@ -6,13 +6,15 @@ import { ClientForm } from '~/components/ClientForm/ClientForm';
 import { Availability } from '~/types/Availability';
 import { Block } from '~/types/Block';
 import { Client } from '~/types/Client';
-import { Button, Card, Container, RadixDialog } from '~/ui';
+import { Button, Card, RadixDialog, Spinner } from '~/ui';
 import { formatTimeShort, isBetweenInclusiveEnd, isBetweenInclusiveStart } from '~/utils/time';
 import './ClientAvailability.scss';
 
 export const ClientAvailability = () => {
   const [blocks, setBlocks] = React.useState<Block[]>([]);
+  const [blocksLoading, setBlocksLoading] = React.useState(true);
   const [clients, setClients] = React.useState<Client[]>([]);
+  const [clientsLoading, setClientsLoading] = React.useState(true);
   const [clientForm, setClientForm] = React.useState<{
     open: boolean;
     client?: Client;
@@ -39,15 +41,23 @@ export const ClientAvailability = () => {
   const days = [0, 1, 2, 3, 4];
 
   React.useEffect(() => {
-    BlockModel.all().then((blocks) => {
-      setBlocks(blocks);
-    });
+    BlockModel.all()
+      .then((blocks) => {
+        setBlocks(blocks);
+      })
+      .finally(() => {
+        setBlocksLoading(false);
+      });
     ClientModel.all({
       page_size: 1000,
       expand_availabilities: true,
-    }).then((clients) => {
-      setClients(clients);
-    });
+    })
+      .then((clients) => {
+        setClients(clients);
+      })
+      .finally(() => {
+        setClientsLoading(false);
+      });
   }, []);
 
   function totalPrescribedHours() {
@@ -213,6 +223,10 @@ export const ClientAvailability = () => {
         </td>
       ))
     );
+  }
+
+  if (blocksLoading || clientsLoading) {
+    return <Spinner className="mt-8" message="Loading clients..." />;
   }
 
   return (
