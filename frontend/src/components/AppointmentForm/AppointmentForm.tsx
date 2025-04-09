@@ -423,7 +423,7 @@ export const AppointmentForm = ({
                         }}
                         radius="sm"
                         size="xs"
-                        title={!repeatableAppointmentDays.includes(index) ? 'Not available' : ''}
+                        title={!repeatableAppointmentDays.includes(index) ? 'Client or technician not available' : ''}
                         variant={field.value?.includes(index) ? 'raised' : 'default'}
                       >
                         {dayStr}

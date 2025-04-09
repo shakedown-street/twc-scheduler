@@ -73,17 +73,25 @@ def find_repeatable_appointment_days(
     days = []
 
     for i in range(5):
+        # skip today
         if i == day:
             continue
 
-        available_techs = find_available_technicians(
+        # skip if the client is not available on the given day
+        if not client.availabilities.filter(
+            day=i,
+            start_time__lte=start_time,
+            end_time__gte=end_time,
+        ).exists():
+            continue
+
+        # add the day to the list if the technician is still a good fit
+        if tech in find_available_technicians(
             client,
             i,
             start_time,
             end_time,
-        )
-
-        if tech in available_techs:
+        ):
             days.append(i)
 
     return days
