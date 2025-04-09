@@ -86,7 +86,7 @@ class BlockViewSet(viewsets.ModelViewSet):
 
 
 class ClientViewSet(viewsets.ModelViewSet):
-    queryset = Client.objects.all()
+    queryset = Client.objects.prefetch_related("appointments").all()
     serializer_class = ClientSerializer
     permission_classes = [
         permissions.IsAuthenticated,
@@ -97,15 +97,6 @@ class ClientViewSet(viewsets.ModelViewSet):
         request = self.request
 
         prefetch_relations = []
-        if request.query_params.get("expand_appointments"):
-            # prefetch_relations.append("appointments")
-            # TODO: Prefetching here could be a bit more efficient
-            prefetch_relations.append(
-                Prefetch(
-                    "appointments",
-                    queryset=Appointment.objects.select_related("client", "technician"),
-                )
-            )
         if request.query_params.get("expand_availabilities"):
             prefetch_relations.append("availabilities")
 
@@ -208,7 +199,7 @@ class ClientViewSet(viewsets.ModelViewSet):
 
 
 class TechnicianViewSet(viewsets.ModelViewSet):
-    queryset = Technician.objects.all()
+    queryset = Technician.objects.prefetch_related("appointments").all()
     serializer_class = TechnicianSerializer
     permission_classes = [
         permissions.IsAuthenticated,
@@ -219,15 +210,6 @@ class TechnicianViewSet(viewsets.ModelViewSet):
         request = self.request
 
         prefetch_relations = []
-        if request.query_params.get("expand_appointments"):
-            # prefetch_relations.append("appointments")
-            # TODO: Prefetching here could be a bit more efficient
-            prefetch_relations.append(
-                Prefetch(
-                    "appointments",
-                    queryset=Appointment.objects.select_related("client", "technician"),
-                )
-            )
         if request.query_params.get("expand_availabilities"):
             prefetch_relations.append("availabilities")
 
