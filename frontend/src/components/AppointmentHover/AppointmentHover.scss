@@ -1,0 +1,67 @@
+@import '~/scss/variables';
+@import '~/scss/mixins';
+
+.AppointmentHover {
+  display: flex;
+  flex-direction: column;
+  font-size: 0.875rem;
+  max-width: 20rem;
+
+  &__row {
+    align-items: center;
+    padding: 0.5rem 0;
+    display: flex;
+    gap: 0.5rem;
+
+    &:not(:last-of-type) {
+      border-bottom: 1px solid $border;
+    }
+
+    &:first-of-type {
+      padding: 0 0 0.5rem 0;
+    }
+
+    &:last-of-type {
+      padding: 0.5rem 0 0 0;
+    }
+
+    label {
+      @include font-medium;
+      align-items: center;
+      display: flex;
+      gap: 0.25rem;
+
+      span {
+        font-size: 1.25rem;
+      }
+    }
+
+    &--notes {
+      align-items: flex-start;
+      flex-direction: column;
+    }
+  }
+
+  &__notes {
+    @include scrollbar;
+    background-color: $tw-gray-100;
+    font-size: 0.75rem;
+    line-height: 1.5;
+    padding: 0.5rem;
+    max-height: 10rem;
+    overflow-y: auto;
+    white-space: pre-wrap;
+  }
+
+  &__inClinic {
+    display: block;
+    font-size: 20px;
+
+    &--true {
+      color: $tw-green-500;
+    }
+    &--false {
+      color: $tw-red-500;
+    }
+  }
+}

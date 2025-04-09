@@ -189,6 +189,9 @@ $text-weights: (
   &-nowrap {
     white-space: nowrap;
   }
+  &-pre-wrap {
+    white-space: pre-wrap;
+  }
   &-ellipsis {
     overflow: hidden;
     text-overflow: ellipsis;
