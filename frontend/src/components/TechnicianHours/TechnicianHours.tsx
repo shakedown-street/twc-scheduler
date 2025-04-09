@@ -100,7 +100,7 @@ export const TechnicianHours = () => {
   }
 
   return (
-    <>
+    <div className="flex gap-4">
       <table className="TechnicianHours">
         <colgroup>
           <col width="24px" />
@@ -268,6 +268,6 @@ export const TechnicianHours = () => {
         </tfoot>
       </table>
       {renderLegend()}
-    </>
+    </div>
   );
 };

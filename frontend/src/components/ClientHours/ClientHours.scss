@@ -44,13 +44,9 @@
 
   &__legend {
     @include radius-md;
-    background-color: $tw-gray-100;
     display: flex;
     flex-direction: column;
     gap: 0.25rem;
-    padding: 0.5rem;
-    margin: 1rem 0;
-    width: fit-content;
 
     &__example {
       align-items: center;
