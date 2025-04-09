@@ -25,7 +25,7 @@ export const AvailabilityRoute = () => {
       <Container>
         <div className="mt-4 mb-12">
           <h1>Availability</h1>
-          <Tabs className="my-4">
+          <Tabs className="mb-4">
             <TabItem active={getTab() === 'clients'} onClick={() => setTab('clients')}>
               Clients
             </TabItem>

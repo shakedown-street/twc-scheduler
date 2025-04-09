@@ -165,8 +165,7 @@
       "day": 1,
       "start_time": "09:00:00",
       "end_time": "12:00:00",
-      "in_clinic": true,
-      "notes": ""
+      "in_clinic": true
     }
   },
   {
@@ -180,8 +179,7 @@
       "day": 3,
       "start_time": "16:00:00",
       "end_time": "19:00:00",
-      "in_clinic": false,
-      "notes": ""
+      "in_clinic": false
     }
   },
   {
@@ -195,8 +193,7 @@
       "day": 1,
       "start_time": "12:30:00",
       "end_time": "15:30:00",
-      "in_clinic": false,
-      "notes": ""
+      "in_clinic": false
     }
   },
   {
@@ -210,8 +207,7 @@
       "day": 2,
       "start_time": "12:30:00",
       "end_time": "15:30:00",
-      "in_clinic": true,
-      "notes": ""
+      "in_clinic": true
     }
   },
   {
@@ -225,8 +221,7 @@
       "day": 4,
       "start_time": "09:00:00",
       "end_time": "12:00:00",
-      "in_clinic": false,
-      "notes": ""
+      "in_clinic": false
     }
   },
   {
@@ -240,8 +235,7 @@
       "day": 4,
       "start_time": "16:00:00",
       "end_time": "19:00:00",
-      "in_clinic": false,
-      "notes": ""
+      "in_clinic": false
     }
   },
   {
@@ -255,8 +249,7 @@
       "day": 4,
       "start_time": "12:30:00",
       "end_time": "15:30:00",
-      "in_clinic": false,
-      "notes": ""
+      "in_clinic": false
     }
   },
   {
@@ -270,8 +263,7 @@
       "day": 1,
       "start_time": "09:00:00",
       "end_time": "12:00:00",
-      "in_clinic": false,
-      "notes": ""
+      "in_clinic": false
     }
   },
   {
@@ -285,8 +277,7 @@
       "day": 4,
       "start_time": "16:00:00",
       "end_time": "19:00:00",
-      "in_clinic": false,
-      "notes": ""
+      "in_clinic": false
     }
   },
   {
@@ -300,8 +291,7 @@
       "day": 4,
       "start_time": "16:00:00",
       "end_time": "19:00:00",
-      "in_clinic": false,
-      "notes": ""
+      "in_clinic": false
     }
   },
   {
@@ -315,8 +305,7 @@
       "day": 1,
       "start_time": "12:30:00",
       "end_time": "15:30:00",
-      "in_clinic": false,
-      "notes": ""
+      "in_clinic": false
     }
   },
   {
@@ -330,8 +319,7 @@
       "day": 1,
       "start_time": "16:00:00",
       "end_time": "19:00:00",
-      "in_clinic": false,
-      "notes": ""
+      "in_clinic": false
     }
   },
   {
@@ -345,8 +333,7 @@
       "day": 1,
       "start_time": "12:30:00",
       "end_time": "15:30:00",
-      "in_clinic": false,
-      "notes": ""
+      "in_clinic": false
     }
   },
   {
@@ -360,8 +347,7 @@
       "day": 2,
       "start_time": "09:00:00",
       "end_time": "12:00:00",
-      "in_clinic": false,
-      "notes": ""
+      "in_clinic": false
     }
   },
   {
@@ -375,8 +361,7 @@
       "day": 2,
       "start_time": "12:30:00",
       "end_time": "15:30:00",
-      "in_clinic": false,
-      "notes": ""
+      "in_clinic": false
     }
   },
   {
@@ -390,8 +375,7 @@
       "day": 2,
       "start_time": "12:30:00",
       "end_time": "15:30:00",
-      "in_clinic": false,
-      "notes": ""
+      "in_clinic": false
     }
   },
   {
@@ -405,8 +389,7 @@
       "day": 4,
       "start_time": "16:00:00",
       "end_time": "19:00:00",
-      "in_clinic": false,
-      "notes": ""
+      "in_clinic": false
     }
   },
   {
@@ -420,8 +403,7 @@
       "day": 3,
       "start_time": "12:30:00",
       "end_time": "15:30:00",
-      "in_clinic": false,
-      "notes": ""
+      "in_clinic": false
     }
   },
   {
@@ -435,8 +417,7 @@
       "day": 2,
       "start_time": "12:30:00",
       "end_time": "15:30:00",
-      "in_clinic": false,
-      "notes": ""
+      "in_clinic": false
     }
   },
   {
@@ -450,8 +431,7 @@
       "day": 0,
       "start_time": "12:30:00",
       "end_time": "15:00:00",
-      "in_clinic": false,
-      "notes": ""
+      "in_clinic": false
     }
   },
   {
@@ -465,8 +445,7 @@
       "day": 4,
       "start_time": "12:30:00",
       "end_time": "15:30:00",
-      "in_clinic": false,
-      "notes": ""
+      "in_clinic": false
     }
   },
   {
@@ -480,8 +459,7 @@
       "day": 4,
       "start_time": "12:30:00",
       "end_time": "15:30:00",
-      "in_clinic": false,
-      "notes": ""
+      "in_clinic": false
     }
   },
   {
@@ -495,8 +473,7 @@
       "day": 2,
       "start_time": "16:00:00",
       "end_time": "19:00:00",
-      "in_clinic": false,
-      "notes": ""
+      "in_clinic": false
     }
   },
   {
@@ -510,8 +487,7 @@
       "day": 3,
       "start_time": "12:30:00",
       "end_time": "15:30:00",
-      "in_clinic": false,
-      "notes": ""
+      "in_clinic": false
     }
   },
   {
@@ -525,8 +501,7 @@
       "day": 3,
       "start_time": "12:30:00",
       "end_time": "15:30:00",
-      "in_clinic": false,
-      "notes": ""
+      "in_clinic": false
     }
   },
   {
@@ -540,8 +515,7 @@
       "day": 0,
       "start_time": "09:00:00",
       "end_time": "12:00:00",
-      "in_clinic": true,
-      "notes": ""
+      "in_clinic": true
     }
   },
   {
@@ -555,8 +529,7 @@
       "day": 1,
       "start_time": "09:00:00",
       "end_time": "12:00:00",
-      "in_clinic": false,
-      "notes": ""
+      "in_clinic": false
     }
   },
   {
@@ -570,8 +543,7 @@
       "day": 3,
       "start_time": "16:00:00",
       "end_time": "19:00:00",
-      "in_clinic": false,
-      "notes": ""
+      "in_clinic": false
     }
   },
   {
@@ -585,8 +557,7 @@
       "day": 4,
       "start_time": "09:00:00",
       "end_time": "12:00:00",
-      "in_clinic": false,
-      "notes": ""
+      "in_clinic": false
     }
   },
   {
@@ -600,8 +571,7 @@
       "day": 1,
       "start_time": "16:00:00",
       "end_time": "19:00:00",
-      "in_clinic": false,
-      "notes": ""
+      "in_clinic": false
     }
   },
   {
@@ -615,8 +585,7 @@
       "day": 4,
       "start_time": "09:00:00",
       "end_time": "12:00:00",
-      "in_clinic": true,
-      "notes": ""
+      "in_clinic": true
     }
   },
   {
@@ -630,8 +599,7 @@
       "day": 2,
       "start_time": "12:30:00",
       "end_time": "15:30:00",
-      "in_clinic": false,
-      "notes": ""
+      "in_clinic": false
     }
   },
   {
@@ -645,8 +613,7 @@
       "day": 0,
       "start_time": "12:30:00",
       "end_time": "15:30:00",
-      "in_clinic": true,
-      "notes": ""
+      "in_clinic": true
     }
   },
   {
@@ -660,8 +627,7 @@
       "day": 3,
       "start_time": "09:00:00",
       "end_time": "12:00:00",
-      "in_clinic": true,
-      "notes": ""
+      "in_clinic": true
     }
   },
   {
@@ -675,8 +641,7 @@
       "day": 1,
       "start_time": "09:00:00",
       "end_time": "12:00:00",
-      "in_clinic": false,
-      "notes": ""
+      "in_clinic": false
     }
   },
   {
@@ -690,8 +655,7 @@
       "day": 1,
       "start_time": "12:30:00",
       "end_time": "15:30:00",
-      "in_clinic": true,
-      "notes": ""
+      "in_clinic": true
     }
   },
   {
@@ -705,8 +669,7 @@
       "day": 1,
       "start_time": "16:00:00",
       "end_time": "19:00:00",
-      "in_clinic": false,
-      "notes": ""
+      "in_clinic": false
     }
   },
   {
@@ -720,8 +683,7 @@
       "day": 4,
       "start_time": "12:30:00",
       "end_time": "15:30:00",
-      "in_clinic": true,
-      "notes": ""
+      "in_clinic": true
     }
   },
   {
@@ -735,8 +697,7 @@
       "day": 1,
       "start_time": "12:30:00",
       "end_time": "15:30:00",
-      "in_clinic": false,
-      "notes": ""
+      "in_clinic": false
     }
   },
   {
@@ -750,8 +711,7 @@
       "day": 4,
       "start_time": "12:30:00",
       "end_time": "15:30:00",
-      "in_clinic": false,
-      "notes": ""
+      "in_clinic": false
     }
   },
   {
@@ -765,8 +725,7 @@
       "day": 3,
       "start_time": "16:00:00",
       "end_time": "19:00:00",
-      "in_clinic": false,
-      "notes": ""
+      "in_clinic": false
     }
   },
   {
@@ -780,8 +739,7 @@
       "day": 0,
       "start_time": "12:30:00",
       "end_time": "15:30:00",
-      "in_clinic": false,
-      "notes": ""
+      "in_clinic": false
     }
   },
   {
@@ -795,8 +753,7 @@
       "day": 0,
       "start_time": "16:00:00",
       "end_time": "19:00:00",
-      "in_clinic": false,
-      "notes": ""
+      "in_clinic": false
     }
   },
   {
@@ -810,8 +767,7 @@
       "day": 2,
       "start_time": "09:00:00",
       "end_time": "12:00:00",
-      "in_clinic": false,
-      "notes": ""
+      "in_clinic": false
     }
   },
   {
@@ -825,8 +781,7 @@
       "day": 0,
       "start_time": "16:00:00",
       "end_time": "19:00:00",
-      "in_clinic": false,
-      "notes": ""
+      "in_clinic": false
     }
   },
   {
@@ -840,8 +795,7 @@
       "day": 0,
       "start_time": "16:00:00",
       "end_time": "19:00:00",
-      "in_clinic": false,
-      "notes": ""
+      "in_clinic": false
     }
   },
   {
@@ -855,8 +809,7 @@
       "day": 3,
       "start_time": "12:30:00",
       "end_time": "15:30:00",
-      "in_clinic": true,
-      "notes": ""
+      "in_clinic": true
     }
   },
   {
@@ -870,8 +823,7 @@
       "day": 1,
       "start_time": "12:30:00",
       "end_time": "15:30:00",
-      "in_clinic": false,
-      "notes": ""
+      "in_clinic": false
     }
   },
   {
@@ -885,8 +837,7 @@
       "day": 0,
       "start_time": "16:00:00",
       "end_time": "19:00:00",
-      "in_clinic": false,
-      "notes": ""
+      "in_clinic": false
     }
   },
   {
@@ -900,8 +851,7 @@
       "day": 0,
       "start_time": "12:30:00",
       "end_time": "15:30:00",
-      "in_clinic": false,
-      "notes": ""
+      "in_clinic": false
     }
   },
   {
@@ -915,8 +865,7 @@
       "day": 3,
       "start_time": "16:00:00",
       "end_time": "19:00:00",
-      "in_clinic": false,
-      "notes": ""
+      "in_clinic": false
     }
   },
   {
@@ -930,8 +879,7 @@
       "day": 2,
       "start_time": "12:30:00",
       "end_time": "15:30:00",
-      "in_clinic": false,
-      "notes": ""
+      "in_clinic": false
     }
   },
   {
@@ -945,8 +893,7 @@
       "day": 0,
       "start_time": "12:30:00",
       "end_time": "15:30:00",
-      "in_clinic": false,
-      "notes": ""
+      "in_clinic": false
     }
   },
   {
@@ -960,8 +907,7 @@
       "day": 3,
       "start_time": "09:00:00",
       "end_time": "12:00:00",
-      "in_clinic": false,
-      "notes": ""
+      "in_clinic": false
     }
   },
   {
@@ -975,8 +921,7 @@
       "day": 0,
       "start_time": "12:30:00",
       "end_time": "15:30:00",
-      "in_clinic": false,
-      "notes": ""
+      "in_clinic": false
     }
   },
   {
@@ -990,8 +935,7 @@
       "day": 2,
       "start_time": "16:00:00",
       "end_time": "19:00:00",
-      "in_clinic": false,
-      "notes": ""
+      "in_clinic": false
     }
   },
   {
@@ -1005,8 +949,7 @@
       "day": 4,
       "start_time": "09:00:00",
       "end_time": "12:00:00",
-      "in_clinic": false,
-      "notes": ""
+      "in_clinic": false
     }
   },
   {
@@ -1020,8 +963,7 @@
       "day": 0,
       "start_time": "09:00:00",
       "end_time": "12:00:00",
-      "in_clinic": false,
-      "notes": ""
+      "in_clinic": false
     }
   },
   {
@@ -1035,8 +977,7 @@
       "day": 3,
       "start_time": "12:30:00",
       "end_time": "15:30:00",
-      "in_clinic": false,
-      "notes": ""
+      "in_clinic": false
     }
   },
   {
@@ -1050,8 +991,7 @@
       "day": 3,
       "start_time": "12:30:00",
       "end_time": "15:30:00",
-      "in_clinic": false,
-      "notes": ""
+      "in_clinic": false
     }
   },
   {
@@ -1065,8 +1005,7 @@
       "day": 0,
       "start_time": "09:00:00",
       "end_time": "12:00:00",
-      "in_clinic": false,
-      "notes": ""
+      "in_clinic": false
     }
   },
   {
@@ -1080,8 +1019,7 @@
       "day": 1,
       "start_time": "12:30:00",
       "end_time": "15:30:00",
-      "in_clinic": false,
-      "notes": ""
+      "in_clinic": false
     }
   },
   {
@@ -1095,8 +1033,7 @@
       "day": 2,
       "start_time": "09:00:00",
       "end_time": "12:00:00",
-      "in_clinic": false,
-      "notes": ""
+      "in_clinic": false
     }
   },
   {
@@ -1110,8 +1047,7 @@
       "day": 2,
       "start_time": "09:00:00",
       "end_time": "12:00:00",
-      "in_clinic": true,
-      "notes": ""
+      "in_clinic": true
     }
   },
   {
@@ -1125,8 +1061,7 @@
       "day": 4,
       "start_time": "12:30:00",
       "end_time": "15:30:00",
-      "in_clinic": false,
-      "notes": ""
+      "in_clinic": false
     }
   },
   {
@@ -1140,8 +1075,7 @@
       "day": 2,
       "start_time": "16:00:00",
       "end_time": "19:00:00",
-      "in_clinic": false,
-      "notes": ""
+      "in_clinic": false
     }
   },
   {
@@ -1155,8 +1089,7 @@
       "day": 0,
       "start_time": "09:00:00",
       "end_time": "12:00:00",
-      "in_clinic": false,
-      "notes": ""
+      "in_clinic": false
     }
   },
   {
@@ -1170,8 +1103,7 @@
       "day": 4,
       "start_time": "12:30:00",
       "end_time": "15:30:00",
-      "in_clinic": false,
-      "notes": ""
+      "in_clinic": false
     }
   },
   {
@@ -1185,8 +1117,7 @@
       "day": 0,
       "start_time": "12:30:00",
       "end_time": "15:30:00",
-      "in_clinic": false,
-      "notes": ""
+      "in_clinic": false
     }
   },
   {
@@ -1200,8 +1131,7 @@
       "day": 1,
       "start_time": "12:30:00",
       "end_time": "15:30:00",
-      "in_clinic": false,
-      "notes": ""
+      "in_clinic": false
     }
   },
   {
@@ -1215,8 +1145,7 @@
       "day": 0,
       "start_time": "12:30:00",
       "end_time": "15:30:00",
-      "in_clinic": false,
-      "notes": ""
+      "in_clinic": false
     }
   },
   {
@@ -1230,8 +1159,7 @@
       "day": 3,
       "start_time": "12:30:00",
       "end_time": "15:30:00",
-      "in_clinic": false,
-      "notes": ""
+      "in_clinic": false
     }
   },
   {
@@ -1245,8 +1173,7 @@
       "day": 1,
       "start_time": "16:00:00",
       "end_time": "19:00:00",
-      "in_clinic": false,
-      "notes": ""
+      "in_clinic": false
     }
   },
   {
@@ -1260,8 +1187,7 @@
       "day": 3,
       "start_time": "09:00:00",
       "end_time": "12:00:00",
-      "in_clinic": false,
-      "notes": ""
+      "in_clinic": false
     }
   },
   {
@@ -1275,8 +1201,7 @@
       "day": 2,
       "start_time": "16:00:00",
       "end_time": "19:00:00",
-      "in_clinic": false,
-      "notes": ""
+      "in_clinic": false
     }
   },
   {
@@ -1290,8 +1215,7 @@
       "day": 2,
       "start_time": "12:30:00",
       "end_time": "15:30:00",
-      "in_clinic": false,
-      "notes": ""
+      "in_clinic": false
     }
   },
   {
@@ -1305,8 +1229,7 @@
       "day": 0,
       "start_time": "16:00:00",
       "end_time": "19:00:00",
-      "in_clinic": true,
-      "notes": ""
+      "in_clinic": true
     }
   },
   {
@@ -1320,8 +1243,7 @@
       "day": 0,
       "start_time": "16:00:00",
       "end_time": "19:00:00",
-      "in_clinic": false,
-      "notes": ""
+      "in_clinic": false
     }
   },
   {
@@ -1335,8 +1257,7 @@
       "day": 2,
       "start_time": "12:30:00",
       "end_time": "15:30:00",
-      "in_clinic": false,
-      "notes": ""
+      "in_clinic": false
     }
   },
   {
@@ -1350,8 +1271,7 @@
       "day": 3,
       "start_time": "12:30:00",
       "end_time": "15:30:00",
-      "in_clinic": false,
-      "notes": ""
+      "in_clinic": false
     }
   },
   {
@@ -1365,8 +1285,7 @@
       "day": 3,
       "start_time": "09:00:00",
       "end_time": "12:00:00",
-      "in_clinic": false,
-      "notes": ""
+      "in_clinic": false
     }
   }
 ]

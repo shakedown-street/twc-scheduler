@@ -133,7 +133,7 @@ export const Schedule = () => {
       <Container>
         <div className="mt-4 mb-12">
           <h1>Schedule</h1>
-          <Tabs className="my-4">
+          <Tabs className="mb-4">
             <TabItem active={getDay() === 0} onClick={() => setDay(0)}>
               Monday
             </TabItem>

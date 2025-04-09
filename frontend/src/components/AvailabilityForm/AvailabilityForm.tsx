@@ -22,7 +22,6 @@ export type AvailabilityFormProps = {
 export type AvailabilityFormData = {
   start_time: string;
   end_time: string;
-  notes?: string;
   in_clinic?: boolean;
 };
 
@@ -47,7 +46,6 @@ export const AvailabilityForm = ({
       form.reset({
         start_time: instance.start_time,
         end_time: instance.end_time,
-        notes: instance.notes,
         in_clinic: instance.in_clinic,
       });
     } else {
@@ -192,7 +190,6 @@ export const AvailabilityForm = ({
         />
       </div>
       {contentType === 'client' && <Checkbox label="In clinic" {...form.register('in_clinic')} />}
-      <Textarea fluid label="Notes" {...form.register('notes')} />
       <div className="AvailabilityForm__actions">
         {instance && (
           <Button
