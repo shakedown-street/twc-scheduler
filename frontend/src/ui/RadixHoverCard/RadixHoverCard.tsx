@@ -8,7 +8,8 @@ export type RadixHoverCardProps = {
   arrow?: boolean;
   children?: React.ReactNode;
   className?: string;
-  delayDuration?: number;
+  closeDelay?: number;
+  openDelay?: number;
   open?: boolean;
   onOpenChange?: (open: boolean) => void;
   portal?: boolean;
@@ -24,6 +25,8 @@ export const RadixHoverCard = ({
   arrow = true,
   className,
   children,
+  closeDelay = 100,
+  openDelay = 200,
   open,
   onOpenChange,
   portal = false,
@@ -48,7 +51,7 @@ export const RadixHoverCard = ({
   );
 
   return (
-    <HoverCard.Root open={open} onOpenChange={onOpenChange}>
+    <HoverCard.Root closeDelay={closeDelay} openDelay={openDelay} open={open} onOpenChange={onOpenChange}>
       {trigger && <HoverCard.Trigger asChild={triggerAsChild}>{trigger}</HoverCard.Trigger>}
       {portal ? <HoverCard.Portal>{tooltipContent}</HoverCard.Portal> : tooltipContent}
     </HoverCard.Root>

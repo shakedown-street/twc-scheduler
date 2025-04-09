@@ -24,6 +24,7 @@ export const RadixTooltip = ({
   arrow = false,
   className,
   children,
+  delayDuration = 200,
   open,
   onOpenChange,
   portal = false,
@@ -48,7 +49,7 @@ export const RadixTooltip = ({
   );
 
   return (
-    <Tooltip.Root open={open} onOpenChange={onOpenChange}>
+    <Tooltip.Root delayDuration={delayDuration} open={open} onOpenChange={onOpenChange}>
       {trigger && <Tooltip.Trigger asChild={triggerAsChild}>{trigger}</Tooltip.Trigger>}
       {portal ? <Tooltip.Portal>{tooltipContent}</Tooltip.Portal> : tooltipContent}
     </Tooltip.Root>
