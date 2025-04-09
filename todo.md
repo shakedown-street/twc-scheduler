@@ -26,6 +26,7 @@ Other:
 
 - Need to indicate on the availability blocks if the appointment is in clinic, and if it is not the full block
 - Display warning if client is not available for in clinic and it is checked
+  - should default to in clinic as well if the client is available in clinic
 
 Done:
 

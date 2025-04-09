@@ -1,5 +1,6 @@
 import React from 'react';
 import { Helmet } from 'react-helmet';
+import { useSearchParams } from 'react-router-dom';
 import { ClientModel } from '~/api';
 import { AppointmentForm } from '~/components/AppointmentForm/AppointmentForm';
 import { TimeSlotTable } from '~/components/TimeSlotTable/TimeSlotTable';
@@ -9,7 +10,6 @@ import { Container, RadixDialog, TabItem, Tabs } from '~/ui';
 import './Home.scss';
 
 export const Home = () => {
-  const [day, setDay] = React.useState(0);
   const [clients, setClients] = React.useState<Client[]>([]);
   const [appointmentForm, setAppointmentForm] = React.useState<{
     open: boolean;
@@ -30,6 +30,18 @@ export const Home = () => {
     minTime: '',
     maxTime: '',
   });
+
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  function getDay() {
+    const day = searchParams.get('day');
+    return day ? parseInt(day) : 0;
+  }
+
+  function setDay(day: number) {
+    searchParams.set('day', `${day}`);
+    setSearchParams(searchParams);
+  }
 
   React.useEffect(() => {
     ClientModel.all({
@@ -120,32 +132,32 @@ export const Home = () => {
       </Helmet>
       <Container>
         <Tabs className="my-4">
-          <TabItem active={day === 0} onClick={() => setDay(0)}>
+          <TabItem active={getDay() === 0} onClick={() => setDay(0)}>
             Monday
           </TabItem>
-          <TabItem active={day === 1} onClick={() => setDay(1)}>
+          <TabItem active={getDay() === 1} onClick={() => setDay(1)}>
             Tuesday
           </TabItem>
-          <TabItem active={day === 2} onClick={() => setDay(2)}>
+          <TabItem active={getDay() === 2} onClick={() => setDay(2)}>
             Wednesday
           </TabItem>
-          <TabItem active={day === 3} onClick={() => setDay(3)}>
+          <TabItem active={getDay() === 3} onClick={() => setDay(3)}>
             Thursday
           </TabItem>
-          <TabItem active={day === 4} onClick={() => setDay(4)}>
+          <TabItem active={getDay() === 4} onClick={() => setDay(4)}>
             Friday
           </TabItem>
         </Tabs>
         <TimeSlotTable
           clients={clients}
-          day={day}
+          day={getDay()}
           onClickAvailabilitySlot={(client, availability, block) => {
-            openAppointmentForm(client, day, availability.start_time, availability.end_time);
+            openAppointmentForm(client, getDay(), availability.start_time, availability.end_time);
           }}
           onClickAppointmentSlot={(client, appointment, availability, block) => {
             openAppointmentForm(
               client,
-              day,
+              getDay(),
               appointment.start_time,
               appointment.end_time,
               availability?.start_time || appointment.start_time,
