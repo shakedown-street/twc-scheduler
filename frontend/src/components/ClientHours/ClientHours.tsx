@@ -74,6 +74,32 @@ export const ClientHours = () => {
     return '#404040'; // tw-neutral-700
   }
 
+  function renderLegend() {
+    return (
+      <div className="ClientHours__legend">
+        <div className="ClientHours__legend__example">
+          <div className="ClientHours__legend__example__color" style={{ background: '#404040' }}></div>
+          <span>Unavailable</span>
+        </div>
+        <div className="ClientHours__legend__example">
+          <div className="ClientHours__legend__example__color" style={{ background: '#cbd5e1' }}></div>
+          <span>Available</span>
+        </div>
+        <div className="ClientHours__legend__example">
+          <div className="ClientHours__legend__example__color" style={{ background: '#b91c1c' }}></div>
+          <span>Maxed on Sessions</span>
+        </div>
+        <div className="ClientHours__legend__example">
+          <div
+            className="ClientHours__legend__example__color"
+            style={{ background: 'repeating-linear-gradient(45deg, white, white 4px, black 4px, black 8px)' }}
+          ></div>
+          <span>In Clinic</span>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <>
       <table className="ClientHours">
@@ -195,6 +221,7 @@ export const ClientHours = () => {
           ))}
         </tbody>
       </table>
+      {renderLegend()}
     </>
   );
 };
