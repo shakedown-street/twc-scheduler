@@ -2,7 +2,7 @@ import React from 'react';
 import { useForm } from 'react-hook-form';
 import { TechnicianModel } from '~/api';
 import { Technician } from '~/types/Technician';
-import { Button, Input, Textarea, Toggle, useToast } from '~/ui';
+import { Badge, Button, Input, Textarea, Toggle, useToast } from '~/ui';
 import './TechnicianForm.scss';
 
 export type TechnicianFormProps = {
@@ -31,8 +31,8 @@ export const TechnicianForm = ({ technician, onCancel, onCreate, onDelete, onUpd
     defaultValues: {
       first_name: technician?.first_name ?? '',
       last_name: technician?.last_name ?? '',
-      bg_color: technician?.bg_color ?? '',
-      text_color: technician?.text_color ?? '',
+      bg_color: technician?.bg_color ?? '#ff0000',
+      text_color: technician?.text_color ?? '#000000',
       requested_hours: technician?.requested_hours ?? 0,
       skill_level: technician?.skill_level ?? 1,
       spanish_speaking: technician?.spanish_speaking ?? false,
@@ -40,6 +40,11 @@ export const TechnicianForm = ({ technician, onCancel, onCreate, onDelete, onUpd
     },
   });
   const toast = useToast();
+
+  const firstName = form.watch('first_name');
+  const lastName = form.watch('last_name');
+  const backgroundColor = form.watch('bg_color');
+  const textColor = form.watch('text_color');
 
   React.useEffect(() => {
     if (!technician) {
@@ -138,13 +143,26 @@ export const TechnicianForm = ({ technician, onCancel, onCreate, onDelete, onUpd
         />
       </div>
       <div className="Input__container">
-        <label htmlFor="color">Background Color</label>
-        <input id="color" type="color" {...form.register('bg_color', { required: true })} />
+        <label htmlFor="bg_color">Background Color</label>
+        <input id="bg_color" type="color" {...form.register('bg_color', { required: true })} />
       </div>
       <div className="Input__container">
         <label htmlFor="text_color">Font Color</label>
         <input id="text_color" type="color" {...form.register('text_color', { required: true })} />
       </div>
+      {(firstName || lastName) && backgroundColor && textColor && (
+        <div className="Input__container">
+          <label>Preview</label>
+          <Badge
+            style={{
+              background: backgroundColor,
+              color: textColor,
+            }}
+          >
+            {firstName} {lastName}
+          </Badge>
+        </div>
+      )}
       <Toggle label="Spanish Speaking" {...form.register('spanish_speaking')} />
       <Textarea rows={4} fluid label="Notes" style={{ resize: 'none' }} {...form.register('notes')} />
       <div className="TechnicianForm__actions">
