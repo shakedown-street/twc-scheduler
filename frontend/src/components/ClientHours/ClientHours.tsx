@@ -67,11 +67,13 @@ export const ClientHours = () => {
         return `repeating-linear-gradient(45deg, white, white 4px, ${color} 4px, ${color} 8px)`;
       }
       return appointment.technician?.color || 'white';
-    }
-    if (isAvailable(client, day, block)) {
+    } else if (isAvailable(client, day, block) && client.is_maxed_on_sessions) {
+      return '#b91c1c'; // tw-red-700
+    } else if (isAvailable(client, day, block)) {
       return '#cbd5e1'; // tw-slate-300
+    } else {
+      return '#404040'; // tw-neutral-700
     }
-    return '#404040'; // tw-neutral-700
   }
 
   function renderLegend() {
