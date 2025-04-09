@@ -45,6 +45,26 @@ export const TechnicianHours = () => {
     }
   }
 
+  function totalHoursByDay(day: number) {
+    return technicians.reduce((acc, technician) => acc + technician.total_hours_by_day[day], 0);
+  }
+
+  function totalHours() {
+    return technicians.reduce((acc, technician) => acc + technician.total_hours, 0);
+  }
+
+  function totalRequestedHours() {
+    return technicians.reduce((acc, technician) => acc + technician.requested_hours, 0);
+  }
+
+  function availableTechsCount(day: number, block: Block) {
+    return technicians.reduce((acc, technician) => {
+      const appointments = getBlockAppointments(technician.appointments || [], day, block) || [];
+      const availabilities = getBlockAvailabilities(technician.availabilities || [], day, block) || [];
+      return acc + (appointments.length < 1 && availabilities.length > 0 ? 1 : 0);
+    }, 0);
+  }
+
   function renderLegend() {
     return (
       <div className="TechnicianHours__legend">
@@ -220,27 +240,30 @@ export const TechnicianHours = () => {
             <td colSpan={4} style={{ textAlign: 'center' }}>
               Total
             </td>
-            <td style={{ textAlign: 'center' }}>
-              {technicians.reduce((acc, technician) => acc + technician.total_hours_by_day[0], 0)}
-            </td>
-            <td style={{ textAlign: 'center' }}>
-              {technicians.reduce((acc, technician) => acc + technician.total_hours_by_day[1], 0)}
-            </td>
-            <td style={{ textAlign: 'center' }}>
-              {technicians.reduce((acc, technician) => acc + technician.total_hours_by_day[2], 0)}
-            </td>
-            <td style={{ textAlign: 'center' }}>
-              {technicians.reduce((acc, technician) => acc + technician.total_hours_by_day[3], 0)}
-            </td>
-            <td style={{ textAlign: 'center' }}>
-              {technicians.reduce((acc, technician) => acc + technician.total_hours_by_day[4], 0)}
-            </td>
-            <td style={{ textAlign: 'center' }}>
-              {technicians.reduce((acc, technician) => acc + technician.total_hours, 0)}
-            </td>
-            <td style={{ textAlign: 'center' }}>
-              {technicians.reduce((acc, technician) => acc + technician.requested_hours, 0)}
-            </td>
+            <td style={{ textAlign: 'center' }}>{totalHoursByDay(0)}</td>
+            <td style={{ textAlign: 'center' }}>{totalHoursByDay(1)}</td>
+            <td style={{ textAlign: 'center' }}>{totalHoursByDay(2)}</td>
+            <td style={{ textAlign: 'center' }}>{totalHoursByDay(3)}</td>
+            <td style={{ textAlign: 'center' }}>{totalHoursByDay(4)}</td>
+            <td style={{ textAlign: 'center' }}>{totalHours()}</td>
+            <td style={{ textAlign: 'center' }}>{totalRequestedHours()}</td>
+            <td></td>
+            {['M', 'T', 'W', 'TH', 'F'].map((day, dayIndex) => (
+              <React.Fragment key={day}>
+                {blocks.map((block, blockIndex) => (
+                  <td
+                    key={block.id}
+                    style={{
+                      borderLeftWidth: blockIndex === 0 ? '6px' : '1px',
+                      borderRightWidth: blockIndex === blocks.length - 1 ? '6px' : '1px',
+                      textAlign: 'center',
+                    }}
+                  >
+                    {availableTechsCount(dayIndex, block)}
+                  </td>
+                ))}
+              </React.Fragment>
+            ))}
           </tr>
         </tfoot>
       </table>
