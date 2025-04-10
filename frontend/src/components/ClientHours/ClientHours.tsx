@@ -33,27 +33,6 @@ export const ClientHours = () => {
       });
   }, []);
 
-  function blockBackground(client: Client, day: number, block: Block) {
-    const appointments = getBlockAppointments(client.appointments || [], day, block) || [];
-    const availabilities = getBlockAvailabilities(client.availabilities || [], day, block) || [];
-
-    if (appointments.length > 0) {
-      const appointment = appointments[0];
-      if (appointment.in_clinic) {
-        const bgColor = appointment.technician?.bg_color || 'white';
-        const textColor = appointment.technician?.text_color || 'black';
-        return striped(textColor, bgColor);
-      }
-      return appointment.technician?.bg_color || 'white';
-    } else if (availabilities.length > 0 && client.is_maxed_on_sessions) {
-      return '#b91c1c'; // tw-red-700
-    } else if (availabilities.length > 0) {
-      return '#cbd5e1'; // tw-slate-300
-    } else {
-      return '#404040'; // tw-neutral-700
-    }
-  }
-
   function totalHoursByDay(day: number) {
     return clients.reduce((acc, client) => acc + client.total_hours_by_day[day], 0);
   }
@@ -74,6 +53,77 @@ export const ClientHours = () => {
     }, 0);
   }
 
+  function renderBlock(client: Client, day: number, block: Block, blockIndex: number) {
+    const blockAppointments = getBlockAppointments(client.appointments || [], day, block) || [];
+    const blockAvailabilities = getBlockAvailabilities(client.availabilities || [], day, block) || [];
+
+    const borderLeftWidth = blockIndex === 0 ? '6px' : '1px';
+    const borderRightWidth = blockIndex === blocks.length - 1 ? '6px' : '1px';
+
+    // Render appointment blocks
+    if (blockAppointments.length > 0) {
+      const appointment = blockAppointments[0];
+      let background = appointment.technician?.bg_color || 'white';
+      if (appointment.in_clinic) {
+        const bgColor = appointment.technician?.bg_color || 'white';
+        const textColor = appointment.technician?.text_color || 'black';
+        background = striped(textColor, bgColor);
+      }
+      return (
+        <RadixHoverCard
+          key={block.id}
+          portal
+          trigger={
+            <td
+              style={{
+                background,
+                borderLeftWidth,
+                borderRightWidth,
+              }}
+            ></td>
+          }
+        >
+          <AppointmentHover appointment={appointment} />
+        </RadixHoverCard>
+      );
+    }
+
+    // Render availability blocks
+    if (blockAvailabilities.length > 0) {
+      let background = '#cbd5e1'; // tw-slate-300
+      if (client.is_maxed_on_sessions) {
+        background = 'black';
+      }
+      return (
+        <td
+          key={block.id}
+          style={{
+            background,
+            borderLeftWidth,
+            borderRightWidth,
+            color: client.is_maxed_on_sessions ? '#ef4444' : '#22c55e', // tw-red-500 : tw-green-500
+            textAlign: 'center',
+            fontWeight: 'bold',
+          }}
+        >
+          {client.is_maxed_on_sessions ? 'M' : 'A'}
+        </td>
+      );
+    }
+
+    // Render unavailable blocks
+    return (
+      <td
+        key={block.id}
+        style={{
+          background: '#404040', // tw-neutral-700
+          borderLeftWidth,
+          borderRightWidth,
+        }}
+      ></td>
+    );
+  }
+
   function renderLegend() {
     return (
       <div className="ClientHours__legend">
@@ -82,11 +132,15 @@ export const ClientHours = () => {
           <span>Unavailable</span>
         </div>
         <div className="ClientHours__legend__example">
-          <div className="ClientHours__legend__example__color" style={{ background: '#cbd5e1' }}></div>
+          <div className="ClientHours__legend__example__color" style={{ background: '#cbd5e1', color: '#22c55e' }}>
+            A
+          </div>
           <span>Available</span>
         </div>
         <div className="ClientHours__legend__example">
-          <div className="ClientHours__legend__example__color" style={{ background: '#b91c1c' }}></div>
+          <div className="ClientHours__legend__example__color" style={{ background: 'black', color: '#b91c1c' }}>
+            M
+          </div>
           <span>Maxed on Sessions</span>
         </div>
         <div className="ClientHours__legend__example">
@@ -197,41 +251,9 @@ export const ClientHours = () => {
               </td>
               {days.map((day) => (
                 <React.Fragment key={day}>
-                  {blocks.map((block, blockIndex) => {
-                    const blockAppointments = getBlockAppointments(client.appointments || [], day, block) || [];
-
-                    if (blockAppointments.length > 0) {
-                      const appointment = blockAppointments[0];
-                      return (
-                        <RadixHoverCard
-                          key={block.id}
-                          portal
-                          trigger={
-                            <td
-                              style={{
-                                background: blockBackground(client, day, block),
-                                borderLeftWidth: blockIndex === 0 ? '6px' : '1px',
-                                borderRightWidth: blockIndex === blocks.length - 1 ? '6px' : '1px',
-                              }}
-                            ></td>
-                          }
-                        >
-                          <AppointmentHover appointment={appointment} />
-                        </RadixHoverCard>
-                      );
-                    }
-
-                    return (
-                      <td
-                        key={block.id}
-                        style={{
-                          background: blockBackground(client, day, block),
-                          borderLeftWidth: blockIndex === 0 ? '6px' : '1px',
-                          borderRightWidth: blockIndex === blocks.length - 1 ? '6px' : '1px',
-                        }}
-                      ></td>
-                    );
-                  })}
+                  {blocks.map((block, blockIndex) => (
+                    <React.Fragment key={block.id}>{renderBlock(client, day, block, blockIndex)}</React.Fragment>
+                  ))}
                 </React.Fragment>
               ))}
             </tr>

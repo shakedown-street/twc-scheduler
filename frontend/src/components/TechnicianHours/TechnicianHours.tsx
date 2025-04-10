@@ -33,26 +33,6 @@ export const TechnicianHours = () => {
       });
   }, []);
 
-  function blockBackground(technician: Technician, day: number, block: Block) {
-    const appointments = getBlockAppointments(technician.appointments || [], day, block) || [];
-    const availabilities = getBlockAvailabilities(technician.availabilities || [], day, block) || [];
-
-    if (appointments.length > 0) {
-      const appointment = appointments[0];
-      const bgColor = appointment.client?.is_onboarding ? '#eab308' : '#15803d'; // tw-yellow-500 : tw-green-700
-      if (appointment.in_clinic) {
-        return striped('black', bgColor);
-      }
-      return `${bgColor}`;
-    } else if (availabilities.length > 0 && technician.is_maxed_on_sessions) {
-      return '#b91c1c'; // tw-red-700
-    } else if (availabilities.length > 0) {
-      return '#cbd5e1'; // tw-slate-300
-    } else {
-      return '#404040'; // tw-neutral-700
-    }
-  }
-
   function totalHoursByDay(day: number) {
     return technicians.reduce((acc, technician) => acc + technician.total_hours_by_day[day], 0);
   }
@@ -73,6 +53,76 @@ export const TechnicianHours = () => {
     }, 0);
   }
 
+  function renderBlock(client: Technician, day: number, block: Block, blockIndex: number) {
+    const blockAppointments = getBlockAppointments(client.appointments || [], day, block) || [];
+    const blockAvailabilities = getBlockAvailabilities(client.availabilities || [], day, block) || [];
+
+    const borderLeftWidth = blockIndex === 0 ? '6px' : '1px';
+    const borderRightWidth = blockIndex === blocks.length - 1 ? '6px' : '1px';
+
+    // Render appointment blocks
+    if (blockAppointments.length > 0) {
+      const appointment = blockAppointments[0];
+      const bgColor = appointment.client?.is_onboarding ? '#eab308' : '#15803d'; // tw-yellow-500 : tw-green-700
+      let background = bgColor;
+      if (appointment.in_clinic) {
+        background = striped('black', bgColor);
+      }
+      return (
+        <RadixHoverCard
+          key={block.id}
+          portal
+          trigger={
+            <td
+              style={{
+                background,
+                borderLeftWidth,
+                borderRightWidth,
+              }}
+            ></td>
+          }
+        >
+          <AppointmentHover appointment={appointment} />
+        </RadixHoverCard>
+      );
+    }
+
+    // Render availability blocks
+    if (blockAvailabilities.length > 0) {
+      let background = '#cbd5e1'; // tw-slate-300
+      if (client.is_maxed_on_sessions) {
+        background = 'black';
+      }
+      return (
+        <td
+          key={block.id}
+          style={{
+            background,
+            borderLeftWidth,
+            borderRightWidth,
+            color: client.is_maxed_on_sessions ? '#ef4444' : '#22c55e', // tw-red-500 : tw-green-500
+            textAlign: 'center',
+            fontWeight: 'bold',
+          }}
+        >
+          {client.is_maxed_on_sessions ? 'M' : 'A'}
+        </td>
+      );
+    }
+
+    // Render unavailable blocks
+    return (
+      <td
+        key={block.id}
+        style={{
+          background: '#404040', // tw-neutral-700
+          borderLeftWidth,
+          borderRightWidth,
+        }}
+      ></td>
+    );
+  }
+
   function renderLegend() {
     return (
       <div className="TechnicianHours__legend">
@@ -80,12 +130,16 @@ export const TechnicianHours = () => {
           <div className="TechnicianHours__legend__example__color" style={{ background: '#404040' }}></div>
           <span>Unavailable</span>
         </div>
-        <div className="TechnicianHours__legend__example">
-          <div className="TechnicianHours__legend__example__color" style={{ background: '#cbd5e1' }}></div>
+        <div className="ClientHours__legend__example">
+          <div className="ClientHours__legend__example__color" style={{ background: '#cbd5e1', color: '#22c55e' }}>
+            A
+          </div>
           <span>Available</span>
         </div>
-        <div className="TechnicianHours__legend__example">
-          <div className="TechnicianHours__legend__example__color" style={{ background: '#b91c1c' }}></div>
+        <div className="ClientHours__legend__example">
+          <div className="ClientHours__legend__example__color" style={{ background: 'black', color: '#b91c1c' }}>
+            M
+          </div>
           <span>Maxed on Sessions</span>
         </div>
         <div className="TechnicianHours__legend__example">
@@ -209,41 +263,9 @@ export const TechnicianHours = () => {
               </td>
               {days.map((day) => (
                 <React.Fragment key={day}>
-                  {blocks.map((block, blockIndex) => {
-                    const blockAppointments = getBlockAppointments(technician.appointments || [], day, block) || [];
-
-                    if (blockAppointments.length > 0) {
-                      const appointment = blockAppointments[0];
-                      return (
-                        <RadixHoverCard
-                          key={block.id}
-                          portal
-                          trigger={
-                            <td
-                              style={{
-                                background: blockBackground(technician, day, block),
-                                borderLeftWidth: blockIndex === 0 ? '6px' : '1px',
-                                borderRightWidth: blockIndex === blocks.length - 1 ? '6px' : '1px',
-                              }}
-                            ></td>
-                          }
-                        >
-                          <AppointmentHover appointment={appointment} />
-                        </RadixHoverCard>
-                      );
-                    }
-
-                    return (
-                      <td
-                        key={block.id}
-                        style={{
-                          background: blockBackground(technician, day, block),
-                          borderLeftWidth: blockIndex === 0 ? '6px' : '1px',
-                          borderRightWidth: blockIndex === blocks.length - 1 ? '6px' : '1px',
-                        }}
-                      ></td>
-                    );
-                  })}
+                  {blocks.map((block, blockIndex) => (
+                    <React.Fragment key={block.id}>{renderBlock(technician, day, block, blockIndex)}</React.Fragment>
+                  ))}
                 </React.Fragment>
               ))}
             </tr>
