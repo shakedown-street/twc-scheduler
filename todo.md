@@ -22,6 +22,8 @@ Other:
 - Highlight the current page on nav bar
 - Show person's name on dialogs for creating availabilities and appointments
 - Reduce memory usage when switching days on the schedule (rendering all the appointments is slow)
+- Polish availability pages
+- Polish matrix page?
 
 Done:
 

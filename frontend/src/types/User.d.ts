@@ -13,7 +13,4 @@ export type User = {
   is_verified: boolean;
   groups: any[];
   user_permissions: any[];
-
-  // Users will only see this on their own User record
-  is_subscribed?: boolean;
 };

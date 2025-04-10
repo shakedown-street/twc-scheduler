@@ -7,8 +7,6 @@ import { PasswordResetConfirm } from './features/auth/routes/PasswordResetConfir
 import { Profile } from './features/auth/routes/Profile/Profile';
 import { SignUp } from './features/auth/routes/SignUp/SignUp';
 import { VerifyEmail } from './features/auth/routes/VerifyEmail/VerifyEmail';
-import { Checkout } from './features/payments/routes/Checkout/Checkout';
-import { CheckoutSuccess } from './features/payments/routes/CheckoutSuccess/CheckoutSuccess';
 import { AvailabilityRoute } from './routes/AvailabilityRoute/AvailabilityRoute';
 import { Schedule } from './routes/Schedule/Schedule';
 import { NotFound } from './routes/NotFound/NotFound';
@@ -17,18 +15,13 @@ import { StyleGuide } from './routes/StyleGuide/StyleGuide';
 
 export type AuthGuardProps = {
   children: React.ReactNode;
-  requireSubscription?: boolean;
 };
 
-export const AuthGuard = ({ children, requireSubscription = false }: AuthGuardProps) => {
+export const AuthGuard = ({ children }: AuthGuardProps) => {
   const { user } = useAuth();
 
   if (!user) {
     return <Navigate to="/login" />;
-  }
-
-  if (requireSubscription && !user.is_subscribed) {
-    return <Navigate to="/checkout" />;
   }
 
   return <>{children}</>;
@@ -76,22 +69,6 @@ export const routes: RouteObject[] = [
         element: (
           <AuthGuard>
             <Profile />
-          </AuthGuard>
-        ),
-      },
-      {
-        path: '/checkout',
-        element: (
-          <AuthGuard>
-            <Checkout />
-          </AuthGuard>
-        ),
-      },
-      {
-        path: '/checkout/success',
-        element: (
-          <AuthGuard>
-            <CheckoutSuccess />
           </AuthGuard>
         ),
       },

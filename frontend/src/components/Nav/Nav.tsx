@@ -1,7 +1,6 @@
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { BillingSessionModel } from '~/api';
 import logo from '~/assets/logo.avif';
 import { ImpersonateDialog } from '~/features/auth/components/ImpersonateDialog/ImpersonateDialog';
 import { useAuth } from '~/features/auth/contexts/AuthContext';
@@ -15,14 +14,6 @@ export const Nav = () => {
   const navigate = useNavigate();
   const { user, setUser } = useAuth();
   const toast = useToast();
-
-  function openBilling() {
-    BillingSessionModel.create({})
-      .then((session) => {
-        window.open(session.data.url, '_blank');
-      })
-      .catch((err) => toast.errorResponse(err));
-  }
 
   function logout() {
     http
@@ -68,18 +59,6 @@ export const Nav = () => {
               </div>
               Profile
             </DropdownMenu.Item>
-            {/*
-              NOTE: If you know the project is using stripe, you can remove this
-              condition and just always show the billing link.
-            */}
-            {import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY && (
-              <DropdownMenu.Item className="DropdownMenu__item" onClick={() => openBilling()}>
-                <div className="DropdownMenu__icon">
-                  <span className="material-symbols-outlined">credit_card</span>
-                </div>
-                Billing
-              </DropdownMenu.Item>
-            )}
             {user?.is_superuser && (
               <DropdownMenu.Item className="DropdownMenu__item" onClick={() => setImpersonateDialogOpen(true)}>
                 <div className="DropdownMenu__icon">
