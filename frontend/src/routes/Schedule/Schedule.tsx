@@ -1,37 +1,34 @@
 import React from 'react';
 import { Helmet } from 'react-helmet';
 import { useSearchParams } from 'react-router-dom';
-import { BlockModel, ClientModel } from '~/api';
+import { ClientModel } from '~/api';
 import { AppointmentForm } from '~/components/AppointmentForm/AppointmentForm';
 import { TimeSlotTable } from '~/components/TimeSlotTable/TimeSlotTable';
+import { useBlocks } from '~/contexts/BlocksContext';
 import { Appointment } from '~/types/Appointment';
+import { Availability } from '~/types/Availability';
 import { Block } from '~/types/Block';
 import { Client } from '~/types/Client';
 import { Container, RadixDialog, Spinner, TabItem, Tabs } from '~/ui';
 import './Schedule.scss';
-import { useBlocks } from '~/contexts/BlocksContext';
 
 export const Schedule = () => {
   const [clients, setClients] = React.useState<Client[]>([]);
   const [clientsLoading, setClientsLoading] = React.useState(true);
   const [appointmentForm, setAppointmentForm] = React.useState<{
     open: boolean;
-    instance?: Appointment;
     client?: Client;
     day: number;
-    initialStartTime: string;
-    initialEndTime: string;
-    minTime: string;
-    maxTime: string;
+    block?: Block;
+    availability?: Availability;
+    instance?: Appointment;
   }>({
     open: false,
-    instance: undefined,
     client: undefined,
     day: 0,
-    initialStartTime: '',
-    initialEndTime: '',
-    minTime: '',
-    maxTime: '',
+    block: undefined,
+    availability: undefined,
+    instance: undefined,
   });
 
   const [searchParams, setSearchParams] = useSearchParams();
@@ -65,22 +62,18 @@ export const Schedule = () => {
   function openAppointmentForm(
     client: Client,
     day: number,
-    startTime: string,
-    endTime: string,
-    minTime: string = startTime,
-    maxTime: string = endTime,
+    block: Block,
+    availability: Availability | undefined,
     instance: Appointment | undefined = undefined
   ) {
     setAppointmentForm({
       ...appointmentForm,
       open: true,
-      instance,
       client: client,
       day,
-      initialStartTime: startTime,
-      initialEndTime: endTime,
-      minTime: minTime,
-      maxTime: maxTime,
+      block,
+      availability,
+      instance,
     });
   }
 
@@ -88,12 +81,10 @@ export const Schedule = () => {
     setAppointmentForm({
       ...appointmentForm,
       open: false,
-      instance: undefined,
       client: undefined,
-      initialStartTime: '',
-      initialEndTime: '',
-      minTime: '',
-      maxTime: '',
+      block: undefined,
+      availability: undefined,
+      instance: undefined,
     });
   }
 
@@ -168,19 +159,11 @@ export const Schedule = () => {
             blocks={blocks}
             clients={clients}
             day={getDay()}
-            onClickAvailabilitySlot={(client, availability, block) => {
-              openAppointmentForm(client, getDay(), availability.start_time, availability.end_time);
+            onClickAvailabilitySlot={(client, block, availability) => {
+              openAppointmentForm(client, getDay(), block, availability);
             }}
-            onClickAppointmentSlot={(client, appointment, availability, block) => {
-              openAppointmentForm(
-                client,
-                getDay(),
-                appointment.start_time,
-                appointment.end_time,
-                availability?.start_time || appointment.start_time,
-                availability?.end_time || appointment.end_time,
-                appointment
-              );
+            onClickAppointmentSlot={(client, block, appointment, availability) => {
+              openAppointmentForm(client, getDay(), block, availability, appointment);
             }}
           />
         </div>
@@ -196,18 +179,16 @@ export const Schedule = () => {
       >
         <div className="p-6">
           <h3 className="mb-4">{appointmentForm.instance ? 'Update' : 'Create'} Appointment</h3>
-          {appointmentForm.client && (
+          {appointmentForm.client && appointmentForm.block && (
             <AppointmentForm
               onCreate={(created) => onCreateAppointment(created)}
               onUpdate={(updated) => onUpdateAppointment(updated)}
               onDelete={(deleted) => onDeleteAppointment(deleted)}
-              instance={appointmentForm.instance}
               client={appointmentForm.client}
               day={appointmentForm.day}
-              initialStartTime={appointmentForm.initialStartTime}
-              initialEndTime={appointmentForm.initialEndTime}
-              minTime={appointmentForm.minTime}
-              maxTime={appointmentForm.maxTime}
+              block={appointmentForm.block}
+              availability={appointmentForm.availability}
+              instance={appointmentForm.instance}
             />
           )}
         </div>

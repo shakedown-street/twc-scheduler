@@ -14,12 +14,12 @@ export type TimeSlotTableProps = {
   clients: Client[];
   day: number;
   onClickBlockSlot?: (client: Client, block: Block) => void;
-  onClickAvailabilitySlot: (client: Client, availability: Availability, block: Block | undefined) => void;
+  onClickAvailabilitySlot: (client: Client, block: Block, availability: Availability) => void;
   onClickAppointmentSlot?: (
     client: Client,
+    block: Block,
     appointment: Appointment,
-    availability: Availability | undefined,
-    block: Block | undefined
+    availability?: Availability
   ) => void;
 };
 
@@ -94,12 +94,12 @@ export const TimeSlotTable = ({
     const slotAvailability = getSlotAvailability(time, client.availabilities || []);
     const slotBlock = getSlotBlock(time);
 
-    if (slotAppointment) {
-      onClickAppointmentSlot?.(client, slotAppointment, slotAvailability, slotBlock);
+    if (slotAppointment && slotBlock) {
+      onClickAppointmentSlot?.(client, slotBlock, slotAppointment, slotAvailability);
       return;
     }
-    if (slotAvailability) {
-      onClickAvailabilitySlot?.(client, slotAvailability, slotBlock);
+    if (slotAvailability && slotBlock) {
+      onClickAvailabilitySlot?.(client, slotBlock, slotAvailability);
       return;
     }
     if (slotBlock) {

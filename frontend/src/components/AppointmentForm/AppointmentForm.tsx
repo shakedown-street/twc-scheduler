@@ -3,19 +3,19 @@ import React from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { AppointmentModel, ClientModel, TechnicianModel } from '~/api';
 import { Appointment } from '~/types/Appointment';
+import { Availability } from '~/types/Availability';
+import { Block } from '~/types/Block';
 import { Client } from '~/types/Client';
 import { Technician } from '~/types/Technician';
 import { Button, IconButton, RadixTooltip, Select, Textarea, TimeInput, Toggle, useToast } from '~/ui';
 import './AppointmentForm.scss';
 
 export type AppointmentFormProps = {
-  instance?: Appointment;
   client: Client;
   day: number;
-  initialStartTime: string;
-  initialEndTime: string;
-  minTime: string;
-  maxTime: string;
+  block: Block;
+  availability?: Availability;
+  instance?: Appointment;
   onCreate?: (created: Appointment[]) => void;
   onUpdate?: (updated: Appointment) => void;
   onDelete?: (deleted: Appointment) => void;
@@ -27,17 +27,15 @@ export type AppointmentFormData = {
   technician: string;
   repeats?: number[];
   notes?: string;
-  in_clinic?: boolean;
+  in_clinic: boolean;
 };
 
 export const AppointmentForm = ({
-  instance,
   client,
   day,
-  initialStartTime,
-  initialEndTime,
-  minTime,
-  maxTime,
+  block,
+  availability,
+  instance,
   onCreate,
   onUpdate,
   onDelete,
@@ -58,6 +56,7 @@ export const AppointmentForm = ({
   const startTime = form.watch('start_time');
   const endTime = form.watch('end_time');
   const technician = form.watch('technician');
+  const inClinic = form.watch('in_clinic');
 
   React.useEffect(() => {
     // Fetch all technicians on mount
@@ -65,7 +64,7 @@ export const AppointmentForm = ({
   }, []);
 
   React.useEffect(() => {
-    // Reset form values when the instance changes
+    // Reset form values when the instance, availability, or block changes
     if (instance) {
       form.reset({
         start_time: instance.start_time,
@@ -73,13 +72,20 @@ export const AppointmentForm = ({
         notes: instance.notes,
         in_clinic: instance.in_clinic,
       });
+    } else if (availability) {
+      form.reset({
+        start_time: availability.start_time,
+        end_time: availability.end_time,
+        in_clinic: availability.in_clinic,
+      });
     } else {
       form.reset({
-        start_time: initialStartTime,
-        end_time: initialEndTime,
+        start_time: block.start_time,
+        end_time: block.end_time,
+        in_clinic: false,
       });
     }
-  }, [instance, initialStartTime, initialEndTime]);
+  }, [instance, availability, block]);
 
   React.useEffect(() => {
     // Get available technicians when any of the relevant values change
@@ -329,8 +335,8 @@ export const AppointmentForm = ({
                   id: 'start_time',
                   label: 'Start time',
                 }}
-                min={minTime}
-                max={maxTime}
+                min={block.start_time}
+                max={block.end_time}
                 onChange={(value) => {
                   field.onChange(value);
                 }}
@@ -350,8 +356,8 @@ export const AppointmentForm = ({
                   id: 'end_time',
                   label: 'End time',
                 }}
-                min={minTime}
-                max={maxTime}
+                min={block.start_time}
+                max={block.end_time}
                 onChange={(value) => {
                   field.onChange(value);
                 }}
@@ -361,7 +367,19 @@ export const AppointmentForm = ({
           }}
         />
       </div>
-      <Toggle labelPosition="right" label="In clinic" {...form.register('in_clinic')} />
+      <div>
+        <Toggle labelPosition="right" label="In clinic" {...form.register('in_clinic')} />
+        {inClinic && availability && !availability.in_clinic && (
+          <div className="AppointmentForm__inClinicWarning">
+            <span className="material-symbols-outlined">warning</span> Client is not available in clinic
+          </div>
+        )}
+        {!inClinic && availability && availability.in_clinic && (
+          <div className="AppointmentForm__inClinicWarning">
+            <span className="material-symbols-outlined">warning</span> Client is available in clinic
+          </div>
+        )}
+      </div>
       <Toggle
         checked={onlyShowRecommendedTechs}
         label="Recommended Techs Only"
