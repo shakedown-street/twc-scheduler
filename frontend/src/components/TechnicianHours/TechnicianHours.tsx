@@ -301,6 +301,18 @@ export const TechnicianHours = () => {
               </React.Fragment>
             ))}
           </tr>
+          <tr>
+            <td colSpan={12}></td>
+            <td
+              colSpan={15}
+              style={{
+                borderLeftWidth: '6px',
+                borderRightWidth: '6px',
+              }}
+            >
+              Total Available
+            </td>
+          </tr>
         </tfoot>
       </table>
       {renderLegend()}
