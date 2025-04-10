@@ -8,6 +8,7 @@ import { Availability } from '~/types/Availability';
 import { Block } from '~/types/Block';
 import { Technician } from '~/types/Technician';
 import { Button, Card, RadixDialog, Spinner } from '~/ui';
+import { isFullBlock } from '~/utils/appointments';
 import { formatTimeShort, isBetweenInclusiveEnd, isBetweenInclusiveStart } from '~/utils/time';
 import './TechAvailability.scss';
 
@@ -193,9 +194,16 @@ export const TechAvailability = () => {
             }}
           >
             {blockAvailability && (
-              <>
-                {formatTimeShort(blockAvailability.start_time)}-{formatTimeShort(blockAvailability.end_time)}
-              </>
+              <div className="flex align-center gap-1">
+                <div className="text-nowrap">
+                  {formatTimeShort(blockAvailability.start_time)}-{formatTimeShort(blockAvailability.end_time)}
+                </div>
+                {!isFullBlock(blockAvailability, block) && (
+                  <span className="material-symbols-outlined text-color-red text-size-sm" title="Partially available">
+                    warning
+                  </span>
+                )}
+              </div>
             )}
           </td>
         );
@@ -240,7 +248,7 @@ export const TechAvailability = () => {
               <th>Rating</th>
               <th>Spanish</th>
               {days.map((day) => (
-                <th key={day} colSpan={blocks.length}>
+                <th key={day} colSpan={blocks.length} className="TechAvailability__table__boldBorder">
                   {['Mon', 'Tue', 'Wed', 'Thu', 'Fri'][day]}
                 </th>
               ))}
@@ -268,7 +276,7 @@ export const TechAvailability = () => {
                 </td>
                 <td style={{ textAlign: 'center' }}>
                   {technician.spanish_speaking && (
-                    <span className="material-symbols-outlined text-color-green">check</span>
+                    <span className="material-symbols-outlined text-color-green text-size-sm">check</span>
                   )}
                 </td>
                 {renderAvailabilities(technician)}

@@ -274,14 +274,18 @@ export const ClientAvailability = () => {
                 </td>
                 <td style={{ textAlign: 'center' }}>
                   {client.req_spanish_speaking && (
-                    <span className="material-symbols-outlined text-color-green">check</span>
+                    <span className="material-symbols-outlined text-color-green text-size-sm">check</span>
                   )}
                 </td>
                 <td style={{ textAlign: 'center' }}>
-                  {client.eval_done && <span className="material-symbols-outlined text-color-green">check</span>}
+                  {client.eval_done && (
+                    <span className="material-symbols-outlined text-color-green text-size-sm">check</span>
+                  )}
                 </td>
                 <td style={{ textAlign: 'center' }}>
-                  {client.is_onboarding && <span className="material-symbols-outlined text-color-green">check</span>}
+                  {client.is_onboarding && (
+                    <span className="material-symbols-outlined text-color-green text-size-sm">check</span>
+                  )}
                 </td>
                 {renderAvailabilities(client)}
                 <td style={{ textAlign: 'right' }}>{client.prescribed_hours}</td>
