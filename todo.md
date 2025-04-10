@@ -21,8 +21,7 @@ Other:
 - Need to indicate on the availability blocks if the appointment is in clinic
 - Show person's name on dialogs for creating availabilities and appointments
 - Reduce memory usage when switching days on the schedule (rendering all the appointments is slow)
-- Polish availability pages
-- Polish matrix page?
+- "total available" doesn't update when adding a new availability
 
 Done:
 
@@ -48,3 +47,5 @@ Done:
 - Indicate on the availability blocks if they the availability is not the full block
 - Default appointment form to in clinic if availability is in clinic, and show a warning whenever switching in clinic toggle
 - Highlight the current page on the nav bar
+- Polish sheet 1 pages
+- Polish availability pages

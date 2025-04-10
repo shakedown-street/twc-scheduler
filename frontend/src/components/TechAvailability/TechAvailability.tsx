@@ -9,6 +9,7 @@ import { Block } from '~/types/Block';
 import { Technician } from '~/types/Technician';
 import { Button, Card, RadixDialog, Spinner } from '~/ui';
 import { isFullBlock } from '~/utils/appointments';
+import { skillLevelColor } from '~/utils/color';
 import { formatTimeShort, isBetweenInclusiveEnd, isBetweenInclusiveStart } from '~/utils/time';
 import './TechAvailability.scss';
 
@@ -58,6 +59,10 @@ export const TechAvailability = () => {
 
   function totalRequestedHours() {
     return technicians.reduce((total, technician) => total + (technician.requested_hours || 0), 0);
+  }
+
+  function totalAvailableHours() {
+    return technicians.reduce((total, technician) => total + (technician.total_hours_available || 0), 0);
   }
 
   function getBlockAvailability(technician: Technician, day: number, block: Block) {
@@ -244,20 +249,31 @@ export const TechAvailability = () => {
         <table className="TechAvailability__table">
           <thead>
             <tr>
-              <th></th>
-              <th>Rating</th>
-              <th>Spanish</th>
+              <th className="ClientAvailability__table--vertical"></th>
+              <th className="ClientAvailability__table--vertical" title="Name"></th>
+              <th className="ClientAvailability__table--vertical" title="Skill level">
+                Rating
+              </th>
+              <th className="ClientAvailability__table--vertical" title="Spanish speaker">
+                Spa
+              </th>
+              <th className="ClientAvailability__table--vertical" title="Requested hours">
+                Req
+              </th>
+              <th className="ClientAvailability__table--vertical" title="Total available hours">
+                Avail
+              </th>
               {days.map((day) => (
                 <th key={day} colSpan={blocks.length} className="TechAvailability__table__boldBorder">
                   {['Mon', 'Tue', 'Wed', 'Thu', 'Fri'][day]}
                 </th>
               ))}
-              <th>Req Hrs</th>
             </tr>
           </thead>
           <tbody>
-            {technicians.map((technician) => (
+            {technicians.map((technician, index) => (
               <tr key={technician.id}>
+                <td>{index + 1}</td>
                 <td
                   style={{
                     background: technician.bg_color,
@@ -269,7 +285,8 @@ export const TechAvailability = () => {
                 </td>
                 <td
                   style={{
-                    textAlign: 'right',
+                    background: skillLevelColor(technician.skill_level),
+                    textAlign: 'center',
                   }}
                 >
                   {technician.skill_level}
@@ -279,16 +296,18 @@ export const TechAvailability = () => {
                     <span className="material-symbols-outlined text-color-green text-size-sm">check</span>
                   )}
                 </td>
+                <td>{technician.requested_hours}</td>
+                <td>{technician.total_hours_available}</td>
                 {renderAvailabilities(technician)}
-                <td style={{ textAlign: 'right' }}>{technician.requested_hours}</td>
               </tr>
             ))}
           </tbody>
           <tfoot>
             <tr>
-              <td colSpan={3}></td>
+              <td colSpan={4}></td>
+              <td>{totalRequestedHours()}</td>
+              <td>{totalAvailableHours()}</td>
               {renderBlockTotals()}
-              <td style={{ textAlign: 'right' }}>{totalRequestedHours()}</td>
             </tr>
           </tfoot>
         </table>

@@ -14,6 +14,7 @@ export type Client = {
   req_spanish_speaking: boolean;
   notes: string;
   is_maxed_on_sessions: boolean;
+  total_hours_available: number;
   total_hours: number;
   total_hours_by_day: number[];
 

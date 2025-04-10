@@ -182,7 +182,7 @@ export const ClientHours = () => {
         <thead>
           <tr>
             <th></th>
-            <th title="Skill level"></th>
+            <th title="Skill level requirement"></th>
             <th title="Spanish speaker">Spa</th>
             <th title="Name"></th>
             <th>Mon</th>

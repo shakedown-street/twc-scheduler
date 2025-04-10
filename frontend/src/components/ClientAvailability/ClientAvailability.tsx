@@ -9,6 +9,7 @@ import { Block } from '~/types/Block';
 import { Client } from '~/types/Client';
 import { Button, Card, RadixDialog, Spinner } from '~/ui';
 import { isFullBlock } from '~/utils/appointments';
+import { skillLevelColor } from '~/utils/color';
 import { formatTimeShort, isBetweenInclusiveEnd, isBetweenInclusiveStart } from '~/utils/time';
 import './ClientAvailability.scss';
 
@@ -58,6 +59,10 @@ export const ClientAvailability = () => {
 
   function totalPrescribedHours() {
     return clients.reduce((total, client) => total + (client.prescribed_hours || 0), 0);
+  }
+
+  function totalAvailableHours() {
+    return clients.reduce((total, client) => total + (client.total_hours_available || 0), 0);
   }
 
   function getBlockAvailability(client: Client, day: number, block: Block) {
@@ -244,22 +249,37 @@ export const ClientAvailability = () => {
         <table className="ClientAvailability__table">
           <thead>
             <tr>
-              <th></th>
-              <th>Rating</th>
-              <th>Spanish</th>
-              <th>Eval</th>
-              <th>Onboarding</th>
+              <th className="ClientAvailability__table--vertical"></th>
+              <th title="Name" className="ClientAvailability__table--vertical"></th>
+              <th title="Skill level requirement" className="ClientAvailability__table--vertical">
+                Rating
+              </th>
+              <th title="Spanish speaker" className="ClientAvailability__table--vertical">
+                Spa
+              </th>
+              <th title="Evaluation done" className="ClientAvailability__table--vertical">
+                Eval
+              </th>
+              <th title="Currently onboarding" className="ClientAvailability__table--vertical">
+                Onboard
+              </th>
+              <th title="Prescribed hours" className="ClientAvailability__table--vertical">
+                Rx
+              </th>
+              <th title="Total available hours" className="ClientAvailability__table--vertical">
+                Avail
+              </th>
               {days.map((day) => (
                 <th className="ClientAvailability__table__boldBorder" key={day} colSpan={blocks.length}>
                   {['Mon', 'Tue', 'Wed', 'Thu', 'Fri'][day]}
                 </th>
               ))}
-              <th>Rx Hrs</th>
             </tr>
           </thead>
           <tbody>
-            {clients.map((client) => (
+            {clients.map((client, index) => (
               <tr key={client.id}>
+                <td>{index + 1}</td>
                 <td>
                   <a href="#" onClick={() => openClientForm(client)}>
                     {client.first_name} {client.last_name}
@@ -267,7 +287,8 @@ export const ClientAvailability = () => {
                 </td>
                 <td
                   style={{
-                    textAlign: 'right',
+                    background: skillLevelColor(client.req_skill_level),
+                    textAlign: 'center',
                   }}
                 >
                   {client.req_skill_level}
@@ -287,16 +308,18 @@ export const ClientAvailability = () => {
                     <span className="material-symbols-outlined text-color-green text-size-sm">check</span>
                   )}
                 </td>
+                <td>{client.prescribed_hours}</td>
+                <td>{client.total_hours_available}</td>
                 {renderAvailabilities(client)}
-                <td style={{ textAlign: 'right' }}>{client.prescribed_hours}</td>
               </tr>
             ))}
           </tbody>
           <tfoot>
             <tr>
-              <td colSpan={5}></td>
+              <td colSpan={6}></td>
+              <td>{totalPrescribedHours()}</td>
+              <td>{totalAvailableHours()}</td>
               {renderBlockTotals()}
-              <td style={{ textAlign: 'right' }}>{totalPrescribedHours()}</td>
             </tr>
           </tfoot>
         </table>

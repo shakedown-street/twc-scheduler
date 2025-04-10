@@ -4,6 +4,10 @@
   &__table {
     width: 100%;
 
+    &--vertical {
+      writing-mode: vertical-rl;
+    }
+
     thead {
       tr {
         th {
