@@ -1,12 +1,13 @@
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
 import React from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, NavLink, useNavigate } from 'react-router-dom';
 import logo from '~/assets/logo.avif';
 import { ImpersonateDialog } from '~/features/auth/components/ImpersonateDialog/ImpersonateDialog';
 import { useAuth } from '~/features/auth/contexts/AuthContext';
 import { http } from '~/http';
 import { Button, Container, IconButton, RadixDialog, useToast } from '~/ui';
 import './Nav.scss';
+import clsx from 'clsx';
 
 export const Nav = () => {
   const [impersonateDialogOpen, setImpersonateDialogOpen] = React.useState(false);
@@ -87,16 +88,44 @@ export const Nav = () => {
             <Link to="/">
               <img className="Nav__logo" src={logo} />
             </Link>
-            <Button navigateTo="/" size="sm">
-              Schedule
-            </Button>
-            <Button navigateTo="/overview" size="sm">
-              Overview
-            </Button>
-            <Button navigateTo="/availability" size="sm">
-              Availability
-            </Button>
-            <div className="Nav__spacer"></div>
+            {user && (
+              <div className="Nav__links">
+                <NavLink
+                  to="/"
+                  className={({ isActive }) => {
+                    return clsx('Nav__link', {
+                      'Nav__link--active': isActive,
+                    });
+                  }}
+                >
+                  <span className="material-symbols-outlined">edit_calendar</span>
+                  Schedule
+                </NavLink>
+                <NavLink
+                  to="/overview"
+                  className={({ isActive }) => {
+                    return clsx('Nav__link', {
+                      'Nav__link--active': isActive,
+                    });
+                  }}
+                >
+                  <span className="material-symbols-outlined">overview</span>
+                  Overview
+                </NavLink>
+                <NavLink
+                  to="/availability"
+                  className={({ isActive }) => {
+                    return clsx('Nav__link', {
+                      'Nav__link--active': isActive,
+                    });
+                  }}
+                >
+                  <span className="material-symbols-outlined">event_available</span>
+                  Availability
+                </NavLink>
+              </div>
+            )}
+            {/* <div className="Nav__spacer"></div> */}
             {!user ? renderAuthLinks() : renderUserMenu()}
           </div>
         </Container>

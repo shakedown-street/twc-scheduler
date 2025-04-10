@@ -244,7 +244,7 @@ export const ClientAvailability = () => {
         <table className="ClientAvailability__table">
           <thead>
             <tr>
-              <th>Name</th>
+              <th></th>
               <th>Rating</th>
               <th>Spanish</th>
               <th>Eval</th>

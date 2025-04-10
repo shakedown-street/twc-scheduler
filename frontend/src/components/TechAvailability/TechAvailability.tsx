@@ -244,7 +244,7 @@ export const TechAvailability = () => {
         <table className="TechAvailability__table">
           <thead>
             <tr>
-              <th>Name</th>
+              <th></th>
               <th>Rating</th>
               <th>Spanish</th>
               {days.map((day) => (
