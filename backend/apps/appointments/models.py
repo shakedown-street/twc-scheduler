@@ -30,6 +30,18 @@ class Technician(UUIDPrimaryKeyMixin, TimestampMixin):
         ordering = ["first_name", "last_name"]
 
     @property
+    def total_hours_available(self):
+        total_minutes = sum(
+            [
+                get_difference_in_minutes(
+                    availability.start_time, availability.end_time
+                )
+                for availability in self.availabilities.all()
+            ]
+        )
+        return round(total_minutes / 60, 2)
+
+    @property
     def total_hours_by_day(self):
         hours = []
 
@@ -81,6 +93,18 @@ class Client(UUIDPrimaryKeyMixin, TimestampMixin):
 
     class Meta:
         ordering = ["first_name", "last_name"]
+
+    @property
+    def total_hours_available(self):
+        total_minutes = sum(
+            [
+                get_difference_in_minutes(
+                    availability.start_time, availability.end_time
+                )
+                for availability in self.availabilities.all()
+            ]
+        )
+        return round(total_minutes / 60, 2)
 
     @property
     def total_hours_by_day(self):

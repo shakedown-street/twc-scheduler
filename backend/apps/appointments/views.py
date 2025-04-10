@@ -1,5 +1,4 @@
 from django.contrib.contenttypes.models import ContentType
-from django.db.models import Prefetch
 from rest_framework import exceptions, mixins, permissions, viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
@@ -86,24 +85,11 @@ class BlockViewSet(viewsets.ModelViewSet):
 
 
 class ClientViewSet(viewsets.ModelViewSet):
-    queryset = Client.objects.prefetch_related("appointments").all()
+    queryset = Client.objects.prefetch_related("availabilities", "appointments").all()
     serializer_class = ClientSerializer
     permission_classes = [
         permissions.IsAuthenticated,
     ]
-
-    def get_queryset(self):
-        qs = super().get_queryset()
-        request = self.request
-
-        prefetch_relations = []
-        if request.query_params.get("expand_availabilities"):
-            prefetch_relations.append("availabilities")
-
-        if prefetch_relations:
-            qs = qs.prefetch_related(*prefetch_relations)
-
-        return qs
 
     @action(detail=True, methods=["post"])
     def create_availability(self, request, pk=None):
@@ -199,24 +185,13 @@ class ClientViewSet(viewsets.ModelViewSet):
 
 
 class TechnicianViewSet(viewsets.ModelViewSet):
-    queryset = Technician.objects.prefetch_related("appointments").all()
+    queryset = Technician.objects.prefetch_related(
+        "availabilities", "appointments"
+    ).all()
     serializer_class = TechnicianSerializer
     permission_classes = [
         permissions.IsAuthenticated,
     ]
-
-    def get_queryset(self):
-        qs = super().get_queryset()
-        request = self.request
-
-        prefetch_relations = []
-        if request.query_params.get("expand_availabilities"):
-            prefetch_relations.append("availabilities")
-
-        if prefetch_relations:
-            qs = qs.prefetch_related(*prefetch_relations)
-
-        return qs
 
     @action(detail=True, methods=["post"])
     def create_availability(self, request, pk=None):

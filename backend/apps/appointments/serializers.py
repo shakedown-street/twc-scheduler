@@ -85,6 +85,7 @@ class ClientSerializer(serializers.ModelSerializer):
         data = super().to_representation(instance)
         request = self.context.get("request")
 
+        data["total_hours_available"] = instance.total_hours_available
         data["total_hours"] = instance.total_hours
         data["total_hours_by_day"] = instance.total_hours_by_day
         data["is_maxed_on_sessions"] = instance.is_maxed_on_sessions
@@ -115,6 +116,7 @@ class TechnicianSerializer(serializers.ModelSerializer):
         data = super().to_representation(instance)
         request = self.context.get("request")
 
+        data["total_hours_available"] = instance.total_hours_available
         data["total_hours"] = instance.total_hours
         data["total_hours_by_day"] = instance.total_hours_by_day
         data["is_maxed_on_sessions"] = instance.is_maxed_on_sessions
