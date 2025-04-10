@@ -7,5 +7,5 @@ export type Availability = {
   day: number;
   start_time: string;
   end_time: string;
-  in_clinic?: boolean;
+  in_clinic: boolean;
 };
