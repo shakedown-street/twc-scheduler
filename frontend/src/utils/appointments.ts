@@ -22,3 +22,7 @@ export function getBlockAvailabilities(availabilities: Availability[], day: numb
     );
   });
 }
+
+export function isFullBlock(availability: Availability, block: Block) {
+  return availability.start_time === block.start_time && availability.end_time === block.end_time;
+}

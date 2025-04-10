@@ -27,3 +27,7 @@ export function skillLevelColor(skillLevel: number) {
       return 'white';
   }
 }
+
+export function striped(color1: string, color2: string) {
+  return `repeating-linear-gradient(45deg, ${color1}, ${color1} 4px, ${color2} 4px, ${color2} 8px)`;
+}

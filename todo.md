@@ -21,9 +21,9 @@ Other:
 - Need to indicate on the availability blocks if the appointment is in clinic, and if it is not the full block
 - Display warning if client is not available for in clinic and it is checked
   - should default to in clinic as well if the client is available in clinic
-- How can we optimize the load times further? What sort of caching can we do?
-- Add loading spinners
 - Highlight the current page on nav bar
+- Show person's name on dialogs for creating availabilities and appointments
+- Reduce memory usage when switching days on the schedule (rendering all the appointments is slow)
 
 Done:
 
@@ -45,3 +45,4 @@ Done:
 - Add legend to sheet one tables
 - Add sheet one matrix showing how many times a client is scheduled with each tech, and the total number of techs they're scheduled with
 - Allow setting both a background and text color for techs
+- Added loading spinners to all pages

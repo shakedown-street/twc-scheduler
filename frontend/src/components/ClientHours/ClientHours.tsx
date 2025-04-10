@@ -6,7 +6,7 @@ import { Client } from '~/types/Client';
 import { Spinner } from '~/ui';
 import { RadixHoverCard } from '~/ui/RadixHoverCard/RadixHoverCard';
 import { getBlockAppointments, getBlockAvailabilities } from '~/utils/appointments';
-import { dayColor, skillLevelColor } from '~/utils/color';
+import { dayColor, skillLevelColor, striped } from '~/utils/color';
 import { AppointmentHover } from '../AppointmentHover/AppointmentHover';
 import './ClientHours.scss';
 
@@ -42,7 +42,7 @@ export const ClientHours = () => {
       if (appointment.in_clinic) {
         const bgColor = appointment.technician?.bg_color || 'white';
         const textColor = appointment.technician?.text_color || 'black';
-        return `repeating-linear-gradient(45deg, ${textColor}, ${textColor} 4px, ${bgColor} 4px, ${bgColor} 8px)`;
+        return striped(textColor, bgColor);
       }
       return appointment.technician?.bg_color || 'white';
     } else if (availabilities.length > 0 && client.is_maxed_on_sessions) {
@@ -90,10 +90,7 @@ export const ClientHours = () => {
           <span>Maxed on Sessions</span>
         </div>
         <div className="ClientHours__legend__example">
-          <div
-            className="ClientHours__legend__example__color"
-            style={{ background: 'repeating-linear-gradient(45deg, black, black 4px, white 4px, white 8px)' }}
-          ></div>
+          <div className="ClientHours__legend__example__color" style={{ background: striped('black', 'white') }}></div>
           <span>In Clinic</span>
         </div>
       </div>

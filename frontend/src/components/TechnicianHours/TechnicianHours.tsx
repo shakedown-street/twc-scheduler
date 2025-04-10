@@ -6,7 +6,7 @@ import { Technician } from '~/types/Technician';
 import { Spinner } from '~/ui';
 import { RadixHoverCard } from '~/ui/RadixHoverCard/RadixHoverCard';
 import { getBlockAppointments, getBlockAvailabilities } from '~/utils/appointments';
-import { dayColor, skillLevelColor } from '~/utils/color';
+import { dayColor, skillLevelColor, striped } from '~/utils/color';
 import { AppointmentHover } from '../AppointmentHover/AppointmentHover';
 import './TechnicianHours.scss';
 
@@ -41,7 +41,7 @@ export const TechnicianHours = () => {
       const appointment = appointments[0];
       const bgColor = appointment.client?.is_onboarding ? '#eab308' : '#15803d'; // tw-yellow-500 : tw-green-700
       if (appointment.in_clinic) {
-        return `repeating-linear-gradient(45deg, black, black 4px, ${bgColor} 4px, ${bgColor} 8px)`;
+        return striped('black', bgColor);
       }
       return `${bgColor}`;
     } else if (availabilities.length > 0 && technician.is_maxed_on_sessions) {
@@ -99,7 +99,7 @@ export const TechnicianHours = () => {
         <div className="TechnicianHours__legend__example">
           <div
             className="TechnicianHours__legend__example__color"
-            style={{ background: 'repeating-linear-gradient(45deg, black, black 4px, white 4px, white 8px)' }}
+            style={{ background: striped('black', 'white') }}
           ></div>
           <span>In Clinic</span>
         </div>

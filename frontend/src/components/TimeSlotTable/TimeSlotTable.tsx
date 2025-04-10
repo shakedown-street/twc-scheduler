@@ -4,6 +4,7 @@ import { Availability } from '~/types/Availability';
 import { Block } from '~/types/Block';
 import { Client } from '~/types/Client';
 import { RadixHoverCard } from '~/ui/RadixHoverCard/RadixHoverCard';
+import { striped } from '~/utils/color';
 import { formatTimeTimeline, generateTimeSlots, isBetweenInclusiveStart, isOnTheHour } from '~/utils/time';
 import { AppointmentHover } from '../AppointmentHover/AppointmentHover';
 import './TimeSlotTable.scss';
@@ -75,7 +76,7 @@ export const TimeSlotTable = ({
       if (slotAppointment.in_clinic) {
         const bgColor = slotAppointment.technician?.bg_color || 'white';
         const textColor = slotAppointment.technician?.text_color || 'black';
-        return `repeating-linear-gradient(45deg, ${textColor}, ${textColor} 4px, ${bgColor} 4px, ${bgColor} 8px)`;
+        return striped(textColor, bgColor);
       }
       return slotAppointment.technician?.bg_color || 'white';
     }

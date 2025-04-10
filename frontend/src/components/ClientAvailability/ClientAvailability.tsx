@@ -8,6 +8,7 @@ import { Availability } from '~/types/Availability';
 import { Block } from '~/types/Block';
 import { Client } from '~/types/Client';
 import { Button, Card, RadixDialog, Spinner } from '~/ui';
+import { isFullBlock } from '~/utils/appointments';
 import { formatTimeShort, isBetweenInclusiveEnd, isBetweenInclusiveStart } from '~/utils/time';
 import './ClientAvailability.scss';
 
@@ -193,9 +194,16 @@ export const ClientAvailability = () => {
             }}
           >
             {blockAvailability && (
-              <>
-                {formatTimeShort(blockAvailability.start_time)}-{formatTimeShort(blockAvailability.end_time)}
-              </>
+              <div className="flex align-center gap-1">
+                <div className="text-nowrap">
+                  {formatTimeShort(blockAvailability.start_time)}-{formatTimeShort(blockAvailability.end_time)}
+                </div>
+                {!isFullBlock(blockAvailability, block) && (
+                  <span className="material-symbols-outlined text-color-red text-size-sm" title="Partially available">
+                    warning
+                  </span>
+                )}
+              </div>
             )}
           </td>
         );
