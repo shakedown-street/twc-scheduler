@@ -141,11 +141,11 @@ export const ClientHours = () => {
           <div className="ClientHours__legend__example__color" style={{ background: 'black', color: '#b91c1c' }}>
             M
           </div>
-          <span>Maxed on Sessions</span>
+          <span>Maxed on sessions</span>
         </div>
         <div className="ClientHours__legend__example">
           <div className="ClientHours__legend__example__color" style={{ background: striped('black', 'white') }}></div>
-          <span>In Clinic</span>
+          <span>In clinic</span>
         </div>
       </div>
     );

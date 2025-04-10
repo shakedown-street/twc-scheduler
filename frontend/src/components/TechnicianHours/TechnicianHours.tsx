@@ -140,22 +140,22 @@ export const TechnicianHours = () => {
           <div className="ClientHours__legend__example__color" style={{ background: 'black', color: '#b91c1c' }}>
             M
           </div>
-          <span>Maxed on Sessions</span>
+          <span>Maxed on sessions</span>
         </div>
         <div className="TechnicianHours__legend__example">
           <div className="TechnicianHours__legend__example__color" style={{ background: '#15803d' }}></div>
-          <span>Has Session</span>
+          <span>Has session</span>
         </div>
         <div className="TechnicianHours__legend__example">
           <div className="TechnicianHours__legend__example__color" style={{ background: '#eab308' }}></div>
-          <span>Onboarding</span>
+          <span>Client onboarding</span>
         </div>
         <div className="TechnicianHours__legend__example">
           <div
             className="TechnicianHours__legend__example__color"
             style={{ background: striped('black', 'white') }}
           ></div>
-          <span>In Clinic</span>
+          <span>In clinic</span>
         </div>
       </div>
     );
