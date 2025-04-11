@@ -3,6 +3,10 @@ from rest_framework import exceptions, mixins, permissions, viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
 
+from apps.accounts.permissions import (
+    IsSuperUserOrReadOnly,
+    IsSuperUserOrReadOnlyAuthenticated,
+)
 from .matcher import (
     find_available_technicians,
     find_repeatable_appointment_days,
@@ -22,7 +26,7 @@ class AppointmentViewSet(viewsets.ModelViewSet):
     queryset = Appointment.objects.select_related("client", "technician").all()
     serializer_class = AppointmentSerializer
     permission_classes = [
-        permissions.IsAuthenticated,
+        IsSuperUserOrReadOnlyAuthenticated,
     ]
 
     def create(self, request, *args, **kwargs):
@@ -72,15 +76,16 @@ class AvailabilityViewSet(
     queryset = Availability.objects.all()
     serializer_class = AvailabilitySerializer
     permission_classes = [
-        permissions.IsAuthenticated,
+        IsSuperUserOrReadOnlyAuthenticated,
     ]
 
 
-class BlockViewSet(viewsets.ModelViewSet):
+class BlockViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Block.objects.all()
     serializer_class = BlockSerialzier
+    # Unauthed users can see blocks
     permission_classes = [
-        permissions.IsAuthenticated,
+        IsSuperUserOrReadOnly,
     ]
 
 
@@ -88,7 +93,7 @@ class ClientViewSet(viewsets.ModelViewSet):
     queryset = Client.objects.prefetch_related("availabilities", "appointments").all()
     serializer_class = ClientSerializer
     permission_classes = [
-        permissions.IsAuthenticated,
+        IsSuperUserOrReadOnlyAuthenticated,
     ]
 
     @action(detail=True, methods=["post"])
@@ -190,7 +195,7 @@ class TechnicianViewSet(viewsets.ModelViewSet):
     ).all()
     serializer_class = TechnicianSerializer
     permission_classes = [
-        permissions.IsAuthenticated,
+        IsSuperUserOrReadOnlyAuthenticated,
     ]
 
     @action(detail=True, methods=["post"])

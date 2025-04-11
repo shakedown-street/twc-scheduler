@@ -2,8 +2,6 @@ Target June 19th
 
 Requested by Alycen and Amy:
 
-- add a read only role
-  - BCBAs can see the full schedule but not edit it
 - warning about max hours per day for techs
   - set max hours per day when adding/updating a tech
 - basic scheduling of OT and speech
@@ -22,6 +20,8 @@ Other:
 - Show person's name on dialogs for creating availabilities and appointments
 - Reduce memory usage when switching days on the schedule (rendering all the appointments is slow)
 - "total available" doesn't update when adding a new availability
+- Polish the schedule page
+- Disable signup. Superusers will create users in the admin
 
 Done:
 
@@ -49,3 +49,4 @@ Done:
 - Highlight the current page on the nav bar
 - Polish sheet 1 pages
 - Polish availability pages
+- Only allow superusers to be able to create/update/delete anything, regular users only have readonly access

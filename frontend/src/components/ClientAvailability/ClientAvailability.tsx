@@ -4,6 +4,7 @@ import { ClientModel } from '~/api';
 import { AvailabilityForm } from '~/components/AvailabilityForm/AvailabilityForm';
 import { ClientForm } from '~/components/ClientForm/ClientForm';
 import { useBlocks } from '~/contexts/BlocksContext';
+import { useAuth } from '~/features/auth/contexts/AuthContext';
 import { Availability } from '~/types/Availability';
 import { Block } from '~/types/Block';
 import { Client } from '~/types/Client';
@@ -39,6 +40,7 @@ export const ClientAvailability = () => {
     day: 0,
   });
 
+  const { user } = useAuth();
   const { blocks } = useBlocks();
 
   const days = [0, 1, 2, 3, 4];
@@ -191,6 +193,9 @@ export const ClientAvailability = () => {
               background: blockAvailability ? block.color : undefined,
             }}
             onClick={() => {
+              if (!user?.is_superuser) {
+                return;
+              }
               if (blockAvailability) {
                 openAvailabilityForm(client, day, block, blockAvailability);
               } else {
@@ -242,9 +247,11 @@ export const ClientAvailability = () => {
       <Card fluid>
         <div className="flex align-center justify-between gap-4 mb-4">
           <h2>Clients</h2>
-          <Button color="primary" onClick={() => setClientForm({ ...clientForm, open: true })} variant="raised">
-            Create Client
-          </Button>
+          {user?.is_superuser && (
+            <Button color="primary" onClick={() => setClientForm({ ...clientForm, open: true })} variant="raised">
+              Create Client
+            </Button>
+          )}
         </div>
         <table className="ClientAvailability__table">
           <thead>
@@ -281,7 +288,15 @@ export const ClientAvailability = () => {
               <tr key={client.id}>
                 <td>{index + 1}</td>
                 <td>
-                  <a href="#" onClick={() => openClientForm(client)}>
+                  <a
+                    className="cursor-pointer"
+                    onClick={() => {
+                      if (!user?.is_superuser) {
+                        return;
+                      }
+                      openClientForm(client);
+                    }}
+                  >
                     {client.first_name} {client.last_name}
                   </a>
                 </td>

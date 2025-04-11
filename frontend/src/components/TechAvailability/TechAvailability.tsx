@@ -4,6 +4,7 @@ import { TechnicianModel } from '~/api';
 import { AvailabilityForm } from '~/components/AvailabilityForm/AvailabilityForm';
 import { TechnicianForm } from '~/components/TechnicianForm/TechnicianForm';
 import { useBlocks } from '~/contexts/BlocksContext';
+import { useAuth } from '~/features/auth/contexts/AuthContext';
 import { Availability } from '~/types/Availability';
 import { Block } from '~/types/Block';
 import { Technician } from '~/types/Technician';
@@ -39,6 +40,7 @@ export const TechAvailability = () => {
     day: 0,
   });
 
+  const { user } = useAuth();
   const { blocks } = useBlocks();
 
   const days = [0, 1, 2, 3, 4];
@@ -191,6 +193,9 @@ export const TechAvailability = () => {
               background: blockAvailability ? block.color : undefined,
             }}
             onClick={() => {
+              if (!user?.is_superuser) {
+                return;
+              }
               if (blockAvailability) {
                 openAvailabilityForm(technician, day, block, blockAvailability);
               } else {
@@ -242,9 +247,15 @@ export const TechAvailability = () => {
       <Card fluid>
         <div className="flex align-center justify-between gap-4 mb-4">
           <h2>Technicians</h2>
-          <Button color="primary" onClick={() => setTechnicianForm({ ...technicianForm, open: true })} variant="raised">
-            Create Technician
-          </Button>
+          {user?.is_superuser && (
+            <Button
+              color="primary"
+              onClick={() => setTechnicianForm({ ...technicianForm, open: true })}
+              variant="raised"
+            >
+              Create Technician
+            </Button>
+          )}
         </div>
         <table className="TechAvailability__table">
           <thead>
@@ -279,7 +290,16 @@ export const TechAvailability = () => {
                     background: technician.bg_color,
                   }}
                 >
-                  <a href="#" onClick={() => openTechnicianForm(technician)} style={{ color: technician.text_color }}>
+                  <a
+                    className="cursor-pointer"
+                    onClick={() => {
+                      if (!user?.is_superuser) {
+                        return;
+                      }
+                      openTechnicianForm(technician);
+                    }}
+                    style={{ color: technician.text_color }}
+                  >
                     {technician.first_name} {technician.last_name}
                   </a>
                 </td>

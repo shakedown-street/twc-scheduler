@@ -11,6 +11,7 @@ import { Block } from '~/types/Block';
 import { Client } from '~/types/Client';
 import { Container, RadixDialog, Spinner, TabItem, Tabs } from '~/ui';
 import './Schedule.scss';
+import { useAuth } from '~/features/auth/contexts/AuthContext';
 
 export const Schedule = () => {
   const [clients, setClients] = React.useState<Client[]>([]);
@@ -32,6 +33,7 @@ export const Schedule = () => {
   });
 
   const [searchParams, setSearchParams] = useSearchParams();
+  const { user } = useAuth();
   const { blocks } = useBlocks();
 
   function getDay() {
@@ -66,6 +68,9 @@ export const Schedule = () => {
     availability: Availability | undefined,
     instance: Appointment | undefined = undefined
   ) {
+    if (!user?.is_superuser) {
+      return;
+    }
     setAppointmentForm({
       ...appointmentForm,
       open: true,

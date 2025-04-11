@@ -11,6 +11,26 @@ class IsSuperUser(permissions.BasePermission):
         return request.user.is_superuser
 
 
+class IsSuperUserOrReadOnly(permissions.BasePermission):
+    """
+    Custom permission to only allow superusers to edit an object.
+    """
+
+    def has_permission(self, request, view):
+        if request.method in permissions.SAFE_METHODS:
+            return True
+        return request.user.is_superuser
+
+
+class IsSuperUserOrReadOnlyAuthenticated(permissions.BasePermission):
+    def has_permission(self, request, view):
+        if request.user.is_authenticated:
+            if request.method in permissions.SAFE_METHODS:
+                return True
+            return request.user.is_superuser
+        return False
+
+
 class EmailUserPermission(permissions.BasePermission):
     def has_permission(self, request, view):
         return request.method == "POST" or request.user.is_authenticated
