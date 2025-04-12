@@ -4,7 +4,8 @@ import { AvailabilityModel, ClientModel, TechnicianModel } from '~/api';
 import { Availability } from '~/types/Availability';
 import { Client } from '~/types/Client';
 import { Technician } from '~/types/Technician';
-import { Button, Checkbox, Textarea, TimeInput, useToast } from '~/ui';
+import { Badge, Button, Checkbox, TimeInput, useToast } from '~/ui';
+import { dayToString } from '~/utils/time';
 import './AvailabilityForm.scss';
 
 export type AvailabilityFormProps = {
@@ -145,6 +146,33 @@ export const AvailabilityForm = ({
 
   return (
     <form className="AvailabilityForm" onSubmit={form.handleSubmit(onSubmit)}>
+      <div className="AvailabilityForm__row">
+        <div className="Input__container">
+          <label className="text-capitalize">{contentType}</label>
+          {contentType === 'client' && (
+            <Badge size="sm">
+              {object.first_name} {object.last_name}
+            </Badge>
+          )}
+          {contentType === 'technician' && (
+            <Badge
+              size="sm"
+              style={{
+                backgroundColor: (object as Technician).bg_color,
+                color: (object as Technician).text_color,
+              }}
+            >
+              {object.first_name} {object.last_name}
+            </Badge>
+          )}
+        </div>
+      </div>
+      <div className="AppointmentForm__row">
+        <div className="Input__container">
+          <label>Day</label>
+          <p>{dayToString(day)}</p>
+        </div>
+      </div>
       <div className="AvailabilityForm__row">
         <Controller
           control={form.control}

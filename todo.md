@@ -17,7 +17,6 @@ Requested by Alycen and Amy:
 Other:
 
 - Need to indicate on the availability blocks if the appointment is in clinic
-- Show person's name on dialogs for creating availabilities and appointments
 - Reduce memory usage when switching days on the schedule (rendering all the appointments is slow)
 - "total available" doesn't update when adding a new availability
 - Polish the schedule page
@@ -49,4 +48,7 @@ Done:
 - Highlight the current page on the nav bar
 - Polish sheet 1 pages
 - Polish availability pages
-- Only allow superusers to be able to create/update/delete anything, regular users only have readonly access
+- Only allow superusers to be able to create/update/delete anything, regular users only have readonly accessn c
+- Show client/technician name when create/editing an availability
+- Show client name when creating/editing an appointment
+- Show day of the week when creating/editing an availability or appointment

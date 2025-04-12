@@ -7,7 +7,8 @@ import { Availability } from '~/types/Availability';
 import { Block } from '~/types/Block';
 import { Client } from '~/types/Client';
 import { Technician } from '~/types/Technician';
-import { Button, IconButton, RadixTooltip, Select, Textarea, TimeInput, Toggle, useToast } from '~/ui';
+import { Badge, Button, IconButton, RadixTooltip, Select, Textarea, TimeInput, Toggle, useToast } from '~/ui';
+import { dayToString } from '~/utils/time';
 import './AppointmentForm.scss';
 
 export type AppointmentFormProps = {
@@ -324,6 +325,20 @@ export const AppointmentForm = ({
   return (
     <form className="AppointmentForm" onSubmit={form.handleSubmit(onSubmit)}>
       <div className="AppointmentForm__row">
+        <div className="Input__container">
+          <label>Client</label>
+          <Badge size="sm">
+            {client.first_name} {client.last_name}
+          </Badge>
+        </div>
+      </div>
+      <div className="AppointmentForm__row">
+        <div className="Input__container">
+          <label>Day</label>
+          <p>{dayToString(day)}</p>
+        </div>
+      </div>
+      <div className="AppointmentForm__row">
         <Controller
           control={form.control}
           name="start_time"
@@ -380,12 +395,6 @@ export const AppointmentForm = ({
           </div>
         )}
       </div>
-      <Toggle
-        checked={onlyShowRecommendedTechs}
-        label="Recommended Techs Only"
-        labelPosition="right"
-        onChange={() => setOnlyShowRecommendedTechs(!onlyShowRecommendedTechs)}
-      />
       <Select fluid label="Technician" {...form.register('technician', { required: true })}>
         <option value="">Select a technician</option>
         {(onlyShowRecommendedTechs ? availableTechnicians : allTechnicians).map((tech) => (
@@ -400,6 +409,12 @@ export const AppointmentForm = ({
           </option>
         ))}
       </Select>
+      <Toggle
+        checked={onlyShowRecommendedTechs}
+        label="Recommended Techs Only"
+        labelPosition="right"
+        onChange={() => setOnlyShowRecommendedTechs(!onlyShowRecommendedTechs)}
+      />
       {!instance && technician && (
         <Controller
           control={form.control}
