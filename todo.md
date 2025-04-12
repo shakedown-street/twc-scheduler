@@ -16,7 +16,6 @@ Requested by Alycen and Amy:
 
 Other:
 
-- Need to indicate on the availability blocks if the appointment is in clinic
 - Reduce memory usage when switching days on the schedule (rendering all the appointments is slow)
 - "total available" doesn't update when adding a new availability
 - Polish the schedule page
@@ -52,3 +51,4 @@ Done:
 - Show client/technician name when create/editing an availability
 - Show client name when creating/editing an appointment
 - Show day of the week when creating/editing an availability or appointment
+- Indicate on client availability blocks if the client is available in clinic

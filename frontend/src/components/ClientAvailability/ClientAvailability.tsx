@@ -208,6 +208,11 @@ export const ClientAvailability = () => {
                 <div className="text-nowrap">
                   {formatTimeShort(blockAvailability.start_time)}-{formatTimeShort(blockAvailability.end_time)}
                 </div>
+                {blockAvailability.in_clinic && (
+                  <span className="material-symbols-outlined text-size-sm" title="In clinic">
+                    location_on
+                  </span>
+                )}
                 {!isFullBlock(blockAvailability, block) && (
                   <span className="material-symbols-outlined text-color-red text-size-sm" title="Partially available">
                     warning
