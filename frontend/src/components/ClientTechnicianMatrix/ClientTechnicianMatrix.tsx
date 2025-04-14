@@ -1,15 +1,35 @@
 import React from 'react';
 import { ClientModel, TechnicianModel } from '~/api';
+import { useAuth } from '~/features/auth/contexts/AuthContext';
 import { Client } from '~/types/Client';
 import { Technician } from '~/types/Technician';
+import { RadixDialog, Spinner } from '~/ui';
+import { ClientForm } from '../ClientForm/ClientForm';
+import { TechnicianForm } from '../TechnicianForm/TechnicianForm';
 import './ClientTechnicianMatrix.scss';
-import { Spinner } from '~/ui';
 
 export const ClientTechnicianMatrix = () => {
   const [clients, setClients] = React.useState<Client[]>([]);
   const [loadingClients, setLoadingClients] = React.useState(true);
   const [technicians, setTechnicians] = React.useState<Technician[]>([]);
   const [loadingTechnicians, setLoadingTechnicians] = React.useState(true);
+
+  const [clientForm, setClientForm] = React.useState<{
+    open: boolean;
+    client?: Client;
+  }>({
+    open: false,
+    client: undefined,
+  });
+  const [technicianForm, setTechnicianForm] = React.useState<{
+    open: boolean;
+    technician?: Technician;
+  }>({
+    open: false,
+    technician: undefined,
+  });
+
+  const { user } = useAuth();
 
   React.useEffect(() => {
     ClientModel.all({
@@ -62,6 +82,58 @@ export const ClientTechnicianMatrix = () => {
     return undefined;
   }
 
+  function openClientForm(client: Client | undefined = undefined) {
+    setClientForm({
+      ...clientForm,
+      open: true,
+      client,
+    });
+  }
+
+  function closeClientForm() {
+    setClientForm({
+      ...clientForm,
+      open: false,
+      client: undefined,
+    });
+  }
+
+  function onUpdateClient(updated: Client) {
+    setClients(clients.map((c) => (c.id === updated.id ? Object.assign({}, c, updated) : c)));
+    closeClientForm();
+  }
+
+  function onDeleteClient(deleted: Client) {
+    setClients(clients.filter((c) => c.id !== deleted.id));
+    closeClientForm();
+  }
+
+  function openTechnicianForm(technician: Technician | undefined = undefined) {
+    setTechnicianForm({
+      ...technicianForm,
+      open: true,
+      technician,
+    });
+  }
+
+  function closeTechnicianForm() {
+    setTechnicianForm({
+      ...technicianForm,
+      open: false,
+      technician: undefined,
+    });
+  }
+
+  function onUpdateTechnician(updated: Technician) {
+    setTechnicians(technicians.map((t) => (t.id === updated.id ? Object.assign({}, t, updated) : t)));
+    closeTechnicianForm();
+  }
+
+  function onDeleteTechnician(deleted: Technician) {
+    setTechnicians(technicians.filter((t) => t.id !== deleted.id));
+    closeTechnicianForm();
+  }
+
   if (loadingClients || loadingTechnicians) {
     return <Spinner className="mt-8" message="Loading matrix..." />;
   }
@@ -81,7 +153,18 @@ export const ClientTechnicianMatrix = () => {
                   color: technician.text_color,
                 }}
               >
-                {technician.first_name} {technician.last_name}
+                <a
+                  className="cursor-pointer"
+                  onClick={() => {
+                    if (!user?.is_superuser) {
+                      return;
+                    }
+                    openTechnicianForm(technician);
+                  }}
+                  style={{ color: technician.text_color }}
+                >
+                  {technician.first_name} {technician.last_name}
+                </a>
               </th>
             ))}
             <th>Total # of Techs</th>
@@ -96,7 +179,17 @@ export const ClientTechnicianMatrix = () => {
                 <tr>
                   <td>{index + 1}</td>
                   <td key={client.id}>
-                    {client.first_name} {client.last_name}
+                    <a
+                      className="cursor-pointer"
+                      onClick={() => {
+                        if (!user?.is_superuser) {
+                          return;
+                        }
+                        openClientForm(client);
+                      }}
+                    >
+                      {client.first_name} {client.last_name}
+                    </a>
                   </td>
                   {technicians.map((technician) => {
                     const count = countAppointments(client, technician);
@@ -125,6 +218,44 @@ export const ClientTechnicianMatrix = () => {
           })}
         </tbody>
       </table>
+      {clientForm.client && (
+        <RadixDialog
+          title={`Update Client`}
+          open={clientForm.open}
+          onOpenChange={(open) => setClientForm({ ...clientForm, open, client: undefined })}
+        >
+          <div className="p-6">
+            <h3 className="mb-4">Update Client</h3>
+            <ClientForm
+              client={clientForm.client}
+              onCancel={() => {
+                setClientForm({ ...clientForm, open: false, client: undefined });
+              }}
+              onDelete={onDeleteClient}
+              onUpdate={onUpdateClient}
+            />
+          </div>
+        </RadixDialog>
+      )}
+      {technicianForm.technician && (
+        <RadixDialog
+          title={`Update Technician`}
+          open={technicianForm.open}
+          onOpenChange={(open) => setTechnicianForm({ ...technicianForm, open, technician: undefined })}
+        >
+          <div className="p-6">
+            <h3 className="mb-4">Update Technician</h3>
+            <TechnicianForm
+              technician={technicianForm.technician}
+              onCancel={() => {
+                setTechnicianForm({ ...technicianForm, open: false, technician: undefined });
+              }}
+              onUpdate={onUpdateTechnician}
+              onDelete={onDeleteTechnician}
+            />
+          </div>
+        </RadixDialog>
+      )}
     </>
   );
 };
