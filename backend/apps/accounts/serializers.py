@@ -128,10 +128,12 @@ class AuthenticationSerializer(serializers.Serializer):
                 detail="Incorrect username or password"
             )
 
-        if not user.is_verified:
-            raise exceptions.AuthenticationFailed(
-                detail="Email verification is required to log in. Please check your email for the verification link."
-            )
+        # NOTE: Email verification is disabled
+
+        # if not user.is_verified:
+        #     raise exceptions.AuthenticationFailed(
+        #         detail="Email verification is required to log in. Please check your email for the verification link."
+        #     )
 
         data["user"] = user
         return data
@@ -166,7 +168,7 @@ class PasswordChangeSerializer(serializers.Serializer):
         user.set_password(new_password)
         user.save()
 
-        send_password_changed_email(user)
+        # send_password_changed_email(user)
         delete_all_auth_tokens(user)
         _, new_token = create_auth_token(user)
 

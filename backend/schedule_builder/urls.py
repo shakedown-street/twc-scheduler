@@ -8,11 +8,11 @@ from apps.accounts.views import (
     EmailUserViewSet,
     LoginView,
     PasswordChangeAPIView,
-    PasswordResetAPIView,
-    PasswordResetConfirmAPIView,
-    ResendVerifyEmailAPIView,
-    VerifyEmailAPIView,
-    social_auth,
+    # PasswordResetAPIView,
+    # PasswordResetConfirmAPIView,
+    # ResendVerifyEmailAPIView,
+    # VerifyEmailAPIView,
+    # social_auth,
 )
 from apps.appointments.views import (
     AppointmentViewSet,
@@ -50,7 +50,6 @@ if settings.STRIPE_SECRET_KEY:
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("api/", include(router.urls)),
-    path("api/auth/", include("rest_framework.urls"), name="api-auth"),
     path("api/token-auth/", LoginView.as_view(), name="knox_login"),
     path("api/token-auth/logout/", knox_views.LogoutView.as_view(), name="knox_logout"),
     path(
@@ -58,32 +57,36 @@ urlpatterns = [
         knox_views.LogoutAllView.as_view(),
         name="knox_logoutall",
     ),
-    path("api/social-auth/<backend>/", social_auth, name="api-social-auth"),
+    # NOTE: Social auth is disabled
+    # path("api/social-auth/<backend>/", social_auth, name="api-social-auth"),
     path(
         "api/password-change/",
         PasswordChangeAPIView.as_view(),
         name="api-password-change",
     ),
-    path(
-        "api/password-reset/", PasswordResetAPIView.as_view(), name="api-password-reset"
-    ),
-    path(
-        "api/password-reset-confirm/",
-        PasswordResetConfirmAPIView.as_view(),
-        name="api-password-reset-confirm",
-    ),
-    path(
-        "api/resend-verify-email/",
-        ResendVerifyEmailAPIView.as_view(),
-        name="api-resend-verify-email",
-    ),
-    path("api/verify-email/", VerifyEmailAPIView.as_view(), name="api-verify-email"),
+    # NOTE: Password reset is disabled
+    # path(
+    #     "api/password-reset/", PasswordResetAPIView.as_view(), name="api-password-reset"
+    # ),
+    # path(
+    #     "api/password-reset-confirm/",
+    #     PasswordResetConfirmAPIView.as_view(),
+    #     name="api-password-reset-confirm",
+    # ),
+    # NOTE: Signup is disabled
+    # path(
+    #     "api/resend-verify-email/",
+    #     ResendVerifyEmailAPIView.as_view(),
+    #     name="api-resend-verify-email",
+    # ),
+    # path("api/verify-email/", VerifyEmailAPIView.as_view(), name="api-verify-email"),
 ]
 
 if settings.DEBUG:
     from django.conf.urls.static import static
 
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    urlpatterns += (path("api/auth/", include("rest_framework.urls"), name="api-auth"),)
 
 
 # Enable Stripe webhook endpoint if the secret key is set

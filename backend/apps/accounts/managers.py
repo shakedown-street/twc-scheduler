@@ -25,8 +25,10 @@ class EmailUserManager(BaseUserManager):
 
         user = self._create_user(email, password, **kwargs)
 
-        if not user.is_verified:
-            send_verify_email(user)
+        # NOTE: Email verification is disabled
+
+        # if not user.is_verified:
+        #     send_verify_email(user)
 
         return user
 

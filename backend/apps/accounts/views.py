@@ -1,6 +1,6 @@
 from django.contrib.auth import get_user_model, login
 from knox.views import LoginView as KnoxLoginView
-from rest_framework import exceptions, permissions, status, views, viewsets
+from rest_framework import exceptions, mixins, permissions, status, views, viewsets
 from rest_framework.decorators import action, api_view, permission_classes
 from rest_framework.response import Response
 from social_django.utils import psa
@@ -9,7 +9,7 @@ from apps.accounts.filters import EmailUserFilter
 from apps.accounts.permissions import EmailUserPermission, IsSuperUser
 from apps.accounts.serializers import (
     AuthenticationSerializer,
-    EmailUserCreateSerializer,
+    # EmailUserCreateSerializer,
     EmailUserSerializer,
     PasswordChangeSerializer,
     PasswordResetConfirmSerializer,
@@ -22,7 +22,13 @@ from apps.accounts.utils import create_auth_token
 User = get_user_model()
 
 
-class EmailUserViewSet(viewsets.ModelViewSet):
+class EmailUserViewSet(
+    mixins.ListModelMixin,
+    mixins.RetrieveModelMixin,
+    mixins.UpdateModelMixin,
+    mixins.DestroyModelMixin,
+    viewsets.GenericViewSet,
+):
     queryset = User.objects.all()
     serializer_class = EmailUserSerializer
     permission_classes = (EmailUserPermission,)
@@ -32,21 +38,23 @@ class EmailUserViewSet(viewsets.ModelViewSet):
         queryset = self.queryset
         return queryset
 
-    def get_serializer_class(self):
-        if self.action == "create":
-            return EmailUserCreateSerializer
-        return self.serializer_class
+    # NOTE: Signup is disabled
 
-    def create(self, request):
-        serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        user = serializer.save()
+    # def get_serializer_class(self):
+    #     if self.action == "create":
+    #         return EmailUserCreateSerializer
+    #     return self.serializer_class
 
-        data = EmailUserSerializer(user, context={"request": request}).data
-        return Response(
-            data,
-            status=status.HTTP_201_CREATED,
-        )
+    # def create(self, request):
+    #     serializer = self.get_serializer(data=request.data)
+    #     serializer.is_valid(raise_exception=True)
+    #     user = serializer.save()
+
+    #     data = EmailUserSerializer(user, context={"request": request}).data
+    #     return Response(
+    #         data,
+    #         status=status.HTTP_201_CREATED,
+    #     )
 
     @action(detail=False, methods=["GET"], permission_classes=[permissions.AllowAny])
     def auth(self, request, *args, **kwargs):

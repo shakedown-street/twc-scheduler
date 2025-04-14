@@ -1,4 +1,5 @@
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
+import clsx from 'clsx';
 import React from 'react';
 import { Link, NavLink, useNavigate } from 'react-router-dom';
 import logo from '~/assets/logo.avif';
@@ -7,7 +8,6 @@ import { useAuth } from '~/features/auth/contexts/AuthContext';
 import { http } from '~/http';
 import { Button, Container, IconButton, RadixDialog, useToast } from '~/ui';
 import './Nav.scss';
-import clsx from 'clsx';
 
 export const Nav = () => {
   const [impersonateDialogOpen, setImpersonateDialogOpen] = React.useState(false);
@@ -33,9 +33,9 @@ export const Nav = () => {
     return (
       <>
         <div className="flex gap-2">
-          <Button color="primary" navigateTo={'/sign-up'}>
+          {/* <Button color="primary" navigateTo={'/sign-up'}>
             Sign Up
-          </Button>
+          </Button> */}
           <Button color="primary" navigateTo={'/login'}>
             Login
           </Button>

@@ -33,7 +33,9 @@ class IsSuperUserOrReadOnlyAuthenticated(permissions.BasePermission):
 
 class EmailUserPermission(permissions.BasePermission):
     def has_permission(self, request, view):
-        return request.method == "POST" or request.user.is_authenticated
+        # NOTE: Signup is disabled
+        # return request.method == "POST" or request.user.is_authenticated
+        return request.user.is_authenticated
 
     def has_object_permission(self, request, view, obj):
         if request.user.is_superuser:
