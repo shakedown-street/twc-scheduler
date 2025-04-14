@@ -13,6 +13,7 @@ export const ClientTechnicianMatrix = () => {
   const [loadingClients, setLoadingClients] = React.useState(true);
   const [technicians, setTechnicians] = React.useState<Technician[]>([]);
   const [loadingTechnicians, setLoadingTechnicians] = React.useState(true);
+  const [hoveredColumn, setHoveredColumn] = React.useState<number>();
 
   const [clientForm, setClientForm] = React.useState<{
     open: boolean;
@@ -134,6 +135,14 @@ export const ClientTechnicianMatrix = () => {
     closeTechnicianForm();
   }
 
+  function handleColumnHoverEnter(index: number) {
+    setHoveredColumn(index);
+  }
+
+  function handleColumnHoverLeave() {
+    setHoveredColumn(undefined);
+  }
+
   if (loadingClients || loadingTechnicians) {
     return <Spinner className="mt-8" message="Loading matrix..." />;
   }
@@ -145,9 +154,11 @@ export const ClientTechnicianMatrix = () => {
           <tr>
             <th></th>
             <th></th>
-            {technicians.map((technician) => (
+            {technicians.map((technician, index) => (
               <th
                 key={technician.id}
+                onMouseEnter={() => handleColumnHoverEnter(index)}
+                onMouseLeave={() => handleColumnHoverLeave()}
                 style={{
                   background: technician.bg_color,
                   color: technician.text_color,
@@ -191,13 +202,16 @@ export const ClientTechnicianMatrix = () => {
                       {client.first_name} {client.last_name}
                     </a>
                   </td>
-                  {technicians.map((technician) => {
+                  {technicians.map((technician, technicianIndex) => {
                     const count = countAppointments(client, technician);
                     return (
                       <td
                         key={technician.id}
+                        onMouseEnter={() => handleColumnHoverEnter(technicianIndex)}
+                        onMouseLeave={() => handleColumnHoverLeave()}
                         style={{
-                          background: count > 0 ? technician.bg_color : undefined,
+                          background:
+                            count > 0 ? technician.bg_color : hoveredColumn === technicianIndex ? '#e5e7eb' : undefined,
                           color: count > 0 ? technician.text_color : undefined,
                         }}
                       >
