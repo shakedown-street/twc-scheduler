@@ -143,7 +143,7 @@ def get_appointment_warnings(
 
         if exceeds_by > 0:
             warnings.append(
-                f"This appointment will exceed {client}'s prescribed hours by {exceeds_by:.2f} hours"
+                f"{client}'s prescribed hours will be exceeded by {exceeds_by:.2f} hours"
             )
 
     # check if this appointment will exceed the technician's requested hours
@@ -166,12 +166,35 @@ def get_appointment_warnings(
 
         if exceeds_by > 0:
             warnings.append(
-                f"This appointment will exceed {tech}'s requested hours by {exceeds_by:.2f} hours"
+                f"{tech}'s requested hours will be exceeded by {exceeds_by:.2f} hours"
+            )
+
+    # check if this appointment will exceed the technician's max hours per day
+    if tech.max_hours_per_day >= 0:
+        total_hours_today = tech.total_hours_by_day[day_int]
+        if instance:
+            # subtract the existing appointment time from the total hours
+            existing_start_as_datetime = datetime.combine(
+                datetime.today(), instance.start_time
+            )
+            existing_end_as_datetime = datetime.combine(
+                datetime.today(), instance.end_time
+            )
+            total_hours_today -= (
+                existing_end_as_datetime - existing_start_as_datetime
+            ).total_seconds() / 3600
+        total_with_appointment = total_hours_today + (new_appt_seconds / 3600)
+        exceeds_by = total_with_appointment - tech.max_hours_per_day
+        if exceeds_by > 0:
+            warnings.append(
+                f"{tech}'s max hours per day will be exceeded by {exceeds_by:.2f} hours"
             )
 
     # check if the technician meets the client's skill requirements
     if tech.skill_level < client.req_skill_level:
-        warnings.append(f"{tech} does not meet the client's skill level requirement")
+        warnings.append(
+            f"{tech} does not meet {client}'s skill level requirement ({client.req_skill_level})"
+        )
 
     # check if the technician meets the client's language requirements
     if client.req_spanish_speaking and not tech.spanish_speaking:
@@ -184,7 +207,7 @@ def get_appointment_warnings(
         end_time__gte=end_time,
     ).exists():
         warnings.append(
-            f"{client} is not available on {day_display[day_int]} from {start_time} to {end_time}"
+            f"{client} is not available on {day_display[day_int]} during this time"
         )
 
     # check if the technician is available
@@ -194,7 +217,7 @@ def get_appointment_warnings(
         end_time__gte=end_time,
     ).exists():
         warnings.append(
-            f"{tech} is not available on {day_display[day_int]} from {start_time} to {end_time}"
+            f"{tech} is not available on {day_display[day_int]} during this time"
         )
 
     # check if the client is already booked
@@ -208,7 +231,7 @@ def get_appointment_warnings(
     if client_appointments.exists():
         booked = client_appointments.first()
         warnings.append(
-            f"{client} is already booked on {day_display[day_int]} from {booked.start_time} to {booked.end_time}"
+            f"{client} is already booked on {day_display[day_int]} during this time"
         )
 
     # check if the technician is already booked
@@ -222,7 +245,7 @@ def get_appointment_warnings(
     if tech_appointments.exists():
         booked = tech_appointments.first()
         warnings.append(
-            f"{tech} is already booked on {day_display[day_int]} from {booked.start_time} to {booked.end_time}"
+            f"{tech} is already booked on {day_display[day_int]} during this time"
         )
 
     # check if this appointment will create a split block for the client or the technician

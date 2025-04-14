@@ -2,8 +2,6 @@ Target June 19th
 
 Requested by Alycen and Amy:
 
-- warning about max hours per day for techs
-  - set max hours per day when adding/updating a tech
 - basic scheduling of OT and speech
   - they're fine with this being very simple. All this needs to do is let you put in appointments that are not tied to a tech, and select
     whether it is OT or speech. It will show up differently on the schedule, and not at all on sheet 1.
@@ -52,3 +50,4 @@ Done:
 - Show client name when creating/editing an appointment
 - Show day of the week when creating/editing an availability or appointment
 - Indicate on client availability blocks if the client is available in clinic
+- Add max_hours_per_day field to tech, add warning when creating an appointment would exceed this

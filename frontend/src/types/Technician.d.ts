@@ -10,6 +10,7 @@ export type Technician = {
   bg_color: string;
   text_color: string;
   requested_hours: number;
+  max_hours_per_day: number;
   skill_level: number;
   spanish_speaking: boolean;
   notes: string;

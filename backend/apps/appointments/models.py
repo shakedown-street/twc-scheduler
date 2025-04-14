@@ -13,7 +13,8 @@ class Technician(UUIDPrimaryKeyMixin, TimestampMixin):
     last_name = models.CharField(max_length=30)
     bg_color = ColorField(default="#ffffff")
     text_color = ColorField(default="#000000")
-    requested_hours = models.IntegerField(default=0)
+    requested_hours = models.IntegerField(default=40)
+    max_hours_per_day = models.IntegerField(default=8)
     skill_level = models.IntegerField(
         default=1, validators=[MinValueValidator(1), MaxValueValidator(3)]
     )

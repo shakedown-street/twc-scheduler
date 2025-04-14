@@ -19,6 +19,7 @@ export type TechnicianFormData = {
   bg_color: string;
   text_color: string;
   requested_hours: number;
+  max_hours_per_day: number;
   skill_level: number;
   spanish_speaking: boolean;
   notes: string;
@@ -33,7 +34,8 @@ export const TechnicianForm = ({ technician, onCancel, onCreate, onDelete, onUpd
       last_name: technician?.last_name ?? '',
       bg_color: technician?.bg_color ?? '#ff0000',
       text_color: technician?.text_color ?? '#000000',
-      requested_hours: technician?.requested_hours ?? 0,
+      requested_hours: technician?.requested_hours ?? 40,
+      max_hours_per_day: technician?.max_hours_per_day ?? 8,
       skill_level: technician?.skill_level ?? 1,
       spanish_speaking: technician?.spanish_speaking ?? false,
       notes: technician?.notes ?? '',
@@ -128,12 +130,20 @@ export const TechnicianForm = ({ technician, onCancel, onCreate, onDelete, onUpd
         <Input
           fluid
           id="requested_hours"
-          label="Requested Hours"
+          label="Requested Hours Per Week"
           type="number"
           {...form.register('requested_hours', { required: true })}
         />
         <Input
           fluid
+          id="max_hours_per_day"
+          label="Max Hours Per Day"
+          type="number"
+          {...form.register('max_hours_per_day', { required: true })}
+        />
+      </div>
+      <div>
+        <Input
           id="skill_level"
           label="Skill Level"
           min={1}
@@ -141,29 +151,33 @@ export const TechnicianForm = ({ technician, onCancel, onCreate, onDelete, onUpd
           type="number"
           {...form.register('skill_level', { required: true })}
         />
+        <div className="hint mt-1">Skill level from 1-3</div>
       </div>
-      <div className="Input__container">
-        <label htmlFor="bg_color">Background Color</label>
-        <input id="bg_color" type="color" {...form.register('bg_color', { required: true })} />
-      </div>
-      <div className="Input__container">
-        <label htmlFor="text_color">Font Color</label>
-        <input id="text_color" type="color" {...form.register('text_color', { required: true })} />
-      </div>
-      {(firstName || lastName) && backgroundColor && textColor && (
-        <div className="Input__container">
-          <label>Preview</label>
-          <Badge
-            style={{
-              background: backgroundColor,
-              color: textColor,
-            }}
-          >
-            {firstName} {lastName}
-          </Badge>
-        </div>
-      )}
       <Toggle label="Spanish Speaking" {...form.register('spanish_speaking')} />
+      <div className="TechnicianForm__row">
+        <div className="Input__container">
+          <label htmlFor="bg_color">BG Color</label>
+          <input id="bg_color" type="color" {...form.register('bg_color', { required: true })} />
+        </div>
+        <div className="Input__container">
+          <label htmlFor="text_color">Font Color</label>
+          <input id="text_color" type="color" {...form.register('text_color', { required: true })} />
+        </div>
+        {(firstName || lastName) && backgroundColor && textColor && (
+          <div className="Input__container">
+            <label>Preview</label>
+            <Badge
+              size="xs"
+              style={{
+                background: backgroundColor,
+                color: textColor,
+              }}
+            >
+              {firstName} {lastName}
+            </Badge>
+          </div>
+        )}
+      </div>
       <Textarea rows={4} fluid label="Notes" style={{ resize: 'none' }} {...form.register('notes')} />
       <div className="TechnicianForm__actions">
         {technician && (

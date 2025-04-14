@@ -5,13 +5,13 @@ import { ClientModel } from '~/api';
 import { AppointmentForm } from '~/components/AppointmentForm/AppointmentForm';
 import { TimeSlotTable } from '~/components/TimeSlotTable/TimeSlotTable';
 import { useBlocks } from '~/contexts/BlocksContext';
+import { useAuth } from '~/features/auth/contexts/AuthContext';
 import { Appointment } from '~/types/Appointment';
 import { Availability } from '~/types/Availability';
 import { Block } from '~/types/Block';
 import { Client } from '~/types/Client';
 import { Container, RadixDialog, Spinner, TabItem, Tabs } from '~/ui';
 import './Schedule.scss';
-import { useAuth } from '~/features/auth/contexts/AuthContext';
 
 export const Schedule = () => {
   const [clients, setClients] = React.useState<Client[]>([]);
@@ -174,6 +174,7 @@ export const Schedule = () => {
         </div>
       </Container>
       <RadixDialog
+        asDrawer
         title={`${appointmentForm.instance ? 'Update' : 'Create'} Appointment`}
         open={appointmentForm.open}
         onOpenChange={(open) => {
