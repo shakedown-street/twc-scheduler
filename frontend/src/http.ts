@@ -36,8 +36,8 @@ export class BaseModel<T = any> {
     return http.post<T>(`${this.endpoint}`, data);
   }
 
-  async get(id: number | string): Promise<AxiosResponse<T>> {
-    return http.get<T>(`${this.endpoint}${id}/`);
+  async get(id: number | string, params: Params = {}): Promise<AxiosResponse<T>> {
+    return http.get<T>(`${this.endpoint}${id}/`, { params });
   }
 
   async list(params: Params = {}): Promise<AxiosResponse<ListResponse<T>>> {

@@ -141,40 +141,21 @@ export const ClientAvailability = () => {
     });
   }
 
-  function onCreateAvailability(client: Client, created: Availability) {
-    setClients((prev) =>
-      prev.map((c) => {
-        if (c.id === client.id) {
-          c.availabilities = [...(c.availabilities || []), created];
+  function refetchClient(client: Client) {
+    return ClientModel.get(client.id, {
+      expand_availabilities: true,
+    }).then((clientUpdated) => {
+      setClients((prev) =>
+        prev.map((c) => {
+          if (c.id === client.id) {
+            c = clientUpdated.data;
+            return c;
+          }
           return c;
-        }
-        return c;
-      })
-    );
-    closeAvailabilityForm();
-  }
-
-  function onUpdateAvailability(client: Client, updated: Availability) {
-    setClients((prev) =>
-      prev.map((c) => {
-        if (c.id === client.id) {
-          c.availabilities = c.availabilities?.map((a) => (a.id === updated.id ? updated : a));
-          return c;
-        }
-        return c;
-      })
-    );
-    closeAvailabilityForm();
-  }
-
-  function onDeleteAvailability(deleted: Availability) {
-    setClients((prev) =>
-      prev.map((c) => {
-        c.availabilities = c.availabilities?.filter((a) => a.id !== deleted.id);
-        return c;
-      })
-    );
-    closeAvailabilityForm();
+        })
+      );
+      closeAvailabilityForm();
+    });
   }
 
   function renderAvailabilities(client: Client) {
@@ -376,9 +357,9 @@ export const ClientAvailability = () => {
           {availabilityForm.object && (
             <AvailabilityForm
               contentType="client"
-              onCreate={(client, created) => onCreateAvailability(client as Client, created)}
-              onUpdate={(client, updated) => onUpdateAvailability(client as Client, updated)}
-              onDelete={(deleted) => onDeleteAvailability(deleted)}
+              onCreate={(client, _) => refetchClient(client as Client)}
+              onUpdate={(client, _) => refetchClient(client as Client)}
+              onDelete={(client, _) => refetchClient(client as Client)}
               instance={availabilityForm.instance}
               object={availabilityForm.object}
               day={availabilityForm.day}

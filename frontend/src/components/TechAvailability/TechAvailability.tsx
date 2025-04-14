@@ -141,40 +141,21 @@ export const TechAvailability = () => {
     });
   }
 
-  function onCreateAvailability(technician: Technician, created: Availability) {
-    setTechnicians((prev) =>
-      prev.map((t) => {
-        if (t.id === technician.id) {
-          t.availabilities = [...(t.availabilities || []), created];
+  function refetchTechnician(technician: Technician) {
+    return TechnicianModel.get(technician.id, {
+      expand_availabilities: true,
+    }).then((technicianUpdated) => {
+      setTechnicians((prev) =>
+        prev.map((t) => {
+          if (t.id === technician.id) {
+            t = technicianUpdated.data;
+            return t;
+          }
           return t;
-        }
-        return t;
-      })
-    );
-    closeAvailabilityForm();
-  }
-
-  function onUpdateAvailability(technician: Technician, updated: Availability) {
-    setTechnicians((prev) =>
-      prev.map((t) => {
-        if (t.id === technician.id) {
-          t.availabilities = t.availabilities?.map((a) => (a.id === updated.id ? updated : a));
-          return t;
-        }
-        return t;
-      })
-    );
-    closeAvailabilityForm();
-  }
-
-  function onDeleteAvailability(deleted: Availability) {
-    setTechnicians((prev) =>
-      prev.map((t) => {
-        t.availabilities = t.availabilities?.filter((a) => a.id !== deleted.id);
-        return t;
-      })
-    );
-    closeAvailabilityForm();
+        })
+      );
+      closeAvailabilityForm();
+    });
   }
 
   function renderAvailabilities(technician: Technician) {
@@ -364,9 +345,9 @@ export const TechAvailability = () => {
           {availabilityForm.object && (
             <AvailabilityForm
               contentType="technician"
-              onCreate={(technician, created) => onCreateAvailability(technician as Technician, created)}
-              onUpdate={(technician, updated) => onUpdateAvailability(technician as Technician, updated)}
-              onDelete={(deleted) => onDeleteAvailability(deleted)}
+              onCreate={(technician, _) => refetchTechnician(technician as Technician)}
+              onUpdate={(technician, _) => refetchTechnician(technician as Technician)}
+              onDelete={(technician, _) => refetchTechnician(technician as Technician)}
               instance={availabilityForm.instance}
               object={availabilityForm.object}
               day={availabilityForm.day}

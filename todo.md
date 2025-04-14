@@ -15,9 +15,9 @@ Requested by Alycen and Amy:
 Other:
 
 - Reduce memory usage when switching days on the schedule (rendering all the appointments is slow)
-- "total available" doesn't update when adding a new availability
 - Polish the schedule page
 - Disable signup. Superusers will create users in the admin
+- Clicking on technician or client name from overview should open edit dialog
 
 Done:
 
@@ -51,3 +51,4 @@ Done:
 - Show day of the week when creating/editing an availability or appointment
 - Indicate on client availability blocks if the client is available in clinic
 - Add max_hours_per_day field to tech, add warning when creating an appointment would exceed this
+- Refetch clients/techs after creating/updating/deleting an availability to refresh backend calculated fields

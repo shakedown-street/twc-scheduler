@@ -17,7 +17,7 @@ export type AvailabilityFormProps = {
   initialEndTime: string;
   onCreate?: (object: Client | Technician, created: Availability) => void;
   onUpdate?: (object: Client | Technician, updated: Availability) => void;
-  onDelete?: (deleted: Availability) => void;
+  onDelete?: (object: Client | Technician, deleted: Availability) => void;
 };
 
 export type AvailabilityFormData = {
@@ -118,7 +118,7 @@ export const AvailabilityForm = ({
     }
     AvailabilityModel.delete(instance.id)
       .then(() => {
-        onDelete?.(instance);
+        onDelete?.(object, instance);
         setConfirmDelete(false);
       })
       .catch((err) => {
