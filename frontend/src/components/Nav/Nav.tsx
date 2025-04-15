@@ -123,6 +123,17 @@ export const Nav = () => {
                   <span className="material-symbols-outlined">event_available</span>
                   Availability
                 </NavLink>
+                <NavLink
+                  to="/sub-list"
+                  className={({ isActive }) => {
+                    return clsx('Nav__link', {
+                      'Nav__link--active': isActive,
+                    });
+                  }}
+                >
+                  <span className="material-symbols-outlined">swap_horiz</span>
+                  Sub List
+                </NavLink>
               </div>
             )}
             {/* <div className="Nav__spacer"></div> */}

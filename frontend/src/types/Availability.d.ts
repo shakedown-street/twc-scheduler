@@ -8,4 +8,5 @@ export type Availability = {
   start_time: string;
   end_time: string;
   in_clinic: boolean;
+  is_sub: boolean;
 };

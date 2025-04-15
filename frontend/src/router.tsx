@@ -8,6 +8,7 @@ import { NotFound } from './routes/NotFound/NotFound';
 import { Overview } from './routes/Overview/Overview';
 import { Schedule } from './routes/Schedule/Schedule';
 import { StyleGuide } from './routes/StyleGuide/StyleGuide';
+import { SubList } from './routes/SubList/SubList';
 
 export type AuthGuardProps = {
   children: React.ReactNode;
@@ -81,6 +82,14 @@ export const routes: RouteObject[] = [
         element: (
           <AuthGuard>
             <AvailabilityRoute />
+          </AuthGuard>
+        ),
+      },
+      {
+        path: '/sub-list',
+        element: (
+          <AuthGuard>
+            <SubList />
           </AuthGuard>
         ),
       },

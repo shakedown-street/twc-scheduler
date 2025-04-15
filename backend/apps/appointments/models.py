@@ -160,6 +160,12 @@ class Availability(UUIDPrimaryKeyMixin, TimestampMixin):
     )
     start_time = models.TimeField()
     end_time = models.TimeField()
+    is_sub = models.BooleanField(
+        default=False,
+        help_text="Only applies to technicians. "
+        "Indicates that this is not a regular availability, but that the technician "
+        "is available to sub for another technician during this time.",
+    )
     in_clinic = models.BooleanField(default=False)
 
     def __str__(self):
