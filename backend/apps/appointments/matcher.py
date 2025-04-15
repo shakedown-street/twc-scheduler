@@ -41,6 +41,7 @@ def find_available_technicians(
         availabilities__day=day,
         availabilities__start_time__lte=start_time,
         availabilities__end_time__gte=end_time,
+        availabilities__is_sub=False,
     )
 
     # filter out technicians who are already booked on the given day and time
@@ -215,6 +216,7 @@ def get_appointment_warnings(
         day=day,
         start_time__lte=start_time,
         end_time__gte=end_time,
+        is_sub=False,
     ).exists():
         warnings.append(
             f"{tech} is not available on {day_display[day_int]} during this time"
@@ -229,7 +231,6 @@ def get_appointment_warnings(
     if instance:
         client_appointments = client_appointments.exclude(pk=instance.pk)
     if client_appointments.exists():
-        booked = client_appointments.first()
         warnings.append(
             f"{client} is already booked on {day_display[day_int]} during this time"
         )
@@ -243,7 +244,6 @@ def get_appointment_warnings(
     if instance:
         tech_appointments = tech_appointments.exclude(pk=instance.pk)
     if tech_appointments.exists():
-        booked = tech_appointments.first()
         warnings.append(
             f"{tech} is already booked on {day_display[day_int]} during this time"
         )

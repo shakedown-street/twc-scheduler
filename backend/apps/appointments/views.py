@@ -102,7 +102,11 @@ class ClientViewSet(viewsets.ModelViewSet):
         content_type = ContentType.objects.get_for_model(Client)
         serializer = AvailabilitySerializer(data=request.data)
         if serializer.is_valid(raise_exception=True):
-            serializer.save(object_id=client.id, content_type=content_type)
+            serializer.save(
+                object_id=client.id,
+                content_type=content_type,
+                is_sub=False,  # NOTE: is_sub does not apply to clients
+            )
             return Response(serializer.data, status=201)
         raise exceptions.APIException("Failed to create availability for client.")
 
