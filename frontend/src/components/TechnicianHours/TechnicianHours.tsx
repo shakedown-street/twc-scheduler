@@ -200,7 +200,7 @@ export const TechnicianHours = ({ subList }: TechnicianHoursProps) => {
           </div>
           <div className="ClientHours__legend__example">
             <div className="ClientHours__legend__example__color" style={{ background: '#eab308' }}></div>
-            <span>Available for sub</span>
+            <span>Available to sub</span>
           </div>
         </div>
       );
@@ -423,7 +423,7 @@ export const TechnicianHours = ({ subList }: TechnicianHoursProps) => {
             </tfoot>
           )}
         </table>
-        {!subList && renderLegend()}
+        {renderLegend()}
       </div>
       {technicianForm.technician && (
         <RadixDialog

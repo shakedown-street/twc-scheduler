@@ -8,7 +8,7 @@ import { useAuth } from '~/features/auth/contexts/AuthContext';
 import { Availability } from '~/types/Availability';
 import { Block } from '~/types/Block';
 import { Technician } from '~/types/Technician';
-import { Button, Card, RadixDialog, Spinner } from '~/ui';
+import { Button, Card, Checkbox, RadixDialog, Spinner } from '~/ui';
 import { isFullBlock } from '~/utils/appointments';
 import { skillLevelColor } from '~/utils/color';
 import { formatTimeShort, isBetweenInclusiveEnd, isBetweenInclusiveStart } from '~/utils/time';
@@ -17,6 +17,7 @@ import './TechAvailability.scss';
 export const TechAvailability = () => {
   const [technicians, setTechnicians] = React.useState<Technician[]>([]);
   const [techniciansLoading, setTechniciansLoading] = React.useState(true);
+  const [showSubOnly, setShowSubOnly] = React.useState(false);
   const [technicianForm, setTechnicianForm] = React.useState<{
     open: boolean;
     technician?: Technician;
@@ -72,7 +73,8 @@ export const TechAvailability = () => {
       (availability) =>
         availability.day === day &&
         isBetweenInclusiveStart(availability.start_time, block.start_time, block.end_time) &&
-        isBetweenInclusiveEnd(availability.end_time, block.start_time, block.end_time)
+        isBetweenInclusiveEnd(availability.end_time, block.start_time, block.end_time) &&
+        (!showSubOnly || availability.is_sub)
     );
   }
 
@@ -189,6 +191,11 @@ export const TechAvailability = () => {
                 <div className="text-nowrap">
                   {formatTimeShort(blockAvailability.start_time)}-{formatTimeShort(blockAvailability.end_time)}
                 </div>
+                {blockAvailability.is_sub && (
+                  <span className="material-symbols-outlined text-size-sm" title="Sub only">
+                    swap_horiz
+                  </span>
+                )}
                 {!isFullBlock(blockAvailability, block) && (
                   <span className="material-symbols-outlined text-color-red text-size-sm" title="Partially available">
                     warning
@@ -237,6 +244,9 @@ export const TechAvailability = () => {
               Create Technician
             </Button>
           )}
+        </div>
+        <div className="flex align-center gap-4 mb-4">
+          <Checkbox checked={showSubOnly} onChange={() => setShowSubOnly(!showSubOnly)} label="Sub only" />
         </div>
         <table className="TechAvailability__table">
           <thead>
