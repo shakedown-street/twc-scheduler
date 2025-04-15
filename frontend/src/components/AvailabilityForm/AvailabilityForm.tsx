@@ -24,6 +24,7 @@ export type AvailabilityFormData = {
   start_time: string;
   end_time: string;
   in_clinic?: boolean;
+  is_sub?: boolean;
 };
 
 export const AvailabilityForm = ({
@@ -48,6 +49,7 @@ export const AvailabilityForm = ({
         start_time: instance.start_time,
         end_time: instance.end_time,
         in_clinic: instance.in_clinic,
+        is_sub: instance.is_sub,
       });
     } else {
       form.reset({
@@ -218,6 +220,15 @@ export const AvailabilityForm = ({
         />
       </div>
       {contentType === 'client' && <Checkbox label="In clinic" {...form.register('in_clinic')} />}
+      {contentType === 'technician' && (
+        <div>
+          <Checkbox label="As sub only" {...form.register('is_sub')} />
+          <p className="hint mt-2">
+            Check this box to indicate that this technician is only available to sub for other technicians during this
+            time, and not for their own appointments.
+          </p>
+        </div>
+      )}
       <div className="AvailabilityForm__actions">
         {instance && (
           <Button
