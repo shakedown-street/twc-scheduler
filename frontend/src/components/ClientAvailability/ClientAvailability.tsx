@@ -8,7 +8,7 @@ import { useAuth } from '~/features/auth/contexts/AuthContext';
 import { Availability } from '~/types/Availability';
 import { Block } from '~/types/Block';
 import { Client } from '~/types/Client';
-import { Button, Card, RadixDialog, Spinner } from '~/ui';
+import { Button, Card, Checkbox, RadixDialog, Spinner } from '~/ui';
 import { isFullBlock } from '~/utils/appointments';
 import { skillLevelColor } from '~/utils/color';
 import { formatTimeShort, isBetweenInclusiveEnd, isBetweenInclusiveStart } from '~/utils/time';
@@ -17,6 +17,7 @@ import './ClientAvailability.scss';
 export const ClientAvailability = () => {
   const [clients, setClients] = React.useState<Client[]>([]);
   const [clientsLoading, setClientsLoading] = React.useState(true);
+  const [showInClinicOnly, setShowInClinicOnly] = React.useState(false);
   const [clientForm, setClientForm] = React.useState<{
     open: boolean;
     client?: Client;
@@ -72,7 +73,8 @@ export const ClientAvailability = () => {
       (availability) =>
         availability.day === day &&
         isBetweenInclusiveStart(availability.start_time, block.start_time, block.end_time) &&
-        isBetweenInclusiveEnd(availability.end_time, block.start_time, block.end_time)
+        isBetweenInclusiveEnd(availability.end_time, block.start_time, block.end_time) &&
+        (!showInClinicOnly || availability.in_clinic)
     );
   }
 
@@ -238,6 +240,13 @@ export const ClientAvailability = () => {
               Create Client
             </Button>
           )}
+        </div>
+        <div className="flex align-center gap-4 mb-4">
+          <Checkbox
+            checked={showInClinicOnly}
+            onChange={() => setShowInClinicOnly(!showInClinicOnly)}
+            label="In clinic"
+          />
         </div>
         <table className="ClientAvailability__table">
           <thead>
