@@ -12,7 +12,11 @@ import { AppointmentHover } from '../AppointmentHover/AppointmentHover';
 import { TechnicianForm } from '../TechnicianForm/TechnicianForm';
 import './TechnicianHours.scss';
 
-export const TechnicianHours = () => {
+export type TechnicianHoursProps = {
+  subList: boolean;
+};
+
+export const TechnicianHours = ({ subList }: TechnicianHoursProps) => {
   const [technicians, setTechnicians] = React.useState<Technician[]>([]);
   const [techniciansLoading, setTechniciansLoading] = React.useState(true);
   const [technicianForm, setTechnicianForm] = React.useState<{
@@ -92,9 +96,36 @@ export const TechnicianHours = () => {
   function renderBlock(client: Technician, day: number, block: Block, blockIndex: number) {
     const blockAppointments = getBlockAppointments(client.appointments || [], day, block) || [];
     const blockAvailabilities = getBlockAvailabilities(client.availabilities || [], day, block) || [];
+    const subAvailabilities = blockAvailabilities.filter((a) => a.is_sub);
 
     const borderLeftWidth = blockIndex === 0 ? '6px' : '1px';
     const borderRightWidth = blockIndex === blocks.length - 1 ? '6px' : '1px';
+
+    // Render sub list blocks
+    if (subList && subAvailabilities.length > 0) {
+      return (
+        <td
+          key={block.id}
+          style={{
+            background: '#eab308', // tw-yellow-500?
+            borderLeftWidth,
+            borderRightWidth,
+          }}
+        ></td>
+      );
+    }
+    if (subList && subAvailabilities.length < 1) {
+      return (
+        <td
+          key={block.id}
+          style={{
+            background: '#404040', // tw-neutral-700
+            borderLeftWidth,
+            borderRightWidth,
+          }}
+        ></td>
+      );
+    }
 
     // Render appointment blocks
     if (blockAppointments.length > 0) {
@@ -160,6 +191,21 @@ export const TechnicianHours = () => {
   }
 
   function renderLegend() {
+    if (subList) {
+      return (
+        <div className="TechnicianHours__legend">
+          <div className="TechnicianHours__legend__example">
+            <div className="TechnicianHours__legend__example__color" style={{ background: '#404040' }}></div>
+            <span>Unavailable</span>
+          </div>
+          <div className="ClientHours__legend__example">
+            <div className="ClientHours__legend__example__color" style={{ background: '#eab308' }}></div>
+            <span>Available for sub</span>
+          </div>
+        </div>
+      );
+    }
+
     return (
       <div className="TechnicianHours__legend">
         <div className="TechnicianHours__legend__example">
@@ -210,14 +256,18 @@ export const TechnicianHours = () => {
             <col width="24px" />
             <col />
             <col width="192px" />
-            <col />
-            <col />
-            <col />
-            <col />
-            <col />
-            <col />
-            <col />
-            <col width="24px" />
+            {!subList && (
+              <>
+                <col />
+                <col />
+                <col />
+                <col />
+                <col />
+                <col />
+                <col />
+                <col width="24px" />
+              </>
+            )}
             {['Mon', 'Tue', 'Wed', 'Thu', 'Fri'].map((day) => (
               <React.Fragment key={day}>
                 {blocks.map((block) => (
@@ -232,14 +282,18 @@ export const TechnicianHours = () => {
               <th title="Skill level"></th>
               <th title="Spanish speaker">Spa</th>
               <th title="Name"></th>
-              <th>Mon</th>
-              <th>Tue</th>
-              <th>Wed</th>
-              <th>Thu</th>
-              <th>Fri</th>
-              <th title="Hours scheduled">Hrs</th>
-              <th title="Hours requested">Req</th>
-              <th title="Available"></th>
+              {!subList && (
+                <>
+                  <th>Mon</th>
+                  <th>Tue</th>
+                  <th>Wed</th>
+                  <th>Thu</th>
+                  <th>Fri</th>
+                  <th title="Hours scheduled">Hrs</th>
+                  <th title="Hours requested">Req</th>
+                  <th title="Available"></th>
+                </>
+              )}
               {['M', 'T', 'W', 'TH', 'F'].map((day, dayIndex) => (
                 <React.Fragment key={day}>
                   {blocks.map((block, blockIndex) => (
@@ -292,23 +346,27 @@ export const TechnicianHours = () => {
                     {technician.first_name} {technician.last_name}
                   </a>
                 </td>
-                <td style={{ textAlign: 'center' }}>{technician.total_hours_by_day[0]}</td>
-                <td style={{ textAlign: 'center' }}>{technician.total_hours_by_day[1]}</td>
-                <td style={{ textAlign: 'center' }}>{technician.total_hours_by_day[2]}</td>
-                <td style={{ textAlign: 'center' }}>{technician.total_hours_by_day[3]}</td>
-                <td style={{ textAlign: 'center' }}>{technician.total_hours_by_day[4]}</td>
-                <td style={{ textAlign: 'center' }}>{technician.total_hours}</td>
-                <td style={{ textAlign: 'center' }}>{technician.requested_hours}</td>
-                <td
-                  style={{
-                    background: 'black',
-                    color: technician.is_maxed_on_sessions ? '#ef4444' : '#22c55e', // tw-red-500 : tw-green-500
-                    fontWeight: 'bold',
-                    textAlign: 'center',
-                  }}
-                >
-                  {technician.is_maxed_on_sessions ? 'M' : 'A'}
-                </td>
+                {!subList && (
+                  <>
+                    <td style={{ textAlign: 'center' }}>{technician.total_hours_by_day[0]}</td>
+                    <td style={{ textAlign: 'center' }}>{technician.total_hours_by_day[1]}</td>
+                    <td style={{ textAlign: 'center' }}>{technician.total_hours_by_day[2]}</td>
+                    <td style={{ textAlign: 'center' }}>{technician.total_hours_by_day[3]}</td>
+                    <td style={{ textAlign: 'center' }}>{technician.total_hours_by_day[4]}</td>
+                    <td style={{ textAlign: 'center' }}>{technician.total_hours}</td>
+                    <td style={{ textAlign: 'center' }}>{technician.requested_hours}</td>
+                    <td
+                      style={{
+                        background: 'black',
+                        color: technician.is_maxed_on_sessions ? '#ef4444' : '#22c55e', // tw-red-500 : tw-green-500
+                        fontWeight: 'bold',
+                        textAlign: 'center',
+                      }}
+                    >
+                      {technician.is_maxed_on_sessions ? 'M' : 'A'}
+                    </td>
+                  </>
+                )}
                 {days.map((day) => (
                   <React.Fragment key={day}>
                     {blocks.map((block, blockIndex) => (
@@ -319,51 +377,53 @@ export const TechnicianHours = () => {
               </tr>
             ))}
           </tbody>
-          <tfoot>
-            <tr>
-              <td colSpan={4} style={{ textAlign: 'center' }}>
-                Total
-              </td>
-              <td style={{ textAlign: 'center' }}>{totalHoursByDay(0)}</td>
-              <td style={{ textAlign: 'center' }}>{totalHoursByDay(1)}</td>
-              <td style={{ textAlign: 'center' }}>{totalHoursByDay(2)}</td>
-              <td style={{ textAlign: 'center' }}>{totalHoursByDay(3)}</td>
-              <td style={{ textAlign: 'center' }}>{totalHoursByDay(4)}</td>
-              <td style={{ textAlign: 'center' }}>{totalHours()}</td>
-              <td style={{ textAlign: 'center' }}>{totalRequestedHours()}</td>
-              <td></td>
-              {['M', 'T', 'W', 'TH', 'F'].map((day, dayIndex) => (
-                <React.Fragment key={day}>
-                  {blocks.map((block, blockIndex) => (
-                    <td
-                      key={block.id}
-                      style={{
-                        borderLeftWidth: blockIndex === 0 ? '6px' : '1px',
-                        borderRightWidth: blockIndex === blocks.length - 1 ? '6px' : '1px',
-                        textAlign: 'center',
-                      }}
-                    >
-                      {availableTechsCount(dayIndex, block)}
-                    </td>
-                  ))}
-                </React.Fragment>
-              ))}
-            </tr>
-            <tr>
-              <td colSpan={12}></td>
-              <td
-                colSpan={15}
-                style={{
-                  borderLeftWidth: '6px',
-                  borderRightWidth: '6px',
-                }}
-              >
-                Total Available
-              </td>
-            </tr>
-          </tfoot>
+          {!subList && (
+            <tfoot>
+              <tr>
+                <td colSpan={4} style={{ textAlign: 'center' }}>
+                  Total
+                </td>
+                <td style={{ textAlign: 'center' }}>{totalHoursByDay(0)}</td>
+                <td style={{ textAlign: 'center' }}>{totalHoursByDay(1)}</td>
+                <td style={{ textAlign: 'center' }}>{totalHoursByDay(2)}</td>
+                <td style={{ textAlign: 'center' }}>{totalHoursByDay(3)}</td>
+                <td style={{ textAlign: 'center' }}>{totalHoursByDay(4)}</td>
+                <td style={{ textAlign: 'center' }}>{totalHours()}</td>
+                <td style={{ textAlign: 'center' }}>{totalRequestedHours()}</td>
+                <td></td>
+                {['M', 'T', 'W', 'TH', 'F'].map((day, dayIndex) => (
+                  <React.Fragment key={day}>
+                    {blocks.map((block, blockIndex) => (
+                      <td
+                        key={block.id}
+                        style={{
+                          borderLeftWidth: blockIndex === 0 ? '6px' : '1px',
+                          borderRightWidth: blockIndex === blocks.length - 1 ? '6px' : '1px',
+                          textAlign: 'center',
+                        }}
+                      >
+                        {availableTechsCount(dayIndex, block)}
+                      </td>
+                    ))}
+                  </React.Fragment>
+                ))}
+              </tr>
+              <tr>
+                <td colSpan={12}></td>
+                <td
+                  colSpan={15}
+                  style={{
+                    borderLeftWidth: '6px',
+                    borderRightWidth: '6px',
+                  }}
+                >
+                  Total Available
+                </td>
+              </tr>
+            </tfoot>
+          )}
         </table>
-        {renderLegend()}
+        {!subList && renderLegend()}
       </div>
       {technicianForm.technician && (
         <RadixDialog
