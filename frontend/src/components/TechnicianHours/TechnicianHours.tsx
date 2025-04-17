@@ -96,25 +96,27 @@ export const TechnicianHours = ({ subList }: TechnicianHoursProps) => {
   function renderBlock(client: Technician, day: number, block: Block, blockIndex: number) {
     const blockAppointments = getBlockAppointments(client.appointments || [], day, block) || [];
     const blockAvailabilities = getBlockAvailabilities(client.availabilities || [], day, block) || [];
-    const subAvailabilities = blockAvailabilities.filter((a) => a.is_sub);
+    const nonSubAvailabilities = blockAvailabilities.filter((a) => !a.is_sub);
+    const isAvailableToSub = blockAvailabilities.length > 0 && blockAppointments.length < 1;
 
     const borderLeftWidth = blockIndex === 0 ? '6px' : '1px';
     const borderRightWidth = blockIndex === blocks.length - 1 ? '6px' : '1px';
 
     // Render sub list blocks
-    if (subList && subAvailabilities.length > 0) {
-      return (
-        <td
-          key={block.id}
-          style={{
-            background: '#eab308', // tw-yellow-500?
-            borderLeftWidth,
-            borderRightWidth,
-          }}
-        ></td>
-      );
-    }
-    if (subList && subAvailabilities.length < 1) {
+    if (subList) {
+      if (isAvailableToSub) {
+        return (
+          <td
+            key={block.id}
+            style={{
+              background: '#eab308', // tw-yellow-500
+              borderLeftWidth,
+              borderRightWidth,
+            }}
+          ></td>
+        );
+      }
+
       return (
         <td
           key={block.id}
@@ -155,7 +157,7 @@ export const TechnicianHours = ({ subList }: TechnicianHoursProps) => {
     }
 
     // Render availability blocks
-    if (blockAvailabilities.length > 0) {
+    if (nonSubAvailabilities.length > 0) {
       let background = '#cbd5e1'; // tw-slate-300
       if (client.is_maxed_on_sessions) {
         background = 'black';
