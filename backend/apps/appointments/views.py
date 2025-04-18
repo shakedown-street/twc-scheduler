@@ -40,25 +40,35 @@ class AppointmentViewSet(viewsets.ModelViewSet):
         ).data
         return Response(response_data, status=201)
 
-    @action(detail=True, methods=["get"])
-    def get_update_warnings(self, request, pk=None):
-        appointment = self.get_object()
+    @action(detail=False, methods=["get"])
+    def get_warnings(self, request):
+        client_id = request.query_params.get("client_id")
         tech_id = request.query_params.get("tech_id")
+        day = request.query_params.get("day")
         start_time = request.query_params.get("start_time")
         end_time = request.query_params.get("end_time")
+        appointment_id = request.query_params.get("appointment_id")
 
-        if not appointment or not tech_id or not start_time or not end_time:
+        if not tech_id or not client_id or not day or not start_time or not end_time:
             raise exceptions.ParseError("Missing required parameters")
 
         try:
             technician = Technician.objects.get(id=tech_id)
+            client = Client.objects.get(id=client_id)
+            appointment = None
+            if appointment_id:
+                appointment = Appointment.objects.get(id=appointment_id)
         except Technician.DoesNotExist:
             raise exceptions.NotFound("Technician not found")
+        except Client.DoesNotExist:
+            raise exceptions.NotFound("Client not found")
+        except Appointment.DoesNotExist:
+            raise exceptions.NotFound("Appointment not found")
 
         warnings = get_appointment_warnings(
-            appointment.client,
+            client,
             technician,
-            appointment.day,
+            day,
             start_time,
             end_time,
             instance=appointment,
@@ -141,31 +151,6 @@ class ClientViewSet(viewsets.ModelViewSet):
             context={"request": request},
         )
         return Response(serializer.data)
-
-    @action(detail=True, methods=["get"])
-    def get_create_warnings(self, request, pk=None):
-        client = self.get_object()
-        tech_id = request.query_params.get("tech_id")
-        day = request.query_params.get("day")
-        start_time = request.query_params.get("start_time")
-        end_time = request.query_params.get("end_time")
-
-        if not tech_id or not day or not start_time or not end_time:
-            raise exceptions.ParseError("Missing required parameters")
-
-        try:
-            technician = Technician.objects.get(id=tech_id)
-        except Technician.DoesNotExist:
-            raise exceptions.NotFound("Technician not found")
-
-        warnings = get_appointment_warnings(
-            client,
-            technician,
-            day,
-            start_time,
-            end_time,
-        )
-        return Response(warnings)
 
     @action(detail=True, methods=["get"])
     def get_repeatable_appointment_days(self, request, pk=None):

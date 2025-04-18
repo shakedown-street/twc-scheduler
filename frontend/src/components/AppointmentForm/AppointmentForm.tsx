@@ -194,40 +194,13 @@ export const AppointmentForm = ({
   }
 
   function getWarnings() {
-    if (!instance) {
-      getCreateWarnings();
-    } else {
-      getUpdateWarnings();
-    }
-  }
-
-  function getCreateWarnings() {
-    ClientModel.detailAction(
-      client?.id,
-      'get_create_warnings',
+    AppointmentModel.listAction(
+      'get_warnings',
       'get',
       {},
       {
-        tech_id: technician,
-        day,
-        start_time: startTime,
-        end_time: endTime,
-      }
-    ).then((warnings) => {
-      setWarnings(warnings.data);
-    });
-  }
-
-  function getUpdateWarnings() {
-    if (!instance) {
-      return;
-    }
-    AppointmentModel.detailAction(
-      instance.id,
-      'get_update_warnings',
-      'get',
-      {},
-      {
+        appointment_id: instance?.id || undefined,
+        client_id: client.id,
         tech_id: technician,
         day,
         start_time: startTime,
