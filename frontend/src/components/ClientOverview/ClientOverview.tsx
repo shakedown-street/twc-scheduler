@@ -10,9 +10,9 @@ import { getBlockAppointments, getBlockAvailabilities } from '~/utils/appointmen
 import { dayColor, skillLevelColor, striped } from '~/utils/color';
 import { AppointmentHover } from '../AppointmentHover/AppointmentHover';
 import { ClientForm } from '../ClientForm/ClientForm';
-import './ClientHours.scss';
+import './ClientOverview.scss';
 
-export const ClientHours = () => {
+export const ClientOverview = () => {
   const [clients, setClients] = React.useState<Client[]>([]);
   const [clientsLoading, setClientsLoading] = React.useState(true);
   const [clientForm, setClientForm] = React.useState<{
@@ -162,25 +162,28 @@ export const ClientHours = () => {
 
   function renderLegend() {
     return (
-      <div className="ClientHours__legend">
-        <div className="ClientHours__legend__example">
-          <div className="ClientHours__legend__example__color" style={{ background: '#404040' }}></div>
+      <div className="ClientOverview__legend">
+        <div className="ClientOverview__legend__example">
+          <div className="ClientOverview__legend__example__color" style={{ background: '#404040' }}></div>
           <span>Unavailable</span>
         </div>
-        <div className="ClientHours__legend__example">
-          <div className="ClientHours__legend__example__color" style={{ background: '#cbd5e1', color: '#22c55e' }}>
+        <div className="ClientOverview__legend__example">
+          <div className="ClientOverview__legend__example__color" style={{ background: '#cbd5e1', color: '#22c55e' }}>
             A
           </div>
           <span>Available</span>
         </div>
-        <div className="ClientHours__legend__example">
-          <div className="ClientHours__legend__example__color" style={{ background: 'black', color: '#b91c1c' }}>
+        <div className="ClientOverview__legend__example">
+          <div className="ClientOverview__legend__example__color" style={{ background: 'black', color: '#b91c1c' }}>
             M
           </div>
           <span>Maxed on sessions</span>
         </div>
-        <div className="ClientHours__legend__example">
-          <div className="ClientHours__legend__example__color" style={{ background: striped('black', 'white') }}></div>
+        <div className="ClientOverview__legend__example">
+          <div
+            className="ClientOverview__legend__example__color"
+            style={{ background: striped('black', 'white') }}
+          ></div>
           <span>In clinic</span>
         </div>
       </div>
@@ -194,7 +197,7 @@ export const ClientHours = () => {
   return (
     <>
       <div className="flex gap-4">
-        <table className="ClientHours">
+        <table className="ClientOverview">
           <colgroup>
             <col width="24px" />
             <col width="24px" />

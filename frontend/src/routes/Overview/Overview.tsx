@@ -1,6 +1,6 @@
 import { Helmet } from 'react-helmet';
 import { useSearchParams } from 'react-router-dom';
-import { ClientHours } from '~/components/ClientHours/ClientHours';
+import { ClientOverview } from '~/components/ClientOverview/ClientOverview';
 import { ClientTechnicianMatrix } from '~/components/ClientTechnicianMatrix/ClientTechnicianMatrix';
 import { TechnicianHours } from '~/components/TechnicianHours/TechnicianHours';
 import { Container, TabItem, Tabs } from '~/ui';
@@ -38,7 +38,7 @@ export const Overview = () => {
             </TabItem>
           </Tabs>
           <div>
-            {getTab() === 'clients' && <ClientHours />}
+            {getTab() === 'clients' && <ClientOverview />}
             {getTab() === 'technicians' && <TechnicianHours />}
             {getTab() === 'matrix' && <ClientTechnicianMatrix />}
           </div>
