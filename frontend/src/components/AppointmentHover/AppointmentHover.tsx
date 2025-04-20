@@ -1,14 +1,26 @@
+import clsx from 'clsx';
+import React from 'react';
+import { Link } from 'react-router-dom';
+import { AppointmentModel } from '~/api';
 import { Appointment } from '~/types/Appointment';
+import { Technician } from '~/types/Technician';
+import { Badge } from '~/ui';
 import { dayToString, formatTime } from '~/utils/time';
 import './AppointmentHover.scss';
-import { Badge } from '~/ui';
-import clsx from 'clsx';
 
 export type AppointmentHoverProps = {
   appointment: Appointment;
 };
 
 export const AppointmentHover = ({ appointment }: AppointmentHoverProps) => {
+  const [recommendedSubs, setRecommendedSubs] = React.useState<Technician[]>([]);
+
+  React.useEffect(() => {
+    AppointmentModel.detailAction(appointment.id, 'find_recommended_subs', 'get').then((res) => {
+      setRecommendedSubs(res.data);
+    });
+  }, []);
+
   return (
     <div className="AppointmentHover">
       <div className="AppointmentHover__row">
@@ -55,6 +67,32 @@ export const AppointmentHover = ({ appointment }: AppointmentHoverProps) => {
         >
           {appointment.in_clinic ? 'check_circle' : 'cancel'}
         </span>
+      </div>
+      <div className="AppointmentHover__row AppointmentHover__row--recommendedSubs">
+        <label>
+          <span className="material-symbols-outlined">swap_horiz</span> Recommended Subs:
+        </label>
+        <div className="AppointmentHover__recommendedSubs">
+          {recommendedSubs.length > 0 ? (
+            recommendedSubs.map((sub) => (
+              <Badge
+                key={sub.id}
+                radius="sm"
+                size="sm"
+                style={{
+                  background: sub.bg_color,
+                  color: sub.text_color,
+                }}
+              >
+                {sub.first_name} {sub.last_name}
+              </Badge>
+            ))
+          ) : (
+            <div className="AppointmentHover__noRecommendedSubs">
+              No automatic match found. Visit the <Link to="/sub-list">Sub List</Link> to find a sub.
+            </div>
+          )}
+        </div>
       </div>
       {appointment.notes && (
         <div className="AppointmentHover__row AppointmentHover__row--notes">

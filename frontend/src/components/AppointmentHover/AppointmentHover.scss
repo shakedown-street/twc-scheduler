@@ -36,10 +36,21 @@
       }
     }
 
+    &--recommendedSubs {
+      align-items: flex-start;
+      flex-direction: column;
+    }
+
     &--notes {
       align-items: flex-start;
       flex-direction: column;
     }
+  }
+
+  &__recommendedSubs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
   }
 
   &__notes {
