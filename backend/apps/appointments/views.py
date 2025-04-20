@@ -1,5 +1,5 @@
 from django.contrib.contenttypes.models import ContentType
-from rest_framework import exceptions, mixins, permissions, viewsets
+from rest_framework import exceptions, mixins, viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
 
@@ -10,6 +10,7 @@ from apps.accounts.permissions import (
 from .matcher import (
     find_available_technicians,
     find_repeatable_appointment_days,
+    find_recommended_subs,
     get_appointment_warnings,
 )
 from .models import Appointment, Availability, Block, Client, Technician
@@ -74,6 +75,19 @@ class AppointmentViewSet(viewsets.ModelViewSet):
             instance=appointment,
         )
         return Response(warnings)
+
+    @action(detail=True, methods=["get"])
+    def find_recommended_subs(self, request, pk=None):
+        appointment = self.get_object()
+        recommended_subs = find_recommended_subs(appointment)
+
+        serializer = TechnicianSerializer(
+            recommended_subs,
+            many=True,
+            context={"request": request},
+        )
+
+        return Response(serializer.data)
 
 
 class AvailabilityViewSet(

@@ -85,6 +85,12 @@ class Client(UUIDPrimaryKeyMixin, TimestampMixin):
     )
     req_spanish_speaking = models.BooleanField(default=False)
     notes = models.TextField(blank=True)
+    past_technicians = models.ManyToManyField(
+        Technician,
+        related_name="past_clients",
+        blank=True,
+        help_text="Technicians that have worked with this client in the past.",
+    )
 
     # generic relation to availabilities
     availabilities = GenericRelation("Availability")

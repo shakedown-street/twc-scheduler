@@ -1,5 +1,7 @@
 from datetime import datetime
 
+from django.db.models import Q
+
 from .models import Appointment, Block, Client, Technician
 
 
@@ -303,3 +305,46 @@ def get_appointment_warnings(
         warnings.append(f"This appointment will create a split block for {tech}")
 
     return warnings
+
+
+def find_recommended_subs(
+    appointment: Appointment,
+) -> list[Technician]:
+    """
+    Find technicians that are available to sub for the given client on the given day and time.
+    """
+    # filter out technicians who don't meet the client's skill and language
+    # requirements
+    qs = Technician.objects.prefetch_related("appointments", "availabilities").filter(
+        skill_level__gte=appointment.client.req_skill_level
+    )
+    if appointment.client.req_spanish_speaking:
+        qs = qs.filter(spanish_speaking=True)
+
+    # filter out the technician who is already booked for this appointment
+    qs = qs.exclude(pk=appointment.technician.pk)
+
+    # filter out technicians who are not available on the given day and time
+    qs = qs.filter(
+        availabilities__day=appointment.day,
+        availabilities__start_time__lte=appointment.start_time,
+        availabilities__end_time__gte=appointment.end_time,
+    )
+
+    # filter out technicians who are already booked on the given day and time
+    for tech in qs:
+        if tech.appointments.filter(
+            day=appointment.day,
+            start_time__lt=appointment.end_time,
+            end_time__gt=appointment.start_time,
+        ).exists():
+            qs = qs.exclude(pk=tech.pk)
+
+    # filter out technicians who are not currently working with the client
+    # and have not worked with the client before
+    qs = qs.filter(
+        Q(past_clients__in=[appointment.client])
+        | Q(appointments__client=appointment.client)
+    ).distinct()
+
+    return qs
