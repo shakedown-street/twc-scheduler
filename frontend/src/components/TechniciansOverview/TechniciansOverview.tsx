@@ -10,13 +10,13 @@ import { getBlockAppointments, getBlockAvailabilities } from '~/utils/appointmen
 import { dayColor, skillLevelColor, striped } from '~/utils/color';
 import { AppointmentHover } from '../AppointmentHover/AppointmentHover';
 import { TechnicianForm } from '../TechnicianForm/TechnicianForm';
-import './TechnicianHours.scss';
+import './TechniciansOverview.scss';
 
-export type TechnicianHoursProps = {
+export type TechniciansOverviewProps = {
   subList?: boolean;
 };
 
-export const TechnicianHours = ({ subList = false }: TechnicianHoursProps) => {
+export const TechniciansOverview = ({ subList = false }: TechniciansOverviewProps) => {
   const [technicians, setTechnicians] = React.useState<Technician[]>([]);
   const [techniciansLoading, setTechniciansLoading] = React.useState(true);
   const [technicianForm, setTechnicianForm] = React.useState<{
@@ -195,13 +195,13 @@ export const TechnicianHours = ({ subList = false }: TechnicianHoursProps) => {
   function renderLegend() {
     if (subList) {
       return (
-        <div className="TechnicianHours__legend">
-          <div className="TechnicianHours__legend__example">
-            <div className="TechnicianHours__legend__example__color" style={{ background: '#404040' }}></div>
+        <div className="TechniciansOverview__legend">
+          <div className="TechniciansOverview__legend__example">
+            <div className="TechniciansOverview__legend__example__color" style={{ background: '#404040' }}></div>
             <span>Unavailable</span>
           </div>
-          <div className="TechnicianHours__legend__example">
-            <div className="TechnicianHours__legend__example__color" style={{ background: '#eab308' }}></div>
+          <div className="TechniciansOverview__legend__example">
+            <div className="TechniciansOverview__legend__example__color" style={{ background: '#eab308' }}></div>
             <span>Available to sub</span>
           </div>
         </div>
@@ -209,34 +209,40 @@ export const TechnicianHours = ({ subList = false }: TechnicianHoursProps) => {
     }
 
     return (
-      <div className="TechnicianHours__legend">
-        <div className="TechnicianHours__legend__example">
-          <div className="TechnicianHours__legend__example__color" style={{ background: '#404040' }}></div>
+      <div className="TechniciansOverview__legend">
+        <div className="TechniciansOverview__legend__example">
+          <div className="TechniciansOverview__legend__example__color" style={{ background: '#404040' }}></div>
           <span>Unavailable</span>
         </div>
-        <div className="TechnicianHours__legend__example">
-          <div className="TechnicianHours__legend__example__color" style={{ background: '#cbd5e1', color: '#22c55e' }}>
+        <div className="TechniciansOverview__legend__example">
+          <div
+            className="TechniciansOverview__legend__example__color"
+            style={{ background: '#cbd5e1', color: '#22c55e' }}
+          >
             A
           </div>
           <span>Available</span>
         </div>
-        <div className="TechnicianHours__legend__example">
-          <div className="TechnicianHours__legend__example__color" style={{ background: 'black', color: '#b91c1c' }}>
+        <div className="TechniciansOverview__legend__example">
+          <div
+            className="TechniciansOverview__legend__example__color"
+            style={{ background: 'black', color: '#b91c1c' }}
+          >
             M
           </div>
           <span>Maxed on sessions</span>
         </div>
-        <div className="TechnicianHours__legend__example">
-          <div className="TechnicianHours__legend__example__color" style={{ background: '#15803d' }}></div>
+        <div className="TechniciansOverview__legend__example">
+          <div className="TechniciansOverview__legend__example__color" style={{ background: '#15803d' }}></div>
           <span>Has session</span>
         </div>
-        <div className="TechnicianHours__legend__example">
-          <div className="TechnicianHours__legend__example__color" style={{ background: '#eab308' }}></div>
+        <div className="TechniciansOverview__legend__example">
+          <div className="TechniciansOverview__legend__example__color" style={{ background: '#eab308' }}></div>
           <span>Client onboarding</span>
         </div>
-        <div className="TechnicianHours__legend__example">
+        <div className="TechniciansOverview__legend__example">
           <div
-            className="TechnicianHours__legend__example__color"
+            className="TechniciansOverview__legend__example__color"
             style={{ background: striped('black', 'white') }}
           ></div>
           <span>In clinic</span>
@@ -252,7 +258,7 @@ export const TechnicianHours = ({ subList = false }: TechnicianHoursProps) => {
   return (
     <>
       <div className="flex gap-4">
-        <table className="TechnicianHours">
+        <table className="TechniciansOverview">
           <colgroup>
             <col width="24px" />
             <col width="24px" />

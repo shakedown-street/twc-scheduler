@@ -6,9 +6,9 @@ import { Technician } from '~/types/Technician';
 import { RadixDialog, Spinner } from '~/ui';
 import { ClientForm } from '../ClientForm/ClientForm';
 import { TechnicianForm } from '../TechnicianForm/TechnicianForm';
-import './ClientTechnicianMatrix.scss';
+import './MatrixOverview.scss';
 
-export const ClientTechnicianMatrix = () => {
+export const MatrixOverview = () => {
   const [clients, setClients] = React.useState<Client[]>([]);
   const [loadingClients, setLoadingClients] = React.useState(true);
   const [technicians, setTechnicians] = React.useState<Technician[]>([]);
@@ -149,7 +149,7 @@ export const ClientTechnicianMatrix = () => {
 
   return (
     <>
-      <table className="ClientTechnicianMatrix">
+      <table className="MatrixOverview">
         <thead>
           <tr>
             <th></th>

@@ -1,8 +1,8 @@
 import { Helmet } from 'react-helmet';
 import { useSearchParams } from 'react-router-dom';
-import { ClientOverview } from '~/components/ClientOverview/ClientOverview';
-import { ClientTechnicianMatrix } from '~/components/ClientTechnicianMatrix/ClientTechnicianMatrix';
-import { TechnicianHours } from '~/components/TechnicianHours/TechnicianHours';
+import { ClientsOverview } from '~/components/ClientsOverview/ClientsOverview';
+import { MatrixOverview } from '~/components/MatrixOverview/MatrixOverview';
+import { TechniciansOverview } from '~/components/TechniciansOverview/TechniciansOverview';
 import { Container, TabItem, Tabs } from '~/ui';
 
 export const Overview = () => {
@@ -38,9 +38,9 @@ export const Overview = () => {
             </TabItem>
           </Tabs>
           <div>
-            {getTab() === 'clients' && <ClientOverview />}
-            {getTab() === 'technicians' && <TechnicianHours />}
-            {getTab() === 'matrix' && <ClientTechnicianMatrix />}
+            {getTab() === 'clients' && <ClientsOverview />}
+            {getTab() === 'technicians' && <TechniciansOverview />}
+            {getTab() === 'matrix' && <MatrixOverview />}
           </div>
         </div>
       </Container>
