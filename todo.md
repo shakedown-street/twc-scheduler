@@ -9,13 +9,13 @@ Requested by Alycen and Amy:
   - when setting a tech's availability, you need to be able to indicate if this is a regular availability, or available for sub
   - new page to see all subs
   - on sheet one, show sub availability as solid blue
-- additional table on the schedule page:
-  - tech name | blocks for the day | total hours | requested hours
 
 Other:
 
-- Reduce memory usage when switching days on the schedule (rendering all the appointments is slow)
-- Polish the schedule page
+- Add a way to select past technicians for clients
+- Improve displaying of recommended subs on appointment hover
+- add table on sublist showing all current and past techs for clients
+- Polish up the schedule
 
 Done:
 
@@ -52,3 +52,4 @@ Done:
 - Refetch clients/techs after creating/updating/deleting an availability to refresh backend calculated fields
 - Allow updating/deleting technicians from overview pages
 - Disabled signup, email verification, and password reset
+- Add technicians table on schedule page, showing their hours and blocks for the day

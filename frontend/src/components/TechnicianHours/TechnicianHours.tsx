@@ -13,10 +13,10 @@ import { TechnicianForm } from '../TechnicianForm/TechnicianForm';
 import './TechnicianHours.scss';
 
 export type TechnicianHoursProps = {
-  subList: boolean;
+  subList?: boolean;
 };
 
-export const TechnicianHours = ({ subList }: TechnicianHoursProps) => {
+export const TechnicianHours = ({ subList = false }: TechnicianHoursProps) => {
   const [technicians, setTechnicians] = React.useState<Technician[]>([]);
   const [techniciansLoading, setTechniciansLoading] = React.useState(true);
   const [technicianForm, setTechnicianForm] = React.useState<{

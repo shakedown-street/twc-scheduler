@@ -3,6 +3,7 @@ import { Helmet } from 'react-helmet';
 import { useSearchParams } from 'react-router-dom';
 import { ClientModel } from '~/api';
 import { AppointmentForm } from '~/components/AppointmentForm/AppointmentForm';
+import { TechnicianDayOverview } from '~/components/TechnicianDayOverview/TechnicianDayOverview';
 import { TimeSlotTable } from '~/components/TimeSlotTable/TimeSlotTable';
 import { useBlocks } from '~/contexts/BlocksContext';
 import { useAuth } from '~/features/auth/contexts/AuthContext';
@@ -132,7 +133,7 @@ export const Schedule = () => {
   }
 
   if (clientsLoading) {
-    return <Spinner className="mt-8" message="Loading schedule..." />;
+    return <Spinner className="mt-8" message="Loading clients..." />;
   }
 
   return (
@@ -160,17 +161,24 @@ export const Schedule = () => {
               Friday
             </TabItem>
           </Tabs>
-          <TimeSlotTable
-            blocks={blocks}
-            clients={clients}
-            day={getDay()}
-            onClickAvailabilitySlot={(client, block, availability) => {
-              openAppointmentForm(client, getDay(), block, availability);
-            }}
-            onClickAppointmentSlot={(client, block, appointment, availability) => {
-              openAppointmentForm(client, getDay(), block, availability, appointment);
-            }}
-          />
+          <div className="flex gap-4 align-start">
+            <div className="flex-1">
+              <TimeSlotTable
+                blocks={blocks}
+                clients={clients}
+                day={getDay()}
+                onClickAvailabilitySlot={(client, block, availability) => {
+                  openAppointmentForm(client, getDay(), block, availability);
+                }}
+                onClickAppointmentSlot={(client, block, appointment, availability) => {
+                  openAppointmentForm(client, getDay(), block, availability, appointment);
+                }}
+              />
+            </div>
+            <div>
+              <TechnicianDayOverview day={getDay()} />
+            </div>
+          </div>
         </div>
       </Container>
       <RadixDialog
