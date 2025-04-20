@@ -93,9 +93,9 @@ export const TechnicianHours = ({ subList }: TechnicianHoursProps) => {
     closeTechnicianForm();
   }
 
-  function renderBlock(client: Technician, day: number, block: Block, blockIndex: number) {
-    const blockAppointments = getBlockAppointments(client.appointments || [], day, block) || [];
-    const blockAvailabilities = getBlockAvailabilities(client.availabilities || [], day, block) || [];
+  function renderBlock(technician: Technician, day: number, block: Block, blockIndex: number) {
+    const blockAppointments = getBlockAppointments(technician.appointments || [], day, block) || [];
+    const blockAvailabilities = getBlockAvailabilities(technician.availabilities || [], day, block) || [];
     const nonSubAvailabilities = blockAvailabilities.filter((a) => !a.is_sub);
     const isAvailableToSub = blockAvailabilities.length > 0 && blockAppointments.length < 1;
 
@@ -159,7 +159,7 @@ export const TechnicianHours = ({ subList }: TechnicianHoursProps) => {
     // Render availability blocks
     if (nonSubAvailabilities.length > 0) {
       let background = '#cbd5e1'; // tw-slate-300
-      if (client.is_maxed_on_sessions) {
+      if (technician.is_maxed_on_sessions) {
         background = 'black';
       }
       return (
@@ -169,12 +169,12 @@ export const TechnicianHours = ({ subList }: TechnicianHoursProps) => {
             background,
             borderLeftWidth,
             borderRightWidth,
-            color: client.is_maxed_on_sessions ? '#ef4444' : '#22c55e', // tw-red-500 : tw-green-500
+            color: technician.is_maxed_on_sessions ? '#ef4444' : '#22c55e', // tw-red-500 : tw-green-500
             textAlign: 'center',
             fontWeight: 'bold',
           }}
         >
-          {client.is_maxed_on_sessions ? 'M' : 'A'}
+          {technician.is_maxed_on_sessions ? 'M' : 'A'}
         </td>
       );
     }
@@ -200,8 +200,8 @@ export const TechnicianHours = ({ subList }: TechnicianHoursProps) => {
             <div className="TechnicianHours__legend__example__color" style={{ background: '#404040' }}></div>
             <span>Unavailable</span>
           </div>
-          <div className="ClientHours__legend__example">
-            <div className="ClientHours__legend__example__color" style={{ background: '#eab308' }}></div>
+          <div className="TechnicianHours__legend__example">
+            <div className="TechnicianHours__legend__example__color" style={{ background: '#eab308' }}></div>
             <span>Available to sub</span>
           </div>
         </div>
@@ -214,14 +214,14 @@ export const TechnicianHours = ({ subList }: TechnicianHoursProps) => {
           <div className="TechnicianHours__legend__example__color" style={{ background: '#404040' }}></div>
           <span>Unavailable</span>
         </div>
-        <div className="ClientHours__legend__example">
-          <div className="ClientHours__legend__example__color" style={{ background: '#cbd5e1', color: '#22c55e' }}>
+        <div className="TechnicianHours__legend__example">
+          <div className="TechnicianHours__legend__example__color" style={{ background: '#cbd5e1', color: '#22c55e' }}>
             A
           </div>
           <span>Available</span>
         </div>
-        <div className="ClientHours__legend__example">
-          <div className="ClientHours__legend__example__color" style={{ background: 'black', color: '#b91c1c' }}>
+        <div className="TechnicianHours__legend__example">
+          <div className="TechnicianHours__legend__example__color" style={{ background: 'black', color: '#b91c1c' }}>
             M
           </div>
           <span>Maxed on sessions</span>
