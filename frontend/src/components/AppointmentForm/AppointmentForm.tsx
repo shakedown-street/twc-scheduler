@@ -305,6 +305,14 @@ export const AppointmentForm = ({
           </Badge>
         </div>
       </div>
+      {client.notes && (
+        <div className="AppointmentForm__row AppointmentForm__row--notes">
+          <div className="Input__container">
+            <label>Client notes</label>
+            <div className="AppointmentForm__notes">{client.notes}</div>
+          </div>
+        </div>
+      )}
       <div className="AppointmentForm__row">
         <div className="Input__container">
           <label>Day</label>
@@ -443,7 +451,7 @@ export const AppointmentForm = ({
           )}
         />
       )}
-      <Textarea fluid label="Notes" rows={6} {...form.register('notes')} />
+      <Textarea fluid label="Appointment notes" rows={6} {...form.register('notes')} />
       <ul className="AppointmentForm__warnings">
         {warnings.map((warning, index) => (
           <li key={index}>{warning}</li>
