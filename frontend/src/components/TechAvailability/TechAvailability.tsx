@@ -277,6 +277,7 @@ export const TechAvailability = () => {
               <tr key={technician.id}>
                 <td>{index + 1}</td>
                 <td
+                  className="text-nowrap"
                   style={{
                     background: technician.bg_color,
                   }}

@@ -167,7 +167,8 @@ export const TechnicianDayOverview = ({ day }: TechnicianDayOverviewProps) => {
             <col width="24px" />
             <col width="24px" />
             <col />
-            <col width="192px" />
+            <col />
+            <col />
             <col />
             <col />
             <col width="24px" />
@@ -193,9 +194,7 @@ export const TechnicianDayOverview = ({ day }: TechnicianDayOverviewProps) => {
                     borderLeftWidth: blockIndex === 0 ? '6px' : '1px',
                     borderRightWidth: blockIndex === blocks.length - 1 ? '6px' : '1px',
                   }}
-                >
-                  {blockIndex + 1}
-                </th>
+                ></th>
               ))}
             </tr>
           </thead>
@@ -218,7 +217,7 @@ export const TechnicianDayOverview = ({ day }: TechnicianDayOverviewProps) => {
                     <span className="material-symbols-outlined text-color-green text-size-sm display-block">check</span>
                   )}
                 </td>
-                <td style={{ background: technician.bg_color, color: technician.text_color }}>
+                <td className="text-nowrap" style={{ background: technician.bg_color, color: technician.text_color }}>
                   <a
                     className="cursor-pointer"
                     onClick={() => {

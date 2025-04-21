@@ -282,7 +282,7 @@ export const ClientAvailability = () => {
             {clients.map((client, index) => (
               <tr key={client.id}>
                 <td>{index + 1}</td>
-                <td>
+                <td className="text-nowrap">
                   <a
                     className="cursor-pointer"
                     onClick={() => {

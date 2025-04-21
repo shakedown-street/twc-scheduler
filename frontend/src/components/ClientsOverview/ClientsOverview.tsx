@@ -202,7 +202,7 @@ export const ClientsOverview = () => {
             <col width="24px" />
             <col width="24px" />
             <col />
-            <col width="192px" />
+            <col />
             <col />
             <col />
             <col />
@@ -269,7 +269,7 @@ export const ClientsOverview = () => {
                     <span className="material-symbols-outlined text-color-green text-size-sm display-block">check</span>
                   )}
                 </td>
-                <td>
+                <td className="text-nowrap">
                   <a
                     className="cursor-pointer"
                     onClick={() => {

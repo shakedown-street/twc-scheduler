@@ -1,6 +1,5 @@
 import clsx from 'clsx';
 import React from 'react';
-import { Link } from 'react-router-dom';
 import { AppointmentModel } from '~/api';
 import { Appointment } from '~/types/Appointment';
 import { Technician } from '~/types/Technician';
@@ -68,13 +67,13 @@ export const AppointmentHover = ({ appointment }: AppointmentHoverProps) => {
           {appointment.in_clinic ? 'check_circle' : 'cancel'}
         </span>
       </div>
-      <div className="AppointmentHover__row AppointmentHover__row--recommendedSubs">
-        <label>
-          <span className="material-symbols-outlined">swap_horiz</span> Recommended Subs:
-        </label>
-        <div className="AppointmentHover__recommendedSubs">
-          {recommendedSubs.length > 0 ? (
-            recommendedSubs.map((sub) => (
+      {recommendedSubs.length > 0 && (
+        <div className="AppointmentHover__row AppointmentHover__row--recommendedSubs">
+          <label>
+            <span className="material-symbols-outlined">swap_horiz</span> Recommended subs:
+          </label>
+          <div className="AppointmentHover__recommendedSubs">
+            {recommendedSubs.map((sub) => (
               <Badge
                 key={sub.id}
                 radius="sm"
@@ -86,14 +85,10 @@ export const AppointmentHover = ({ appointment }: AppointmentHoverProps) => {
               >
                 {sub.first_name} {sub.last_name}
               </Badge>
-            ))
-          ) : (
-            <div className="AppointmentHover__noRecommendedSubs">
-              No automatic match found. Visit the <Link to="/sub-list">Sub List</Link> to find a sub.
-            </div>
-          )}
+            ))}
+          </div>
         </div>
-      </div>
+      )}
       {appointment.notes && (
         <div className="AppointmentHover__row AppointmentHover__row--notes">
           <div className="AppointmentHover__notes">{appointment.notes}</div>

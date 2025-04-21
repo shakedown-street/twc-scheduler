@@ -110,9 +110,15 @@ export const TimeSlotTable = ({
 
   return (
     <table className="TimeSlotTable">
+      <colgroup>
+        <col />
+        {timeSlots.map((slot) => (
+          <col key={slot} width="28px" />
+        ))}
+      </colgroup>
       <thead>
         <tr>
-          <th>Client</th>
+          <th></th>
           {timeSlots.map((slot) => (
             <th
               key={slot}
@@ -131,7 +137,7 @@ export const TimeSlotTable = ({
       <tbody>
         {clients.map((client) => (
           <tr key={client.id}>
-            <td>
+            <td className="text-nowrap">
               {client.first_name} {client.last_name}
             </td>
             {timeSlots.map((slot) => {

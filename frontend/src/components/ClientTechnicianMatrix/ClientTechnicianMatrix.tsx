@@ -189,7 +189,7 @@ export const ClientTechnicianMatrix = () => {
               <React.Fragment key={client.id}>
                 <tr>
                   <td>{index + 1}</td>
-                  <td key={client.id}>
+                  <td className="text-nowrap" style={{ textAlign: 'left' }}>
                     <a
                       className="cursor-pointer"
                       onClick={() => {

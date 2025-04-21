@@ -141,7 +141,7 @@ export const Schedule = () => {
       <Helmet>
         <title>Schedule | Schedule Builder</title>
       </Helmet>
-      <Container>
+      <Container fluid>
         <div className="mt-4 mb-12">
           <h1>Schedule</h1>
           <Tabs className="mb-4">
@@ -162,22 +162,18 @@ export const Schedule = () => {
             </TabItem>
           </Tabs>
           <div className="flex gap-4 align-start">
-            <div className="flex-1">
-              <TimeSlotTable
-                blocks={blocks}
-                clients={clients}
-                day={getDay()}
-                onClickAvailabilitySlot={(client, block, availability) => {
-                  openAppointmentForm(client, getDay(), block, availability);
-                }}
-                onClickAppointmentSlot={(client, block, appointment, availability) => {
-                  openAppointmentForm(client, getDay(), block, availability, appointment);
-                }}
-              />
-            </div>
-            <div>
-              <TechnicianDayOverview day={getDay()} />
-            </div>
+            <TimeSlotTable
+              blocks={blocks}
+              clients={clients}
+              day={getDay()}
+              onClickAvailabilitySlot={(client, block, availability) => {
+                openAppointmentForm(client, getDay(), block, availability);
+              }}
+              onClickAppointmentSlot={(client, block, appointment, availability) => {
+                openAppointmentForm(client, getDay(), block, availability, appointment);
+              }}
+            />
+            <TechnicianDayOverview day={getDay()} />
           </div>
         </div>
       </Container>

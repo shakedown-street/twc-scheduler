@@ -292,7 +292,7 @@ export const TechniciansOverview = ({ subList = false }: TechniciansOverviewProp
             <col width="24px" />
             <col width="24px" />
             <col />
-            <col width="192px" />
+            <col />
             {!subList && (
               <>
                 <col />
@@ -369,7 +369,7 @@ export const TechniciansOverview = ({ subList = false }: TechniciansOverviewProp
                     <span className="material-symbols-outlined text-color-green text-size-sm display-block">check</span>
                   )}
                 </td>
-                <td style={{ background: technician.bg_color, color: technician.text_color }}>
+                <td className="text-nowrap" style={{ background: technician.bg_color, color: technician.text_color }}>
                   <a
                     className="cursor-pointer"
                     onClick={() => {
