@@ -67,6 +67,22 @@ export const AppointmentHover = ({ appointment }: AppointmentHoverProps) => {
           {appointment.in_clinic ? 'check_circle' : 'cancel'}
         </span>
       </div>
+      {appointment.client?.notes && (
+        <div className="AppointmentHover__row AppointmentHover__row--notes">
+          <label>
+            <span className="material-symbols-outlined">note</span> Client notes:
+          </label>
+          <div className="AppointmentHover__notes">{appointment.client?.notes}</div>
+        </div>
+      )}
+      {appointment.notes && (
+        <div className="AppointmentHover__row AppointmentHover__row--notes">
+          <label>
+            <span className="material-symbols-outlined">note</span> Appointment notes:
+          </label>
+          <div className="AppointmentHover__notes">{appointment.notes}</div>
+        </div>
+      )}
       {recommendedSubs.length > 0 && (
         <div className="AppointmentHover__row AppointmentHover__row--recommendedSubs">
           <label>
@@ -87,11 +103,6 @@ export const AppointmentHover = ({ appointment }: AppointmentHoverProps) => {
               </Badge>
             ))}
           </div>
-        </div>
-      )}
-      {appointment.notes && (
-        <div className="AppointmentHover__row AppointmentHover__row--notes">
-          <div className="AppointmentHover__notes">{appointment.notes}</div>
         </div>
       )}
     </div>

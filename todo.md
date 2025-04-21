@@ -11,11 +11,11 @@ Requested by Alycen and Amy:
 
 Other:
 
+- Add table on sublist showing all current and past techs for clients
 - Add a way to select past technicians for clients
+- Add a way to select who can't sub for a client
 - Improve displaying of recommended subs on appointment hover
-- add table on sublist showing all current and past techs for clients
-- add ability to edit clients from time slot table
-- Polish up the schedule
+- Add ability to edit clients from time slot table
 
 Done:
 
@@ -54,3 +54,5 @@ Done:
 - Disabled signup, email verification, and password reset
 - Add technicians table on schedule page, showing their hours and blocks for the day
 - Show sub availability as blue on technicians overview
+- Make technician day overview a drawer instead of always visible on the schedule
+- Add readonly client notes on appointment hover and appointment form
