@@ -74,8 +74,6 @@ export const TechnicianDayOverview = ({ day }: TechnicianDayOverviewProps) => {
   function renderBlock(technician: Technician, block: Block, blockIndex: number) {
     const blockAppointments = getBlockAppointments(technician.appointments || [], day, block) || [];
     const blockAvailabilities = getBlockAvailabilities(technician.availabilities || [], day, block) || [];
-    const nonSubAvailabilities = blockAvailabilities.filter((a) => !a.is_sub);
-    const isAvailableToSub = blockAvailabilities.length > 0 && blockAppointments.length < 1;
 
     const borderLeftWidth = blockIndex === 0 ? '6px' : '1px';
     const borderRightWidth = blockIndex === blocks.length - 1 ? '6px' : '1px';
@@ -108,10 +106,19 @@ export const TechnicianDayOverview = ({ day }: TechnicianDayOverviewProps) => {
     }
 
     // Render availability blocks
-    if (nonSubAvailabilities.length > 0) {
+    if (blockAvailabilities.length > 0) {
       let background = '#cbd5e1'; // tw-slate-300
+      let color = '#22c55e'; // tw-green-500
+      let letter = 'A';
       if (technician.is_maxed_on_sessions) {
         background = 'black';
+        color = '#ef4444'; // tw-red-500
+        letter = 'M';
+      }
+      if (blockAvailabilities[0].is_sub) {
+        background = '#1d4ed8'; // tw-blue-700
+        color = 'white';
+        letter = 'S';
       }
       return (
         <td
@@ -120,26 +127,13 @@ export const TechnicianDayOverview = ({ day }: TechnicianDayOverviewProps) => {
             background,
             borderLeftWidth,
             borderRightWidth,
-            color: technician.is_maxed_on_sessions ? '#ef4444' : '#22c55e', // tw-red-500 : tw-green-500
+            color,
             textAlign: 'center',
             fontWeight: 'bold',
           }}
         >
-          {technician.is_maxed_on_sessions ? 'M' : 'A'}
+          {letter}
         </td>
-      );
-    }
-
-    if (isAvailableToSub) {
-      return (
-        <td
-          key={block.id}
-          style={{
-            background: '#1d4ed8', // tw-blue-700
-            borderLeftWidth,
-            borderRightWidth,
-          }}
-        ></td>
       );
     }
 
