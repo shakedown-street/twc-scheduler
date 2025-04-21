@@ -11,12 +11,14 @@ import { Appointment } from '~/types/Appointment';
 import { Availability } from '~/types/Availability';
 import { Block } from '~/types/Block';
 import { Client } from '~/types/Client';
-import { Container, RadixDialog, Spinner, TabItem, Tabs } from '~/ui';
+import { Button, Container, RadixDialog, Spinner, TabItem, Tabs } from '~/ui';
+import { dayToString } from '~/utils/time';
 import './Schedule.scss';
 
 export const Schedule = () => {
   const [clients, setClients] = React.useState<Client[]>([]);
   const [clientsLoading, setClientsLoading] = React.useState(true);
+  const [technicianDayOverviewOpen, setTechnicianDayOverviewOpen] = React.useState(false);
   const [appointmentForm, setAppointmentForm] = React.useState<{
     open: boolean;
     client?: Client;
@@ -141,40 +143,42 @@ export const Schedule = () => {
       <Helmet>
         <title>Schedule | Schedule Builder</title>
       </Helmet>
-      <Container fluid>
+      <Container>
         <div className="mt-4 mb-12">
           <h1>Schedule</h1>
-          <Tabs className="mb-4">
-            <TabItem active={getDay() === 0} onClick={() => setDay(0)}>
-              Monday
-            </TabItem>
-            <TabItem active={getDay() === 1} onClick={() => setDay(1)}>
-              Tuesday
-            </TabItem>
-            <TabItem active={getDay() === 2} onClick={() => setDay(2)}>
-              Wednesday
-            </TabItem>
-            <TabItem active={getDay() === 3} onClick={() => setDay(3)}>
-              Thursday
-            </TabItem>
-            <TabItem active={getDay() === 4} onClick={() => setDay(4)}>
-              Friday
-            </TabItem>
-          </Tabs>
-          <div className="flex gap-4 align-start">
-            <TimeSlotTable
-              blocks={blocks}
-              clients={clients}
-              day={getDay()}
-              onClickAvailabilitySlot={(client, block, availability) => {
-                openAppointmentForm(client, getDay(), block, availability);
-              }}
-              onClickAppointmentSlot={(client, block, appointment, availability) => {
-                openAppointmentForm(client, getDay(), block, availability, appointment);
-              }}
-            />
-            <TechnicianDayOverview day={getDay()} />
+          <div className="flex align-center justify-between mb-4">
+            <Tabs>
+              <TabItem active={getDay() === 0} onClick={() => setDay(0)}>
+                Monday
+              </TabItem>
+              <TabItem active={getDay() === 1} onClick={() => setDay(1)}>
+                Tuesday
+              </TabItem>
+              <TabItem active={getDay() === 2} onClick={() => setDay(2)}>
+                Wednesday
+              </TabItem>
+              <TabItem active={getDay() === 3} onClick={() => setDay(3)}>
+                Thursday
+              </TabItem>
+              <TabItem active={getDay() === 4} onClick={() => setDay(4)}>
+                Friday
+              </TabItem>
+            </Tabs>
+            <Button color="primary" onClick={() => setTechnicianDayOverviewOpen(true)} variant="ghost">
+              {dayToString(getDay())} Technician Overview
+            </Button>
           </div>
+          <TimeSlotTable
+            blocks={blocks}
+            clients={clients}
+            day={getDay()}
+            onClickAvailabilitySlot={(client, block, availability) => {
+              openAppointmentForm(client, getDay(), block, availability);
+            }}
+            onClickAppointmentSlot={(client, block, appointment, availability) => {
+              openAppointmentForm(client, getDay(), block, availability, appointment);
+            }}
+          />
         </div>
       </Container>
       <RadixDialog
@@ -201,6 +205,19 @@ export const Schedule = () => {
               instance={appointmentForm.instance}
             />
           )}
+        </div>
+      </RadixDialog>
+      <RadixDialog
+        asDrawer
+        title="Technician Day Overview"
+        open={technicianDayOverviewOpen}
+        onOpenChange={(open) => {
+          setTechnicianDayOverviewOpen(open);
+        }}
+      >
+        <div className="p-6">
+          <h3 className="mb-4">Technician Overview for {dayToString(getDay())}</h3>
+          <TechnicianDayOverview day={getDay()} />
         </div>
       </RadixDialog>
     </>
