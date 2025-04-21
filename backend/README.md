@@ -1,120 +1,81 @@
 # Schedule Builder Backend
 
-- [Django](https://www.djangoproject.com/)
-- [Django REST Framework](https://www.django-rest-framework.org/)
+The backend for the Schedule Builder application is built using Django and Django REST Framework. It provides the core functionality for managing technicians, clients, appointments, and intelligent scheduling.
 
-## Setting up a development environment
+## Requirements
 
-### [Recommended development tools][recommended-development-tools]
+- Python 3.9+
+- Django 4.2
+- PostgreSQL
+- Docker (optional, for containerized development)
 
-[recommended-development-tools]: https://dev.izeni.net/izeni/izeni-django-template/-/wikis/recommended-development-tools
+## Setup
 
-### Classic method
+### Local Development
 
-Install python requirements
+1. Clone the repository:
 
-```bash
-pip install -r requirements.txt
-```
+   ```bash
+   git clone <repository-url>
+   cd schedule-builder/backend
+   ```
 
-Migrate the database
+2. Create a virtual environment and activate it:
 
-```bash
-./manage.py migrate
-```
+   ```bash
+   python3 -m venv venv
+   source venv/bin/activate
+   ```
 
-Create a superuser to access the admin
+3. Install dependencies:
 
-```bash
-./manage.py createsuperuser
-```
+   ```bash
+   pip install -r requirements.txt
+   ```
 
-Start a development webserver
+4. Apply migrations:
 
-```bash
-./manage.py runserver
-```
+   ```bash
+   python manage.py migrate
+   ```
 
-### Docker method
+5. Run the development server:
+   ```bash
+   python manage.py runserver
+   ```
 
-Build and start the stack:
+### Using Docker
 
-```bash
-docker-compose up -d
-```
+1. Build and start the containers:
 
-Create a superuser to access the admin:
+   ```bash
+   docker-compose up -d
+   ```
 
-```bash
-docker-compose exec backend ./manage.py createsuperuser
-```
+2. Access the application at `http://localhost:8000`.
 
-## Typical development tasks
+## Testing
 
-### Admin
-
-Visit the admin in your browser at: [http://localhost:8000/admin](http://localhost:8000/admin)
-
-### Lint
-
-```bash
-make lint
-```
-
--or-
-
-```bash
-docker-compose exec backend make lint
-```
-
-### Test
+Run the test suite using:
 
 ```bash
 make test
 ```
 
--or-
+## Linting
+
+Ensure code quality with:
 
 ```bash
-docker-compose exec backend make test
+make lint
 ```
 
-### Coverage
+## Deployment
 
-```bash
-make coverage
-```
+1. Use the production Docker Compose file:
 
--or-
+   ```bash
+   docker-compose -f docker-compose.prod.yml up -d
+   ```
 
-```bash
-docker-compose exec backend make coverage
-```
-
-### Django shell
-
-Enter a Django shell:
-
-```bash
-make shell
-```
-
--or-
-
-```bash
-docker-compose exec backend make shell
-```
-
-### Postgres shell
-
-Enter a PostgresQL shell connected to the project database:
-
-```bash
-su postgres -c "psql schedule_builder"
-```
-
--or-
-
-```bash
-docker exec -it schedule_builder_database_1 su postgres -c "psql schedule_builder"
-```
+2. Ensure environment variables are set for production (e.g., database credentials, secret keys).
