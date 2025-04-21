@@ -1,6 +1,4 @@
-# Schedule Builder - Project Documentation
-
-## Overview
+# Schedule Builder
 
 The Schedule Builder is a specialized web application designed to efficiently match therapy technicians with clients based on complex scheduling requirements. The system's core strength lies in its sophisticated matching algorithm that automatically finds available technicians who meet all client requirements, significantly reducing the time and effort needed for appointment scheduling.
 
