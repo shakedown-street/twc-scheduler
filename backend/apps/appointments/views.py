@@ -7,10 +7,11 @@ from apps.accounts.permissions import (
     IsSuperUserOrReadOnly,
     IsSuperUserOrReadOnlyAuthenticated,
 )
+
 from .matcher import (
     find_available_technicians,
-    find_repeatable_appointment_days,
     find_recommended_subs,
+    find_repeatable_appointment_days,
     get_appointment_warnings,
 )
 from .models import Appointment, Availability, Block, Client, Technician
@@ -19,6 +20,7 @@ from .serializers import (
     AvailabilitySerializer,
     BlockSerialzier,
     ClientSerializer,
+    TechnicianBasicSerializer,
     TechnicianSerializer,
 )
 
@@ -81,7 +83,7 @@ class AppointmentViewSet(viewsets.ModelViewSet):
         appointment = self.get_object()
         recommended_subs = find_recommended_subs(appointment)
 
-        serializer = TechnicianSerializer(
+        serializer = TechnicianBasicSerializer(
             recommended_subs,
             many=True,
             context={"request": request},
@@ -107,14 +109,18 @@ class AvailabilityViewSet(
 class BlockViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Block.objects.all()
     serializer_class = BlockSerialzier
-    # Unauthed users can see blocks
+    # NOTE: Unauthed users can see blocks
     permission_classes = [
         IsSuperUserOrReadOnly,
     ]
 
 
 class ClientViewSet(viewsets.ModelViewSet):
-    queryset = Client.objects.prefetch_related("availabilities", "appointments").all()
+    queryset = Client.objects.prefetch_related(
+        "availabilities",
+        "appointments",
+        "past_technicians",
+    ).all()
     serializer_class = ClientSerializer
     permission_classes = [
         IsSuperUserOrReadOnlyAuthenticated,
@@ -159,7 +165,7 @@ class ClientViewSet(viewsets.ModelViewSet):
             end_time,
             instance=appointment if appointment else None,
         )
-        serializer = TechnicianSerializer(
+        serializer = TechnicianBasicSerializer(
             available_technicians,
             many=True,
             context={"request": request},

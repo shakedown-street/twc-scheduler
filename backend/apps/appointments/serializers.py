@@ -3,13 +3,13 @@ from rest_framework import serializers
 from .models import Appointment, Availability, Block, Client, Technician
 
 
-class AppointmentClientSerializer(serializers.ModelSerializer):
+class ClientBasicSerializer(serializers.ModelSerializer):
     class Meta:
         model = Client
         fields = "__all__"
 
 
-class AppointmentTechnicianSerializer(serializers.ModelSerializer):
+class TechnicianBasicSerializer(serializers.ModelSerializer):
     class Meta:
         model = Technician
         fields = "__all__"
@@ -29,10 +29,10 @@ class AppointmentSerializer(serializers.ModelSerializer):
     def to_representation(self, instance):
         data = super().to_representation(instance)
 
-        data["client"] = AppointmentClientSerializer(
+        data["client"] = ClientBasicSerializer(
             instance.client, context=self.context
         ).data
-        data["technician"] = AppointmentTechnicianSerializer(
+        data["technician"] = TechnicianBasicSerializer(
             instance.technician, context=self.context
         ).data
 
@@ -85,10 +85,11 @@ class ClientSerializer(serializers.ModelSerializer):
         data = super().to_representation(instance)
         request = self.context.get("request")
 
-        data["total_hours_available"] = instance.total_hours_available
-        data["total_hours"] = instance.total_hours
-        data["total_hours_by_day"] = instance.total_hours_by_day
-        data["is_maxed_on_sessions"] = instance.is_maxed_on_sessions
+        if request and request.query_params.get("expand_properties"):
+            data["total_hours_available"] = instance.total_hours_available
+            data["total_hours"] = instance.total_hours
+            data["total_hours_by_day"] = instance.total_hours_by_day
+            data["is_maxed_on_sessions"] = instance.is_maxed_on_sessions
 
         if request and request.query_params.get("expand_appointments"):
             data["appointments"] = AppointmentSerializer(
@@ -100,6 +101,26 @@ class ClientSerializer(serializers.ModelSerializer):
         if request and request.query_params.get("expand_availabilities"):
             data["availabilities"] = AvailabilitySerializer(
                 instance.availabilities.all(),
+                many=True,
+                context=self.context,
+            ).data
+
+        if request and request.query_params.get("expand_technicians"):
+            current_technician_ids = instance.appointments.values_list(
+                "technician__id",
+                flat=True,
+            )
+            current_technicians_qs = Technician.objects.filter(
+                id__in=current_technician_ids,
+            ).distinct()
+            data["current_technicians"] = TechnicianBasicSerializer(
+                current_technicians_qs,
+                many=True,
+                context=self.context,
+            ).data
+
+            data["past_technicians"] = TechnicianBasicSerializer(
+                instance.past_technicians.all(),
                 many=True,
                 context=self.context,
             ).data
@@ -116,10 +137,11 @@ class TechnicianSerializer(serializers.ModelSerializer):
         data = super().to_representation(instance)
         request = self.context.get("request")
 
-        data["total_hours_available"] = instance.total_hours_available
-        data["total_hours"] = instance.total_hours
-        data["total_hours_by_day"] = instance.total_hours_by_day
-        data["is_maxed_on_sessions"] = instance.is_maxed_on_sessions
+        if request and request.query_params.get("expand_properties"):
+            data["total_hours_available"] = instance.total_hours_available
+            data["total_hours"] = instance.total_hours
+            data["total_hours_by_day"] = instance.total_hours_by_day
+            data["is_maxed_on_sessions"] = instance.is_maxed_on_sessions
 
         if request and request.query_params.get("expand_appointments"):
             data["appointments"] = AppointmentSerializer(
