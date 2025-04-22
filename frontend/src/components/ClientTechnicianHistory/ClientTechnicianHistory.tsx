@@ -121,8 +121,8 @@ export const ClientTechnicianHistory = () => {
                 <td style={{ background: skillLevelColor(client.req_skill_level), textAlign: 'center' }}>
                   {client.req_skill_level}
                 </td>
-                <td>{displayTechnicians(client.current_technicians || [])}</td>
-                <td>{displayTechnicians(client.past_technicians || [])}</td>
+                <td>{displayTechnicians(client.current_technicians)}</td>
+                <td>{displayTechnicians(client.past_technicians)}</td>
                 <td>{client.sub_notes}</td>
               </tr>
             ))}

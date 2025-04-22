@@ -1,5 +1,6 @@
 import { Appointment } from './Appointment';
 import { Availability } from './Availability';
+import { Technician } from './Technician';
 
 export type Client = {
   id: string;
