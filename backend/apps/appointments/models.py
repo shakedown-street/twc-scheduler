@@ -77,14 +77,18 @@ class Technician(UUIDPrimaryKeyMixin, TimestampMixin):
 class Client(UUIDPrimaryKeyMixin, TimestampMixin):
     first_name = models.CharField(max_length=30)
     last_name = models.CharField(max_length=30)
-    eval_done = models.BooleanField(default=False)
-    is_onboarding = models.BooleanField(default=False)
     prescribed_hours = models.IntegerField(default=0)
     req_skill_level = models.IntegerField(
         default=1, validators=[MinValueValidator(1), MaxValueValidator(3)]
     )
     req_spanish_speaking = models.BooleanField(default=False)
+    eval_done = models.BooleanField(default=False)
+    is_onboarding = models.BooleanField(default=False)
     notes = models.TextField(blank=True)
+    sub_notes = models.TextField(
+        blank=True,
+        help_text="Notes regarding subbing.  E.g 'No males'",
+    )
     past_technicians = models.ManyToManyField(
         Technician,
         related_name="past_clients",
