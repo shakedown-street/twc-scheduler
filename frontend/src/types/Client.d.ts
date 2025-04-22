@@ -21,4 +21,6 @@ export type Client = {
   // Sometimes available
   appointments?: Appointment[];
   availabilities?: Availability[];
+  current_technicians?: Technician[];
+  past_technicians?: Technician[];
 };
