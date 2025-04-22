@@ -23,6 +23,7 @@ export type ClientFormData = {
   req_skill_level: number;
   req_spanish_speaking: boolean;
   notes: string;
+  sub_notes: string;
   past_technicians: string[];
 };
 
@@ -46,6 +47,7 @@ export const ClientForm = ({ client, onCancel, onCreate, onDelete, onUpdate }: C
       req_skill_level: client.req_skill_level,
       req_spanish_speaking: client.req_spanish_speaking,
       notes: client.notes,
+      sub_notes: client.sub_notes,
       past_technicians: client.past_technicians as string[],
     });
   }, [client, form.reset]);
@@ -123,12 +125,14 @@ export const ClientForm = ({ client, onCancel, onCreate, onDelete, onUpdate }: C
       <div className="ClientForm__row">
         <Input
           fluid
+          id="prescribed_hours"
           label="Prescribed Hours"
           type="number"
           {...form.register('prescribed_hours', { required: true })}
         />
         <Input
           fluid
+          id="req_skill_level"
           label="Required Skill Level"
           min={1}
           max={3}
@@ -139,12 +143,31 @@ export const ClientForm = ({ client, onCancel, onCreate, onDelete, onUpdate }: C
       <Toggle label="Require Spanish Speaking" {...form.register('req_spanish_speaking')} />
       <Toggle label="Evaluation Done" {...form.register('eval_done')} />
       <Toggle label="Currently Onboarding" {...form.register('is_onboarding')} />
-      <Textarea rows={3} fluid label="Notes" style={{ resize: 'none' }} {...form.register('notes')} />
+      <Textarea
+        rows={3}
+        fluid
+        id="notes"
+        label="Notes"
+        inputSize="xs"
+        style={{ resize: 'none' }}
+        {...form.register('notes')}
+      />
+      <Textarea
+        rows={3}
+        fluid
+        id="sub_notes"
+        label="Sub Notes"
+        inputSize="xs"
+        placeholder='E.g. "No males"'
+        style={{ resize: 'none' }}
+        {...form.register('sub_notes')}
+      />
       {technicians.length > 0 && (
         <div>
           <Select
             className="ClientForm__pastTechnicians"
             label="Past Technicians"
+            id="past_technicians"
             fluid
             multiple
             inputSize="xs"
@@ -156,11 +179,7 @@ export const ClientForm = ({ client, onCancel, onCreate, onDelete, onUpdate }: C
               </option>
             ))}
           </Select>
-          <div className="hint mt-1">
-            Technicians that have worked with this client in the past.
-            <br />
-            Hold down “Control”, or “Command” on a Mac, to select more than one.
-          </div>
+          <div className="hint mt-1">Hold down “Control”, or “Command” on a Mac, to select more than one.</div>
         </div>
       )}
       <div className="ClientForm__actions">

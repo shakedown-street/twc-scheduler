@@ -13,6 +13,7 @@ export type Client = {
   req_skill_level: number;
   req_spanish_speaking: boolean;
   notes: string;
+  sub_notes: string;
   is_maxed_on_sessions: boolean;
   total_hours_available: number;
   total_hours: number;
