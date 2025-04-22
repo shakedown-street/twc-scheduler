@@ -13,10 +13,11 @@ import { TechnicianForm } from '../TechnicianForm/TechnicianForm';
 import './TechniciansOverview.scss';
 
 export type TechniciansOverviewProps = {
-  subList?: boolean;
+  isSubList?: boolean;
+  showLegend?: boolean;
 };
 
-export const TechniciansOverview = ({ subList = false }: TechniciansOverviewProps) => {
+export const TechniciansOverview = ({ isSubList = false, showLegend = true }: TechniciansOverviewProps) => {
   const [technicians, setTechnicians] = React.useState<Technician[]>([]);
   const [techniciansLoading, setTechniciansLoading] = React.useState(true);
   const [technicianForm, setTechnicianForm] = React.useState<{
@@ -38,6 +39,7 @@ export const TechniciansOverview = ({ subList = false }: TechniciansOverviewProp
       page_size: 1000,
       expand_appointments: true,
       expand_availabilities: true,
+      expand_properties: true,
     })
       .then((technicians) => {
         setTechnicians(technicians);
@@ -102,7 +104,7 @@ export const TechniciansOverview = ({ subList = false }: TechniciansOverviewProp
     const borderRightWidth = blockIndex === blocks.length - 1 ? '6px' : '1px';
 
     // Render sub list blocks
-    if (subList) {
+    if (isSubList) {
       if (isAvailableToSub) {
         let background = '#1d4ed8'; // tw-blue-700
         let color = 'white';
@@ -208,7 +210,7 @@ export const TechniciansOverview = ({ subList = false }: TechniciansOverviewProp
   }
 
   function renderLegend() {
-    if (subList) {
+    if (isSubList) {
       return (
         <div className="TechniciansOverview__legend">
           <div className="TechniciansOverview__legend__example">
@@ -293,7 +295,7 @@ export const TechniciansOverview = ({ subList = false }: TechniciansOverviewProp
             <col width="24px" />
             <col />
             <col />
-            {!subList && (
+            {!isSubList && (
               <>
                 <col />
                 <col />
@@ -319,7 +321,7 @@ export const TechniciansOverview = ({ subList = false }: TechniciansOverviewProp
               <th title="Skill level"></th>
               <th title="Spanish speaker">Spa</th>
               <th title="Name"></th>
-              {!subList && (
+              {!isSubList && (
                 <>
                   <th>Mon</th>
                   <th>Tue</th>
@@ -383,7 +385,7 @@ export const TechniciansOverview = ({ subList = false }: TechniciansOverviewProp
                     {technician.first_name} {technician.last_name}
                   </a>
                 </td>
-                {!subList && (
+                {!isSubList && (
                   <>
                     <td style={{ textAlign: 'center' }}>{technician.total_hours_by_day[0]}</td>
                     <td style={{ textAlign: 'center' }}>{technician.total_hours_by_day[1]}</td>
@@ -414,7 +416,7 @@ export const TechniciansOverview = ({ subList = false }: TechniciansOverviewProp
               </tr>
             ))}
           </tbody>
-          {!subList && (
+          {!isSubList && (
             <tfoot>
               <tr>
                 <td colSpan={4} style={{ textAlign: 'center' }}>
@@ -460,7 +462,7 @@ export const TechniciansOverview = ({ subList = false }: TechniciansOverviewProp
             </tfoot>
           )}
         </table>
-        {renderLegend()}
+        {showLegend && renderLegend()}
       </div>
       {technicianForm.technician && (
         <RadixDialog

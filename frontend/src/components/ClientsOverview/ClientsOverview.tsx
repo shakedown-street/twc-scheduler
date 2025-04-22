@@ -34,6 +34,7 @@ export const ClientsOverview = () => {
       page_size: 1000,
       expand_appointments: true,
       expand_availabilities: true,
+      expand_properties: true,
     })
       .then((clients) => {
         setClients(clients);
