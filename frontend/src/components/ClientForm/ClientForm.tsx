@@ -1,8 +1,9 @@
 import React from 'react';
 import { useForm } from 'react-hook-form';
-import { ClientModel } from '~/api';
+import { ClientModel, TechnicianModel } from '~/api';
 import { Client } from '~/types/Client';
-import { Button, Input, Textarea, Toggle, useToast } from '~/ui';
+import { Technician } from '~/types/Technician';
+import { Button, Input, Select, Textarea, Toggle, useToast } from '~/ui';
 import './ClientForm.scss';
 
 export type ClientFormProps = {
@@ -22,23 +23,14 @@ export type ClientFormData = {
   req_skill_level: number;
   req_spanish_speaking: boolean;
   notes: string;
+  past_technicians: string[];
 };
 
 export const ClientForm = ({ client, onCancel, onCreate, onDelete, onUpdate }: ClientFormProps) => {
   const [confirmDelete, setConfirmDelete] = React.useState(false);
+  const [technicians, setTechnicians] = React.useState<Technician[]>([]);
 
-  const form = useForm<ClientFormData>({
-    defaultValues: {
-      first_name: client?.first_name ?? '',
-      last_name: client?.last_name ?? '',
-      eval_done: client?.eval_done ?? false,
-      is_onboarding: client?.is_onboarding ?? false,
-      prescribed_hours: client?.prescribed_hours ?? 0,
-      req_skill_level: client?.req_skill_level ?? 1,
-      req_spanish_speaking: client?.req_spanish_speaking ?? false,
-      notes: client?.notes ?? '',
-    },
-  });
+  const form = useForm<ClientFormData>();
   const toast = useToast();
 
   React.useEffect(() => {
@@ -54,8 +46,17 @@ export const ClientForm = ({ client, onCancel, onCreate, onDelete, onUpdate }: C
       req_skill_level: client.req_skill_level,
       req_spanish_speaking: client.req_spanish_speaking,
       notes: client.notes,
+      past_technicians: client.past_technicians as string[],
     });
   }, [client, form.reset]);
+
+  React.useEffect(() => {
+    TechnicianModel.all({
+      page_size: 1000,
+    }).then((technicians) => {
+      setTechnicians(technicians);
+    });
+  }, []);
 
   function clickDelete() {
     setConfirmDelete(true);
@@ -135,10 +136,33 @@ export const ClientForm = ({ client, onCancel, onCreate, onDelete, onUpdate }: C
           {...form.register('req_skill_level', { required: true })}
         />
       </div>
-      <Toggle label="Evaluation Done" {...form.register('eval_done')} />
       <Toggle label="Require Spanish Speaking" {...form.register('req_spanish_speaking')} />
+      <Toggle label="Evaluation Done" {...form.register('eval_done')} />
       <Toggle label="Currently Onboarding" {...form.register('is_onboarding')} />
-      <Textarea rows={4} fluid label="Notes" style={{ resize: 'none' }} {...form.register('notes')} />
+      <Textarea rows={3} fluid label="Notes" style={{ resize: 'none' }} {...form.register('notes')} />
+      {technicians.length > 0 && (
+        <div>
+          <Select
+            className="ClientForm__pastTechnicians"
+            label="Past Technicians"
+            fluid
+            multiple
+            inputSize="xs"
+            {...form.register('past_technicians')}
+          >
+            {technicians.map((technician) => (
+              <option key={technician.id} value={technician.id}>
+                {technician.first_name} {technician.last_name}
+              </option>
+            ))}
+          </Select>
+          <div className="hint mt-1">
+            Technicians that have worked with this client in the past.
+            <br />
+            Hold down “Control”, or “Command” on a Mac, to select more than one.
+          </div>
+        </div>
+      )}
       <div className="ClientForm__actions">
         {client && (
           <Button color="red" onClick={clickDelete}>

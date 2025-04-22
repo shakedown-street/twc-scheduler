@@ -28,4 +28,9 @@
       justify-content: flex-end;
     }
   }
+
+  &__pastTechnicians {
+    height: auto;
+    min-height: 6rem;
+  }
 }
