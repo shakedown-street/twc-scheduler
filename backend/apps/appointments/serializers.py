@@ -1,6 +1,13 @@
 from rest_framework import serializers
 
-from .models import Appointment, Availability, Block, Client, Technician
+from .models import (
+    Appointment,
+    Availability,
+    Block,
+    Client,
+    Technician,
+    TherapyAppointment,
+)
 
 
 class ClientBasicSerializer(serializers.ModelSerializer):
@@ -161,5 +168,20 @@ class TechnicianSerializer(serializers.ModelSerializer):
                 many=True,
                 context=self.context,
             ).data
+
+        return data
+
+
+class TherapyAppointmentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = TherapyAppointment
+        fields = "__all__"
+
+    def to_representation(self, instance):
+        data = super().to_representation(instance)
+
+        data["client"] = ClientBasicSerializer(
+            instance.client, context=self.context
+        ).data
 
         return data

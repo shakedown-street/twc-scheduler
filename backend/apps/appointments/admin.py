@@ -1,10 +1,17 @@
 from django.contrib import admin
 
-from .models import Appointment, Availability, Block, Client, Technician
+from .models import (
+    Appointment,
+    Availability,
+    Block,
+    Client,
+    Technician,
+    TherapyAppointment,
+)
 
 
 @admin.register(Appointment)
-class Appointment(admin.ModelAdmin):
+class AppointmentAdmin(admin.ModelAdmin):
     list_display = (
         "client",
         "technician",
@@ -50,4 +57,15 @@ class TechnicianAdmin(admin.ModelAdmin):
         "last_name",
         "skill_level",
         "spanish_speaking",
+    )
+
+
+@admin.register(TherapyAppointment)
+class TherapyAppointmentAdmin(admin.ModelAdmin):
+    list_display = (
+        "client",
+        "therapy_type",
+        "day",
+        "start_time",
+        "end_time",
     )

@@ -14,7 +14,14 @@ from .matcher import (
     find_repeatable_appointment_days,
     get_appointment_warnings,
 )
-from .models import Appointment, Availability, Block, Client, Technician
+from .models import (
+    Appointment,
+    Availability,
+    Block,
+    Client,
+    Technician,
+    TherapyAppointment,
+)
 from .serializers import (
     AppointmentSerializer,
     AvailabilitySerializer,
@@ -22,6 +29,7 @@ from .serializers import (
     ClientSerializer,
     TechnicianBasicSerializer,
     TechnicianSerializer,
+    TherapyAppointmentSerializer,
 )
 
 
@@ -220,3 +228,11 @@ class TechnicianViewSet(viewsets.ModelViewSet):
             )
             return Response(serializer.data, status=201)
         raise exceptions.APIException("Failed to create availability for technician.")
+
+
+class TherapyAppointmentViewSet(viewsets.ModelViewSet):
+    queryset = TherapyAppointment.objects.select_related("client").all()
+    serializer_class = TherapyAppointmentSerializer
+    permission_classes = [
+        IsSuperUserOrReadOnlyAuthenticated,
+    ]

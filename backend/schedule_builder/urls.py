@@ -20,6 +20,7 @@ from apps.appointments.views import (
     BlockViewSet,
     ClientViewSet,
     TechnicianViewSet,
+    TherapyAppointmentViewSet,
 )
 
 router = routers.DefaultRouter()
@@ -29,6 +30,11 @@ router.register(r"availabilities", AvailabilityViewSet, "availability")
 router.register(r"blocks", BlockViewSet, "block")
 router.register(r"clients", ClientViewSet, "client")
 router.register(r"technicians", TechnicianViewSet, "technician")
+router.register(
+    r"therapy-appointments",
+    TherapyAppointmentViewSet,
+    "therapy-appointment",
+)
 
 
 # Enable Stripe API endpoints if the secret key is set

@@ -24,11 +24,11 @@ class Technician(UUIDPrimaryKeyMixin, TimestampMixin):
     # generic relation to availabilities
     availabilities = GenericRelation("Availability")
 
-    def __str__(self):
-        return f"{self.first_name} {self.last_name}"
-
     class Meta:
         ordering = ["first_name", "last_name"]
+
+    def __str__(self):
+        return f"{self.first_name} {self.last_name}"
 
     @property
     def total_hours_available(self):
@@ -99,11 +99,11 @@ class Client(UUIDPrimaryKeyMixin, TimestampMixin):
     # generic relation to availabilities
     availabilities = GenericRelation("Availability")
 
-    def __str__(self):
-        return f"{self.first_name} {self.last_name}"
-
     class Meta:
         ordering = ["first_name", "last_name"]
+
+    def __str__(self):
+        return f"{self.first_name} {self.last_name}"
 
     @property
     def total_hours_available(self):
@@ -154,11 +154,11 @@ class Block(models.Model):
     start_time = models.TimeField()
     end_time = models.TimeField()
 
-    def __str__(self):
-        return f"{self.start_time} - {self.end_time}"
-
     class Meta:
         ordering = ["start_time"]
+
+    def __str__(self):
+        return f"{self.start_time} - {self.end_time}"
 
 
 class Availability(UUIDPrimaryKeyMixin, TimestampMixin):
@@ -178,13 +178,13 @@ class Availability(UUIDPrimaryKeyMixin, TimestampMixin):
     )
     in_clinic = models.BooleanField(default=False)
 
-    def __str__(self):
-        return f"{self.object} - D{self.day} ({self.start_time}-{self.end_time})"
-
     class Meta:
         ordering = ["content_type", "object_id", "day", "start_time"]
         verbose_name_plural = "Availabilities"
         unique_together = ["content_type", "object_id", "day", "start_time"]
+
+    def __str__(self):
+        return f"{self.object} - D{self.day} ({self.start_time}-{self.end_time})"
 
 
 class Appointment(UUIDPrimaryKeyMixin, TimestampMixin):
@@ -202,8 +202,42 @@ class Appointment(UUIDPrimaryKeyMixin, TimestampMixin):
     in_clinic = models.BooleanField(default=False)
     notes = models.TextField(blank=True)
 
+    class Meta:
+        ordering = ["client", "technician", "day", "start_time"]
+        unique_together = ["client", "day", "start_time"]
+
     def __str__(self):
         return f"{self.client} - {self.technician} - D{self.day} {self.start_time} - {self.end_time}"
 
+
+class TherapyAppointment(UUIDPrimaryKeyMixin, TimestampMixin):
+    OT = "ot"
+    ST = "st"
+    THERAPY_TYPE_CHOICES = (
+        (OT, "Occupational Therapy"),
+        (ST, "Speech Therapy"),
+    )
+    client = models.ForeignKey(
+        Client, related_name="therapy_appointments", on_delete=models.CASCADE
+    )
+    therapy_type = models.CharField(
+        max_length=2,
+        choices=THERAPY_TYPE_CHOICES,
+        default=OT,
+    )
+    day = models.IntegerField(
+        default=0, validators=[MinValueValidator(0), MaxValueValidator(6)]
+    )
+    start_time = models.TimeField()
+    end_time = models.TimeField()
+    notes = models.TextField(blank=True)
+
     class Meta:
-        ordering = ["client", "technician", "day", "start_time"]
+        ordering = ["client", "day", "start_time"]
+        unique_together = ["client", "day", "start_time"]
+
+    def __str__(self):
+        return f"{self.client} - {self.get_therapy_type_display()} - D{self.day} {self.start_time} - {self.end_time}"
+
+    def get_therapy_type_display(self):
+        return dict(self.THERAPY_TYPE_CHOICES).get(self.therapy_type, "Unknown")
