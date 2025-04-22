@@ -44,40 +44,40 @@ export const ClientTechnicianHistory = () => {
   }
 
   return (
-    <table className="ClientTechnicianHistory">
-      <colgroup>
-        <col />
-        <col width="240px" />
-        <col width="240px" />
-      </colgroup>
-      <thead>
-        <tr>
-          <th>Client</th>
-          <th>Current Technicians</th>
-          <th>Past Technicians</th>
-          {/* <th>Sub Notes</th> */}
-        </tr>
-      </thead>
-      <tbody>
-        {clients.map((client) => (
-          <tr key={client.id}>
-            <td>
-              {client.first_name} {client.last_name}
-            </td>
-            <td>{displayTechnicians(client.current_technicians || [])}</td>
-            <td>
-              <div className="flex align-center gap-1">
-                {displayTechnicians(client.past_technicians || [])}
-                <Button iconLeading="edit" size="xs">
-                  Edit
-                </Button>
-              </div>
-            </td>
-            {/* <td>{client.subNotes}</td> */}
+    <div className="ClientTechnicianHistory__container">
+      <table className="ClientTechnicianHistory">
+        <colgroup>
+          <col />
+          <col width="240px" />
+          <col width="240px" />
+        </colgroup>
+        <thead>
+          <tr>
+            <th>Client</th>
+            <th>Current Technicians</th>
+            <th>Past Technicians</th>
+            {/* <th>Sub Notes</th> */}
           </tr>
-        ))}
-        <tr></tr>
-      </tbody>
-    </table>
+        </thead>
+        <tbody>
+          {clients.map((client) => (
+            <tr key={client.id}>
+              <td>
+                <div className="flex flex-column align-start gap-1">
+                  {client.first_name} {client.last_name}
+                  <Button iconLeading="edit" size="xs">
+                    Edit
+                  </Button>
+                </div>
+              </td>
+              <td>{displayTechnicians(client.current_technicians || [])}</td>
+              <td>{displayTechnicians(client.past_technicians || [])}</td>
+              {/* <td>{client.subNotes}</td> */}
+            </tr>
+          ))}
+          <tr></tr>
+        </tbody>
+      </table>
+    </div>
   );
 };
