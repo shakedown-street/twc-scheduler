@@ -26,7 +26,7 @@ export const AppointmentHover = ({ appointment }: AppointmentHoverProps) => {
         <label>
           <span className="material-symbols-outlined">person</span> Client:
         </label>
-        <Badge radius="sm" size="sm">
+        <Badge size="xs">
           {appointment.client?.first_name} {appointment.client?.last_name}
         </Badge>
       </div>
@@ -35,8 +35,7 @@ export const AppointmentHover = ({ appointment }: AppointmentHoverProps) => {
           <span className="material-symbols-outlined">engineering</span> Technician:
         </label>
         <Badge
-          radius="sm"
-          size="sm"
+          size="xs"
           style={{
             background: appointment.technician?.bg_color,
             color: appointment.technician?.text_color,
@@ -92,8 +91,7 @@ export const AppointmentHover = ({ appointment }: AppointmentHoverProps) => {
             {recommendedSubs.map((sub) => (
               <Badge
                 key={sub.id}
-                radius="sm"
-                size="sm"
+                size="xs"
                 style={{
                   background: sub.bg_color,
                   color: sub.text_color,

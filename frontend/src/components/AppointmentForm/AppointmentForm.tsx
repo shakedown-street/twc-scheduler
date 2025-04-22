@@ -300,7 +300,7 @@ export const AppointmentForm = ({
       <div className="AppointmentForm__row">
         <div className="Input__container">
           <label>Client</label>
-          <Badge size="sm">
+          <Badge size="xs">
             {client.first_name} {client.last_name}
           </Badge>
         </div>

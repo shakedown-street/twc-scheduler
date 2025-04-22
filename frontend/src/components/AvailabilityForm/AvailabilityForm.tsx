@@ -152,13 +152,13 @@ export const AvailabilityForm = ({
         <div className="Input__container">
           <label className="text-capitalize">{contentType}</label>
           {contentType === 'client' && (
-            <Badge size="sm">
+            <Badge size="xs">
               {object.first_name} {object.last_name}
             </Badge>
           )}
           {contentType === 'technician' && (
             <Badge
-              size="sm"
+              size="xs"
               style={{
                 backgroundColor: (object as Technician).bg_color,
                 color: (object as Technician).text_color,

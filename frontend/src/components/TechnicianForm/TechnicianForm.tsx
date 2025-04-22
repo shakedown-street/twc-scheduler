@@ -43,8 +43,6 @@ export const TechnicianForm = ({ technician, onCancel, onCreate, onDelete, onUpd
   });
   const toast = useToast();
 
-  const firstName = form.watch('first_name');
-  const lastName = form.watch('last_name');
   const backgroundColor = form.watch('bg_color');
   const textColor = form.watch('text_color');
 
@@ -163,7 +161,7 @@ export const TechnicianForm = ({ technician, onCancel, onCreate, onDelete, onUpd
           <label htmlFor="text_color">Font Color</label>
           <input id="text_color" type="color" {...form.register('text_color', { required: true })} />
         </div>
-        {(firstName || lastName) && backgroundColor && textColor && (
+        {backgroundColor && textColor && (
           <div className="Input__container">
             <label>Preview</label>
             <Badge
@@ -173,7 +171,7 @@ export const TechnicianForm = ({ technician, onCancel, onCreate, onDelete, onUpd
                 color: textColor,
               }}
             >
-              {firstName} {lastName}
+              Preview
             </Badge>
           </div>
         )}
