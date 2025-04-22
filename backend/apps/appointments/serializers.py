@@ -105,25 +105,26 @@ class ClientSerializer(serializers.ModelSerializer):
                 context=self.context,
             ).data
 
-        if request and request.query_params.get("expand_technicians"):
-            current_technician_ids = instance.appointments.values_list(
-                "technician__id",
-                flat=True,
-            )
-            current_technicians_qs = Technician.objects.filter(
-                id__in=current_technician_ids,
-            ).distinct()
-            data["current_technicians"] = TechnicianBasicSerializer(
-                current_technicians_qs,
-                many=True,
-                context=self.context,
-            ).data
+        # Serialize current technicians from appointments
+        current_technician_ids = instance.appointments.values_list(
+            "technician__id",
+            flat=True,
+        )
+        current_technicians_qs = Technician.objects.filter(
+            id__in=current_technician_ids,
+        ).distinct()
+        data["current_technicians"] = TechnicianBasicSerializer(
+            current_technicians_qs,
+            many=True,
+            context=self.context,
+        ).data
 
-            data["past_technicians"] = TechnicianBasicSerializer(
-                instance.past_technicians.all(),
-                many=True,
-                context=self.context,
-            ).data
+        # Serialize past technicians
+        data["past_technicians"] = TechnicianBasicSerializer(
+            instance.past_technicians.all(),
+            many=True,
+            context=self.context,
+        ).data
 
         return data
 
