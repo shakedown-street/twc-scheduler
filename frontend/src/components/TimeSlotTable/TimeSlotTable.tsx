@@ -4,8 +4,8 @@ import { Availability } from '~/types/Availability';
 import { Block } from '~/types/Block';
 import { Client } from '~/types/Client';
 import { RadixHoverCard } from '~/ui/RadixHoverCard/RadixHoverCard';
-import { striped } from '~/utils/color';
-import { formatTimeTimeline, generateTimeSlots, isBetweenInclusiveStart, isOnTheHour } from '~/utils/time';
+import { skillLevelColor, striped } from '~/utils/color';
+import { dayToString, formatTimeTimeline, generateTimeSlots, isBetweenInclusiveStart, isOnTheHour } from '~/utils/time';
 import { AppointmentHover } from '../AppointmentHover/AppointmentHover';
 import './TimeSlotTable.scss';
 
@@ -118,7 +118,13 @@ export const TimeSlotTable = ({
       </colgroup>
       <thead>
         <tr>
-          <th></th>
+          <th title="Client"></th>
+          <th title="Skill level requirement"></th>
+          <th title="Spanish speaker">Spa</th>
+          <th title="Day hours">{dayToString(day, 'medium')}</th>
+          <th title="Week hours">Week</th>
+          <th title="Hours prescribed">Rx</th>
+          <th title="Available"></th>
           {timeSlots.map((slot) => (
             <th
               key={slot}
@@ -139,6 +145,32 @@ export const TimeSlotTable = ({
           <tr key={client.id}>
             <td className="text-nowrap">
               {client.first_name} {client.last_name}
+            </td>
+            <td style={{ background: skillLevelColor(client.req_skill_level), textAlign: 'center' }}>
+              {client.req_skill_level}
+            </td>
+            <td
+              style={{
+                textAlign: 'center',
+                verticalAlign: 'middle',
+              }}
+            >
+              {client.req_spanish_speaking && (
+                <span className="material-symbols-outlined text-color-green text-size-sm display-block">check</span>
+              )}
+            </td>
+            <td style={{ textAlign: 'center' }}>{client.computed_properties?.total_hours_by_day[day]}</td>
+            <td style={{ textAlign: 'center' }}>{client.computed_properties?.total_hours}</td>
+            <td style={{ textAlign: 'center' }}>{client.prescribed_hours}</td>
+            <td
+              style={{
+                background: 'black',
+                color: client.computed_properties?.is_maxed_on_sessions ? '#ef4444' : '#22c55e', // tw-red-500 : tw-green-500
+                fontWeight: 'bold',
+                textAlign: 'center',
+              }}
+            >
+              {client.computed_properties?.is_maxed_on_sessions ? 'M' : 'A'}
             </td>
             {timeSlots.map((slot) => {
               const slotAppointment = getSlotAppointment(slot, client.appointments || []);

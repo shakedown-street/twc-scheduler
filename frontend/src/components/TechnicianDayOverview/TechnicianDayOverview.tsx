@@ -8,6 +8,7 @@ import { RadixDialog, Spinner } from '~/ui';
 import { RadixHoverCard } from '~/ui/RadixHoverCard/RadixHoverCard';
 import { getBlockAppointments, getBlockAvailabilities } from '~/utils/appointments';
 import { skillLevelColor, striped } from '~/utils/color';
+import { dayToString } from '~/utils/time';
 import { AppointmentHover } from '../AppointmentHover/AppointmentHover';
 import { TechnicianForm } from '../TechnicianForm/TechnicianForm';
 import './TechnicianDayOverview.scss';
@@ -176,9 +177,9 @@ export const TechnicianDayOverview = ({ day }: TechnicianDayOverviewProps) => {
               <th></th>
               <th title="Skill level"></th>
               <th title="Spanish speaker">Spa</th>
-              <th title="Name"></th>
-              <th title="Hours today">Hrs</th>
-              <th title="Hours scheduled">Total</th>
+              <th title="Technician"></th>
+              <th title="Day hours">{dayToString(day, 'medium')}</th>
+              <th title="Week hours">Week</th>
               <th title="Hours requested">Req</th>
               <th title="Available"></th>
               {blocks.map((block, blockIndex) => (

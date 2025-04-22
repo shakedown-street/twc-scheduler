@@ -256,7 +256,7 @@ export const TechAvailability = () => {
           <thead>
             <tr>
               <th className="ClientAvailability__table--vertical"></th>
-              <th className="ClientAvailability__table--vertical" title="Name"></th>
+              <th className="ClientAvailability__table--vertical" title="Technician"></th>
               <th className="ClientAvailability__table--vertical" title="Skill level">
                 Rating
               </th>

@@ -253,7 +253,7 @@ export const ClientAvailability = () => {
           <thead>
             <tr>
               <th className="ClientAvailability__table--vertical"></th>
-              <th title="Name" className="ClientAvailability__table--vertical"></th>
+              <th title="Client" className="ClientAvailability__table--vertical"></th>
               <th title="Skill level requirement" className="ClientAvailability__table--vertical">
                 Rating
               </th>

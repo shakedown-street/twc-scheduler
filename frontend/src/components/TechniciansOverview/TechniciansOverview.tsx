@@ -327,7 +327,7 @@ export const TechniciansOverview = ({ isSubList = false, showLegend = true }: Te
               <th></th>
               <th title="Skill level"></th>
               <th title="Spanish speaker">Spa</th>
-              <th title="Name"></th>
+              <th title="Technician"></th>
               {!isSubList && (
                 <>
                   <th>Mon</th>
@@ -335,7 +335,7 @@ export const TechniciansOverview = ({ isSubList = false, showLegend = true }: Te
                   <th>Wed</th>
                   <th>Thu</th>
                   <th>Fri</th>
-                  <th title="Hours scheduled">Hrs</th>
+                  <th title="Week hours">Week</th>
                   <th title="Hours requested">Req</th>
                   <th title="Available"></th>
                 </>

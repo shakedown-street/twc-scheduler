@@ -2,7 +2,6 @@ Target May 9-16
 
 Other:
 
-- Show client hrs/prescribed hours on scheduling table
 - Add ability to edit clients from time slot table
 - Polish sub list
 - basic scheduling of OT and speech
@@ -52,3 +51,4 @@ Done:
 - Add "sub_notes" field to client to enable indicating who can't sub for a client
 - Add sub notes to the client form and display on the sub list
 - Add ability to edit clients from the ClientTechnicianHistory table
+- Show rating, spanish speaking, day hours, week hours, and prescribed hours on schedule table
