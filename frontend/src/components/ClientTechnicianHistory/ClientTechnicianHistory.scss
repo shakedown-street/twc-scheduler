@@ -4,8 +4,13 @@
 .ClientTechnicianHistory {
   &__container {
     @include scrollbar;
-    height: 50rem;
-    overflow-y: auto;
+    max-height: 50rem;
+    overflow: auto;
+  }
+
+  &__notes {
+    font-size: 0.75rem;
+    white-space: pre-wrap;
   }
 
   thead {

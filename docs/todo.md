@@ -1,19 +1,13 @@
 Target May 9-16
 
-Requested by Alycen and Amy:
-
-- basic scheduling of OT and speech
-  - they're fine with this being very simple. All this needs to do is let you put in appointments that are not tied to a tech, and select
-    whether it is OT or speech. It will show up differently on the schedule, and not at all on sheet 1.
-- sub list
-  - when setting a tech's availability, you need to be able to indicate if this is a regular availability, or available for sub
-  - new page to see all subs
-
 Other:
 
-- Add a way to indicate who can't sub for a client
-- Improve displaying of recommended subs on appointment hover
 - Add ability to edit clients from time slot table
+- Add ability to edit clients from the ClientTechnicianHistory table
+- Show client hrs/prescribed hours on scheduling table
+- Polish sub list
+- basic scheduling of OT and speech
+  - they're fine with this being very simple. All this needs to do is let you put in appointments that are not tied to a tech, and select whether it is OT or speech. It will show up differently on the schedule, and not at all on sheet 1.
 
 Done:
 
@@ -56,3 +50,5 @@ Done:
 - Add readonly client notes on appointment hover and appointment form
 - Add table on the sublist showing all current and past technicians for each client
 - Add a way to select past technicians for a client
+- Add "sub_notes" field to client to enable indicating who can't sub for a client
+- Add sub notes to the client form and display on the sub list

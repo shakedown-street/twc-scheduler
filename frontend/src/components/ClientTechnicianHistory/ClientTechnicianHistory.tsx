@@ -2,7 +2,8 @@ import React from 'react';
 import { ClientModel } from '~/api';
 import { Client } from '~/types/Client';
 import { Technician } from '~/types/Technician';
-import { Badge, Button, Spinner } from '~/ui';
+import { Badge, Spinner } from '~/ui';
+import { skillLevelColor } from '~/utils/color';
 import './ClientTechnicianHistory.scss';
 
 export const ClientTechnicianHistory = () => {
@@ -48,31 +49,32 @@ export const ClientTechnicianHistory = () => {
       <table className="ClientTechnicianHistory">
         <colgroup>
           <col />
+          <col />
+          <col width="240px" />
           <col width="240px" />
           <col width="240px" />
         </colgroup>
         <thead>
           <tr>
             <th>Client</th>
+            <th>Rating</th>
             <th>Current Technicians</th>
             <th>Past Technicians</th>
-            {/* <th>Sub Notes</th> */}
+            <th>Sub Notes</th>
           </tr>
         </thead>
         <tbody>
           {clients.map((client) => (
             <tr key={client.id}>
-              <td>
-                <div className="flex flex-column align-start gap-1">
-                  {client.first_name} {client.last_name}
-                  <Button iconLeading="edit" size="xs">
-                    Edit
-                  </Button>
-                </div>
+              <td className="text-nowrap">
+                {client.first_name} {client.last_name}
+              </td>
+              <td style={{ background: skillLevelColor(client.req_skill_level), textAlign: 'center' }}>
+                {client.req_skill_level}
               </td>
               <td>{displayTechnicians(client.current_technicians || [])}</td>
               <td>{displayTechnicians(client.past_technicians || [])}</td>
-              {/* <td>{client.subNotes}</td> */}
+              <td>{client.sub_notes}</td>
             </tr>
           ))}
           <tr></tr>
