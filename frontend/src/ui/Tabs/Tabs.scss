@@ -2,6 +2,7 @@
 @import '~/scss/variables';
 
 .Tabs {
+  @include scrollbar;
   align-items: center;
   display: flex;
   overflow-x: hidden;

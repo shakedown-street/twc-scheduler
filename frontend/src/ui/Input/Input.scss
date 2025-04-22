@@ -32,6 +32,7 @@
 }
 
 @mixin input-base {
+  @include scrollbar;
   @include input-size(1rem);
   @include sans;
   background: transparent;
