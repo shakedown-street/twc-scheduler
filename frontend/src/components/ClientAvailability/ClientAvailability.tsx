@@ -336,6 +336,7 @@ export const ClientAvailability = () => {
         </table>
       </Card>
       <RadixDialog
+        asDrawer
         title={`${clientForm.client ? 'Update' : 'Create'} Client`}
         open={clientForm.open}
         onOpenChange={(open) => setClientForm({ ...clientForm, open, client: undefined })}

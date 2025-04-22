@@ -466,6 +466,7 @@ export const TechniciansOverview = ({ isSubList = false, showLegend = true }: Te
       </div>
       {technicianForm.technician && (
         <RadixDialog
+          asDrawer
           title={`Update Technician`}
           open={technicianForm.open}
           onOpenChange={(open) => setTechnicianForm({ ...technicianForm, open, technician: undefined })}

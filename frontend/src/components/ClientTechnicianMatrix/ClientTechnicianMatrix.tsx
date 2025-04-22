@@ -234,6 +234,7 @@ export const ClientTechnicianMatrix = () => {
       </table>
       {clientForm.client && (
         <RadixDialog
+          asDrawer
           title={`Update Client`}
           open={clientForm.open}
           onOpenChange={(open) => setClientForm({ ...clientForm, open, client: undefined })}
@@ -253,6 +254,7 @@ export const ClientTechnicianMatrix = () => {
       )}
       {technicianForm.technician && (
         <RadixDialog
+          asDrawer
           title={`Update Technician`}
           open={technicianForm.open}
           onOpenChange={(open) => setTechnicianForm({ ...technicianForm, open, technician: undefined })}

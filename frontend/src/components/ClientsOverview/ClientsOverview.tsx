@@ -358,6 +358,7 @@ export const ClientsOverview = () => {
       </div>
       {clientForm.client && (
         <RadixDialog
+          asDrawer
           title={`Update Client`}
           open={clientForm.open}
           onOpenChange={(open) => setClientForm({ ...clientForm, open, client: undefined })}

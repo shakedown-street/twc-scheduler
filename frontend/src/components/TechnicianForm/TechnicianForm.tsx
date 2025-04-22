@@ -176,7 +176,7 @@ export const TechnicianForm = ({ technician, onCancel, onCreate, onDelete, onUpd
           </div>
         )}
       </div>
-      <Textarea rows={4} fluid label="Notes" style={{ resize: 'none' }} {...form.register('notes')} />
+      <Textarea rows={3} fluid label="Notes" style={{ resize: 'none' }} {...form.register('notes')} />
       <div className="TechnicianForm__actions">
         {technician && (
           <Button color="red" onClick={clickDelete}>

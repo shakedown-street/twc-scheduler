@@ -249,6 +249,7 @@ export const TechnicianDayOverview = ({ day }: TechnicianDayOverviewProps) => {
       </div>
       {technicianForm.technician && (
         <RadixDialog
+          asDrawer
           title={`Update Technician`}
           open={technicianForm.open}
           onOpenChange={(open) => setTechnicianForm({ ...technicianForm, open, technician: undefined })}

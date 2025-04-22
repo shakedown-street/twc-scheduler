@@ -326,6 +326,7 @@ export const TechAvailability = () => {
         </table>
       </Card>
       <RadixDialog
+        asDrawer
         title={`${technicianForm.technician ? 'Update' : 'Create'} Technician`}
         open={technicianForm.open}
         onOpenChange={(open) => setTechnicianForm({ ...technicianForm, open, technician: undefined })}
