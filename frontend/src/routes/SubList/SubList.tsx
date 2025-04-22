@@ -1,4 +1,5 @@
 import { Helmet } from 'react-helmet';
+import { ClientTechnicianHistory } from '~/components/ClientTechnicianHistory/ClientTechnicianHistory';
 import { TechniciansOverview } from '~/components/TechniciansOverview/TechniciansOverview';
 import { Container } from '~/ui';
 import './SubList.scss';
@@ -12,7 +13,10 @@ export const SubList = () => {
       <Container>
         <div className="mt-4 mb-12">
           <h1>Sub List</h1>
-          <TechniciansOverview subList />
+          <div className="flex align-start gap-4">
+            <TechniciansOverview isSubList showLegend={false} />
+            <ClientTechnicianHistory />
+          </div>
         </div>
       </Container>
     </>
