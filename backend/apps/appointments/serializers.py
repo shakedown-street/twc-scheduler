@@ -86,10 +86,12 @@ class ClientSerializer(serializers.ModelSerializer):
         request = self.context.get("request")
 
         if request and request.query_params.get("expand_properties"):
-            data["total_hours_available"] = instance.total_hours_available
-            data["total_hours"] = instance.total_hours
-            data["total_hours_by_day"] = instance.total_hours_by_day
-            data["is_maxed_on_sessions"] = instance.is_maxed_on_sessions
+            data["computed_properties"] = {
+                "total_hours_available": instance.total_hours_available,
+                "total_hours": instance.total_hours,
+                "total_hours_by_day": instance.total_hours_by_day,
+                "is_maxed_on_sessions": instance.is_maxed_on_sessions,
+            }
 
         if request and request.query_params.get("expand_appointments"):
             data["appointments"] = AppointmentSerializer(
@@ -139,10 +141,12 @@ class TechnicianSerializer(serializers.ModelSerializer):
         request = self.context.get("request")
 
         if request and request.query_params.get("expand_properties"):
-            data["total_hours_available"] = instance.total_hours_available
-            data["total_hours"] = instance.total_hours
-            data["total_hours_by_day"] = instance.total_hours_by_day
-            data["is_maxed_on_sessions"] = instance.is_maxed_on_sessions
+            data["computed_properties"] = {
+                "total_hours_available": instance.total_hours_available,
+                "total_hours": instance.total_hours,
+                "total_hours_by_day": instance.total_hours_by_day,
+                "is_maxed_on_sessions": instance.is_maxed_on_sessions,
+            }
 
         if request and request.query_params.get("expand_appointments"):
             data["appointments"] = AppointmentSerializer(

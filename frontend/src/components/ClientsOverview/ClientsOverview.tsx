@@ -45,11 +45,17 @@ export const ClientsOverview = () => {
   }, []);
 
   function totalHoursByDay(day: number) {
-    return clients.reduce((acc, client) => acc + client.total_hours_by_day[day], 0);
+    return clients.reduce(
+      (acc, client) => acc + (client.computed_properties ? client.computed_properties.total_hours_by_day[day] : 0),
+      0
+    );
   }
 
   function totalHours() {
-    return clients.reduce((acc, client) => acc + client.total_hours, 0);
+    return clients.reduce(
+      (acc, client) => acc + (client.computed_properties ? client.computed_properties.total_hours : 0),
+      0
+    );
   }
 
   function totalRequestedHours() {
@@ -128,7 +134,7 @@ export const ClientsOverview = () => {
     // Render availability blocks
     if (blockAvailabilities.length > 0) {
       let background = '#cbd5e1'; // tw-slate-300
-      if (client.is_maxed_on_sessions) {
+      if (client.computed_properties?.is_maxed_on_sessions) {
         background = 'black';
       }
       return (
@@ -138,12 +144,12 @@ export const ClientsOverview = () => {
             background,
             borderLeftWidth,
             borderRightWidth,
-            color: client.is_maxed_on_sessions ? '#ef4444' : '#22c55e', // tw-red-500 : tw-green-500
+            color: client.computed_properties?.is_maxed_on_sessions ? '#ef4444' : '#22c55e', // tw-red-500 : tw-green-500
             textAlign: 'center',
             fontWeight: 'bold',
           }}
         >
-          {client.is_maxed_on_sessions ? 'M' : 'A'}
+          {client.computed_properties?.is_maxed_on_sessions ? 'M' : 'A'}
         </td>
       );
     }
@@ -283,22 +289,22 @@ export const ClientsOverview = () => {
                     {client.first_name} {client.last_name}
                   </a>
                 </td>
-                <td style={{ textAlign: 'center' }}>{client.total_hours_by_day[0]}</td>
-                <td style={{ textAlign: 'center' }}>{client.total_hours_by_day[1]}</td>
-                <td style={{ textAlign: 'center' }}>{client.total_hours_by_day[2]}</td>
-                <td style={{ textAlign: 'center' }}>{client.total_hours_by_day[3]}</td>
-                <td style={{ textAlign: 'center' }}>{client.total_hours_by_day[4]}</td>
-                <td style={{ textAlign: 'center' }}>{client.total_hours}</td>
+                <td style={{ textAlign: 'center' }}>{client.computed_properties?.total_hours_by_day[0]}</td>
+                <td style={{ textAlign: 'center' }}>{client.computed_properties?.total_hours_by_day[1]}</td>
+                <td style={{ textAlign: 'center' }}>{client.computed_properties?.total_hours_by_day[2]}</td>
+                <td style={{ textAlign: 'center' }}>{client.computed_properties?.total_hours_by_day[3]}</td>
+                <td style={{ textAlign: 'center' }}>{client.computed_properties?.total_hours_by_day[4]}</td>
+                <td style={{ textAlign: 'center' }}>{client.computed_properties?.total_hours}</td>
                 <td style={{ textAlign: 'center' }}>{client.prescribed_hours}</td>
                 <td
                   style={{
                     background: 'black',
-                    color: client.is_maxed_on_sessions ? '#ef4444' : '#22c55e', // tw-red-500 : tw-green-500
+                    color: client.computed_properties?.is_maxed_on_sessions ? '#ef4444' : '#22c55e', // tw-red-500 : tw-green-500
                     fontWeight: 'bold',
                     textAlign: 'center',
                   }}
                 >
-                  {client.is_maxed_on_sessions ? 'M' : 'A'}
+                  {client.computed_properties?.is_maxed_on_sessions ? 'M' : 'A'}
                 </td>
                 {days.map((day) => (
                   <React.Fragment key={day}>

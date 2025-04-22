@@ -50,11 +50,18 @@ export const TechniciansOverview = ({ isSubList = false, showLegend = true }: Te
   }, []);
 
   function totalHoursByDay(day: number) {
-    return technicians.reduce((acc, technician) => acc + technician.total_hours_by_day[day], 0);
+    return technicians.reduce(
+      (acc, technician) =>
+        acc + (technician.computed_properties ? technician.computed_properties.total_hours_by_day[day] : 0),
+      0
+    );
   }
 
   function totalHours() {
-    return technicians.reduce((acc, technician) => acc + technician.total_hours, 0);
+    return technicians.reduce(
+      (acc, technician) => acc + (technician.computed_properties ? technician.computed_properties.total_hours : 0),
+      0
+    );
   }
 
   function totalRequestedHours() {
@@ -169,7 +176,7 @@ export const TechniciansOverview = ({ isSubList = false, showLegend = true }: Te
       let background = '#cbd5e1'; // tw-slate-300
       let color = '#22c55e'; // tw-green-500
       let letter = 'A';
-      if (technician.is_maxed_on_sessions) {
+      if (technician.computed_properties?.is_maxed_on_sessions) {
         background = 'black';
         color = '#ef4444'; // tw-red-500
         letter = 'M';
@@ -387,22 +394,22 @@ export const TechniciansOverview = ({ isSubList = false, showLegend = true }: Te
                 </td>
                 {!isSubList && (
                   <>
-                    <td style={{ textAlign: 'center' }}>{technician.total_hours_by_day[0]}</td>
-                    <td style={{ textAlign: 'center' }}>{technician.total_hours_by_day[1]}</td>
-                    <td style={{ textAlign: 'center' }}>{technician.total_hours_by_day[2]}</td>
-                    <td style={{ textAlign: 'center' }}>{technician.total_hours_by_day[3]}</td>
-                    <td style={{ textAlign: 'center' }}>{technician.total_hours_by_day[4]}</td>
-                    <td style={{ textAlign: 'center' }}>{technician.total_hours}</td>
+                    <td style={{ textAlign: 'center' }}>{technician.computed_properties?.total_hours_by_day[0]}</td>
+                    <td style={{ textAlign: 'center' }}>{technician.computed_properties?.total_hours_by_day[1]}</td>
+                    <td style={{ textAlign: 'center' }}>{technician.computed_properties?.total_hours_by_day[2]}</td>
+                    <td style={{ textAlign: 'center' }}>{technician.computed_properties?.total_hours_by_day[3]}</td>
+                    <td style={{ textAlign: 'center' }}>{technician.computed_properties?.total_hours_by_day[4]}</td>
+                    <td style={{ textAlign: 'center' }}>{technician.computed_properties?.total_hours}</td>
                     <td style={{ textAlign: 'center' }}>{technician.requested_hours}</td>
                     <td
                       style={{
                         background: 'black',
-                        color: technician.is_maxed_on_sessions ? '#ef4444' : '#22c55e', // tw-red-500 : tw-green-500
+                        color: technician.computed_properties?.is_maxed_on_sessions ? '#ef4444' : '#22c55e', // tw-red-500 : tw-green-500
                         fontWeight: 'bold',
                         textAlign: 'center',
                       }}
                     >
-                      {technician.is_maxed_on_sessions ? 'M' : 'A'}
+                      {technician.computed_properties?.is_maxed_on_sessions ? 'M' : 'A'}
                     </td>
                   </>
                 )}

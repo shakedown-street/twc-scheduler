@@ -66,7 +66,7 @@ export const ClientAvailability = () => {
   }
 
   function totalAvailableHours() {
-    return clients.reduce((total, client) => total + (client.total_hours_available || 0), 0);
+    return clients.reduce((total, client) => total + (client.computed_properties?.total_hours_available || 0), 0);
   }
 
   function getBlockAvailability(client: Client, day: number, block: Block) {
@@ -320,7 +320,7 @@ export const ClientAvailability = () => {
                   )}
                 </td>
                 <td>{client.prescribed_hours}</td>
-                <td>{client.total_hours_available}</td>
+                <td>{client.computed_properties?.total_hours_available}</td>
                 {renderAvailabilities(client)}
               </tr>
             ))}

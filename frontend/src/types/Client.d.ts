@@ -14,14 +14,16 @@ export type Client = {
   req_spanish_speaking: boolean;
   notes: string;
   sub_notes: string;
-  is_maxed_on_sessions: boolean;
-  total_hours_available: number;
-  total_hours: number;
-  total_hours_by_day: number[];
+  current_technicians: Technician[];
+  past_technicians: Technician[];
 
   // Sometimes available
   appointments?: Appointment[];
   availabilities?: Availability[];
-  current_technicians?: Technician[];
-  past_technicians?: Technician[];
+  computed_properties?: {
+    total_hours_available: number;
+    total_hours: number;
+    total_hours_by_day: number[];
+    is_maxed_on_sessions: boolean;
+  };
 };

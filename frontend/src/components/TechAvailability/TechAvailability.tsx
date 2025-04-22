@@ -66,7 +66,10 @@ export const TechAvailability = () => {
   }
 
   function totalAvailableHours() {
-    return technicians.reduce((total, technician) => total + (technician.total_hours_available || 0), 0);
+    return technicians.reduce(
+      (total, technician) => total + (technician.computed_properties?.total_hours_available || 0),
+      0
+    );
   }
 
   function getBlockAvailability(technician: Technician, day: number, block: Block) {
@@ -310,7 +313,7 @@ export const TechAvailability = () => {
                   )}
                 </td>
                 <td>{technician.requested_hours}</td>
-                <td>{technician.total_hours_available}</td>
+                <td>{technician.computed_properties?.total_hours_available}</td>
                 {renderAvailabilities(technician)}
               </tr>
             ))}

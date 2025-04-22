@@ -111,7 +111,7 @@ export const TechnicianDayOverview = ({ day }: TechnicianDayOverviewProps) => {
       let background = '#cbd5e1'; // tw-slate-300
       let color = '#22c55e'; // tw-green-500
       let letter = 'A';
-      if (technician.is_maxed_on_sessions) {
+      if (technician.computed_properties?.is_maxed_on_sessions) {
         background = 'black';
         color = '#ef4444'; // tw-red-500
         letter = 'M';
@@ -226,18 +226,18 @@ export const TechnicianDayOverview = ({ day }: TechnicianDayOverviewProps) => {
                     {technician.first_name} {technician.last_name}
                   </a>
                 </td>
-                <td style={{ textAlign: 'center' }}>{technician.total_hours_by_day[day]}</td>
-                <td style={{ textAlign: 'center' }}>{technician.total_hours}</td>
+                <td style={{ textAlign: 'center' }}>{technician.computed_properties?.total_hours_by_day[day]}</td>
+                <td style={{ textAlign: 'center' }}>{technician.computed_properties?.total_hours}</td>
                 <td style={{ textAlign: 'center' }}>{technician.requested_hours}</td>
                 <td
                   style={{
                     background: 'black',
-                    color: technician.is_maxed_on_sessions ? '#ef4444' : '#22c55e', // tw-red-500 : tw-green-500
+                    color: technician.computed_properties?.is_maxed_on_sessions ? '#ef4444' : '#22c55e', // tw-red-500 : tw-green-500
                     fontWeight: 'bold',
                     textAlign: 'center',
                   }}
                 >
-                  {technician.is_maxed_on_sessions ? 'M' : 'A'}
+                  {technician.computed_properties?.is_maxed_on_sessions ? 'M' : 'A'}
                 </td>
                 {blocks.map((block, blockIndex) => (
                   <React.Fragment key={block.id}>{renderBlock(technician, block, blockIndex)}</React.Fragment>
