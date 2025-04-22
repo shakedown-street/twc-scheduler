@@ -48,7 +48,7 @@ export const ClientForm = ({ client, onCancel, onCreate, onDelete, onUpdate }: C
       req_spanish_speaking: client.req_spanish_speaking,
       notes: client.notes,
       sub_notes: client.sub_notes,
-      past_technicians: client.past_technicians as string[],
+      past_technicians: client.past_technicians ? client.past_technicians.map((t) => t.id) : [],
     });
   }, [client, form.reset]);
 

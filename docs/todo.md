@@ -2,9 +2,8 @@ Target May 9-16
 
 Other:
 
-- Add ability to edit clients from time slot table
-- Add ability to edit clients from the ClientTechnicianHistory table
 - Show client hrs/prescribed hours on scheduling table
+- Add ability to edit clients from time slot table
 - Polish sub list
 - basic scheduling of OT and speech
   - they're fine with this being very simple. All this needs to do is let you put in appointments that are not tied to a tech, and select whether it is OT or speech. It will show up differently on the schedule, and not at all on sheet 1.
@@ -52,3 +51,4 @@ Done:
 - Add a way to select past technicians for a client
 - Add "sub_notes" field to client to enable indicating who can't sub for a client
 - Add sub notes to the client form and display on the sub list
+- Add ability to edit clients from the ClientTechnicianHistory table
