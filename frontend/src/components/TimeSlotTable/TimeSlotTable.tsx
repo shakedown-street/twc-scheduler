@@ -13,6 +13,7 @@ export type TimeSlotTableProps = {
   blocks: Block[];
   clients: Client[];
   day: number;
+  onClickClient?: (client: Client) => void;
   onClickBlockSlot?: (client: Client, block: Block) => void;
   onClickAvailabilitySlot: (client: Client, block: Block, availability: Availability) => void;
   onClickAppointmentSlot?: (
@@ -27,6 +28,7 @@ export const TimeSlotTable = ({
   blocks,
   clients,
   day,
+  onClickClient,
   onClickBlockSlot,
   onClickAvailabilitySlot,
   onClickAppointmentSlot,
@@ -144,7 +146,14 @@ export const TimeSlotTable = ({
         {clients.map((client) => (
           <tr key={client.id}>
             <td className="text-nowrap">
-              {client.first_name} {client.last_name}
+              <a
+                className="cursor-pointer"
+                onClick={() => {
+                  onClickClient?.(client);
+                }}
+              >
+                {client.first_name} {client.last_name}
+              </a>
             </td>
             <td style={{ background: skillLevelColor(client.req_skill_level), textAlign: 'center' }}>
               {client.req_skill_level}

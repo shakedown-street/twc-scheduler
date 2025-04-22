@@ -3,6 +3,7 @@ import { Helmet } from 'react-helmet';
 import { useSearchParams } from 'react-router-dom';
 import { ClientModel } from '~/api';
 import { AppointmentForm } from '~/components/AppointmentForm/AppointmentForm';
+import { ClientForm } from '~/components/ClientForm/ClientForm';
 import { TechnicianDayOverview } from '~/components/TechnicianDayOverview/TechnicianDayOverview';
 import { TimeSlotTable } from '~/components/TimeSlotTable/TimeSlotTable';
 import { useBlocks } from '~/contexts/BlocksContext';
@@ -33,6 +34,13 @@ export const Schedule = () => {
     block: undefined,
     availability: undefined,
     instance: undefined,
+  });
+  const [clientForm, setClientForm] = React.useState<{
+    open: boolean;
+    client?: Client;
+  }>({
+    open: false,
+    client: undefined,
   });
 
   const [searchParams, setSearchParams] = useSearchParams();
@@ -135,6 +143,32 @@ export const Schedule = () => {
     closeAppointmentForm();
   }
 
+  function openClientForm(client: Client | undefined = undefined) {
+    setClientForm({
+      ...clientForm,
+      open: true,
+      client,
+    });
+  }
+
+  function closeClientForm() {
+    setClientForm({
+      ...clientForm,
+      open: false,
+      client: undefined,
+    });
+  }
+
+  function onUpdateClient(updated: Client) {
+    setClients(clients.map((c) => (c.id === updated.id ? Object.assign({}, c, updated) : c)));
+    closeClientForm();
+  }
+
+  function onDeleteClient(deleted: Client) {
+    setClients(clients.filter((c) => c.id !== deleted.id));
+    closeClientForm();
+  }
+
   if (clientsLoading) {
     return <Spinner className="mt-8" message="Loading clients..." />;
   }
@@ -173,6 +207,12 @@ export const Schedule = () => {
             blocks={blocks}
             clients={clients}
             day={getDay()}
+            onClickClient={(client) => {
+              if (!user?.is_superuser) {
+                return;
+              }
+              openClientForm(client);
+            }}
             onClickAvailabilitySlot={(client, block, availability) => {
               openAppointmentForm(client, getDay(), block, availability);
             }}
@@ -208,6 +248,26 @@ export const Schedule = () => {
           )}
         </div>
       </RadixDialog>
+      {clientForm.client && (
+        <RadixDialog
+          asDrawer
+          title={`Update Client`}
+          open={clientForm.open}
+          onOpenChange={(open) => setClientForm({ ...clientForm, open, client: undefined })}
+        >
+          <div className="p-6">
+            <h3 className="mb-4">Update Client</h3>
+            <ClientForm
+              client={clientForm.client}
+              onCancel={() => {
+                setClientForm({ ...clientForm, open: false, client: undefined });
+              }}
+              onDelete={onDeleteClient}
+              onUpdate={onUpdateClient}
+            />
+          </div>
+        </RadixDialog>
+      )}
       <RadixDialog
         asDrawer
         title="Technician Day Overview"
