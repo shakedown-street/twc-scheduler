@@ -15,11 +15,11 @@ for i in range(43):
     Client.objects.create(
         first_name=fake.first_name(),
         last_name=fake.last_name(),
-        eval_done=fake.boolean(),
-        is_onboarding=fake.boolean(),
         prescribed_hours=fake.random_int(min=8, max=40),
         req_skill_level=fake.random_int(min=1, max=3),
-        req_spanish_speaking=fake.boolean(),
+        req_spanish_speaking=fake.boolean(chance_of_getting_true=10),
+        eval_done=fake.boolean(),
+        is_onboarding=fake.boolean(chance_of_getting_true=10),
     )
 
 for i in range(34):
@@ -27,10 +27,12 @@ for i in range(34):
     Technician.objects.create(
         first_name=fake.first_name(),
         last_name=fake.last_name(),
-        color=fake.hex_color(),
+        bg_color=fake.hex_color(),
+        text_color="#000000",
         requested_hours=fake.random_int(min=20, max=40),
+        max_hours_per_day=fake.random_int(min=3, max=9),
         skill_level=fake.random_int(min=1, max=3),
-        spanish_speaking=fake.boolean(),
+        spanish_speaking=fake.boolean(chance_of_getting_true=25),
     )
 
 for client in Client.objects.all():
@@ -45,7 +47,8 @@ for client in Client.objects.all():
                 day=fake.random_int(min=0, max=4),
                 start_time=random_block.start_time,
                 end_time=random_block.end_time,
-                in_clinic=fake.boolean(),
+                in_clinic=fake.boolean(chance_of_getting_true=75),
+                is_sub=False,
             )
         except IntegrityError:
             print(
@@ -64,7 +67,8 @@ for technician in Technician.objects.all():
                 day=fake.random_int(min=0, max=4),
                 start_time=random_block.start_time,
                 end_time=random_block.end_time,
-                in_clinic=fake.boolean(),
+                in_clinic=True,
+                is_sub=fake.boolean(chance_of_getting_true=10),
             )
         except IntegrityError:
             print(

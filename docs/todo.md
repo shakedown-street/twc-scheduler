@@ -5,7 +5,6 @@ Other:
 - Polish sub list
 - basic scheduling of OT and speech
   - they're fine with this being very simple. All this needs to do is let you put in appointments that are not tied to a tech, and select whether it is OT or speech. It will show up differently on the schedule, and not at all on sheet 1.
-- Squash/restart migrations before pushing to prod
 
 Done:
 
