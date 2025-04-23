@@ -5,9 +5,8 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+    command: [ "npm", "run", "build:production" ]
     volumes:
       - /srv/static/schedule_builder/dist:/frontend/dist:z
-    args:
-      - MODE=:production
     environment:
       NODE_ENV: production

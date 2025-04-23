@@ -7,7 +7,3 @@ COPY package-lock.json ./
 
 RUN npm install
 COPY . .
-
-ARG MODE
-
-RUN npm run build${MODE}
