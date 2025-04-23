@@ -5,6 +5,8 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+    volumes:
+      - /srv/static/schedule_builder/dist:/frontend/dist:z
     args:
       - MODE=:production
     environment:
