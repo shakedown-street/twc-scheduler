@@ -3,9 +3,8 @@ version: "3"
 services:
   database:
     image: postgres:15.3-bullseye
-    environment:
-      POSTGRES_USER: schedule_builder
-      POSTGRES_PASSWORD: schedule_builder
+    env_file:
+      - .env.prod
     volumes:
       - db:/var/lib/postgresql/data
     restart: unless-stopped
@@ -20,28 +19,27 @@ services:
       - database
     ports:
       - 8000:8000
+    env_file:
+      - .env.prod
     environment:
       DJANGO_SETTINGS_MODULE: "schedule_builder.settings.production"
       DB_HOST: database
-      DB_USER: schedule_builder
-      DB_PASS: schedule_builder
-      FQDN: schedule_builder.com
       SCHEMA: https
     restart: unless-stopped
-  keydb:
-    image: bitnami/keydb:latest
-    environment:
-      ALLOW_EMPTY_PASSWORD: "yes"
-      DB_HOST: database
-      DB_USER: schedule_builder
-      DB_PASS: schedule_builder
-      FQDN: schedule_builder.com
-      SCHEMA: https
-  celery_worker:
-    build: .
-    environment:
-      DJANGO_SETTINGS_MODULE: "schedule_builder.settings.production"
-    image: schedule_builder
-    command: bash /schedule_builder/server/celery_worker.sh
+  # keydb:
+  #   image: bitnami/keydb:latest
+  #   environment:
+  #     ALLOW_EMPTY_PASSWORD: "yes"
+  #     DB_HOST: database
+  #     DB_USER: schedule_builder
+  #     DB_PASS: schedule_builder
+  #     FQDN: schedule_builder.com
+  #     SCHEMA: https
+  # celery_worker:
+  #   build: .
+  #   environment:
+  #     DJANGO_SETTINGS_MODULE: "schedule_builder.settings.production"
+  #   image: schedule_builder
+  #   command: bash /schedule_builder/server/celery_worker.sh
 volumes:
   db:
