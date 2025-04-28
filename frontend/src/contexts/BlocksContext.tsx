@@ -1,6 +1,7 @@
 import React from 'react';
 import { BlockModel } from '~/api';
 import { Block } from '~/types/Block';
+import { Spinner } from '~/ui';
 
 export type BlocksContextType = {
   blocks: Block[];
@@ -14,12 +15,22 @@ export type BlocksProviderProps = {
 
 export const BlocksProvider = (props: BlocksProviderProps) => {
   const [blocks, setBlocks] = React.useState<Block[]>([]);
+  const [loading, setLoading] = React.useState(true);
 
   React.useEffect(() => {
-    BlockModel.all().then((blocks) => {
-      setBlocks(blocks);
-    });
+    setLoading(true);
+    BlockModel.all()
+      .then((blocks) => {
+        setBlocks(blocks);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
   }, []);
+
+  if (loading) {
+    return <Spinner className="mt-8" message="Loading blocks..." />;
+  }
 
   return <BlocksContext.Provider value={{ blocks }}>{props.children}</BlocksContext.Provider>;
 };
