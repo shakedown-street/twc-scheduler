@@ -3,6 +3,7 @@ from django.contrib.contenttypes.fields import GenericForeignKey, GenericRelatio
 from django.contrib.contenttypes.models import ContentType
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
+from encrypted_model_fields.fields import EncryptedCharField, EncryptedTextField
 from schedule_builder.mixins import TimestampMixin, UUIDPrimaryKeyMixin
 
 from .utils import get_difference_in_minutes
@@ -11,6 +12,8 @@ from .utils import get_difference_in_minutes
 class Technician(UUIDPrimaryKeyMixin, TimestampMixin):
     first_name = models.CharField(max_length=30)
     last_name = models.CharField(max_length=30)
+    encrypted_first_name = EncryptedCharField(max_length=30)
+    encrypted_last_name = EncryptedCharField(max_length=30)
     bg_color = ColorField(default="#ffffff")
     text_color = ColorField(default="#000000")
     requested_hours = models.IntegerField(default=40)
@@ -20,6 +23,7 @@ class Technician(UUIDPrimaryKeyMixin, TimestampMixin):
     )
     spanish_speaking = models.BooleanField(default=False)
     notes = models.TextField(blank=True)
+    encrypted_notes = EncryptedTextField(blank=True)
 
     # generic relation to availabilities
     availabilities = GenericRelation("Availability")
@@ -77,6 +81,8 @@ class Technician(UUIDPrimaryKeyMixin, TimestampMixin):
 class Client(UUIDPrimaryKeyMixin, TimestampMixin):
     first_name = models.CharField(max_length=30)
     last_name = models.CharField(max_length=30)
+    encrypted_first_name = EncryptedCharField(max_length=30)
+    encrypted_last_name = EncryptedCharField(max_length=30)
     prescribed_hours = models.IntegerField(default=0)
     req_skill_level = models.IntegerField(
         default=1, validators=[MinValueValidator(1), MaxValueValidator(3)]
@@ -89,6 +95,8 @@ class Client(UUIDPrimaryKeyMixin, TimestampMixin):
         blank=True,
         help_text="Notes regarding subbing.  E.g 'No males'",
     )
+    encrypted_notes = EncryptedTextField(blank=True)
+    encrypted_sub_notes = EncryptedTextField(blank=True)
     past_technicians = models.ManyToManyField(
         Technician,
         related_name="past_clients",
@@ -201,6 +209,7 @@ class Appointment(UUIDPrimaryKeyMixin, TimestampMixin):
     end_time = models.TimeField()
     in_clinic = models.BooleanField(default=False)
     notes = models.TextField(blank=True)
+    encrypted_notes = EncryptedTextField(blank=True)
 
     class Meta:
         ordering = ["client", "technician", "day", "start_time"]
@@ -231,6 +240,7 @@ class TherapyAppointment(UUIDPrimaryKeyMixin, TimestampMixin):
     start_time = models.TimeField()
     end_time = models.TimeField()
     notes = models.TextField(blank=True)
+    encrypted_notes = EncryptedTextField(blank=True)
 
     class Meta:
         ordering = ["client", "day", "start_time"]

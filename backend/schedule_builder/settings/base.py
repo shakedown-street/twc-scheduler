@@ -61,6 +61,7 @@ INSTALLED_APPS = (
     "corsheaders",
     "django_extensions",
     "django_filters",
+    "encrypted_model_fields",
     "knox",
     "rest_framework",
     # "social_django",
@@ -209,9 +210,17 @@ REST_FRAMEWORK = {
 
 REST_KNOX = {
     "AUTO_REFRESH": True,
-    "TOKEN_TTL": timedelta(days=2),
+    "TOKEN_TTL": timedelta(hours=1),
     "USER_SERIALIZER": "apps.accounts.serializers.EmailUserSerializer",
 }
+
+
+# django-encrypted-model-fields
+
+FIELD_ENCRYPTION_KEY = os.environ.get(
+    "FIELD_ENCRYPTION_KEY",
+    "Z80Ja1Pn1AhFZmEnnMByEfZjVspYeAFs3jlb6IBQWFo=",  # DEVELOPMENT ONLY
+)
 
 
 # social-auth-app-django
