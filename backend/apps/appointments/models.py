@@ -1,3 +1,4 @@
+from auditlog.registry import auditlog
 from colorfield.fields import ColorField
 from django.contrib.contenttypes.fields import GenericForeignKey, GenericRelation
 from django.contrib.contenttypes.models import ContentType
@@ -242,3 +243,12 @@ class TherapyAppointment(UUIDPrimaryKeyMixin, TimestampMixin):
 
     def get_therapy_type_display(self):
         return dict(self.THERAPY_TYPE_CHOICES).get(self.therapy_type, "Unknown")
+
+
+# Register the models with auditlog
+auditlog.register(Technician)
+auditlog.register(Client)
+auditlog.register(Block)
+auditlog.register(Availability)
+auditlog.register(Appointment)
+auditlog.register(TherapyAppointment)
