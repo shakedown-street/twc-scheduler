@@ -1,3 +1,4 @@
+from auditlog.registry import auditlog
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
 from django.core.mail import send_mail
 from django.db import models
@@ -70,3 +71,6 @@ class EmailUser(AbstractBaseUser, PermissionsMixin, UUIDPrimaryKeyMixin):
     ) -> None:
         """Sends an email to this User."""
         send_mail(subject, message, from_email, [self.email], **kwargs)
+
+
+auditlog.register(EmailUser)
