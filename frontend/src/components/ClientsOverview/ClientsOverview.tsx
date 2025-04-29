@@ -8,6 +8,7 @@ import { RadixDialog, Spinner } from '~/ui';
 import { RadixHoverCard } from '~/ui/RadixHoverCard/RadixHoverCard';
 import { getBlockAppointments, getBlockAvailabilities } from '~/utils/appointments';
 import { dayColor, skillLevelColor, striped } from '~/utils/color';
+import { orderByFirstName } from '~/utils/order';
 import { AppointmentHover } from '../AppointmentHover/AppointmentHover';
 import { ClientForm } from '../ClientForm/ClientForm';
 import './ClientsOverview.scss';
@@ -37,7 +38,7 @@ export const ClientsOverview = () => {
       expand_properties: true,
     })
       .then((clients) => {
-        setClients(clients);
+        setClients(orderByFirstName<Client>(clients));
       })
       .finally(() => {
         setClientsLoading(false);

@@ -4,6 +4,7 @@ import { useAuth } from '~/features/auth/contexts/AuthContext';
 import { Client } from '~/types/Client';
 import { Technician } from '~/types/Technician';
 import { RadixDialog, Spinner } from '~/ui';
+import { orderByFirstName } from '~/utils/order';
 import { ClientForm } from '../ClientForm/ClientForm';
 import { TechnicianForm } from '../TechnicianForm/TechnicianForm';
 import './ClientTechnicianMatrix.scss';
@@ -38,7 +39,7 @@ export const ClientTechnicianMatrix = () => {
       expand_appointments: true,
     })
       .then((clients) => {
-        setClients(clients);
+        setClients(orderByFirstName<Client>(clients));
       })
       .finally(() => {
         setLoadingClients(false);
@@ -47,7 +48,7 @@ export const ClientTechnicianMatrix = () => {
       page_size: 1000,
     })
       .then((technicians) => {
-        setTechnicians(technicians);
+        setTechnicians(orderByFirstName<Technician>(technicians));
       })
       .finally(() => {
         setLoadingTechnicians(false);

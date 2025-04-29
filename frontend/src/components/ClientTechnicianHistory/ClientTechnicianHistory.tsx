@@ -5,6 +5,7 @@ import { Client } from '~/types/Client';
 import { Technician } from '~/types/Technician';
 import { Badge, RadixDialog, Spinner } from '~/ui';
 import { skillLevelColor } from '~/utils/color';
+import { orderByFirstName } from '~/utils/order';
 import { ClientForm } from '../ClientForm/ClientForm';
 import './ClientTechnicianHistory.scss';
 
@@ -28,7 +29,7 @@ export const ClientTechnicianHistory = () => {
       page_size: 1000,
       expand_technicians: true,
     }).then((clients) => {
-      setClients(clients);
+      setClients(orderByFirstName<Client>(clients));
       setClientsLoading(false);
     });
   }, []);

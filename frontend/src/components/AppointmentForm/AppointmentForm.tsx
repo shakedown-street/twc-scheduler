@@ -8,6 +8,7 @@ import { Block } from '~/types/Block';
 import { Client } from '~/types/Client';
 import { Technician } from '~/types/Technician';
 import { Badge, Button, IconButton, RadixTooltip, Select, Textarea, TimeInput, Toggle, useToast } from '~/ui';
+import { orderByFirstName } from '~/utils/order';
 import { dayToString } from '~/utils/time';
 import './AppointmentForm.scss';
 
@@ -163,7 +164,7 @@ export const AppointmentForm = ({
       }
     )
       .then((technicians) => {
-        setAvailableTechnicians(technicians.data as Technician[]);
+        setAvailableTechnicians(orderByFirstName<Technician>(technicians.data));
       })
       .finally(() => {
         setAvailableTechniciansLoaded(true);
@@ -174,7 +175,7 @@ export const AppointmentForm = ({
     TechnicianModel.all({
       page_size: 1000,
     }).then((technicians) => {
-      setAllTechnicians(technicians);
+      setAllTechnicians(orderByFirstName<Technician>(technicians));
     });
   }
 

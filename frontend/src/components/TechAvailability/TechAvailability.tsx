@@ -11,6 +11,7 @@ import { Technician } from '~/types/Technician';
 import { Button, Card, Checkbox, RadixDialog, Spinner } from '~/ui';
 import { isFullBlock } from '~/utils/appointments';
 import { skillLevelColor } from '~/utils/color';
+import { orderByFirstName } from '~/utils/order';
 import { formatTimeShort, isBetweenInclusiveEnd, isBetweenInclusiveStart } from '~/utils/time';
 import './TechAvailability.scss';
 
@@ -54,7 +55,7 @@ export const TechAvailability = () => {
       expand_properties: true,
     })
       .then((technicians) => {
-        setTechnicians(technicians);
+        setTechnicians(orderByFirstName<Technician>(technicians));
       })
       .finally(() => {
         setTechniciansLoading(false);

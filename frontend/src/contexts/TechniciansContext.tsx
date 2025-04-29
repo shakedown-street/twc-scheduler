@@ -4,6 +4,7 @@ import { Appointment } from '~/types/Appointment';
 import { Availability } from '~/types/Availability';
 import { Technician } from '~/types/Technician';
 import { Spinner } from '~/ui';
+import { orderByFirstName } from '~/utils/order';
 
 // Not in use ATM
 
@@ -38,7 +39,7 @@ export const TechniciansProvider = (props: TechniciansProviderProps) => {
       expand_appointments: true,
     })
       .then((technicians) => {
-        setTechnicians(technicians);
+        setTechnicians(orderByFirstName<Technician>(technicians));
       })
       .finally(() => {
         setLoading(false);

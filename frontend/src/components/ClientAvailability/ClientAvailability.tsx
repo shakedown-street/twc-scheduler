@@ -11,6 +11,7 @@ import { Client } from '~/types/Client';
 import { Button, Card, Checkbox, RadixDialog, Spinner } from '~/ui';
 import { isFullBlock } from '~/utils/appointments';
 import { skillLevelColor } from '~/utils/color';
+import { orderByFirstName } from '~/utils/order';
 import { formatTimeShort, isBetweenInclusiveEnd, isBetweenInclusiveStart } from '~/utils/time';
 import './ClientAvailability.scss';
 
@@ -54,7 +55,7 @@ export const ClientAvailability = () => {
       expand_properties: true,
     })
       .then((clients) => {
-        setClients(clients);
+        setClients(orderByFirstName<Client>(clients));
       })
       .finally(() => {
         setClientsLoading(false);

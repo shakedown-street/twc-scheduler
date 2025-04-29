@@ -8,6 +8,7 @@ import { RadixDialog, Spinner } from '~/ui';
 import { RadixHoverCard } from '~/ui/RadixHoverCard/RadixHoverCard';
 import { getBlockAppointments, getBlockAvailabilities } from '~/utils/appointments';
 import { skillLevelColor, striped } from '~/utils/color';
+import { orderByFirstName } from '~/utils/order';
 import { dayToString } from '~/utils/time';
 import { AppointmentHover } from '../AppointmentHover/AppointmentHover';
 import { TechnicianForm } from '../TechnicianForm/TechnicianForm';
@@ -40,7 +41,7 @@ export const TechnicianDayOverview = ({ day }: TechnicianDayOverviewProps) => {
       expand_properties: true,
     })
       .then((technicians) => {
-        setTechnicians(technicians);
+        setTechnicians(orderByFirstName<Technician>(technicians));
       })
       .finally(() => {
         setTechniciansLoading(false);

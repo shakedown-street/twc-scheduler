@@ -13,6 +13,7 @@ import { Availability } from '~/types/Availability';
 import { Block } from '~/types/Block';
 import { Client } from '~/types/Client';
 import { Button, Container, RadixDialog, Spinner, TabItem, Tabs } from '~/ui';
+import { orderByFirstName } from '~/utils/order';
 import { dayToString } from '~/utils/time';
 import './Schedule.scss';
 
@@ -66,7 +67,7 @@ export const Schedule = () => {
       expand_properties: true,
     })
       .then((clients) => {
-        setClients(clients);
+        setClients(orderByFirstName<Client>(clients));
       })
       .finally(() => {
         setClientsLoading(false);

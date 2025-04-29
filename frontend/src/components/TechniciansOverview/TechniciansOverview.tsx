@@ -8,6 +8,7 @@ import { RadixDialog, Spinner } from '~/ui';
 import { RadixHoverCard } from '~/ui/RadixHoverCard/RadixHoverCard';
 import { getBlockAppointments, getBlockAvailabilities } from '~/utils/appointments';
 import { dayColor, skillLevelColor, striped } from '~/utils/color';
+import { orderByFirstName } from '~/utils/order';
 import { AppointmentHover } from '../AppointmentHover/AppointmentHover';
 import { TechnicianForm } from '../TechnicianForm/TechnicianForm';
 import './TechniciansOverview.scss';
@@ -42,7 +43,7 @@ export const TechniciansOverview = ({ isSubList = false, showLegend = true }: Te
       expand_properties: true,
     })
       .then((technicians) => {
-        setTechnicians(technicians);
+        setTechnicians(orderByFirstName<Technician>(technicians));
       })
       .finally(() => {
         setTechniciansLoading(false);

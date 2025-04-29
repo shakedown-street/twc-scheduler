@@ -4,6 +4,7 @@ import { ClientModel, TechnicianModel } from '~/api';
 import { Client } from '~/types/Client';
 import { Technician } from '~/types/Technician';
 import { Button, Input, Select, Textarea, Toggle, useToast } from '~/ui';
+import { orderByFirstName } from '~/utils/order';
 import './ClientForm.scss';
 
 export type ClientFormProps = {
@@ -56,7 +57,7 @@ export const ClientForm = ({ client, onCancel, onCreate, onDelete, onUpdate }: C
     TechnicianModel.all({
       page_size: 1000,
     }).then((technicians) => {
-      setTechnicians(technicians);
+      setTechnicians(orderByFirstName<Technician>(technicians));
     });
   }, []);
 

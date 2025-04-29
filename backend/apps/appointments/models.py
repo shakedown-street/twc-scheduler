@@ -27,6 +27,10 @@ class Technician(UUIDPrimaryKeyMixin, TimestampMixin):
     availabilities = GenericRelation("Availability")
 
     class Meta:
+        # NOTE: Because first_name and last_name are encrypted in the database,
+        # the ordering will not be correct!  Ordering must* be done on the frontend.
+        # The problem with ordering them on the get_queryset is that sorting them there will
+        # return a `list` not a queryset
         ordering = ["first_name", "last_name"]
 
     def __str__(self):
@@ -102,6 +106,10 @@ class Client(UUIDPrimaryKeyMixin, TimestampMixin):
     availabilities = GenericRelation("Availability")
 
     class Meta:
+        # NOTE: Because first_name and last_name are encrypted in the database,
+        # the ordering will not be correct!  Ordering must* be done on the frontend.
+        # The problem with ordering them on the get_queryset is that sorting them there will
+        # return a `list` not a queryset
         ordering = ["first_name", "last_name"]
 
     def __str__(self):

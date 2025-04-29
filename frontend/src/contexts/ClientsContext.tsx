@@ -4,6 +4,7 @@ import { Appointment } from '~/types/Appointment';
 import { Availability } from '~/types/Availability';
 import { Client } from '~/types/Client';
 import { Spinner } from '~/ui';
+import { orderByFirstName } from '~/utils/order';
 
 // Not in use ATM
 
@@ -38,7 +39,7 @@ export const ClientsProvider = (props: ClientsProviderProps) => {
       expand_appointments: true,
     })
       .then((clients) => {
-        setClients(clients);
+        setClients(orderByFirstName<Client>(clients));
       })
       .finally(() => {
         setLoading(false);
