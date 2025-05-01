@@ -3,5 +3,6 @@
   "printWidth": 120,
   "quoteProps": "consistent",
   "semi": true,
-  "singleQuote": true
+  "singleQuote": true,
+  "trailingComma": "es5"
 }

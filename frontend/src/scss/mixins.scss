@@ -192,7 +192,8 @@ $breakpoints: (
   @media (min-width: $min-width-rem) and (max-width: $max-width-rem) {
     & {
       font-size: calc(
-        #{$min-size} + (#{$max-size-strip} - #{$min-size-strip}) * (100vw - #{$min-width}) / (#{$max-width-strip} - #{$min-width-strip})
+        #{$min-size} + (#{$max-size-strip} - #{$min-size-strip}) * (100vw - #{$min-width}) /
+          (#{$max-width-strip} - #{$min-width-strip})
       );
     }
   }
