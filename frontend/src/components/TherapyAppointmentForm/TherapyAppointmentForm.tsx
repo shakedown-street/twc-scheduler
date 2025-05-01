@@ -192,7 +192,7 @@ export const TherapyAppointmentForm = ({
                   id: 'end_time',
                   label: 'End time',
                 }}
-                min="09:00:00"
+                min={initialStartTime}
                 max="19:00:00"
                 onChange={(value) => {
                   field.onChange(value);
