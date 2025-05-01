@@ -3,6 +3,7 @@ import { Appointment } from '~/types/Appointment';
 import { Availability } from '~/types/Availability';
 import { Block } from '~/types/Block';
 import { Client } from '~/types/Client';
+import { TherapyAppointment } from '~/types/TherapyAppointment';
 import { RadixHoverCard } from '~/ui/RadixHoverCard/RadixHoverCard';
 import { skillLevelColor, striped } from '~/utils/color';
 import { dayToString, formatTimeTimeline, generateTimeSlots, isBetweenInclusiveStart, isOnTheHour } from '~/utils/time';
@@ -22,6 +23,7 @@ export type TimeSlotTableProps = {
     appointment: Appointment,
     availability?: Availability
   ) => void;
+  onShiftClick?: (client: Client, time: string, therapyAppointment?: TherapyAppointment) => void;
 };
 
 export const TimeSlotTable = ({
@@ -32,6 +34,7 @@ export const TimeSlotTable = ({
   onClickBlockSlot,
   onClickAvailabilitySlot,
   onClickAppointmentSlot,
+  onShiftClick,
 }: TimeSlotTableProps) => {
   const [timeSlots, setTimeSlots] = React.useState<string[]>([]);
 
@@ -69,12 +72,28 @@ export const TimeSlotTable = ({
       });
   }
 
+  function getSlotTherapyAppointment(time: string, therapyAppointments: TherapyAppointment[]) {
+    if (!therapyAppointments || therapyAppointments.length === 0) {
+      return undefined;
+    }
+
+    return therapyAppointments
+      .filter((a) => a.day === day)
+      .find((therapyAppointment) => {
+        return isBetweenInclusiveStart(time, therapyAppointment.start_time, therapyAppointment.end_time);
+      });
+  }
+
   function slotBackground(time: string, client: Client) {
+    const slotTherapyAppointment = getSlotTherapyAppointment(time, client.therapy_appointments || []);
     const slotAppointment = getSlotAppointment(time, client.appointments || []);
     const slotAvailability = getSlotAvailability(time, client.availabilities || []);
     const slotBlock = getSlotBlock(time);
 
-    if (slotAppointment) {
+    if (slotTherapyAppointment) {
+      return 'black';
+    }
+    if (slotAppointment && !slotTherapyAppointment) {
       if (slotAppointment.in_clinic) {
         const bgColor = slotAppointment.technician?.bg_color || 'white';
         const textColor = slotAppointment.technician?.text_color || 'black';
@@ -91,7 +110,23 @@ export const TimeSlotTable = ({
     return '#404040'; // tw-neutral-700
   }
 
-  function clickSlot(client: Client, time: string) {
+  function slotText(time: string, client: Client) {
+    const slotTherapyAppointment = getSlotTherapyAppointment(time, client.therapy_appointments || []);
+
+    if (slotTherapyAppointment) {
+      return slotTherapyAppointment.therapy_type;
+    }
+    return '';
+  }
+
+  function clickSlot(event: React.MouseEvent, client: Client, time: string) {
+    if (event.shiftKey) {
+      const slotTherapyAppointment = getSlotTherapyAppointment(time, client.therapy_appointments || []);
+
+      onShiftClick?.(client, time, slotTherapyAppointment);
+      return;
+    }
+
     const slotAppointment = getSlotAppointment(time, client.appointments || []);
     const slotAvailability = getSlotAvailability(time, client.availabilities || []);
     const slotBlock = getSlotBlock(time);
@@ -196,10 +231,12 @@ export const TimeSlotTable = ({
                           borderLeft: isOnTheHour(slot) ? '2px solid black' : undefined,
                           background: slotBackground(slot, client),
                         }}
-                        onClick={() => {
-                          clickSlot(client, slot);
+                        onClick={(event) => {
+                          clickSlot(event, client, slot);
                         }}
-                      ></td>
+                      >
+                        {slotText(slot, client)}
+                      </td>
                     }
                   >
                     <AppointmentHover appointment={slotAppointment} />
@@ -215,10 +252,12 @@ export const TimeSlotTable = ({
                     borderLeft: isOnTheHour(slot) ? '2px solid black' : undefined,
                     background: slotBackground(slot, client),
                   }}
-                  onClick={() => {
-                    clickSlot(client, slot);
+                  onClick={(event) => {
+                    clickSlot(event, client, slot);
                   }}
-                ></td>
+                >
+                  {slotText(slot, client)}
+                </td>
               );
             })}
           </tr>

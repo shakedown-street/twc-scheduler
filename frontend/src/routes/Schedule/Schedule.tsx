@@ -5,6 +5,7 @@ import { ClientModel } from '~/api';
 import { AppointmentForm } from '~/components/AppointmentForm/AppointmentForm';
 import { ClientForm } from '~/components/ClientForm/ClientForm';
 import { TechnicianDayOverview } from '~/components/TechnicianDayOverview/TechnicianDayOverview';
+import { TherapyAppointmentForm } from '~/components/TherapyAppointmentForm/TherapyAppointmentForm';
 import { TimeSlotTable } from '~/components/TimeSlotTable/TimeSlotTable';
 import { useBlocks } from '~/contexts/BlocksContext';
 import { useAuth } from '~/features/auth/contexts/AuthContext';
@@ -12,6 +13,7 @@ import { Appointment } from '~/types/Appointment';
 import { Availability } from '~/types/Availability';
 import { Block } from '~/types/Block';
 import { Client } from '~/types/Client';
+import { TherapyAppointment } from '~/types/TherapyAppointment';
 import { Button, Container, RadixDialog, Spinner, TabItem, Tabs } from '~/ui';
 import { orderByFirstName } from '~/utils/order';
 import { dayToString } from '~/utils/time';
@@ -34,6 +36,19 @@ export const Schedule = () => {
     day: 0,
     block: undefined,
     availability: undefined,
+    instance: undefined,
+  });
+  const [therapyAppointmentForm, setTherapyAppointmentForm] = React.useState<{
+    open: boolean;
+    client?: Client;
+    day: number;
+    initialStartTime: string;
+    instance?: TherapyAppointment;
+  }>({
+    open: false,
+    client: undefined,
+    day: 0,
+    initialStartTime: '09:00:00',
     instance: undefined,
   });
   const [clientForm, setClientForm] = React.useState<{
@@ -144,6 +159,74 @@ export const Schedule = () => {
     closeAppointmentForm();
   }
 
+  function openTherapyAppointmentForm(
+    client: Client,
+    day: number,
+    initialStartTime: string,
+    instance: TherapyAppointment | undefined = undefined
+  ) {
+    if (!user?.is_superuser) {
+      return;
+    }
+    setTherapyAppointmentForm({
+      ...therapyAppointmentForm,
+      open: true,
+      client: client,
+      day,
+      initialStartTime,
+      instance,
+    });
+  }
+
+  function closeTherapyAppointmentForm() {
+    setTherapyAppointmentForm({
+      ...therapyAppointmentForm,
+      open: false,
+      client: undefined,
+      day: 0,
+      initialStartTime: '09:00:00',
+      instance: undefined,
+    });
+  }
+
+  function onCreateTherapyAppointment(created: TherapyAppointment) {
+    const clientId = created.client;
+
+    setClients((prev) =>
+      prev.map((c) => {
+        if (c.id === clientId) {
+          c.therapy_appointments = [...(c.therapy_appointments || []), created];
+          return c;
+        }
+        return c;
+      })
+    );
+    closeTherapyAppointmentForm();
+  }
+
+  function onUpdateTherapyAppointment(updated: TherapyAppointment) {
+    setClients((prev) =>
+      prev.map((c) => {
+        if (c.id === updated.client) {
+          c.therapy_appointments = c.therapy_appointments?.map((a) => (a.id === updated.id ? updated : a));
+          return c;
+        }
+        return c;
+      })
+    );
+    closeTherapyAppointmentForm();
+  }
+
+  function onDeleteTherapyAppointment(deleted: TherapyAppointment) {
+    setClients((prev) =>
+      prev.map((c) => {
+        c.therapy_appointments = c.therapy_appointments?.filter((a) => a.id !== deleted.id);
+        return c;
+      })
+    );
+    closeTherapyAppointmentForm();
+  }
+
   function openClientForm(client: Client | undefined = undefined) {
     setClientForm({
       ...clientForm,
@@ -204,6 +287,9 @@ export const Schedule = () => {
               {dayToString(getDay())} Technician Overview
             </Button>
           </div>
+          <p className="mb-4 text-size-xs text-color-muted">
+            <b>NOTE</b>: Click any time slot while holding the "Shift" key to add/remove OT, ST, and MH appointments
+          </p>
           <TimeSlotTable
             blocks={blocks}
             clients={clients}
@@ -219,6 +305,9 @@ export const Schedule = () => {
             }}
             onClickAppointmentSlot={(client, block, appointment, availability) => {
               openAppointmentForm(client, getDay(), block, availability, appointment);
+            }}
+            onShiftClick={(client, time, therapyAppointment) => {
+              openTherapyAppointmentForm(client, getDay(), time, therapyAppointment);
             }}
           />
         </div>
@@ -245,6 +334,31 @@ export const Schedule = () => {
               block={appointmentForm.block}
               availability={appointmentForm.availability}
               instance={appointmentForm.instance}
+            />
+          )}
+        </div>
+      </RadixDialog>
+      <RadixDialog
+        asDrawer
+        title={`${therapyAppointmentForm.instance ? 'Update' : 'Create'} Therapy Appointment`}
+        open={therapyAppointmentForm.open}
+        onOpenChange={(open) => {
+          if (!open) {
+            closeTherapyAppointmentForm();
+          }
+        }}
+      >
+        <div className="p-6">
+          <h3 className="mb-4">{therapyAppointmentForm.instance ? 'Update' : 'Create'} Therapy Appointment</h3>
+          {therapyAppointmentForm.client && (
+            <TherapyAppointmentForm
+              onCreate={(created) => onCreateTherapyAppointment(created)}
+              onUpdate={(updated) => onUpdateTherapyAppointment(updated)}
+              onDelete={(deleted) => onDeleteTherapyAppointment(deleted)}
+              client={therapyAppointmentForm.client}
+              day={therapyAppointmentForm.day}
+              initialStartTime={therapyAppointmentForm.initialStartTime}
+              instance={therapyAppointmentForm.instance}
             />
           )}
         </div>

@@ -169,7 +169,7 @@ export const AvailabilityForm = ({
           )}
         </div>
       </div>
-      <div className="AppointmentForm__row">
+      <div className="AvailabilityForm__row">
         <div className="Input__container">
           <label>Day</label>
           <p>{dayToString(day)}</p>
