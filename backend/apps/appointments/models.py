@@ -223,12 +223,16 @@ class Appointment(UUIDPrimaryKeyMixin, TimestampMixin):
 class TherapyAppointment(UUIDPrimaryKeyMixin, TimestampMixin):
     OT = "ot"
     ST = "st"
+    MH = "mh"
     THERAPY_TYPE_CHOICES = (
         (OT, "Occupational Therapy"),
         (ST, "Speech Therapy"),
+        (MH, "Mental Health"),
     )
     client = models.ForeignKey(
-        Client, related_name="therapy_appointments", on_delete=models.CASCADE
+        Client,
+        related_name="therapy_appointments",
+        on_delete=models.CASCADE,
     )
     therapy_type = models.CharField(
         max_length=2,
