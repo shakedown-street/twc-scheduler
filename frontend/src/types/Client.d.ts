@@ -1,6 +1,7 @@
 import { Appointment } from './Appointment';
 import { Availability } from './Availability';
 import { Technician } from './Technician';
+import { TherapyAppointment } from './TherapyAppointment';
 
 export type Client = {
   id: string;
@@ -20,6 +21,7 @@ export type Client = {
 
   // Sometimes available
   appointments?: Appointment[];
+  therapy_appointments?: TherapyAppointment[];
   availabilities?: Availability[];
   computed_properties?: {
     total_hours_available: number;
