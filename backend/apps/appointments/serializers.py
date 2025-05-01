@@ -67,6 +67,19 @@ class AppointmentSerializer(serializers.ModelSerializer):
         return created
 
 
+class TherapyAppointmentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = TherapyAppointment
+        fields = "__all__"
+
+    def to_representation(self, instance):
+        data = super().to_representation(instance)
+
+        data["therapy_type_display"] = instance.get_therapy_type_display()
+
+        return data
+
+
 class AvailabilitySerializer(serializers.ModelSerializer):
     class Meta:
         model = Availability
@@ -103,6 +116,11 @@ class ClientSerializer(serializers.ModelSerializer):
         if request and request.query_params.get("expand_appointments"):
             data["appointments"] = AppointmentSerializer(
                 instance.appointments.all(),
+                many=True,
+                context=self.context,
+            ).data
+            data["therapy_appointments"] = TherapyAppointmentSerializer(
+                instance.therapy_appointments.all(),
                 many=True,
                 context=self.context,
             ).data
@@ -168,20 +186,5 @@ class TechnicianSerializer(serializers.ModelSerializer):
                 many=True,
                 context=self.context,
             ).data
-
-        return data
-
-
-class TherapyAppointmentSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = TherapyAppointment
-        fields = "__all__"
-
-    def to_representation(self, instance):
-        data = super().to_representation(instance)
-
-        data["client"] = ClientBasicSerializer(
-            instance.client, context=self.context
-        ).data
 
         return data

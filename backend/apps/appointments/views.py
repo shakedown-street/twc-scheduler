@@ -127,6 +127,7 @@ class ClientViewSet(viewsets.ModelViewSet):
     queryset = Client.objects.prefetch_related(
         "availabilities",
         "appointments",
+        "therapy_appointments",
         "past_technicians",
     ).all()
     serializer_class = ClientSerializer
@@ -208,7 +209,8 @@ class ClientViewSet(viewsets.ModelViewSet):
 
 class TechnicianViewSet(viewsets.ModelViewSet):
     queryset = Technician.objects.prefetch_related(
-        "availabilities", "appointments"
+        "availabilities",
+        "appointments",
     ).all()
     serializer_class = TechnicianSerializer
     permission_classes = [
