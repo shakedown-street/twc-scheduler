@@ -50,7 +50,8 @@
     }
 
     &__boldBorder {
-      border: 2px solid $tw-gray-900 !important;
+      border-left: 6px solid $tw-gray-900 !important;
+      border-right: 6px solid $tw-gray-900 !important;
     }
 
     &__block {
@@ -59,11 +60,11 @@
       width: 4.5rem;
 
       &--first {
-        border-left: 2px solid $tw-gray-900 !important;
+        border-left: 6px solid $tw-gray-900 !important;
       }
 
       &--last {
-        border-right: 2px solid $tw-gray-900 !important;
+        border-right: 6px solid $tw-gray-900 !important;
       }
 
       &__count {
