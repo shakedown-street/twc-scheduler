@@ -26,6 +26,7 @@ export type ClientFormData = {
   notes: string;
   sub_notes: string;
   past_technicians: string[];
+  is_manually_maxed_out: boolean;
 };
 
 export const ClientForm = ({ client, onCancel, onCreate, onDelete, onUpdate }: ClientFormProps) => {
@@ -50,6 +51,7 @@ export const ClientForm = ({ client, onCancel, onCreate, onDelete, onUpdate }: C
       notes: client.notes,
       sub_notes: client.sub_notes,
       past_technicians: client.past_technicians.map((tech) => tech.id),
+      is_manually_maxed_out: client.is_manually_maxed_out || false,
     });
   }, [client, form.reset]);
 
@@ -144,6 +146,10 @@ export const ClientForm = ({ client, onCancel, onCreate, onDelete, onUpdate }: C
       <Toggle label="Require Spanish Speaking" {...form.register('req_spanish_speaking')} />
       <Toggle label="Evaluation Done" {...form.register('eval_done')} />
       <Toggle label="Currently Onboarding" {...form.register('is_onboarding')} />
+      <Toggle label="Manually Maxed Out" {...form.register('is_manually_maxed_out')} />
+      <p className="hint">
+        If checked, this client will be considered maxed out on sessions regardless of their total hours.
+      </p>
       <Textarea
         rows={3}
         fluid

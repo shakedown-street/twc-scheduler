@@ -14,6 +14,7 @@ export type Technician = {
   skill_level: number;
   spanish_speaking: boolean;
   notes: string;
+  is_manually_maxed_out?: boolean;
 
   // Sometimes available
   appointments?: Appointment[];

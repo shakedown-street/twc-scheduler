@@ -23,24 +23,13 @@ export type TechnicianFormData = {
   skill_level: number;
   spanish_speaking: boolean;
   notes: string;
+  is_manually_maxed_out: boolean;
 };
 
 export const TechnicianForm = ({ technician, onCancel, onCreate, onDelete, onUpdate }: TechnicianFormProps) => {
   const [confirmDelete, setConfirmDelete] = React.useState(false);
 
-  const form = useForm<TechnicianFormData>({
-    defaultValues: {
-      first_name: technician?.first_name ?? '',
-      last_name: technician?.last_name ?? '',
-      bg_color: technician?.bg_color ?? '#ff0000',
-      text_color: technician?.text_color ?? '#000000',
-      requested_hours: technician?.requested_hours ?? 40,
-      max_hours_per_day: technician?.max_hours_per_day ?? 8,
-      skill_level: technician?.skill_level ?? 1,
-      spanish_speaking: technician?.spanish_speaking ?? false,
-      notes: technician?.notes ?? '',
-    },
-  });
+  const form = useForm<TechnicianFormData>();
   const toast = useToast();
 
   const backgroundColor = form.watch('bg_color');
@@ -56,9 +45,11 @@ export const TechnicianForm = ({ technician, onCancel, onCreate, onDelete, onUpd
       bg_color: technician.bg_color,
       text_color: technician.text_color,
       requested_hours: technician.requested_hours,
+      max_hours_per_day: technician.max_hours_per_day,
       skill_level: technician.skill_level,
       spanish_speaking: technician.spanish_speaking,
       notes: technician.notes,
+      is_manually_maxed_out: technician.is_manually_maxed_out || false,
     });
   }, [technician, form.reset]);
 
@@ -152,6 +143,10 @@ export const TechnicianForm = ({ technician, onCancel, onCreate, onDelete, onUpd
         <div className="hint mt-1">Skill level from 1-3</div>
       </div>
       <Toggle label="Spanish Speaking" {...form.register('spanish_speaking')} />
+      <Toggle label="Manually Maxed Out" {...form.register('is_manually_maxed_out')} />
+      <p className="hint">
+        If checked, this technician will be considered maxed out on sessions regardless of their total hours.
+      </p>
       <div className="TechnicianForm__row">
         <div className="Input__container">
           <label htmlFor="bg_color">BG Color</label>

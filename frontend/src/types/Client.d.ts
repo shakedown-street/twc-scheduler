@@ -18,6 +18,7 @@ export type Client = {
   sub_notes: string;
   current_technicians: Technician[];
   past_technicians: Technician[];
+  is_manually_maxed_out?: boolean;
 
   // Sometimes available
   appointments?: Appointment[];
