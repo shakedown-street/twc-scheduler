@@ -126,6 +126,13 @@ def get_appointment_warnings(
         "Friday",
     ]
 
+    # check if the client or technician are manually maxed out
+    if client.is_manually_maxed_out:
+        warnings.append(f"{client} is maxed out on sessions")
+
+    if tech.is_manually_maxed_out:
+        warnings.append(f"{tech} is maxed out on sessions")
+
     # check if this appointment will exceed the client's prescribed hours
     if client.prescribed_hours >= 0:
         total_hours = client.total_hours

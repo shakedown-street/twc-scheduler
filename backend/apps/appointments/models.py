@@ -21,6 +21,10 @@ class Technician(UUIDPrimaryKeyMixin, TimestampMixin):
         default=1, validators=[MinValueValidator(1), MaxValueValidator(3)]
     )
     spanish_speaking = models.BooleanField(default=False)
+    is_manually_maxed_out = models.BooleanField(
+        default=False,
+        help_text="Indicates this person will be considered maxed out on sessions regardless of their total hours.",
+    )
     notes = EncryptedTextField(blank=True)
 
     # generic relation to availabilities
@@ -77,6 +81,8 @@ class Technician(UUIDPrimaryKeyMixin, TimestampMixin):
 
     @property
     def is_maxed_on_sessions(self):
+        if self.is_manually_maxed_out:
+            return True
         return self.total_hours >= self.requested_hours
 
 
@@ -101,6 +107,10 @@ class Client(UUIDPrimaryKeyMixin, TimestampMixin):
         blank=True,
         help_text="Technicians that have worked with this client in the past.",
     )
+    is_manually_maxed_out = models.BooleanField(
+        default=False,
+        help_text="Indicates this person will be considered maxed out on sessions regardless of their total hours.",
+    )
 
     # generic relation to availabilities
     availabilities = GenericRelation("Availability")
@@ -156,6 +166,8 @@ class Client(UUIDPrimaryKeyMixin, TimestampMixin):
 
     @property
     def is_maxed_on_sessions(self):
+        if self.is_manually_maxed_out:
+            return True
         return self.total_hours >= self.prescribed_hours
 
 
