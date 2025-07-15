@@ -10,7 +10,7 @@ export const Overview = () => {
 
   function getTab() {
     const tab = searchParams.get('tab');
-    return tab || 'clients';
+    return tab || 'appointments';
   }
 
   function setTab(tab: string) {
@@ -27,19 +27,20 @@ export const Overview = () => {
         <div className="mt-4 mb-12">
           <h1>Overview</h1>
           <Tabs className="mb-4">
-            <TabItem active={getTab() === 'clients'} onClick={() => setTab('clients')}>
-              Clients
-            </TabItem>
-            <TabItem active={getTab() === 'technicians'} onClick={() => setTab('technicians')}>
-              Technicians
+            <TabItem active={getTab() === 'appointments'} onClick={() => setTab('appointments')}>
+              Appointments
             </TabItem>
             <TabItem active={getTab() === 'matrix'} onClick={() => setTab('matrix')}>
               Matrix
             </TabItem>
           </Tabs>
           <div>
-            {getTab() === 'clients' && <ClientsOverview />}
-            {getTab() === 'technicians' && <TechniciansOverview />}
+            {getTab() === 'appointments' && (
+              <div className="flex gap-2">
+                <ClientsOverview />
+                <TechniciansOverview />
+              </div>
+            )}
             {getTab() === 'matrix' && <ClientTechnicianMatrix />}
           </div>
         </div>

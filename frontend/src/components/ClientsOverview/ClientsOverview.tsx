@@ -4,7 +4,7 @@ import { useBlocks } from '~/contexts/BlocksContext';
 import { useAuth } from '~/features/auth/contexts/AuthContext';
 import { Block } from '~/types/Block';
 import { Client } from '~/types/Client';
-import { RadixDialog, Spinner } from '~/ui';
+import { Button, IconButton, RadixDialog, Spinner } from '~/ui';
 import { RadixHoverCard } from '~/ui/RadixHoverCard/RadixHoverCard';
 import { getBlockAppointments, getBlockAvailabilities } from '~/utils/appointments';
 import { dayColor, skillLevelColor, striped } from '~/utils/color';
@@ -59,6 +59,12 @@ export const ClientsOverview = () => {
     );
   }
 
+  function displayTotalHoursByDay(client: Client, day: number) {
+    return client.computed_properties!.total_hours_by_day[day] > 0
+      ? client.computed_properties!.total_hours_by_day[day]
+      : '-';
+  }
+
   function totalRequestedHours() {
     return clients.reduce((acc, client) => acc + client.prescribed_hours, 0);
   }
@@ -67,7 +73,12 @@ export const ClientsOverview = () => {
     return clients.reduce((acc, client) => {
       const appointments = getBlockAppointments(client.appointments || [], day, block) || [];
       const availabilities = getBlockAvailabilities(client.availabilities || [], day, block) || [];
-      return acc + (appointments.length < 1 && availabilities.length > 0 ? 1 : 0);
+      return (
+        acc +
+        (appointments.length < 1 && availabilities.length > 0 && !client.computed_properties?.is_maxed_on_sessions
+          ? 1
+          : 0)
+      );
     }, 0);
   }
 
@@ -204,7 +215,17 @@ export const ClientsOverview = () => {
 
   return (
     <>
-      <div className="flex gap-4">
+      <div className="flex flex-column gap-4">
+        <RadixHoverCard
+          align="start"
+          trigger={
+            <Button className="align-self-start" iconLeading="info" size="xs" variant="outlined">
+              Legend
+            </Button>
+          }
+        >
+          {renderLegend()}
+        </RadixHoverCard>
         <table className="ClientsOverview">
           <colgroup>
             <col width="24px" />
@@ -290,12 +311,12 @@ export const ClientsOverview = () => {
                     {client.first_name} {client.last_name}
                   </a>
                 </td>
-                <td style={{ textAlign: 'center' }}>{client.computed_properties?.total_hours_by_day[0]}</td>
-                <td style={{ textAlign: 'center' }}>{client.computed_properties?.total_hours_by_day[1]}</td>
-                <td style={{ textAlign: 'center' }}>{client.computed_properties?.total_hours_by_day[2]}</td>
-                <td style={{ textAlign: 'center' }}>{client.computed_properties?.total_hours_by_day[3]}</td>
-                <td style={{ textAlign: 'center' }}>{client.computed_properties?.total_hours_by_day[4]}</td>
-                <td style={{ textAlign: 'center' }}>{client.computed_properties?.total_hours}</td>
+                <td style={{ textAlign: 'center' }}>{displayTotalHoursByDay(client, 0)}</td>
+                <td style={{ textAlign: 'center' }}>{displayTotalHoursByDay(client, 1)}</td>
+                <td style={{ textAlign: 'center' }}>{displayTotalHoursByDay(client, 2)}</td>
+                <td style={{ textAlign: 'center' }}>{displayTotalHoursByDay(client, 3)}</td>
+                <td style={{ textAlign: 'center' }}>{displayTotalHoursByDay(client, 4)}</td>
+                <td style={{ textAlign: 'center' }}>{client.computed_properties!.total_hours}</td>
                 <td style={{ textAlign: 'center' }}>{client.prescribed_hours}</td>
                 <td
                   style={{
@@ -361,7 +382,6 @@ export const ClientsOverview = () => {
             </tr>
           </tfoot>
         </table>
-        {renderLegend()}
       </div>
       {clientForm.client && (
         <RadixDialog

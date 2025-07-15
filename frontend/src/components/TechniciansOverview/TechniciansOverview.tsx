@@ -4,7 +4,7 @@ import { useBlocks } from '~/contexts/BlocksContext';
 import { useAuth } from '~/features/auth/contexts/AuthContext';
 import { Block } from '~/types/Block';
 import { Technician } from '~/types/Technician';
-import { RadixDialog, Spinner } from '~/ui';
+import { Button, RadixDialog, Spinner } from '~/ui';
 import { RadixHoverCard } from '~/ui/RadixHoverCard/RadixHoverCard';
 import { getBlockAppointments, getBlockAvailabilities } from '~/utils/appointments';
 import { dayColor, skillLevelColor, striped } from '~/utils/color';
@@ -65,6 +65,12 @@ export const TechniciansOverview = ({ isSubList = false, showLegend = true }: Te
     );
   }
 
+  function displayTotalHoursByDay(technician: Technician, day: number) {
+    return technician.computed_properties!.total_hours_by_day[day] > 0
+      ? technician.computed_properties!.total_hours_by_day[day]
+      : '-';
+  }
+
   function totalRequestedHours() {
     return technicians.reduce((acc, technician) => acc + technician.requested_hours, 0);
   }
@@ -73,7 +79,12 @@ export const TechniciansOverview = ({ isSubList = false, showLegend = true }: Te
     return technicians.reduce((acc, technician) => {
       const appointments = getBlockAppointments(technician.appointments || [], day, block) || [];
       const availabilities = getBlockAvailabilities(technician.availabilities || [], day, block) || [];
-      return acc + (appointments.length < 1 && availabilities.length > 0 ? 1 : 0);
+      return (
+        acc +
+        (appointments.length < 1 && availabilities.length > 0 && !technician.computed_properties?.is_maxed_on_sessions
+          ? 1
+          : 0)
+      );
     }, 0);
   }
 
@@ -296,7 +307,19 @@ export const TechniciansOverview = ({ isSubList = false, showLegend = true }: Te
 
   return (
     <>
-      <div className="flex gap-4">
+      <div className="flex flex-column gap-4">
+        {showLegend && (
+          <RadixHoverCard
+            align="start"
+            trigger={
+              <Button className="align-self-start" iconLeading="info" size="xs" variant="outlined">
+                Legend
+              </Button>
+            }
+          >
+            {renderLegend()}
+          </RadixHoverCard>
+        )}
         <table className="TechniciansOverview">
           <colgroup>
             <col width="24px" />
@@ -395,11 +418,11 @@ export const TechniciansOverview = ({ isSubList = false, showLegend = true }: Te
                 </td>
                 {!isSubList && (
                   <>
-                    <td style={{ textAlign: 'center' }}>{technician.computed_properties?.total_hours_by_day[0]}</td>
-                    <td style={{ textAlign: 'center' }}>{technician.computed_properties?.total_hours_by_day[1]}</td>
-                    <td style={{ textAlign: 'center' }}>{technician.computed_properties?.total_hours_by_day[2]}</td>
-                    <td style={{ textAlign: 'center' }}>{technician.computed_properties?.total_hours_by_day[3]}</td>
-                    <td style={{ textAlign: 'center' }}>{technician.computed_properties?.total_hours_by_day[4]}</td>
+                    <td style={{ textAlign: 'center' }}>{displayTotalHoursByDay(technician, 0)}</td>
+                    <td style={{ textAlign: 'center' }}>{displayTotalHoursByDay(technician, 1)}</td>
+                    <td style={{ textAlign: 'center' }}>{displayTotalHoursByDay(technician, 2)}</td>
+                    <td style={{ textAlign: 'center' }}>{displayTotalHoursByDay(technician, 3)}</td>
+                    <td style={{ textAlign: 'center' }}>{displayTotalHoursByDay(technician, 4)}</td>
                     <td style={{ textAlign: 'center' }}>{technician.computed_properties?.total_hours}</td>
                     <td style={{ textAlign: 'center' }}>{technician.requested_hours}</td>
                     <td
@@ -470,7 +493,6 @@ export const TechniciansOverview = ({ isSubList = false, showLegend = true }: Te
             </tfoot>
           )}
         </table>
-        {showLegend && renderLegend()}
       </div>
       {technicianForm.technician && (
         <RadixDialog
