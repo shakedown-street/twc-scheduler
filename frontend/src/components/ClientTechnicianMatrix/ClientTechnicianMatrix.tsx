@@ -216,7 +216,7 @@ export const ClientTechnicianMatrix = () => {
                           color: count > 0 ? technician.text_color : undefined,
                         }}
                       >
-                        {count}
+                        {count > 0 ? count : ''}
                       </td>
                     );
                   })}
@@ -225,7 +225,7 @@ export const ClientTechnicianMatrix = () => {
                       background: getTotalTechsColor(total),
                     }}
                   >
-                    {total}
+                    {total > 0 ? total : ''}
                   </td>
                 </tr>
               </React.Fragment>
