@@ -265,7 +265,7 @@ export const Schedule = () => {
       <Container>
         <div className="mt-4 mb-12">
           <h1>Schedule</h1>
-          <div className="flex align-center justify-between mb-4">
+          <div className="Schedule__header">
             <Tabs>
               <TabItem active={getDay() === 0} onClick={() => setDay(0)}>
                 Monday

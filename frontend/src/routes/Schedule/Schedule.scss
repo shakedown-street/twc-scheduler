@@ -1,0 +1,11 @@
+.Schedule {
+  &__header {
+    align-items: center;
+    background-color: white;
+    display: flex;
+    position: sticky;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+    top: 0;
+  }
+}
