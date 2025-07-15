@@ -185,7 +185,7 @@ export const TechniciansOverview = ({ isSubList = false, showLegend = true }: Te
 
     // Render availability blocks
     if (blockAvailabilities.length > 0) {
-      let background = '#cbd5e1'; // tw-slate-300
+      let background = 'black'; // tw-slate-300
       let color = '#22c55e'; // tw-green-500
       let letter = 'A';
       if (technician.computed_properties?.is_maxed_on_sessions) {
@@ -258,7 +258,7 @@ export const TechniciansOverview = ({ isSubList = false, showLegend = true }: Te
         <div className="TechniciansOverview__legend__example">
           <div
             className="TechniciansOverview__legend__example__color"
-            style={{ background: '#cbd5e1', color: '#22c55e' }}
+            style={{ background: 'black', color: '#22c55e' }}
           >
             A
           </div>

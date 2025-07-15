@@ -4,7 +4,7 @@ import { useBlocks } from '~/contexts/BlocksContext';
 import { useAuth } from '~/features/auth/contexts/AuthContext';
 import { Block } from '~/types/Block';
 import { Client } from '~/types/Client';
-import { Button, IconButton, RadixDialog, Spinner } from '~/ui';
+import { Button, RadixDialog, Spinner } from '~/ui';
 import { RadixHoverCard } from '~/ui/RadixHoverCard/RadixHoverCard';
 import { getBlockAppointments, getBlockAvailabilities } from '~/utils/appointments';
 import { dayColor, skillLevelColor, striped } from '~/utils/color';
@@ -145,7 +145,7 @@ export const ClientsOverview = () => {
 
     // Render availability blocks
     if (blockAvailabilities.length > 0) {
-      let background = '#cbd5e1'; // tw-slate-300
+      let background = 'black';
       if (client.computed_properties?.is_maxed_on_sessions) {
         background = 'black';
       }
@@ -187,7 +187,7 @@ export const ClientsOverview = () => {
           <span>Unavailable</span>
         </div>
         <div className="ClientsOverview__legend__example">
-          <div className="ClientsOverview__legend__example__color" style={{ background: '#cbd5e1', color: '#22c55e' }}>
+          <div className="ClientsOverview__legend__example__color" style={{ background: 'black', color: '#22c55e' }}>
             A
           </div>
           <span>Available</span>
