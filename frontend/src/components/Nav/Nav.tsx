@@ -7,10 +7,12 @@ import { ImpersonateDialog } from '~/features/auth/components/ImpersonateDialog/
 import { useAuth } from '~/features/auth/contexts/AuthContext';
 import { http } from '~/http';
 import { Button, Container, IconButton, RadixDialog, useToast } from '~/ui';
+import { SettingsDialog } from '../SettingsDialog/SettingsDialog';
 import './Nav.scss';
 
 export const Nav = () => {
   const [impersonateDialogOpen, setImpersonateDialogOpen] = React.useState(false);
+  const [settingsDialogOpen, setSettingsDialogOpen] = React.useState(false);
 
   const navigate = useNavigate();
   const { user, setUser } = useAuth();
@@ -68,6 +70,12 @@ export const Nav = () => {
                 Impersonate
               </DropdownMenu.Item>
             )}
+            <DropdownMenu.Item className="DropdownMenu__item" onClick={() => setSettingsDialogOpen(true)}>
+              <div className="DropdownMenu__icon">
+                <span className="material-symbols-outlined">settings</span>
+              </div>
+              Settings
+            </DropdownMenu.Item>
             <DropdownMenu.Item className="DropdownMenu__item" onClick={() => logout()}>
               <div className="DropdownMenu__icon">
                 <span className="material-symbols-outlined">logout</span>
@@ -148,6 +156,14 @@ export const Nav = () => {
         title="Impersonate"
       >
         <ImpersonateDialog />
+      </RadixDialog>
+      <RadixDialog
+        description="Change your settings"
+        open={settingsDialogOpen}
+        onOpenChange={(open) => setSettingsDialogOpen(open)}
+        title="Settings"
+      >
+        <SettingsDialog onClose={() => setSettingsDialogOpen(false)} />
       </RadixDialog>
     </>
   );
