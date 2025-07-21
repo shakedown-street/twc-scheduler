@@ -18,6 +18,16 @@ export function addMinutes(time: string, minutes: number) {
 }
 
 /**
+ * Removes minutes to a time string in the format "HH:mm:ss"
+ */
+
+export function removeMinutes(time: string, minutes: number) {
+  const parsedTime = parseTime(time);
+  const newTime = new Date(parsedTime.getTime() - minutes * 60000);
+  return format(newTime, 'HH:mm:ss');
+}
+
+/**
  * Return true if the minutes of the time string are 0
  */
 export function isOnTheHour(time: string) {
