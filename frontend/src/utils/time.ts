@@ -87,6 +87,13 @@ export function isBetweenInclusiveEnd(time: string, start: string, end: string) 
 }
 
 /**
+ * Check if there is any intersection between two times
+ */
+export function checkTimeIntersection(aStart: string, aEnd: string, bStart: string, bEnd: string) {
+  return isBetweenInclusiveStart(aStart, bStart, bEnd) || isBetweenInclusiveEnd(aEnd, bStart, bEnd);
+}
+
+/**
  * Format a time string in the format "HH:mm:ss" to "h:mm a"
  */
 export function formatTime(time: string) {
