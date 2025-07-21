@@ -124,23 +124,26 @@ export const ClientsOverview = () => {
         const textColor = appointment.technician?.text_color || 'black';
         background = striped(textColor, bgColor);
       }
-      return (
-        <RadixHoverCard
-          key={block.id}
-          portal
-          trigger={
-            <td
-              style={{
-                background,
-                borderLeftWidth,
-                borderRightWidth,
-              }}
-            ></td>
-          }
-        >
-          <AppointmentHover appointment={appointment} />
-        </RadixHoverCard>
+
+      const hoverTrigger = (
+        <td
+          style={{
+            background,
+            borderLeftWidth,
+            borderRightWidth,
+          }}
+        ></td>
       );
+
+      if (user?.hover_cards_enabled) {
+        return (
+          <RadixHoverCard key={block.id} portal trigger={hoverTrigger}>
+            <AppointmentHover appointment={appointment} />
+          </RadixHoverCard>
+        );
+      } else {
+        return hoverTrigger;
+      }
     }
 
     // Render availability blocks

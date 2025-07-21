@@ -1,4 +1,5 @@
 import React from 'react';
+import { useAuth } from '~/features/auth/contexts/AuthContext';
 import { Appointment } from '~/types/Appointment';
 import { Availability } from '~/types/Availability';
 import { Block } from '~/types/Block';
@@ -37,6 +38,8 @@ export const TimeSlotTable = ({
   onShiftClick,
 }: TimeSlotTableProps) => {
   const [timeSlots, setTimeSlots] = React.useState<string[]>([]);
+
+  const { user } = useAuth();
 
   React.useEffect(() => {
     setTimeSlots(generateTimeSlots(blocks[0].start_time, blocks[blocks.length - 1].end_time, 15));
@@ -220,28 +223,32 @@ export const TimeSlotTable = ({
               const slotAppointment = getSlotAppointment(slot, client.appointments || []);
 
               if (slotAppointment) {
-                return (
-                  <RadixHoverCard
-                    key={slot}
-                    portal
-                    trigger={
-                      <td
-                        className="TimeSlotTable__slot"
-                        style={{
-                          borderLeft: isOnTheHour(slot) ? '2px solid black' : undefined,
-                          background: slotBackground(slot, client),
-                        }}
-                        onClick={(event) => {
-                          clickSlot(event, client, slot);
-                        }}
-                      >
-                        {slotText(slot, client)}
-                      </td>
-                    }
+                const hoverTrigger = (
+                  <td
+                    className="TimeSlotTable__slot"
+                    style={{
+                      borderLeft: isOnTheHour(slot) ? '2px solid black' : undefined,
+                      background: slotBackground(slot, client),
+                    }}
+                    onClick={(event) => {
+                      clickSlot(event, client, slot);
+                    }}
                   >
-                    <AppointmentHover appointment={slotAppointment} />
-                  </RadixHoverCard>
+                    {slotText(slot, client)}
+                  </td>
                 );
+
+                if (user?.hover_cards_enabled) {
+                  return (
+                    <RadixHoverCard key={slot} portal trigger={hoverTrigger}>
+                      <AppointmentHover appointment={slotAppointment} />
+                    </RadixHoverCard>
+                  );
+                } else {
+                  {
+                    hoverTrigger;
+                  }
+                }
               }
 
               return (
