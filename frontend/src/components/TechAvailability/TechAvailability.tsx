@@ -12,7 +12,7 @@ import { Button, Card, Checkbox, RadixDialog, Spinner } from '~/ui';
 import { isFullBlock } from '~/utils/appointments';
 import { skillLevelColor } from '~/utils/color';
 import { orderByFirstName } from '~/utils/order';
-import { formatTimeShort, isBetweenInclusiveEnd, isBetweenInclusiveStart } from '~/utils/time';
+import { checkTimeIntersection, formatTimeShort } from '~/utils/time';
 import './TechAvailability.scss';
 
 export const TechAvailability = () => {
@@ -90,8 +90,7 @@ export const TechAvailability = () => {
     return technician.availabilities?.find(
       (availability) =>
         availability.day === day &&
-        isBetweenInclusiveStart(availability.start_time, block.start_time, block.end_time) &&
-        isBetweenInclusiveEnd(availability.end_time, block.start_time, block.end_time) &&
+        checkTimeIntersection(availability.start_time, availability.end_time, block.start_time, block.end_time) &&
         (!showSubOnly || availability.is_sub)
     );
   }
