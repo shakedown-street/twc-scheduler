@@ -13,4 +13,6 @@ export type User = {
   is_verified: boolean;
   groups: any[];
   user_permissions: any[];
+
+  hover_cards_enabled: boolean;
 };

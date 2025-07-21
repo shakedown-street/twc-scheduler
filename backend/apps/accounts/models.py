@@ -24,6 +24,14 @@ class EmailUser(AbstractBaseUser, PermissionsMixin, UUIDPrimaryKeyMixin):
     phone = models.CharField(_("phone number"), max_length=16, blank=True)
     date_joined = models.DateTimeField(_("date joined"), default=timezone.now)
 
+    # Settings
+    hover_cards_enabled = models.BooleanField(
+        default=True,
+        help_text=_(
+            "Enable hover cards on the frontend for quick info on users and events."
+        ),
+    )
+
     # Permissions
     is_active = models.BooleanField(
         _("active"),
