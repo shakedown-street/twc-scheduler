@@ -50,6 +50,10 @@ class EmailUserAdmin(UserAdmin):
             },
         ),
         (
+            "Settings",
+            {"fields": ("hover_cards_enabled",)},
+        ),
+        (
             "Verification",
             {"fields": ("is_verified",)},
         ),
