@@ -2,6 +2,8 @@ import React from 'react';
 import { ClientModel } from '~/api';
 import { useBlocks } from '~/contexts/BlocksContext';
 import { useAuth } from '~/features/auth/contexts/AuthContext';
+import { Appointment } from '~/types/Appointment';
+import { Availability } from '~/types/Availability';
 import { Block } from '~/types/Block';
 import { Client } from '~/types/Client';
 import { Button, RadixDialog, Spinner } from '~/ui';
@@ -9,6 +11,7 @@ import { RadixHoverCard } from '~/ui/RadixHoverCard/RadixHoverCard';
 import { getBlockAppointments, getBlockAvailabilities } from '~/utils/appointments';
 import { dayColor, skillLevelColor, striped } from '~/utils/color';
 import { orderByFirstName } from '~/utils/order';
+import { AppointmentForm } from '../AppointmentForm/AppointmentForm';
 import { AppointmentHover } from '../AppointmentHover/AppointmentHover';
 import { ClientForm } from '../ClientForm/ClientForm';
 import './ClientsOverview.scss';
@@ -16,6 +19,21 @@ import './ClientsOverview.scss';
 export const ClientsOverview = () => {
   const [clients, setClients] = React.useState<Client[]>([]);
   const [clientsLoading, setClientsLoading] = React.useState(true);
+  const [appointmentForm, setAppointmentForm] = React.useState<{
+    open: boolean;
+    client?: Client;
+    day: number;
+    block?: Block;
+    availability?: Availability;
+    instance?: Appointment;
+  }>({
+    open: false,
+    client: undefined,
+    day: 0,
+    block: undefined,
+    availability: undefined,
+    instance: undefined,
+  });
   const [clientForm, setClientForm] = React.useState<{
     open: boolean;
     client?: Client;
@@ -82,6 +100,76 @@ export const ClientsOverview = () => {
     }, 0);
   }
 
+  function openAppointmentForm(
+    client: Client,
+    day: number,
+    block: Block,
+    availability: Availability | undefined,
+    instance: Appointment | undefined = undefined
+  ) {
+    if (!user?.is_superuser) {
+      return;
+    }
+    setAppointmentForm({
+      ...appointmentForm,
+      open: true,
+      client: client,
+      day,
+      block,
+      availability,
+      instance,
+    });
+  }
+
+  function closeAppointmentForm() {
+    setAppointmentForm({
+      ...appointmentForm,
+      open: false,
+      client: undefined,
+      block: undefined,
+      availability: undefined,
+      instance: undefined,
+    });
+  }
+
+  function onCreateAppointment(created: Appointment[]) {
+    const clientId = created[0].client?.id;
+
+    setClients((prev) =>
+      prev.map((c) => {
+        if (c.id === clientId) {
+          c.appointments = [...(c.appointments || []), ...created];
+          return c;
+        }
+        return c;
+      })
+    );
+    closeAppointmentForm();
+  }
+
+  function onUpdateAppointment(updated: Appointment) {
+    setClients((prev) =>
+      prev.map((c) => {
+        if (c.id === updated.client?.id) {
+          c.appointments = c.appointments?.map((a) => (a.id === updated.id ? updated : a));
+          return c;
+        }
+        return c;
+      })
+    );
+    closeAppointmentForm();
+  }
+
+  function onDeleteAppointment(deleted: Appointment) {
+    setClients((prev) =>
+      prev.map((c) => {
+        c.appointments = c.appointments?.filter((a) => a.id !== deleted.id);
+        return c;
+      })
+    );
+    closeAppointmentForm();
+  }
+
   function openClientForm(client: Client | undefined = undefined) {
     setClientForm({
       ...clientForm,
@@ -108,6 +196,20 @@ export const ClientsOverview = () => {
     closeClientForm();
   }
 
+  function clickSlot(client: Client, day: number, block: Block) {
+    const blockAppointments = getBlockAppointments(client.appointments || [], day, block) || [];
+    const blockAvailabilities = getBlockAvailabilities(client.availabilities || [], day, block) || [];
+
+    if (blockAppointments) {
+      openAppointmentForm(client, day, block, blockAvailabilities[0], blockAppointments[0]);
+      return;
+    }
+    if (blockAvailabilities) {
+      openAppointmentForm(client, day, block, blockAvailabilities[0]);
+      return;
+    }
+  }
+
   function renderBlock(client: Client, day: number, block: Block, blockIndex: number) {
     const blockAppointments = getBlockAppointments(client.appointments || [], day, block) || [];
     const blockAvailabilities = getBlockAvailabilities(client.availabilities || [], day, block) || [];
@@ -127,10 +229,14 @@ export const ClientsOverview = () => {
 
       const hoverTrigger = (
         <td
+          onClick={() => {
+            clickSlot(client, day, block);
+          }}
           style={{
             background,
             borderLeftWidth,
             borderRightWidth,
+            cursor: 'pointer',
           }}
         ></td>
       );
@@ -155,11 +261,15 @@ export const ClientsOverview = () => {
       return (
         <td
           key={block.id}
+          onClick={() => {
+            clickSlot(client, day, block);
+          }}
           style={{
             background,
             borderLeftWidth,
             borderRightWidth,
             color: client.computed_properties?.is_maxed_on_sessions ? '#ef4444' : '#22c55e', // tw-red-500 : tw-green-500
+            cursor: 'pointer',
             textAlign: 'center',
             fontWeight: 'bold',
           }}
@@ -386,6 +496,32 @@ export const ClientsOverview = () => {
           </tfoot>
         </table>
       </div>
+      <RadixDialog
+        asDrawer
+        title={`${appointmentForm.instance ? 'Update' : 'Create'} Appointment`}
+        open={appointmentForm.open}
+        onOpenChange={(open) => {
+          if (!open) {
+            closeAppointmentForm();
+          }
+        }}
+      >
+        <div className="p-6">
+          <h3 className="mb-4">{appointmentForm.instance ? 'Update' : 'Create'} Appointment</h3>
+          {appointmentForm.client && appointmentForm.block && (
+            <AppointmentForm
+              onCreate={(created) => onCreateAppointment(created)}
+              onUpdate={(updated) => onUpdateAppointment(updated)}
+              onDelete={(deleted) => onDeleteAppointment(deleted)}
+              client={appointmentForm.client}
+              day={appointmentForm.day}
+              block={appointmentForm.block}
+              availability={appointmentForm.availability}
+              instance={appointmentForm.instance}
+            />
+          )}
+        </div>
+      </RadixDialog>
       {clientForm.client && (
         <RadixDialog
           asDrawer
