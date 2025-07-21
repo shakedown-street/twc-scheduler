@@ -7,7 +7,15 @@ import { Client } from '~/types/Client';
 import { TherapyAppointment } from '~/types/TherapyAppointment';
 import { RadixHoverCard } from '~/ui/RadixHoverCard/RadixHoverCard';
 import { skillLevelColor, striped } from '~/utils/color';
-import { dayToString, formatTimeTimeline, generateTimeSlots, isBetweenInclusiveStart, isOnTheHour } from '~/utils/time';
+import {
+  addMinutes,
+  dayToString,
+  formatTimeTimeline,
+  generateTimeSlots,
+  isBetweenInclusiveStart,
+  isOnTheHour,
+  removeMinutes,
+} from '~/utils/time';
 import { AppointmentHover } from '../AppointmentHover/AppointmentHover';
 import './TimeSlotTable.scss';
 
@@ -42,7 +50,10 @@ export const TimeSlotTable = ({
   const { user } = useAuth();
 
   React.useEffect(() => {
-    setTimeSlots(generateTimeSlots(blocks[0].start_time, blocks[blocks.length - 1].end_time, 15));
+    // NOTE: We show an hour before the first block and an hour after the last block
+    setTimeSlots(
+      generateTimeSlots(removeMinutes(blocks[0].start_time, 60), addMinutes(blocks[blocks.length - 1].end_time, 60), 15)
+    );
   }, [blocks]);
 
   function getSlotBlock(time: string) {
