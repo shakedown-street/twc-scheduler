@@ -25,13 +25,26 @@ export const ClientTechnicianHistory = () => {
 
   React.useEffect(() => {
     setClientsLoading(true);
-    ClientModel.all({
-      page_size: 1000,
-      expand_technicians: true,
-    }).then((clients) => {
-      setClients(orderByFirstName<Client>(clients));
-      setClientsLoading(false);
-    });
+
+    const fetchClients = () => {
+      ClientModel.all({
+        page_size: 1000,
+        expand_technicians: true,
+      }).then((clients) => {
+        setClients(orderByFirstName<Client>(clients));
+        setClientsLoading(false);
+      });
+    };
+
+    // Poll every minute
+    const pollInterval = setInterval(() => {
+      fetchClients();
+    }, 60 * 1000);
+
+    // Initial fetch
+    fetchClients();
+
+    return () => clearInterval(pollInterval);
   }, []);
 
   function openClientForm(client: Client | undefined = undefined) {

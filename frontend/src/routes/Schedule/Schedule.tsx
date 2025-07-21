@@ -75,18 +75,31 @@ export const Schedule = () => {
 
   React.useEffect(() => {
     setClientsLoading(true);
-    ClientModel.all({
-      page_size: 1000,
-      expand_appointments: true,
-      expand_availabilities: true,
-      expand_properties: true,
-    })
-      .then((clients) => {
-        setClients(orderByFirstName<Client>(clients));
+
+    const fetchClients = () => {
+      ClientModel.all({
+        page_size: 1000,
+        expand_appointments: true,
+        expand_availabilities: true,
+        expand_properties: true,
       })
-      .finally(() => {
-        setClientsLoading(false);
-      });
+        .then((clients) => {
+          setClients(orderByFirstName<Client>(clients));
+        })
+        .finally(() => {
+          setClientsLoading(false);
+        });
+    };
+
+    // Poll every minute
+    const pollInterval = setInterval(() => {
+      fetchClients();
+    }, 60 * 1000);
+
+    // Initial fetch
+    fetchClients();
+
+    return () => clearInterval(pollInterval);
   }, []);
 
   function openAppointmentForm(

@@ -49,17 +49,30 @@ export const TechAvailability = () => {
 
   React.useEffect(() => {
     setTechniciansLoading(true);
-    TechnicianModel.all({
-      page_size: 1000,
-      expand_availabilities: true,
-      expand_properties: true,
-    })
-      .then((technicians) => {
-        setTechnicians(orderByFirstName<Technician>(technicians));
+
+    const fetchTechnicians = () => {
+      TechnicianModel.all({
+        page_size: 1000,
+        expand_availabilities: true,
+        expand_properties: true,
       })
-      .finally(() => {
-        setTechniciansLoading(false);
-      });
+        .then((technicians) => {
+          setTechnicians(orderByFirstName<Technician>(technicians));
+        })
+        .finally(() => {
+          setTechniciansLoading(false);
+        });
+    };
+
+    // Poll every minute
+    const pollInterval = setInterval(() => {
+      fetchTechnicians();
+    }, 60 * 1000);
+
+    // Initial fetch
+    fetchTechnicians();
+
+    return () => clearInterval(pollInterval);
   }, []);
 
   function totalRequestedHours() {
