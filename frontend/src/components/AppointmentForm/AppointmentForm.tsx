@@ -7,7 +7,7 @@ import { Availability } from '~/types/Availability';
 import { Block } from '~/types/Block';
 import { Client } from '~/types/Client';
 import { Technician } from '~/types/Technician';
-import { Badge, Button, IconButton, RadixTooltip, Select, Textarea, TimeInput, Toggle, useToast } from '~/ui';
+import { Badge, Button, Checkbox, IconButton, RadixTooltip, Select, Textarea, TimeInput, useToast } from '~/ui';
 import { orderByFirstName } from '~/utils/order';
 import { dayToString } from '~/utils/time';
 import './AppointmentForm.scss';
@@ -42,6 +42,7 @@ export const AppointmentForm = ({
   onUpdate,
   onDelete,
 }: AppointmentFormProps) => {
+  const [overrideBlockTimes, setOverrideBlockTimes] = React.useState(false);
   const [availableTechnicians, setAvailableTechnicians] = React.useState<Technician[]>([]);
   const [availableTechniciansLoaded, setAvailableTechniciansLoaded] = React.useState(false);
   const [onlyShowRecommendedTechs, setOnlyShowRecommendedTechs] = React.useState(true);
@@ -332,8 +333,8 @@ export const AppointmentForm = ({
                   id: 'start_time',
                   label: 'Start time',
                 }}
-                min={block.start_time}
-                max={block.end_time}
+                min={overrideBlockTimes ? '08:00:00' : block.start_time}
+                max={overrideBlockTimes ? '20:00:00' : block.end_time}
                 onChange={(value) => {
                   field.onChange(value);
                 }}
@@ -353,8 +354,8 @@ export const AppointmentForm = ({
                   id: 'end_time',
                   label: 'End time',
                 }}
-                min={block.start_time}
-                max={block.end_time}
+                min={overrideBlockTimes ? '08:00:00' : block.start_time}
+                max={overrideBlockTimes ? '20:00:00' : block.end_time}
                 onChange={(value) => {
                   field.onChange(value);
                 }}
@@ -364,8 +365,21 @@ export const AppointmentForm = ({
           }}
         />
       </div>
+      <div className="AppointmentForm__row">
+        <div>
+          <Checkbox
+            checked={overrideBlockTimes}
+            inputSize="sm"
+            label="Override block times"
+            onChange={() => {
+              setOverrideBlockTimes((prev) => !prev);
+            }}
+          />
+          <p className="hint mt-2">Check to allow setting start and end times outside of the block times.</p>
+        </div>
+      </div>
       <div>
-        <Toggle labelPosition="right" label="In clinic" {...form.register('in_clinic')} />
+        <Checkbox inputSize="sm" label="In clinic" {...form.register('in_clinic')} />
         {inClinic && availability && !availability.in_clinic && (
           <div className="AppointmentForm__inClinicWarning">
             <span className="material-symbols-outlined">warning</span> Client is not available in clinic
@@ -391,10 +405,10 @@ export const AppointmentForm = ({
           </option>
         ))}
       </Select>
-      <Toggle
+      <Checkbox
         checked={onlyShowRecommendedTechs}
+        inputSize="sm"
         label="Recommended Techs Only"
-        labelPosition="right"
         onChange={() => setOnlyShowRecommendedTechs(!onlyShowRecommendedTechs)}
       />
       {!instance && technician && (
