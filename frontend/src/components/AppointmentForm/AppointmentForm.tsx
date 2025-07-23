@@ -30,6 +30,7 @@ export type AppointmentFormData = {
   repeats?: number[];
   notes?: string;
   in_clinic: boolean;
+  is_preschool_or_adaptive: boolean;
 };
 
 export const AppointmentForm = ({
@@ -74,18 +75,21 @@ export const AppointmentForm = ({
         end_time: instance.end_time,
         notes: instance.notes,
         in_clinic: instance.in_clinic,
+        is_preschool_or_adaptive: instance.is_preschool_or_adaptive,
       });
     } else if (availability) {
       form.reset({
         start_time: availability.start_time,
         end_time: availability.end_time,
         in_clinic: availability.in_clinic,
+        is_preschool_or_adaptive: false,
       });
     } else {
       form.reset({
         start_time: block.start_time,
         end_time: block.end_time,
         in_clinic: false,
+        is_preschool_or_adaptive: false,
       });
     }
   }, [instance, availability, block]);
@@ -390,6 +394,9 @@ export const AppointmentForm = ({
             <span className="material-symbols-outlined">warning</span> Client is available in clinic
           </div>
         )}
+      </div>
+      <div>
+        <Checkbox inputSize="sm" label="Preschool/Adaptive" {...form.register('is_preschool_or_adaptive')} />
       </div>
       <Select fluid label="Technician" {...form.register('technician', { required: true })}>
         <option value="">Select a technician</option>
