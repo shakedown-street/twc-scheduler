@@ -66,6 +66,19 @@ export const AppointmentHover = ({ appointment }: AppointmentHoverProps) => {
           {appointment.in_clinic ? 'check_circle' : 'cancel'}
         </span>
       </div>
+      <div className="AppointmentHover__row">
+        <label>
+          <span className="material-symbols-outlined">school</span> Preschool/Adaptive:
+        </label>
+        <span
+          className={clsx('material-symbols-outlined', 'AppointmentHover__inClinic', {
+            'AppointmentHover__inClinic--true': appointment.is_preschool_or_adaptive,
+            'AppointmentHover__inClinic--false': !appointment.is_preschool_or_adaptive,
+          })}
+        >
+          {appointment.is_preschool_or_adaptive ? 'check_circle' : 'cancel'}
+        </span>
+      </div>
       {appointment.client?.notes && (
         <div className="AppointmentHover__row AppointmentHover__row--notes">
           <label>
