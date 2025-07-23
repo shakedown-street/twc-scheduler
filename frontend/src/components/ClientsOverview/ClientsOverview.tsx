@@ -242,6 +242,7 @@ export const ClientsOverview = () => {
 
       const hoverTrigger = (
         <td
+          className="ClientsOverview__slot"
           onClick={() => {
             clickSlot(client, day, block);
           }}
@@ -251,7 +252,9 @@ export const ClientsOverview = () => {
             borderRightWidth,
             cursor: 'pointer',
           }}
-        ></td>
+        >
+          {appointment.is_preschool_or_adaptive && <div className="ClientsOverview__slot__corner">PA</div>}
+        </td>
       );
 
       if (user?.hover_cards_enabled) {
@@ -330,6 +333,12 @@ export const ClientsOverview = () => {
             style={{ background: striped('black', 'white') }}
           ></div>
           <span>In clinic</span>
+        </div>
+        <div className="ClientsOverview__legend__example">
+          <div className="ClientsOverview__legend__example__color">
+            <div className="ClientsOverview__legend__example__color__corner">PA</div>
+          </div>
+          <span>Preschool/Adaptive</span>
         </div>
       </div>
     );

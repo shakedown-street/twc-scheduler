@@ -159,6 +159,62 @@ export const TimeSlotTable = ({
     }
   }
 
+  function renderSlotCorner(slotAppointment: Appointment | undefined) {
+    const cornerText = slotAppointment && slotAppointment.is_preschool_or_adaptive ? 'PA' : '';
+    if (cornerText) {
+      return <div className="TimeSlotTable__slot__corner">{cornerText}</div>;
+    }
+    return null;
+  }
+
+  function renderTimeSlot(time: string, client: Client) {
+    const slotAppointment = getSlotAppointment(time, client.appointments || []);
+
+    if (slotAppointment) {
+      const hoverTrigger = (
+        <td
+          className="TimeSlotTable__slot"
+          style={{
+            borderLeft: isOnTheHour(time) ? '2px solid black' : undefined,
+            background: slotBackground(time, client),
+          }}
+          onClick={(event) => {
+            clickSlot(event, client, time);
+          }}
+        >
+          {renderSlotCorner(slotAppointment)}
+          {slotText(time, client)}
+        </td>
+      );
+
+      if (user?.hover_cards_enabled) {
+        return (
+          <RadixHoverCard key={time} portal trigger={hoverTrigger}>
+            <AppointmentHover appointment={slotAppointment} />
+          </RadixHoverCard>
+        );
+      } else {
+        return hoverTrigger;
+      }
+    }
+
+    return (
+      <td
+        key={time}
+        className="TimeSlotTable__slot"
+        style={{
+          borderLeft: isOnTheHour(time) ? '2px solid black' : undefined,
+          background: slotBackground(time, client),
+        }}
+        onClick={(event) => {
+          clickSlot(event, client, time);
+        }}
+      >
+        {slotText(time, client)}
+      </td>
+    );
+  }
+
   return (
     <table className="TimeSlotTable">
       <colgroup>
@@ -230,54 +286,7 @@ export const TimeSlotTable = ({
             >
               {client.computed_properties?.is_maxed_on_sessions ? 'M' : 'A'}
             </td>
-            {timeSlots.map((slot) => {
-              const slotAppointment = getSlotAppointment(slot, client.appointments || []);
-
-              if (slotAppointment) {
-                const hoverTrigger = (
-                  <td
-                    className="TimeSlotTable__slot"
-                    style={{
-                      borderLeft: isOnTheHour(slot) ? '2px solid black' : undefined,
-                      background: slotBackground(slot, client),
-                    }}
-                    onClick={(event) => {
-                      clickSlot(event, client, slot);
-                    }}
-                  >
-                    {slotText(slot, client)}
-                  </td>
-                );
-
-                if (user?.hover_cards_enabled) {
-                  return (
-                    <RadixHoverCard key={slot} portal trigger={hoverTrigger}>
-                      <AppointmentHover appointment={slotAppointment} />
-                    </RadixHoverCard>
-                  );
-                } else {
-                  {
-                    hoverTrigger;
-                  }
-                }
-              }
-
-              return (
-                <td
-                  key={slot}
-                  className="TimeSlotTable__slot"
-                  style={{
-                    borderLeft: isOnTheHour(slot) ? '2px solid black' : undefined,
-                    background: slotBackground(slot, client),
-                  }}
-                  onClick={(event) => {
-                    clickSlot(event, client, slot);
-                  }}
-                >
-                  {slotText(slot, client)}
-                </td>
-              );
-            })}
+            {timeSlots.map((slot) => renderTimeSlot(slot, client))}
           </tr>
         ))}
       </tbody>

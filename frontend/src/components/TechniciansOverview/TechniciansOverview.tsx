@@ -180,12 +180,15 @@ export const TechniciansOverview = ({ isSubList = false, showLegend = true }: Te
 
       const hoverTrigger = (
         <td
+          className="TechniciansOverview__slot"
           style={{
             background,
             borderLeftWidth,
             borderRightWidth,
           }}
-        ></td>
+        >
+          {appointment.is_preschool_or_adaptive && <div className="TechniciansOverview__slot__corner">PA</div>}
+        </td>
       );
 
       if (user?.hover_cards_enabled) {
@@ -312,6 +315,12 @@ export const TechniciansOverview = ({ isSubList = false, showLegend = true }: Te
             style={{ background: striped('black', 'white') }}
           ></div>
           <span>In clinic</span>
+        </div>
+        <div className="TechniciansOverview__legend__example">
+          <div className="TechniciansOverview__legend__example__color">
+            <div className="TechniciansOverview__legend__example__color__corner">PA</div>
+          </div>
+          <span>Preschool/Adaptive</span>
         </div>
       </div>
     );

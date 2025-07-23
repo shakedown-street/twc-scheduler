@@ -51,7 +51,18 @@
   }
 
   &__slot {
-    width: 2rem;
+    position: relative;
+
+    &__corner {
+      background-color: black;
+      color: white;
+      font-size: 0.5rem;
+      position: absolute;
+      padding: 0.125rem;
+      line-height: 1;
+      right: 0;
+      top: 0;
+    }
   }
 
   &__legend {
@@ -72,8 +83,20 @@
         border: 1px solid black;
         display: flex;
         justify-content: center;
+        position: relative;
         height: 1.5rem;
         width: 1.5rem;
+
+        &__corner {
+          background-color: black;
+          color: white;
+          font-size: 0.5rem;
+          position: absolute;
+          padding: 0.125rem;
+          line-height: 1;
+          right: 0;
+          top: 0;
+        }
       }
     }
   }

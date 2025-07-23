@@ -92,12 +92,15 @@ export const TechnicianDayOverview = ({ day }: TechnicianDayOverviewProps) => {
 
       const hoverTrigger = (
         <td
+          className="TechnicianDayOverview__slot"
           style={{
             background,
             borderLeftWidth,
             borderRightWidth,
           }}
-        ></td>
+        >
+          {appointment.is_preschool_or_adaptive && <div className="TechnicianDayOverview__slot__corner">PA</div>}
+        </td>
       );
 
       if (user?.hover_cards_enabled) {
@@ -113,7 +116,7 @@ export const TechnicianDayOverview = ({ day }: TechnicianDayOverviewProps) => {
 
     // Render availability blocks
     if (blockAvailabilities.length > 0) {
-      let background = '#cbd5e1'; // tw-slate-300
+      let background = 'black'; // tw-slate-300
       let color = '#22c55e'; // tw-green-500
       let letter = 'A';
       if (technician.computed_properties?.is_maxed_on_sessions) {
