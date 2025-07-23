@@ -31,3 +31,15 @@ export function skillLevelColor(skillLevel: number) {
 export function striped(color1: string, color2: string) {
   return `repeating-linear-gradient(45deg, ${color1}, ${color1} 4px, ${color2} 4px, ${color2} 8px)`;
 }
+
+/**
+ * Determines if black or white text should be used on a given background color
+ */
+export function getContrastTextColor(backgroundColor: string) {
+  const hex = backgroundColor.replace('#', '');
+  const r = parseInt(hex.substring(0, 2), 16);
+  const g = parseInt(hex.substring(2, 4), 16);
+  const b = parseInt(hex.substring(4, 6), 16);
+  const yiq = (r * 299 + g * 587 + b * 114) / 1000;
+  return yiq >= 128 ? 'black' : 'white';
+}
