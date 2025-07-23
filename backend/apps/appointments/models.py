@@ -222,6 +222,7 @@ class Appointment(UUIDPrimaryKeyMixin, TimestampMixin):
     start_time = models.TimeField()
     end_time = models.TimeField()
     in_clinic = models.BooleanField(default=False)
+    is_preschool_or_adaptive = models.BooleanField(default=False)
     notes = EncryptedTextField(blank=True)
 
     class Meta:

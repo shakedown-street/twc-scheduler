@@ -9,6 +9,7 @@ export type Appointment = {
   start_time: string;
   end_time: string;
   in_clinic: boolean;
+  is_preschool_or_adaptive: boolean;
   notes: string;
 
   // Sometimes available

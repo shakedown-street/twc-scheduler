@@ -18,6 +18,8 @@ class AppointmentAdmin(admin.ModelAdmin):
         "day",
         "start_time",
         "end_time",
+        "in_clinic",
+        "is_preschool_or_adaptive",
     )
 
 
