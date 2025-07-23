@@ -212,7 +212,7 @@ REST_FRAMEWORK = {
 
 REST_KNOX = {
     "AUTO_REFRESH": True,
-    "TOKEN_TTL": timedelta(hours=1),
+    "TOKEN_TTL": timedelta(hours=12),
     "USER_SERIALIZER": "apps.accounts.serializers.EmailUserSerializer",
 }
 
