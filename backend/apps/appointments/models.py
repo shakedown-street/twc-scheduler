@@ -10,6 +10,28 @@ from schedule_builder.mixins import TimestampMixin, UUIDPrimaryKeyMixin
 from .utils import get_difference_in_minutes
 
 
+class Schedule(UUIDPrimaryKeyMixin, TimestampMixin):
+    name = models.CharField(max_length=100)
+
+    class Meta:
+        ordering = ["-created_at"]
+
+    def __str__(self):
+        return self.name
+
+
+class Block(models.Model):
+    color = ColorField(default="#000000")
+    start_time = models.TimeField()
+    end_time = models.TimeField()
+
+    class Meta:
+        ordering = ["start_time"]
+
+    def __str__(self):
+        return f"{self.start_time} - {self.end_time}"
+
+
 class Technician(UUIDPrimaryKeyMixin, TimestampMixin):
     first_name = EncryptedCharField(max_length=30)
     last_name = EncryptedCharField(max_length=30)
@@ -40,20 +62,18 @@ class Technician(UUIDPrimaryKeyMixin, TimestampMixin):
     def __str__(self):
         return f"{self.first_name} {self.last_name}"
 
-    @property
-    def total_hours_available(self):
+    def total_hours_available(self, schedule: Schedule = None):
         total_minutes = sum(
             [
                 get_difference_in_minutes(
                     availability.start_time, availability.end_time
                 )
-                for availability in self.availabilities.all()
+                for availability in self.availabilities.filter(schedule=schedule)
             ]
         )
         return round(total_minutes / 60, 2)
 
-    @property
-    def total_hours_by_day(self):
+    def total_hours_by_day(self, schedule: Schedule = None):
         hours = []
 
         for day in range(7):
@@ -62,28 +82,31 @@ class Technician(UUIDPrimaryKeyMixin, TimestampMixin):
                     get_difference_in_minutes(
                         appointment.start_time, appointment.end_time
                     )
-                    for appointment in self.appointments.filter(day=day)
+                    for appointment in self.appointments.filter(
+                        schedule=schedule,
+                        day=day,
+                    )
                 ]
             )
             hours.append(round(total_minutes / 60, 2))
 
         return hours
 
-    @property
-    def total_hours(self):
+    def total_hours(self, schedule: Schedule = None):
         total_minutes = sum(
             [
                 get_difference_in_minutes(appointment.start_time, appointment.end_time)
-                for appointment in self.appointments.all()
+                for appointment in self.appointments.filter(
+                    schedule=schedule,
+                )
             ]
         )
         return round(total_minutes / 60, 2)
 
-    @property
-    def is_maxed_on_sessions(self):
+    def is_maxed_on_sessions(self, schedule: Schedule = None):
         if self.is_manually_maxed_out:
             return True
-        return self.total_hours >= self.requested_hours
+        return self.total_hours(schedule) >= self.requested_hours
 
 
 class Client(UUIDPrimaryKeyMixin, TimestampMixin):
@@ -125,20 +148,20 @@ class Client(UUIDPrimaryKeyMixin, TimestampMixin):
     def __str__(self):
         return f"{self.first_name} {self.last_name}"
 
-    @property
-    def total_hours_available(self):
+    def total_hours_available(self, schedule: Schedule = None):
         total_minutes = sum(
             [
                 get_difference_in_minutes(
                     availability.start_time, availability.end_time
                 )
-                for availability in self.availabilities.all()
+                for availability in self.availabilities.filter(
+                    schedule=schedule,
+                )
             ]
         )
         return round(total_minutes / 60, 2)
 
-    @property
-    def total_hours_by_day(self):
+    def total_hours_by_day(self, schedule: Schedule = None):
         hours = []
 
         for day in range(7):
@@ -147,40 +170,29 @@ class Client(UUIDPrimaryKeyMixin, TimestampMixin):
                     get_difference_in_minutes(
                         appointment.start_time, appointment.end_time
                     )
-                    for appointment in self.appointments.filter(day=day)
+                    for appointment in self.appointments.filter(
+                        schedule=schedule,
+                        day=day,
+                    )
                 ]
             )
             hours.append(round(total_minutes / 60, 2))
 
         return hours
 
-    @property
-    def total_hours(self):
+    def total_hours(self, schedule: Schedule = None):
         total_minutes = sum(
             [
                 get_difference_in_minutes(appointment.start_time, appointment.end_time)
-                for appointment in self.appointments.all()
+                for appointment in self.appointments.filter(schedule=schedule)
             ]
         )
         return round(total_minutes / 60, 2)
 
-    @property
-    def is_maxed_on_sessions(self):
+    def is_maxed_on_sessions(self, schedule: Schedule = None):
         if self.is_manually_maxed_out:
             return True
-        return self.total_hours >= self.prescribed_hours
-
-
-class Block(models.Model):
-    color = ColorField(default="#000000")
-    start_time = models.TimeField()
-    end_time = models.TimeField()
-
-    class Meta:
-        ordering = ["start_time"]
-
-    def __str__(self):
-        return f"{self.start_time} - {self.end_time}"
+        return self.total_hours(schedule) >= self.prescribed_hours
 
 
 class Availability(UUIDPrimaryKeyMixin, TimestampMixin):
@@ -200,10 +212,19 @@ class Availability(UUIDPrimaryKeyMixin, TimestampMixin):
     )
     in_clinic = models.BooleanField(default=False)
 
+    schedule = models.ForeignKey(
+        Schedule,
+        related_name="availabilities",
+        on_delete=models.CASCADE,
+        default=None,
+        null=True,
+        blank=True,
+    )
+
     class Meta:
         ordering = ["content_type", "object_id", "day", "start_time"]
         verbose_name_plural = "Availabilities"
-        unique_together = ["content_type", "object_id", "day", "start_time"]
+        unique_together = ["content_type", "object_id", "schedule", "day", "start_time"]
 
     def __str__(self):
         return f"{self.object} - D{self.day} ({self.start_time}-{self.end_time})"
@@ -225,9 +246,18 @@ class Appointment(UUIDPrimaryKeyMixin, TimestampMixin):
     is_preschool_or_adaptive = models.BooleanField(default=False)
     notes = EncryptedTextField(blank=True)
 
+    schedule = models.ForeignKey(
+        Schedule,
+        related_name="appointments",
+        on_delete=models.CASCADE,
+        default=None,
+        null=True,
+        blank=True,
+    )
+
     class Meta:
         ordering = ["client", "technician", "day", "start_time"]
-        unique_together = ["client", "day", "start_time"]
+        unique_together = ["client", "schedule", "day", "start_time"]
 
     def __str__(self):
         return f"{self.client} - {self.technician} - D{self.day} {self.start_time} - {self.end_time}"
@@ -259,9 +289,18 @@ class TherapyAppointment(UUIDPrimaryKeyMixin, TimestampMixin):
     end_time = models.TimeField()
     notes = EncryptedTextField(blank=True)
 
+    schedule = models.ForeignKey(
+        Schedule,
+        related_name="therapy_appointments",
+        on_delete=models.CASCADE,
+        default=None,
+        null=True,
+        blank=True,
+    )
+
     class Meta:
         ordering = ["client", "day", "start_time"]
-        unique_together = ["client", "day", "start_time"]
+        unique_together = ["client", "schedule", "day", "start_time"]
 
     def __str__(self):
         return f"{self.client} - {self.get_therapy_type_display()} - D{self.day} {self.start_time} - {self.end_time}"
@@ -271,9 +310,10 @@ class TherapyAppointment(UUIDPrimaryKeyMixin, TimestampMixin):
 
 
 # Register the models with auditlog
+auditlog.register(Schedule)
+auditlog.register(Block)
 auditlog.register(Technician)
 auditlog.register(Client)
-auditlog.register(Block)
 auditlog.register(Availability)
 auditlog.register(Appointment)
 auditlog.register(TherapyAppointment)

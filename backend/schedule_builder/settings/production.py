@@ -1,4 +1,5 @@
 from .base import *
+from corsheaders.defaults import default_headers
 
 FRONTEND_URL = f"{SITE_SCHEMA}://{SITE_DOMAIN}"
 
@@ -25,6 +26,9 @@ CSRF_TRUSTED_ORIGINS = [FRONTEND_URL]
 # django-cors-headers
 
 CORS_ALLOWED_ORIGINS = [FRONTEND_URL]
+CORS_ALLOW_HEADERS = list(default_headers) + [
+    "X-Schedule-ID",
+]
 
 
 # stripe

@@ -82,6 +82,7 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "auditlog.middleware.AuditlogMiddleware",
+    "schedule_builder.middleware.ScheduleMiddleware",
 ]
 
 ROOT_URLCONF = "schedule_builder.urls"

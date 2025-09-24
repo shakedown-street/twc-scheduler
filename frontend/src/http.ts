@@ -7,11 +7,15 @@ export const http = axios.create({
 http.interceptors.request.use((config) => {
   const token = localStorage.getItem('token');
   const impersonate = localStorage.getItem('impersonate');
+  const schedule = localStorage.getItem('schedule');
 
   if (impersonate) {
     config.headers['Authorization'] = `Token ${impersonate}`;
   } else if (token) {
     config.headers['Authorization'] = `Token ${token}`;
+  }
+  if (schedule) {
+    config.headers['X-Schedule-ID'] = schedule;
   }
   return config;
 });

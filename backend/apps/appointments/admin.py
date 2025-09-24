@@ -5,6 +5,7 @@ from .models import (
     Availability,
     Block,
     Client,
+    Schedule,
     Technician,
     TherapyAppointment,
 )
@@ -15,12 +16,14 @@ class AppointmentAdmin(admin.ModelAdmin):
     list_display = (
         "client",
         "technician",
+        "schedule",
         "day",
         "start_time",
         "end_time",
         "in_clinic",
         "is_preschool_or_adaptive",
     )
+    list_filter = ("schedule",)
 
 
 @admin.register(Availability)
@@ -28,10 +31,12 @@ class AvailabilityAdmin(admin.ModelAdmin):
     list_display = (
         "object",
         "content_type",
+        "schedule",
         "day",
         "start_time",
         "end_time",
     )
+    list_filter = ("schedule",)
 
 
 @admin.register(Block)
@@ -71,3 +76,9 @@ class TherapyAppointmentAdmin(admin.ModelAdmin):
         "start_time",
         "end_time",
     )
+    list_filter = ("schedule",)
+
+
+@admin.register(Schedule)
+class ScheduleAdmin(admin.ModelAdmin):
+    list_display = ("name",)

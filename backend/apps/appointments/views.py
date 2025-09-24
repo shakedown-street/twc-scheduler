@@ -19,6 +19,7 @@ from .models import (
     Availability,
     Block,
     Client,
+    Schedule,
     Technician,
     TherapyAppointment,
 )
@@ -27,10 +28,19 @@ from .serializers import (
     AvailabilitySerializer,
     BlockSerialzier,
     ClientSerializer,
+    ScheduleSerializer,
     TechnicianBasicSerializer,
     TechnicianSerializer,
     TherapyAppointmentSerializer,
 )
+
+
+class ScheduleViewSet(viewsets.ModelViewSet):
+    queryset = Schedule.objects.all()
+    serializer_class = ScheduleSerializer
+    permission_classes = [
+        IsSuperUserOrReadOnlyAuthenticated,
+    ]
 
 
 class AppointmentViewSet(viewsets.ModelViewSet):
@@ -39,6 +49,13 @@ class AppointmentViewSet(viewsets.ModelViewSet):
     permission_classes = [
         IsSuperUserOrReadOnlyAuthenticated,
     ]
+
+    def get_queryset(self):
+        qs = super().get_queryset()
+
+        qs = qs.filter(schedule=request.schedule)
+
+        return qs
 
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
@@ -83,6 +100,7 @@ class AppointmentViewSet(viewsets.ModelViewSet):
             start_time,
             end_time,
             instance=appointment,
+            schedule=request.schedule,
         )
         return Response(warnings)
 
@@ -113,6 +131,13 @@ class AvailabilityViewSet(
         IsSuperUserOrReadOnlyAuthenticated,
     ]
 
+    def get_queryset(self):
+        qs = super().get_queryset()
+
+        qs = qs.filter(schedule=self.request.schedule)
+
+        return qs
+
 
 class BlockViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Block.objects.all()
@@ -139,7 +164,9 @@ class ClientViewSet(viewsets.ModelViewSet):
     def create_availability(self, request, pk=None):
         client = self.get_object()
         content_type = ContentType.objects.get_for_model(Client)
-        serializer = AvailabilitySerializer(data=request.data)
+        serializer = AvailabilitySerializer(
+            data=request.data, context={"request": request}
+        )
         if serializer.is_valid(raise_exception=True):
             serializer.save(
                 object_id=client.id,
@@ -173,6 +200,7 @@ class ClientViewSet(viewsets.ModelViewSet):
             start_time,
             end_time,
             instance=appointment if appointment else None,
+            schedule=request.schedule,
         )
         serializer = TechnicianBasicSerializer(
             available_technicians,
@@ -203,6 +231,7 @@ class ClientViewSet(viewsets.ModelViewSet):
             day,
             start_time,
             end_time,
+            schedule=request.schedule,
         )
         return Response(repeatable_days)
 
@@ -221,7 +250,9 @@ class TechnicianViewSet(viewsets.ModelViewSet):
     def create_availability(self, request, pk=None):
         technician = self.get_object()
         content_type = ContentType.objects.get_for_model(Technician)
-        serializer = AvailabilitySerializer(data=request.data)
+        serializer = AvailabilitySerializer(
+            data=request.data, context={"request": request}
+        )
         if serializer.is_valid(raise_exception=True):
             serializer.save(
                 object_id=technician.id,
@@ -238,3 +269,10 @@ class TherapyAppointmentViewSet(viewsets.ModelViewSet):
     permission_classes = [
         IsSuperUserOrReadOnlyAuthenticated,
     ]
+
+    def get_queryset(self):
+        qs = super().get_queryset()
+
+        qs = qs.filter(schedule=self.request.schedule)
+
+        return qs

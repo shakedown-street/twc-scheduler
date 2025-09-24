@@ -19,6 +19,7 @@ from apps.appointments.views import (
     AvailabilityViewSet,
     BlockViewSet,
     ClientViewSet,
+    ScheduleViewSet,
     TechnicianViewSet,
     TherapyAppointmentViewSet,
 )
@@ -29,6 +30,7 @@ router.register(r"appointments", AppointmentViewSet, "appointment")
 router.register(r"availabilities", AvailabilityViewSet, "availability")
 router.register(r"blocks", BlockViewSet, "block")
 router.register(r"clients", ClientViewSet, "client")
+router.register(r"schedules", ScheduleViewSet, "schedule")
 router.register(r"technicians", TechnicianViewSet, "technician")
 router.register(
     r"therapy-appointments",

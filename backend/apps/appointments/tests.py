@@ -232,7 +232,7 @@ class AvailabilityTestCase(TestCase):
         self.assertEqual(block_1_technicians[0], self.technician)
 
         # Assert that client is not maxed out on sessions
-        self.assertEqual(self.client.is_maxed_on_sessions, False)
+        self.assertEqual(self.client.is_maxed_on_sessions(), False)
 
         # Create an appointment for the technician
         Appointment.objects.create(
@@ -256,7 +256,7 @@ class AvailabilityTestCase(TestCase):
         self.assertEqual(len(block_1_technicians), 0)
 
         # Assert that the client is maxed out on sessions
-        self.assertEqual(self.client.is_maxed_on_sessions, True)
+        self.assertEqual(self.client.is_maxed_on_sessions(), True)
 
     def test_total_hours_by_day(self):
         """
@@ -293,14 +293,14 @@ class AvailabilityTestCase(TestCase):
             end_time="12:30:00",
         )
 
-        self.assertEqual(self.client.total_hours_by_day[0], 6)
-        self.assertEqual(self.client.total_hours_by_day[1], 2.5)
-        self.assertEqual(self.client.total_hours_by_day[2], 0)
-        self.assertEqual(self.client.total_hours_by_day[3], 3)
-        self.assertEqual(self.technician.total_hours_by_day[0], 6)
-        self.assertEqual(self.technician.total_hours_by_day[1], 2.5)
-        self.assertEqual(self.technician.total_hours_by_day[2], 0)
-        self.assertEqual(self.technician.total_hours_by_day[3], 3)
+        self.assertEqual(self.client.total_hours_by_day()[0], 6)
+        self.assertEqual(self.client.total_hours_by_day()[1], 2.5)
+        self.assertEqual(self.client.total_hours_by_day()[2], 0)
+        self.assertEqual(self.client.total_hours_by_day()[3], 3)
+        self.assertEqual(self.technician.total_hours_by_day()[0], 6)
+        self.assertEqual(self.technician.total_hours_by_day()[1], 2.5)
+        self.assertEqual(self.technician.total_hours_by_day()[2], 0)
+        self.assertEqual(self.technician.total_hours_by_day()[3], 3)
 
     def test_total_hours(self):
         """
@@ -337,5 +337,4 @@ class AvailabilityTestCase(TestCase):
             end_time="12:30:00",
         )
 
-        self.assertEqual(self.client.total_hours, 11.5)
-        self.assertEqual(self.client.total_hours, 11.5)
+        self.assertEqual(self.client.total_hours(), 11.5)

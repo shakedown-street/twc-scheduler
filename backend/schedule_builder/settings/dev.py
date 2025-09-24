@@ -1,4 +1,5 @@
 from .base import *
+from corsheaders.defaults import default_headers
 
 DEBUG = True
 FRONTEND_URL = "http://localhost:5173"
@@ -27,6 +28,9 @@ CSRF_TRUSTED_ORIGINS = [FRONTEND_URL]
 # django-cors-headers
 
 CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOW_HEADERS = list(default_headers) + [
+    "X-Schedule-ID",
+]
 
 
 # djangorestframework

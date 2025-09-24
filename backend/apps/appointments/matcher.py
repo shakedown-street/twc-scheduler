@@ -2,7 +2,7 @@ from datetime import datetime
 
 from django.db.models import Q
 
-from .models import Appointment, Block, Client, Technician
+from .models import Appointment, Block, Client, Schedule, Technician
 
 
 def find_available_technicians(
@@ -11,6 +11,7 @@ def find_available_technicians(
     start_time: str,
     end_time: str,
     instance: Appointment | None = None,
+    schedule: Schedule | None = None,
 ) -> list[Technician]:
     """
     Filter out technicians who:
@@ -35,11 +36,12 @@ def find_available_technicians(
 
     # filter out technicians who are maxed out on appointments for the week
     for tech in qs:
-        if tech.is_maxed_on_sessions:
+        if tech.is_maxed_on_sessions(schedule):
             qs = qs.exclude(pk=tech.pk)
 
     # filter out technicians who are not available on the given day and time
     qs = qs.filter(
+        availabilities__schedule=schedule,
         availabilities__day=day,
         availabilities__start_time__lte=start_time,
         availabilities__end_time__gte=end_time,
@@ -48,7 +50,7 @@ def find_available_technicians(
 
     # filter out technicians who are already booked on the given day and time
     for tech in qs:
-        appointments = tech.appointments.filter(day=day)
+        appointments = tech.appointments.filter(schedule=schedule, day=day)
 
         if appointments.filter(
             start_time__lt=end_time, end_time__gt=start_time
@@ -68,6 +70,7 @@ def find_repeatable_appointment_days(
     day: int,
     start_time: str,
     end_time: str,
+    schedule: Schedule | None = None,
 ) -> list[int]:
     """
     Return an array of days (int) that the given technician
@@ -82,6 +85,7 @@ def find_repeatable_appointment_days(
 
         # skip if the client is not available on the given day
         if not client.availabilities.filter(
+            schedule=schedule,
             day=i,
             start_time__lte=start_time,
             end_time__gte=end_time,
@@ -94,6 +98,8 @@ def find_repeatable_appointment_days(
             i,
             start_time,
             end_time,
+            None,
+            schedule,
         ):
             days.append(i)
 
@@ -107,6 +113,7 @@ def get_appointment_warnings(
     start_time: str,
     end_time: str,
     instance: Appointment | None = None,
+    schedule: Schedule | None = None,
 ) -> list[str]:
     warnings = []
 
@@ -135,7 +142,7 @@ def get_appointment_warnings(
 
     # check if this appointment will exceed the client's prescribed hours
     if client.prescribed_hours >= 0:
-        total_hours = client.total_hours
+        total_hours = client.total_hours(schedule)
         if instance:
             # subtract the existing appointment time from the total hours
             existing_start_as_datetime = datetime.combine(
@@ -158,7 +165,7 @@ def get_appointment_warnings(
 
     # check if this appointment will exceed the technician's requested hours
     if tech.requested_hours >= 0:
-        total_hours = tech.total_hours
+        total_hours = tech.total_hours(schedule)
         if instance:
             # subtract the existing appointment time from the total hours
             existing_start_as_datetime = datetime.combine(
@@ -181,7 +188,7 @@ def get_appointment_warnings(
 
     # check if this appointment will exceed the technician's max hours per day
     if tech.max_hours_per_day >= 0:
-        total_hours_today = tech.total_hours_by_day[day_int]
+        total_hours_today = tech.total_hours_by_day(schedule)[day_int]
         if instance:
             # subtract the existing appointment time from the total hours
             existing_start_as_datetime = datetime.combine(
@@ -212,6 +219,7 @@ def get_appointment_warnings(
 
     # check if the client is available
     if not client.availabilities.filter(
+        schedule=schedule,
         day=day,
         start_time__lte=start_time,
         end_time__gte=end_time,
@@ -222,6 +230,7 @@ def get_appointment_warnings(
 
     # check if the technician is available
     if not tech.availabilities.filter(
+        schedule=schedule,
         day=day,
         start_time__lte=start_time,
         end_time__gte=end_time,
@@ -233,6 +242,7 @@ def get_appointment_warnings(
 
     # check if the client is already booked
     client_appointments = client.appointments.filter(
+        schedule=schedule,
         day=day,
         start_time__lt=end_time,
         end_time__gt=start_time,
@@ -246,6 +256,7 @@ def get_appointment_warnings(
 
     # check if the technician is already booked
     tech_appointments = tech.appointments.filter(
+        schedule=schedule,
         day=day,
         start_time__lt=end_time,
         end_time__gt=start_time,
@@ -270,16 +281,19 @@ def get_appointment_warnings(
         parsed_start_time >= block_3.start_time and parsed_end_time <= block_3.end_time
     )
     client_has_block_1_appt = client.appointments.filter(
+        schedule=schedule,
         day=day,
         start_time__gte=block_1.start_time,
         end_time__lte=block_1.end_time,
     ).exists()
     client_has_block_2_appt = client.appointments.filter(
+        schedule=schedule,
         day=day,
         start_time__gte=block_2.start_time,
         end_time__lte=block_2.end_time,
     ).exists()
     client_has_block_3_appt = client.appointments.filter(
+        schedule=schedule,
         day=day,
         start_time__gte=block_3.start_time,
         end_time__lte=block_3.end_time,
@@ -291,16 +305,19 @@ def get_appointment_warnings(
         warnings.append(f"This appointment will create a split block for {client}")
 
     tech_has_block_1_appt = tech.appointments.filter(
+        schedule=schedule,
         day=day,
         start_time__gte=block_1.start_time,
         end_time__lte=block_1.end_time,
     ).exists()
     tech_has_block_2_appt = tech.appointments.filter(
+        schedule=schedule,
         day=day,
         start_time__gte=block_2.start_time,
         end_time__lte=block_2.end_time,
     ).exists()
     tech_has_block_3_appt = tech.appointments.filter(
+        schedule=schedule,
         day=day,
         start_time__gte=block_3.start_time,
         end_time__lte=block_3.end_time,
@@ -333,6 +350,7 @@ def find_recommended_subs(
 
     # filter out technicians who are not available on the given day and time
     qs = qs.filter(
+        availabilities__schedule=appointment.schedule,
         availabilities__day=appointment.day,
         availabilities__start_time__lte=appointment.start_time,
         availabilities__end_time__gte=appointment.end_time,
@@ -341,6 +359,7 @@ def find_recommended_subs(
     # filter out technicians who are already booked on the given day and time
     for tech in qs:
         if tech.appointments.filter(
+            schedule=appointment.schedule,
             day=appointment.day,
             start_time__lt=appointment.end_time,
             end_time__gt=appointment.start_time,
@@ -351,7 +370,10 @@ def find_recommended_subs(
     # and have not worked with the client before
     qs = qs.filter(
         Q(past_clients__in=[appointment.client])
-        | Q(appointments__client=appointment.client)
+        | (
+            Q(appointments__client=appointment.client)
+            & Q(appointments__schedule=appointment.schedule)
+        )
     ).distinct()
 
     return qs

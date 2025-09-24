@@ -5,9 +5,16 @@ from .models import (
     Availability,
     Block,
     Client,
+    Schedule,
     Technician,
     TherapyAppointment,
 )
+
+
+class ScheduleSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Schedule
+        fields = "__all__"
 
 
 class ClientBasicSerializer(serializers.ModelSerializer):
@@ -51,6 +58,9 @@ class AppointmentSerializer(serializers.ModelSerializer):
         return value
 
     def create(self, validated_data):
+        request = self.context.get("request")
+        validated_data["schedule"] = request.schedule
+
         repeats = validated_data.pop("repeats", None)
         created = []
 
@@ -79,6 +89,12 @@ class TherapyAppointmentSerializer(serializers.ModelSerializer):
 
         return data
 
+    def create(self, validated_data):
+        request = self.context.get("request")
+        validated_data["schedule"] = request.schedule
+
+        return super().create(validated_data)
+
 
 class AvailabilitySerializer(serializers.ModelSerializer):
     class Meta:
@@ -88,6 +104,12 @@ class AvailabilitySerializer(serializers.ModelSerializer):
             "content_type",
             "object_id",
         ]
+
+    def create(self, validated_data):
+        request = self.context.get("request")
+        validated_data["schedule"] = request.schedule
+
+        return super().create(validated_data)
 
 
 class BlockSerialzier(serializers.ModelSerializer):
@@ -107,33 +129,37 @@ class ClientSerializer(serializers.ModelSerializer):
 
         if request and request.query_params.get("expand_properties"):
             data["computed_properties"] = {
-                "total_hours_available": instance.total_hours_available,
-                "total_hours": instance.total_hours,
-                "total_hours_by_day": instance.total_hours_by_day,
-                "is_maxed_on_sessions": instance.is_maxed_on_sessions,
+                "total_hours_available": instance.total_hours_available(
+                    request.schedule
+                ),
+                "total_hours": instance.total_hours(request.schedule),
+                "total_hours_by_day": instance.total_hours_by_day(request.schedule),
+                "is_maxed_on_sessions": instance.is_maxed_on_sessions(request.schedule),
             }
 
         if request and request.query_params.get("expand_appointments"):
             data["appointments"] = AppointmentSerializer(
-                instance.appointments.all(),
+                instance.appointments.filter(schedule=request.schedule),
                 many=True,
                 context=self.context,
             ).data
             data["therapy_appointments"] = TherapyAppointmentSerializer(
-                instance.therapy_appointments.all(),
+                instance.therapy_appointments.filter(schedule=request.schedule),
                 many=True,
                 context=self.context,
             ).data
 
         if request and request.query_params.get("expand_availabilities"):
             data["availabilities"] = AvailabilitySerializer(
-                instance.availabilities.all(),
+                instance.availabilities.filter(schedule=request.schedule),
                 many=True,
                 context=self.context,
             ).data
 
         # Serialize current technicians from appointments
-        current_technician_ids = instance.appointments.values_list(
+        current_technician_ids = instance.appointments.filter(
+            schedule=request.schedule,
+        ).values_list(
             "technician__id",
             flat=True,
         )
@@ -167,22 +193,24 @@ class TechnicianSerializer(serializers.ModelSerializer):
 
         if request and request.query_params.get("expand_properties"):
             data["computed_properties"] = {
-                "total_hours_available": instance.total_hours_available,
-                "total_hours": instance.total_hours,
-                "total_hours_by_day": instance.total_hours_by_day,
-                "is_maxed_on_sessions": instance.is_maxed_on_sessions,
+                "total_hours_available": instance.total_hours_available(
+                    request.schedule
+                ),
+                "total_hours": instance.total_hours(request.schedule),
+                "total_hours_by_day": instance.total_hours_by_day(request.schedule),
+                "is_maxed_on_sessions": instance.is_maxed_on_sessions(request.schedule),
             }
 
         if request and request.query_params.get("expand_appointments"):
             data["appointments"] = AppointmentSerializer(
-                instance.appointments,
+                instance.appointments.filter(schedule=request.schedule),
                 many=True,
                 context=self.context,
             ).data
 
         if request and request.query_params.get("expand_availabilities"):
             data["availabilities"] = AvailabilitySerializer(
-                instance.availabilities,
+                instance.availabilities.filter(schedule=request.schedule),
                 many=True,
                 context=self.context,
             ).data
