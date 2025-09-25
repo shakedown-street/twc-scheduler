@@ -1,8 +1,8 @@
+import { http } from '@/http';
+import { Button, Input } from '@/ui';
+import { handleFormErrors } from '@/utils/errors';
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
-import { http } from '~/http';
-import { Button, Input } from '~/ui';
-import { handleFormErrors } from '~/utils/errors';
 import './PasswordResetConfirmForm.scss';
 
 export type PasswordResetConfirmFormProps = {

@@ -1,7 +1,7 @@
+import { http } from '@/http';
+import { Button } from '@/ui';
 import { useGoogleLogin } from '@react-oauth/google';
 import { useNavigate } from 'react-router-dom';
-import { http } from '~/http';
-import { Button } from '~/ui';
 import { useAuth } from '../../contexts/AuthContext';
 import GoogleSSOLogo from './GoogleSSOLogo.svg';
 

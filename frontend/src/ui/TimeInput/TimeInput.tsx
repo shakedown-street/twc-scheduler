@@ -1,6 +1,6 @@
+import { formatTime, generateTimeSlots } from '@/utils/time';
 import clsx from 'clsx';
 import React from 'react';
-import { formatTime, generateTimeSlots } from '~/utils/time';
 import { Input, InputProps } from '../Input/Input';
 import { RadixPopover } from '../RadixPopover/RadixPopover';
 import './TimeInput.scss';

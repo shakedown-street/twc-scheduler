@@ -1,9 +1,9 @@
+import { ClientsOverview } from '@/components/ClientsOverview/ClientsOverview';
+import { ClientTechnicianMatrix } from '@/components/ClientTechnicianMatrix/ClientTechnicianMatrix';
+import { TechniciansOverview } from '@/components/TechniciansOverview/TechniciansOverview';
+import { Container, TabItem, Tabs } from '@/ui';
 import { Helmet } from 'react-helmet';
 import { useSearchParams } from 'react-router-dom';
-import { ClientsOverview } from '~/components/ClientsOverview/ClientsOverview';
-import { ClientTechnicianMatrix } from '~/components/ClientTechnicianMatrix/ClientTechnicianMatrix';
-import { TechniciansOverview } from '~/components/TechniciansOverview/TechniciansOverview';
-import { Container, TabItem, Tabs } from '~/ui';
 
 export const Overview = () => {
   const [searchParams, setSearchParams] = useSearchParams();

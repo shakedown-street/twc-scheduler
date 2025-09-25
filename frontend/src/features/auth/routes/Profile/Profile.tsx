@@ -1,6 +1,6 @@
+import { Card, Container, TabItem, Tabs } from '@/ui';
 import React from 'react';
 import { Helmet } from 'react-helmet';
-import { Card, Container, TabItem, Tabs } from '~/ui';
 import { PasswordChangeForm } from '../../components/PasswordChangeForm/PasswordChangeForm';
 import { ProfileForm } from '../../components/ProfileForm/ProfileForm';
 

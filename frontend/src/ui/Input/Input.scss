@@ -1,5 +1,5 @@
-@import '~/scss/mixins';
-@import '~/scss/variables';
+@import '@/scss/mixins';
+@import '@/scss/variables';
 
 @mixin input-container-size($base) {
   .iconLeading {

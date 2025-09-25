@@ -1,11 +1,11 @@
+import { AvailabilityModel, ClientModel, TechnicianModel } from '@/api';
+import { Availability } from '@/types/Availability';
+import { Client } from '@/types/Client';
+import { Technician } from '@/types/Technician';
+import { Badge, Button, Checkbox, TimeInput, useToast } from '@/ui';
+import { dayToString } from '@/utils/time';
 import React from 'react';
 import { Controller, useForm } from 'react-hook-form';
-import { AvailabilityModel, ClientModel, TechnicianModel } from '~/api';
-import { Availability } from '~/types/Availability';
-import { Client } from '~/types/Client';
-import { Technician } from '~/types/Technician';
-import { Badge, Button, Checkbox, TimeInput, useToast } from '~/ui';
-import { dayToString } from '~/utils/time';
 import './AvailabilityForm.scss';
 
 export type AvailabilityFormProps = {

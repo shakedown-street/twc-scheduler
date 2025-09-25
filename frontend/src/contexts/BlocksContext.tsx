@@ -1,7 +1,7 @@
+import { BlockModel } from '@/api';
+import { Block } from '@/types/Block';
+import { Spinner } from '@/ui';
 import React from 'react';
-import { BlockModel } from '~/api';
-import { Block } from '~/types/Block';
-import { Spinner } from '~/ui';
 
 export type BlocksContextType = {
   blocks: Block[];

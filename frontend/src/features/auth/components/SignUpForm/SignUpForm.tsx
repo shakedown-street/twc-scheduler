@@ -1,8 +1,8 @@
+import { UserModel } from '@/api';
+import { Button, Input } from '@/ui';
+import { handleFormErrors } from '@/utils/errors';
 import React from 'react';
 import { useForm } from 'react-hook-form';
-import { UserModel } from '~/api';
-import { Button, Input } from '~/ui';
-import { handleFormErrors } from '~/utils/errors';
 import './SignUpForm.scss';
 
 export type SignUpFormData = {

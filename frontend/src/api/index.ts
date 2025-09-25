@@ -1,11 +1,11 @@
-import { BaseModel } from '~/http';
-import { Appointment } from '~/types/Appointment';
-import { Availability } from '~/types/Availability';
-import { Block } from '~/types/Block';
-import { Client } from '~/types/Client';
-import { Technician } from '~/types/Technician';
-import { TherapyAppointment } from '~/types/TherapyAppointment';
-import { User } from '~/types/User';
+import { BaseModel } from '@/http';
+import { Appointment } from '@/types/Appointment';
+import { Availability } from '@/types/Availability';
+import { Block } from '@/types/Block';
+import { Client } from '@/types/Client';
+import { Technician } from '@/types/Technician';
+import { TherapyAppointment } from '@/types/TherapyAppointment';
+import { User } from '@/types/User';
 
 export const AppointmentModel = new BaseModel<Appointment>('/api/appointments/');
 export const AvailabilityModel = new BaseModel<Availability>('/api/availabilities/');

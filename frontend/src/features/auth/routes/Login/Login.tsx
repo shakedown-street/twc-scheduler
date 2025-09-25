@@ -1,5 +1,5 @@
+import { Card, Container } from '@/ui';
 import { Helmet } from 'react-helmet';
-import { Card, Container } from '~/ui';
 import { LoginForm } from '../../components/LoginForm/LoginForm';
 
 export const Login = () => {

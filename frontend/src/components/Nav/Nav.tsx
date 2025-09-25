@@ -1,12 +1,12 @@
+import logo from '@/assets/logo.avif';
+import { ImpersonateDialog } from '@/features/auth/components/ImpersonateDialog/ImpersonateDialog';
+import { useAuth } from '@/features/auth/contexts/AuthContext';
+import { http } from '@/http';
+import { Button, Container, IconButton, RadixDialog, useToast } from '@/ui';
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
 import clsx from 'clsx';
 import React from 'react';
 import { Link, NavLink, useNavigate } from 'react-router-dom';
-import logo from '~/assets/logo.avif';
-import { ImpersonateDialog } from '~/features/auth/components/ImpersonateDialog/ImpersonateDialog';
-import { useAuth } from '~/features/auth/contexts/AuthContext';
-import { http } from '~/http';
-import { Button, Container, IconButton, RadixDialog, useToast } from '~/ui';
 import { SettingsDialog } from '../SettingsDialog/SettingsDialog';
 import './Nav.scss';
 

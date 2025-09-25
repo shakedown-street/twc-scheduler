@@ -1,5 +1,5 @@
-@import '~/scss/mixins';
-@import '~/scss/variables';
+@import '@/scss/mixins';
+@import '@/scss/variables';
 
 @mixin checkbox-size($base) {
   $box-size: $base * 1.5;

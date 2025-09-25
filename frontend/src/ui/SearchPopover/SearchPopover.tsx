@@ -1,6 +1,6 @@
+import { http } from '@/http';
+import { debounceRef } from '@/utils/debounce';
 import React from 'react';
-import { http } from '~/http';
-import { debounceRef } from '~/utils/debounce';
 import { Input } from '../Input/Input';
 import { RadixPopover } from '../RadixPopover/RadixPopover';
 import { Spinner } from '../Spinner/Spinner';

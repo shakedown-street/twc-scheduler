@@ -1,8 +1,8 @@
+import { http } from '@/http';
+import { Button, Input } from '@/ui';
+import { handleFormErrors } from '@/utils/errors';
 import React from 'react';
 import { useForm } from 'react-hook-form';
-import { http } from '~/http';
-import { Button, Input } from '~/ui';
-import { handleFormErrors } from '~/utils/errors';
 import './PasswordResetForm.scss';
 
 export type PasswordResetFormData = {

@@ -1,9 +1,9 @@
+import { http } from '@/http';
+import { Button, Input, RadixDialog } from '@/ui';
+import { handleFormErrors } from '@/utils/errors';
 import React from 'react';
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
-import { http } from '~/http';
-import { Button, Input, RadixDialog } from '~/ui';
-import { handleFormErrors } from '~/utils/errors';
 import { useAuth } from '../../contexts/AuthContext';
 import { ResendVerifyEmail } from '../ResendVerifyEmail/ResendVerifyEmail';
 import './LoginForm.scss';

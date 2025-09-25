@@ -1,8 +1,8 @@
+import { http } from '@/http';
+import { Card, Container } from '@/ui';
 import React from 'react';
 import { Helmet } from 'react-helmet';
 import { Link, useParams } from 'react-router-dom';
-import { http } from '~/http';
-import { Card, Container } from '~/ui';
 
 export const VerifyEmail = () => {
   const [error, setError] = React.useState('');

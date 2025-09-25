@@ -1,6 +1,3 @@
-import React from 'react';
-import { Helmet } from 'react-helmet';
-import { useSearchParams } from 'react-router-dom';
 import {
   Badge,
   BasicImageUpload,
@@ -27,7 +24,10 @@ import {
   TimeInput,
   Toggle,
   useToast,
-} from '~/ui';
+} from '@/ui';
+import React from 'react';
+import { Helmet } from 'react-helmet';
+import { useSearchParams } from 'react-router-dom';
 import './StyleGuide.scss';
 
 export const StyleGuide = () => {

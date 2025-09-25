@@ -1,6 +1,6 @@
+import { Card, Container } from '@/ui';
 import { Helmet } from 'react-helmet';
 import { useParams } from 'react-router-dom';
-import { Card, Container } from '~/ui';
 import { PasswordResetConfirmForm } from '../../components/PasswordResetConfirmForm/PasswordResetConfirmForm';
 
 export const PasswordResetConfirm = () => {

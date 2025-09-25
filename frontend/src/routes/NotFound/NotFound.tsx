@@ -1,5 +1,5 @@
+import { Button, Card, Container } from '@/ui';
 import { Helmet } from 'react-helmet';
-import { Button, Card, Container } from '~/ui';
 
 export const NotFound = () => {
   return (

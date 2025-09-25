@@ -1,18 +1,18 @@
+import { TechnicianModel } from '@/api';
+import { AvailabilityForm } from '@/components/AvailabilityForm/AvailabilityForm';
+import { TechnicianForm } from '@/components/TechnicianForm/TechnicianForm';
+import { useBlocks } from '@/contexts/BlocksContext';
+import { useAuth } from '@/features/auth/contexts/AuthContext';
+import { Availability } from '@/types/Availability';
+import { Block } from '@/types/Block';
+import { Technician } from '@/types/Technician';
+import { Button, Card, Checkbox, RadixDialog, Spinner } from '@/ui';
+import { isFullBlock } from '@/utils/appointments';
+import { skillLevelColor } from '@/utils/color';
+import { orderByFirstName } from '@/utils/order';
+import { checkTimeIntersection, formatTimeShort } from '@/utils/time';
 import clsx from 'clsx';
 import React from 'react';
-import { TechnicianModel } from '~/api';
-import { AvailabilityForm } from '~/components/AvailabilityForm/AvailabilityForm';
-import { TechnicianForm } from '~/components/TechnicianForm/TechnicianForm';
-import { useBlocks } from '~/contexts/BlocksContext';
-import { useAuth } from '~/features/auth/contexts/AuthContext';
-import { Availability } from '~/types/Availability';
-import { Block } from '~/types/Block';
-import { Technician } from '~/types/Technician';
-import { Button, Card, Checkbox, RadixDialog, Spinner } from '~/ui';
-import { isFullBlock } from '~/utils/appointments';
-import { skillLevelColor } from '~/utils/color';
-import { orderByFirstName } from '~/utils/order';
-import { checkTimeIntersection, formatTimeShort } from '~/utils/time';
 import './TechAvailability.scss';
 
 export const TechAvailability = () => {

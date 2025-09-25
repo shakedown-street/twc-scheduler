@@ -1,7 +1,7 @@
+import { ClientTechnicianHistory } from '@/components/ClientTechnicianHistory/ClientTechnicianHistory';
+import { TechniciansOverview } from '@/components/TechniciansOverview/TechniciansOverview';
+import { Container } from '@/ui';
 import { Helmet } from 'react-helmet';
-import { ClientTechnicianHistory } from '~/components/ClientTechnicianHistory/ClientTechnicianHistory';
-import { TechniciansOverview } from '~/components/TechniciansOverview/TechniciansOverview';
-import { Container } from '~/ui';
 import './SubList.scss';
 
 export const SubList = () => {

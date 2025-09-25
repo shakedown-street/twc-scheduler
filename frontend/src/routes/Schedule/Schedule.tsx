@@ -1,22 +1,22 @@
+import { ClientModel } from '@/api';
+import { AppointmentForm } from '@/components/AppointmentForm/AppointmentForm';
+import { ClientForm } from '@/components/ClientForm/ClientForm';
+import { TechnicianDayOverview } from '@/components/TechnicianDayOverview/TechnicianDayOverview';
+import { TherapyAppointmentForm } from '@/components/TherapyAppointmentForm/TherapyAppointmentForm';
+import { TimeSlotTable } from '@/components/TimeSlotTable/TimeSlotTable';
+import { useBlocks } from '@/contexts/BlocksContext';
+import { useAuth } from '@/features/auth/contexts/AuthContext';
+import { Appointment } from '@/types/Appointment';
+import { Availability } from '@/types/Availability';
+import { Block } from '@/types/Block';
+import { Client } from '@/types/Client';
+import { TherapyAppointment } from '@/types/TherapyAppointment';
+import { Button, Container, RadixDialog, Spinner, TabItem, Tabs } from '@/ui';
+import { orderByFirstName } from '@/utils/order';
+import { dayToString } from '@/utils/time';
 import React from 'react';
 import { Helmet } from 'react-helmet';
 import { useSearchParams } from 'react-router-dom';
-import { ClientModel } from '~/api';
-import { AppointmentForm } from '~/components/AppointmentForm/AppointmentForm';
-import { ClientForm } from '~/components/ClientForm/ClientForm';
-import { TechnicianDayOverview } from '~/components/TechnicianDayOverview/TechnicianDayOverview';
-import { TherapyAppointmentForm } from '~/components/TherapyAppointmentForm/TherapyAppointmentForm';
-import { TimeSlotTable } from '~/components/TimeSlotTable/TimeSlotTable';
-import { useBlocks } from '~/contexts/BlocksContext';
-import { useAuth } from '~/features/auth/contexts/AuthContext';
-import { Appointment } from '~/types/Appointment';
-import { Availability } from '~/types/Availability';
-import { Block } from '~/types/Block';
-import { Client } from '~/types/Client';
-import { TherapyAppointment } from '~/types/TherapyAppointment';
-import { Button, Container, RadixDialog, Spinner, TabItem, Tabs } from '~/ui';
-import { orderByFirstName } from '~/utils/order';
-import { dayToString } from '~/utils/time';
 import './Schedule.scss';
 
 export const Schedule = () => {

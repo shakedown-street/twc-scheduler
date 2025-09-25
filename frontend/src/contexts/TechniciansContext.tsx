@@ -1,10 +1,10 @@
+import { TechnicianModel } from '@/api';
+import { Appointment } from '@/types/Appointment';
+import { Availability } from '@/types/Availability';
+import { Technician } from '@/types/Technician';
+import { Spinner } from '@/ui';
+import { orderByFirstName } from '@/utils/order';
 import React from 'react';
-import { TechnicianModel } from '~/api';
-import { Appointment } from '~/types/Appointment';
-import { Availability } from '~/types/Availability';
-import { Technician } from '~/types/Technician';
-import { Spinner } from '~/ui';
-import { orderByFirstName } from '~/utils/order';
 
 // Not in use ATM
 

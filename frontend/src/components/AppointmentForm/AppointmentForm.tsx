@@ -1,15 +1,15 @@
+import { AppointmentModel, ClientModel, TechnicianModel } from '@/api';
+import { Appointment } from '@/types/Appointment';
+import { Availability } from '@/types/Availability';
+import { Block } from '@/types/Block';
+import { Client } from '@/types/Client';
+import { Technician } from '@/types/Technician';
+import { Badge, Button, Checkbox, IconButton, RadixTooltip, Select, Textarea, TimeInput, useToast } from '@/ui';
+import { orderByFirstName } from '@/utils/order';
+import { dayToString } from '@/utils/time';
 import clsx from 'clsx';
 import React from 'react';
 import { Controller, useForm } from 'react-hook-form';
-import { AppointmentModel, ClientModel, TechnicianModel } from '~/api';
-import { Appointment } from '~/types/Appointment';
-import { Availability } from '~/types/Availability';
-import { Block } from '~/types/Block';
-import { Client } from '~/types/Client';
-import { Technician } from '~/types/Technician';
-import { Badge, Button, Checkbox, IconButton, RadixTooltip, Select, Textarea, TimeInput, useToast } from '~/ui';
-import { orderByFirstName } from '~/utils/order';
-import { dayToString } from '~/utils/time';
 import './AppointmentForm.scss';
 
 export type AppointmentFormProps = {

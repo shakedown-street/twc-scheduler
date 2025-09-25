@@ -1,5 +1,5 @@
+import { isFileAccepted } from '@/utils/files';
 import React from 'react';
-import { isFileAccepted } from '~/utils/files';
 import { useToast } from '../Toaster/ToastContext';
 
 export type FileUploadControllerRenderProps = {

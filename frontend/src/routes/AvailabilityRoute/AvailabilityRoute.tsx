@@ -1,8 +1,8 @@
+import { ClientAvailability } from '@/components/ClientAvailability/ClientAvailability';
+import { TechAvailability } from '@/components/TechAvailability/TechAvailability';
+import { Container, TabItem, Tabs } from '@/ui';
 import { Helmet } from 'react-helmet';
 import { useSearchParams } from 'react-router-dom';
-import { ClientAvailability } from '~/components/ClientAvailability/ClientAvailability';
-import { TechAvailability } from '~/components/TechAvailability/TechAvailability';
-import { Container, TabItem, Tabs } from '~/ui';
 
 export const AvailabilityRoute = () => {
   const [searchParams, setSearchParams] = useSearchParams();

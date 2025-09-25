@@ -1,6 +1,6 @@
-import { Appointment } from '~/types/Appointment';
-import { Availability } from '~/types/Availability';
-import { Block } from '~/types/Block';
+import { Appointment } from '@/types/Appointment';
+import { Availability } from '@/types/Availability';
+import { Block } from '@/types/Block';
 import { checkTimeIntersection } from './time';
 
 export function getBlockAppointments(appointments: Appointment[], day: number, block: Block) {

@@ -1,5 +1,5 @@
+import { handleDetailError, handleFieldErrors, handleNonFieldErrors } from '@/utils/errors';
 import React from 'react';
-import { handleDetailError, handleFieldErrors, handleNonFieldErrors } from '~/utils/errors';
 
 export type Toast = {
   id: number;

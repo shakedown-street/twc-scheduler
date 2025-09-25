@@ -1,6 +1,6 @@
+import { http } from '@/http';
+import { Button, Card, useToast } from '@/ui';
 import { useNavigate } from 'react-router-dom';
-import { http } from '~/http';
-import { Button, Card, useToast } from '~/ui';
 import { useAuth } from '../../contexts/AuthContext';
 import './ImpersonationWarning.scss';
 

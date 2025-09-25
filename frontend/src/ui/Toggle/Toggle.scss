@@ -1,5 +1,5 @@
-@import '~/scss/mixins';
-@import '~/scss/variables';
+@import '@/scss/mixins';
+@import '@/scss/variables';
 
 @mixin toggle-size($base) {
   $toggle-height: $base * 1.5;

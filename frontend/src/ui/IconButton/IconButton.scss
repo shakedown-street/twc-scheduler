@@ -1,5 +1,5 @@
-@import '~/scss/mixins';
-@import '~/scss/variables';
+@import '@/scss/mixins';
+@import '@/scss/variables';
 
 @mixin icon-button-size($base) {
   $button-size: calc($base * 1.5);

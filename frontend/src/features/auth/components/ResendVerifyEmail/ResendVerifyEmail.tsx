@@ -1,5 +1,5 @@
-import { http } from '~/http';
-import { Button, useToast } from '~/ui';
+import { http } from '@/http';
+import { Button, useToast } from '@/ui';
 import './ResendVerifyEmail.scss';
 
 export type ResendVerifyEmailProps = {

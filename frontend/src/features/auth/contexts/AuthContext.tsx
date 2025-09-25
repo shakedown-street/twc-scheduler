@@ -1,7 +1,7 @@
+import { UserModel } from '@/api';
+import { User } from '@/types/User';
+import { Spinner } from '@/ui';
 import React from 'react';
-import { UserModel } from '~/api';
-import { User } from '~/types/User';
-import { Spinner } from '~/ui';
 
 export type AuthContextType = {
   getUser: () => Promise<User | undefined>;

@@ -1,6 +1,6 @@
+import { Card, Container } from '@/ui';
 import { Helmet } from 'react-helmet';
 import { Link } from 'react-router-dom';
-import { Card, Container } from '~/ui';
 import { GoogleSSOButton } from '../../components/GoogleSSOButton/GoogleSSOButton';
 import { SignUpForm } from '../../components/SignUpForm/SignUpForm';
 

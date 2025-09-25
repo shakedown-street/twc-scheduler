@@ -1,8 +1,8 @@
+import { UserModel } from '@/api';
+import { useAuth } from '@/features/auth/contexts/AuthContext';
+import { Button, Checkbox } from '@/ui';
 import React from 'react';
 import { useForm } from 'react-hook-form';
-import { UserModel } from '~/api';
-import { useAuth } from '~/features/auth/contexts/AuthContext';
-import { Button, Checkbox } from '~/ui';
 import './SettingsDialog.scss';
 
 export type SettingsDialogProps = {

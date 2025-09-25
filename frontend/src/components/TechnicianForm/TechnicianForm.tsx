@@ -1,8 +1,8 @@
+import { TechnicianModel } from '@/api';
+import { Technician } from '@/types/Technician';
+import { Badge, Button, Input, Textarea, Toggle, useToast } from '@/ui';
 import React from 'react';
 import { useForm } from 'react-hook-form';
-import { TechnicianModel } from '~/api';
-import { Technician } from '~/types/Technician';
-import { Badge, Button, Input, Textarea, Toggle, useToast } from '~/ui';
 import './TechnicianForm.scss';
 
 export type TechnicianFormProps = {

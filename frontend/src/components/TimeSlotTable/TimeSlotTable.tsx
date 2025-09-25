@@ -1,12 +1,11 @@
-import React from 'react';
-import { useAuth } from '~/features/auth/contexts/AuthContext';
-import { Appointment } from '~/types/Appointment';
-import { Availability } from '~/types/Availability';
-import { Block } from '~/types/Block';
-import { Client } from '~/types/Client';
-import { TherapyAppointment } from '~/types/TherapyAppointment';
-import { RadixHoverCard } from '~/ui/RadixHoverCard/RadixHoverCard';
-import { skillLevelColor, striped } from '~/utils/color';
+import { useAuth } from '@/features/auth/contexts/AuthContext';
+import { Appointment } from '@/types/Appointment';
+import { Availability } from '@/types/Availability';
+import { Block } from '@/types/Block';
+import { Client } from '@/types/Client';
+import { TherapyAppointment } from '@/types/TherapyAppointment';
+import { RadixHoverCard } from '@/ui/RadixHoverCard/RadixHoverCard';
+import { skillLevelColor, striped } from '@/utils/color';
 import {
   addMinutes,
   dayToString,
@@ -15,7 +14,8 @@ import {
   isBetweenInclusiveStart,
   isOnTheHour,
   removeMinutes,
-} from '~/utils/time';
+} from '@/utils/time';
+import React from 'react';
 import { AppointmentHover } from '../AppointmentHover/AppointmentHover';
 import './TimeSlotTable.scss';
 

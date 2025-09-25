@@ -1,4 +1,4 @@
-import { formatBytes } from '~/utils/format';
+import { formatBytes } from '@/utils/format';
 import { Button } from '../Button/Button';
 import { IconButton } from '../IconButton/IconButton';
 import './FileDropArea.scss';

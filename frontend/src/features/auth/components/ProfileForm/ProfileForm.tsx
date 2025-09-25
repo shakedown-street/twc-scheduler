@@ -1,7 +1,7 @@
+import { UserModel } from '@/api';
+import { BasicImageUpload, Button, Input, useToast } from '@/ui';
+import { convertToFormData } from '@/utils/formData';
 import { Controller, useForm } from 'react-hook-form';
-import { UserModel } from '~/api';
-import { BasicImageUpload, Button, Input, useToast } from '~/ui';
-import { convertToFormData } from '~/utils/formData';
 import { useAuth } from '../../contexts/AuthContext';
 import './ProfileForm.scss';
 

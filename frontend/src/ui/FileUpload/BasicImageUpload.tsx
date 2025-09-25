@@ -1,4 +1,4 @@
-import genericPlaceholder from '~/assets/generic-placeholder.svg';
+import genericPlaceholder from '@/assets/generic-placeholder.svg';
 import { IconButton } from '../IconButton/IconButton';
 import './BasicImageUpload.scss';
 import { FileUploadController } from './FileUploadController';

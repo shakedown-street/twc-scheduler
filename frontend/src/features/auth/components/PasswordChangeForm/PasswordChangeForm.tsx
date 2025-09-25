@@ -1,7 +1,7 @@
+import { http } from '@/http';
+import { Button, Input, useToast } from '@/ui';
+import { handleFormErrors } from '@/utils/errors';
 import { useForm } from 'react-hook-form';
-import { http } from '~/http';
-import { Button, Input, useToast } from '~/ui';
-import { handleFormErrors } from '~/utils/errors';
 import './PasswordChangeForm.scss';
 
 export type PasswordChangeFormData = {
