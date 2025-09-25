@@ -1,4 +1,4 @@
-export type TherapyAppointment = {
+type TherapyAppointment = {
   id: string;
   created_at: string;
   updated_at: string;

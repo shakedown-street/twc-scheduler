@@ -1,9 +1,4 @@
-import { Appointment } from './Appointment';
-import { Availability } from './Availability';
-import { Technician } from './Technician';
-import { TherapyAppointment } from './TherapyAppointment';
-
-export type Client = {
+type Client = {
   id: string;
   created_at: string;
   updated_at: string;

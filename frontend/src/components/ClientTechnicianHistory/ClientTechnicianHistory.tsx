@@ -1,7 +1,5 @@
 import { ClientModel } from '@/api';
 import { useAuth } from '@/features/auth/contexts/AuthContext';
-import { Client } from '@/types/Client';
-import { Technician } from '@/types/Technician';
 import { Badge, RadixDialog, Spinner } from '@/ui';
 import { skillLevelColor } from '@/utils/color';
 import { orderByFirstName } from '@/utils/order';

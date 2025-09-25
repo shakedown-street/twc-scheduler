@@ -1,8 +1,6 @@
 import { TechnicianModel } from '@/api';
 import { useBlocks } from '@/contexts/BlocksContext';
 import { useAuth } from '@/features/auth/contexts/AuthContext';
-import { Block } from '@/types/Block';
-import { Technician } from '@/types/Technician';
 import { RadixDialog, Spinner } from '@/ui';
 import { RadixHoverCard } from '@/ui/RadixHoverCard/RadixHoverCard';
 import { getBlockAppointments, getBlockAvailabilities } from '@/utils/appointments';

@@ -1,7 +1,4 @@
 import { AvailabilityModel, ClientModel, TechnicianModel } from '@/api';
-import { Availability } from '@/types/Availability';
-import { Client } from '@/types/Client';
-import { Technician } from '@/types/Technician';
 import { Badge, Button, Checkbox, TimeInput, useToast } from '@/ui';
 import { dayToString } from '@/utils/time';
 import React from 'react';

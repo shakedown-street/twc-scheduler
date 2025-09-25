@@ -1,10 +1,6 @@
 import { ClientModel } from '@/api';
 import { useBlocks } from '@/contexts/BlocksContext';
 import { useAuth } from '@/features/auth/contexts/AuthContext';
-import { Appointment } from '@/types/Appointment';
-import { Availability } from '@/types/Availability';
-import { Block } from '@/types/Block';
-import { Client } from '@/types/Client';
 import { Button, RadixDialog, Spinner } from '@/ui';
 import { RadixHoverCard } from '@/ui/RadixHoverCard/RadixHoverCard';
 import { getBlockAppointments, getBlockAvailabilities } from '@/utils/appointments';

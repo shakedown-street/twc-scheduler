@@ -1,6 +1,4 @@
 import { AppointmentModel } from '@/api';
-import { Appointment } from '@/types/Appointment';
-import { Technician } from '@/types/Technician';
 import { Badge } from '@/ui';
 import { dayToString, formatTime } from '@/utils/time';
 import clsx from 'clsx';

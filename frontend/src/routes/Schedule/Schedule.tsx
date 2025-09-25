@@ -6,11 +6,6 @@ import { TherapyAppointmentForm } from '@/components/TherapyAppointmentForm/Ther
 import { TimeSlotTable } from '@/components/TimeSlotTable/TimeSlotTable';
 import { useBlocks } from '@/contexts/BlocksContext';
 import { useAuth } from '@/features/auth/contexts/AuthContext';
-import { Appointment } from '@/types/Appointment';
-import { Availability } from '@/types/Availability';
-import { Block } from '@/types/Block';
-import { Client } from '@/types/Client';
-import { TherapyAppointment } from '@/types/TherapyAppointment';
 import { Button, Container, RadixDialog, Spinner, TabItem, Tabs } from '@/ui';
 import { orderByFirstName } from '@/utils/order';
 import { dayToString } from '@/utils/time';

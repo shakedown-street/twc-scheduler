@@ -1,9 +1,4 @@
 import { useAuth } from '@/features/auth/contexts/AuthContext';
-import { Appointment } from '@/types/Appointment';
-import { Availability } from '@/types/Availability';
-import { Block } from '@/types/Block';
-import { Client } from '@/types/Client';
-import { TherapyAppointment } from '@/types/TherapyAppointment';
 import { RadixHoverCard } from '@/ui/RadixHoverCard/RadixHoverCard';
 import { skillLevelColor, striped } from '@/utils/color';
 import {

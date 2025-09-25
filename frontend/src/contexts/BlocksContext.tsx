@@ -1,5 +1,4 @@
 import { BlockModel } from '@/api';
-import { Block } from '@/types/Block';
 import { Spinner } from '@/ui';
 import React from 'react';
 

@@ -1,9 +1,4 @@
 import { AppointmentModel, ClientModel, TechnicianModel } from '@/api';
-import { Appointment } from '@/types/Appointment';
-import { Availability } from '@/types/Availability';
-import { Block } from '@/types/Block';
-import { Client } from '@/types/Client';
-import { Technician } from '@/types/Technician';
 import { Badge, Button, Checkbox, IconButton, RadixTooltip, Select, Textarea, TimeInput, useToast } from '@/ui';
 import { orderByFirstName } from '@/utils/order';
 import { dayToString } from '@/utils/time';

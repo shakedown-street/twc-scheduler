@@ -1,5 +1,4 @@
 import { UserModel } from '@/api';
-import { User } from '@/types/User';
 import { Button, SearchPopover } from '@/ui';
 import { useNavigate } from 'react-router-dom';
 import './ImpersonateDialog.scss';

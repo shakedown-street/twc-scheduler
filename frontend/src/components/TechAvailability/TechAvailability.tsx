@@ -3,9 +3,6 @@ import { AvailabilityForm } from '@/components/AvailabilityForm/AvailabilityForm
 import { TechnicianForm } from '@/components/TechnicianForm/TechnicianForm';
 import { useBlocks } from '@/contexts/BlocksContext';
 import { useAuth } from '@/features/auth/contexts/AuthContext';
-import { Availability } from '@/types/Availability';
-import { Block } from '@/types/Block';
-import { Technician } from '@/types/Technician';
 import { Button, Card, Checkbox, RadixDialog, Spinner } from '@/ui';
 import { isFullBlock } from '@/utils/appointments';
 import { skillLevelColor } from '@/utils/color';

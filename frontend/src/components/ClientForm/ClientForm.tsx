@@ -1,6 +1,4 @@
 import { ClientModel, TechnicianModel } from '@/api';
-import { Client } from '@/types/Client';
-import { Technician } from '@/types/Technician';
 import { Button, Input, Select, Textarea, Toggle, useToast } from '@/ui';
 import { orderByFirstName } from '@/utils/order';
 import React from 'react';

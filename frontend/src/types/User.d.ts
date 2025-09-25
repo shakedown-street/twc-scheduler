@@ -1,4 +1,4 @@
-export type User = {
+type User = {
   id: string;
   last_login: string | null;
   is_superuser: boolean;

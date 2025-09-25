@@ -1,6 +1,4 @@
 import { TherapyAppointmentModel } from '@/api';
-import { Client } from '@/types/Client';
-import { TherapyAppointment } from '@/types/TherapyAppointment';
 import { Badge, Button, Select, Textarea, TimeInput, useToast } from '@/ui';
 import { addMinutes, dayToString } from '@/utils/time';
 import React from 'react';

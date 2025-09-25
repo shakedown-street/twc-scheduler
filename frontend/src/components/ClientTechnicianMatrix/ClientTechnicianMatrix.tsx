@@ -1,7 +1,5 @@
 import { ClientModel, TechnicianModel } from '@/api';
 import { useAuth } from '@/features/auth/contexts/AuthContext';
-import { Client } from '@/types/Client';
-import { Technician } from '@/types/Technician';
 import { RadixDialog, Spinner } from '@/ui';
 import { orderByFirstName } from '@/utils/order';
 import React from 'react';
