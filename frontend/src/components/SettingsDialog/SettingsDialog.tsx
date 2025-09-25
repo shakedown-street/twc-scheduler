@@ -1,8 +1,9 @@
 import { UserModel } from '@/api';
 import { useAuth } from '@/features/auth/contexts/AuthContext';
-import { Button, Checkbox } from '@/ui';
+import { Checkbox } from '@/ui';
 import React from 'react';
 import { useForm } from 'react-hook-form';
+import { Button } from '../ui/button';
 import './SettingsDialog.scss';
 
 export type SettingsDialogProps = {
@@ -45,10 +46,10 @@ export const SettingsDialog = (props: SettingsDialogProps) => {
             </p>
           </div>
           <div className="SettingsDialog__form__actions">
-            <Button onClick={props.onClose}>Cancel</Button>
-            <Button color="primary" type="submit" variant="raised">
-              Save
+            <Button onClick={props.onClose} type="button" variant="ghost">
+              Cancel
             </Button>
+            <Button type="submit">Save</Button>
           </div>
         </form>
       </div>

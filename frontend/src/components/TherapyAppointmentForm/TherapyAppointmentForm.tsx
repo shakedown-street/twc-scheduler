@@ -1,8 +1,10 @@
 import { TherapyAppointmentModel } from '@/api';
-import { Badge, Button, Select, Textarea, TimeInput, useToast } from '@/ui';
+import { Select, Textarea, TimeInput, useToast } from '@/ui';
 import { addMinutes, dayToString } from '@/utils/time';
 import React from 'react';
 import { Controller, useForm } from 'react-hook-form';
+import { Badge } from '../ui/badge';
+import { Button } from '../ui/button';
 import './TherapyAppointmentForm.scss';
 
 export type TherapyAppointmentFormProps = {
@@ -124,8 +126,10 @@ export const TherapyAppointmentForm = ({
           This action cannot be undone.
         </p>
         <div className="TherapyAppointmentForm__confirmDelete__actions">
-          <Button onClick={() => setConfirmDelete(false)}>Cancel</Button>
-          <Button color="red" onClick={clickConfirmDelete} variant="raised">
+          <Button onClick={() => setConfirmDelete(false)} variant="ghost">
+            Cancel
+          </Button>
+          <Button onClick={clickConfirmDelete} variant="destructive">
             Delete
           </Button>
         </div>
@@ -138,7 +142,7 @@ export const TherapyAppointmentForm = ({
       <div className="TherapyAppointmentForm__row">
         <div className="Input__container">
           <label>Client</label>
-          <Badge size="xs">
+          <Badge>
             {client.first_name} {client.last_name}
           </Badge>
         </div>
@@ -211,16 +215,17 @@ export const TherapyAppointmentForm = ({
       <div className="TherapyAppointmentForm__actions">
         {instance && (
           <Button
-            color="red"
             onClick={() => {
               clickDelete();
             }}
+            type="button"
+            variant="destructive"
           >
             Delete
           </Button>
         )}
         <div className="flex-1"></div>
-        <Button color="primary" disabled={!form.formState.isValid} type="submit" variant="raised">
+        <Button disabled={!form.formState.isValid} type="submit">
           {instance ? 'Update' : 'Create'}
         </Button>
       </div>

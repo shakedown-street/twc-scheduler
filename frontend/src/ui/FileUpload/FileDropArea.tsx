@@ -1,5 +1,5 @@
+import { Button } from '@/components/ui/button';
 import { formatBytes } from '@/utils/format';
-import { Button } from '../Button/Button';
 import { IconButton } from '../IconButton/IconButton';
 import './FileDropArea.scss';
 import { FileUploadController } from './FileUploadController';
@@ -27,7 +27,7 @@ export const FileDropArea = ({
             <div className="FileDropArea__dropzone__info">
               <div className="font-medium">Drop files here</div>
               <div className="text-sm">or</div>
-              <Button onClick={openFileInput} size="xs" variant="outlined">
+              <Button onClick={openFileInput} size="sm" variant="outline">
                 Browse Files
               </Button>
             </div>

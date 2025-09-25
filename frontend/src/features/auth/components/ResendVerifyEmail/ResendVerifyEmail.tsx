@@ -1,5 +1,6 @@
+import { Button } from '@/components/ui/button';
 import { http } from '@/http';
-import { Button, useToast } from '@/ui';
+import { useToast } from '@/ui';
 import './ResendVerifyEmail.scss';
 
 export type ResendVerifyEmailProps = {
@@ -32,7 +33,7 @@ export const ResendVerifyEmail = ({ email, onSuccess }: ResendVerifyEmailProps) 
           <br />
           for a verification email from us.
         </p>
-        <Button color="primary" fluid onClick={clickResendVerifyEmail} variant="raised">
+        <Button className="w-full" onClick={clickResendVerifyEmail}>
           Resend Verification Email
         </Button>
       </div>

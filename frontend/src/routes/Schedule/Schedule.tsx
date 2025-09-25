@@ -6,13 +6,14 @@ import { TherapyAppointmentForm } from '@/components/TherapyAppointmentForm/Ther
 import { TimeSlotTable } from '@/components/TimeSlotTable/TimeSlotTable';
 import { useBlocks } from '@/contexts/BlocksContext';
 import { useAuth } from '@/features/auth/contexts/AuthContext';
-import { Button, Container, RadixDialog, Spinner, TabItem, Tabs } from '@/ui';
+import { RadixDialog, Spinner, TabItem, Tabs } from '@/ui';
 import { orderByFirstName } from '@/utils/order';
 import { dayToString } from '@/utils/time';
 import React from 'react';
 import { Helmet } from 'react-helmet';
 import { useSearchParams } from 'react-router-dom';
 import './Schedule.scss';
+import { Button } from '@/components/ui/button';
 
 export const Schedule = () => {
   const [clients, setClients] = React.useState<Client[]>([]);
@@ -270,7 +271,7 @@ export const Schedule = () => {
       <Helmet>
         <title>Schedule | Schedule Builder</title>
       </Helmet>
-      <Container>
+      <div className="container mx-auto px-4">
         <div className="mt-4 mb-12">
           <h1>Schedule</h1>
           <div className="Schedule__header">
@@ -291,7 +292,7 @@ export const Schedule = () => {
                 Friday
               </TabItem>
             </Tabs>
-            <Button color="primary" onClick={() => setTechnicianDayOverviewOpen(true)} variant="ghost">
+            <Button onClick={() => setTechnicianDayOverviewOpen(true)} variant="outline">
               {dayToString(getDay())} Technician Overview
             </Button>
           </div>
@@ -319,7 +320,7 @@ export const Schedule = () => {
             }}
           />
         </div>
-      </Container>
+      </div>
       <RadixDialog
         asDrawer
         title={`${appointmentForm.instance ? 'Update' : 'Create'} Appointment`}

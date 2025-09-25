@@ -1,5 +1,7 @@
-import { Button, Card, Container } from '@/ui';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Helmet } from 'react-helmet';
+import { Link } from 'react-router';
 
 export const NotFound = () => {
   return (
@@ -7,16 +9,20 @@ export const NotFound = () => {
       <Helmet>
         <title>Page Not Found | Schedule Builder</title>
       </Helmet>
-      <Container>
+      <div className="container mx-auto px-4">
         <div className="centerPage">
-          <Card fluid>
-            <h1 className="mb-4 text-center">Page Not Found</h1>
-            <Button color="primary" fluid navigateTo="/">
-              Go home
-            </Button>
+          <Card>
+            <CardHeader>
+              <CardTitle>Page Not Found</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <Button asChild className="w-full">
+                <Link to="/">Go home</Link>
+              </Button>
+            </CardContent>
           </Card>
         </div>
-      </Container>
+      </div>
     </>
   );
 };

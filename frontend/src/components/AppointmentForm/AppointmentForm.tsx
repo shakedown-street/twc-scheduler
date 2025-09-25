@@ -1,12 +1,14 @@
 import { AppointmentModel, ClientModel, TechnicianModel } from '@/api';
-import { Badge, Button, Checkbox, IconButton, Select, Textarea, TimeInput, useToast } from '@/ui';
+import { Checkbox, IconButton, Select, Textarea, TimeInput, useToast } from '@/ui';
 import { orderByFirstName } from '@/utils/order';
 import { dayToString } from '@/utils/time';
 import clsx from 'clsx';
 import React from 'react';
 import { Controller, useForm } from 'react-hook-form';
+import { Badge } from '../ui/badge';
 import { Tooltip, TooltipContent, TooltipTrigger } from '../ui/tooltip';
 import './AppointmentForm.scss';
+import { Button } from '../ui/button';
 
 export type AppointmentFormProps = {
   client: Client;
@@ -288,8 +290,10 @@ export const AppointmentForm = ({
           This action cannot be undone.
         </p>
         <div className="AppointmentForm__confirmDelete__actions">
-          <Button onClick={() => setConfirmDelete(false)}>Cancel</Button>
-          <Button color="red" onClick={clickConfirmDelete} variant="raised">
+          <Button onClick={() => setConfirmDelete(false)} variant="ghost">
+            Cancel
+          </Button>
+          <Button onClick={clickConfirmDelete} variant="destructive">
             Delete
           </Button>
         </div>
@@ -302,7 +306,7 @@ export const AppointmentForm = ({
       <div className="AppointmentForm__row">
         <div className="Input__container">
           <label>Client</label>
-          <Badge size="xs">
+          <Badge>
             {client.first_name} {client.last_name}
           </Badge>
         </div>
@@ -446,7 +450,6 @@ export const AppointmentForm = ({
                     index !== day && (
                       <Button
                         key={index}
-                        color="primary"
                         disabled={!repeatableAppointmentDays.includes(index)}
                         onClick={() => {
                           const selectedDays = field.value || [];
@@ -456,10 +459,10 @@ export const AppointmentForm = ({
                             field.onChange([...selectedDays, index]);
                           }
                         }}
-                        radius="sm"
-                        size="xs"
+                        size="sm"
                         title={!repeatableAppointmentDays.includes(index) ? 'Client or technician not available' : ''}
-                        variant={field.value?.includes(index) ? 'raised' : 'default'}
+                        type="button"
+                        variant={field.value?.includes(index) ? 'default' : 'ghost'}
                       >
                         {dayStr}
                       </Button>
@@ -479,16 +482,17 @@ export const AppointmentForm = ({
       <div className="AppointmentForm__actions">
         {instance && (
           <Button
-            color="red"
             onClick={() => {
               clickDelete();
             }}
+            type="button"
+            variant="destructive"
           >
             Delete
           </Button>
         )}
         <div className="flex-1"></div>
-        <Button color="primary" disabled={!form.formState.isValid} type="submit" variant="raised">
+        <Button disabled={!form.formState.isValid} type="submit">
           {instance ? 'Update' : 'Create'}
         </Button>
       </div>

@@ -1,10 +1,9 @@
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { http } from '@/http';
 import { debounceRef } from '@/utils/debounce';
+import { Loader } from 'lucide-react';
 import React from 'react';
 import { Input } from '../Input/Input';
-import { RadixPopover } from '../RadixPopover/RadixPopover';
-import { Spinner } from '../Spinner/Spinner';
-import './SearchPopover.scss';
 
 export type SearchPopoverProps = {
   endpoint: string;
@@ -25,7 +24,7 @@ export const SearchPopover = ({
 }: SearchPopoverProps) => {
   const [popoverOpen, setPopoverOpen] = React.useState(false);
   const [searchValue, setSearchValue] = React.useState('');
-  const [matches, setMatches] = React.useState<any>([]);
+  const [matches, setMatches] = React.useState<any[]>([]);
   const [matchesLoading, setMatchesLoading] = React.useState(false);
 
   const debouncedSearch = debounceRef((value: string) => {
@@ -43,8 +42,8 @@ export const SearchPopover = ({
   function renderMatches() {
     if (matchesLoading) {
       return (
-        <div className="mt-4">
-          <Spinner />
+        <div className="mt-4 flex items-center justify-center">
+          <Loader className="h-4 w-4 animate-spin" />
         </div>
       );
     }
@@ -54,11 +53,11 @@ export const SearchPopover = ({
     }
 
     return (
-      <ul className="SearchPopover__matchList">
+      <div className="mt-4 max-h-48 overflow-auto">
         {matches.map((match: any, idx: number) => {
           return (
-            <li
-              className="SearchPopover__match"
+            <div
+              className="hover:bg-primary hover:text-primary-foreground flex items-center rounded-md px-3 text-sm leading-8"
               key={idx}
               onClick={() => {
                 onChange(match);
@@ -66,33 +65,38 @@ export const SearchPopover = ({
               }}
             >
               {renderMatch(match)}
-            </li>
+            </div>
           );
         })}
-      </ul>
+      </div>
     );
   }
 
   return (
     <>
-      <RadixPopover className="p-4" open={popoverOpen} onOpenChange={setPopoverOpen} trigger={trigger}>
-        <Input
-          autoFocus
-          fluid
-          id="search"
-          label={searchLabel ? searchLabel : 'Search'}
-          value={searchValue}
-          onChange={(e) => {
-            setSearchValue(e.target.value);
-            if (e.target.value.length > 0) {
-              debouncedSearch(e.target.value);
-            } else {
-              setMatches([]);
-            }
-          }}
-        />
-        {renderMatches()}
-      </RadixPopover>
+      <Popover open={popoverOpen} onOpenChange={setPopoverOpen}>
+        {trigger && <PopoverTrigger asChild>{trigger}</PopoverTrigger>}
+        <PopoverContent className="p-4">
+          <label className="mb-2" htmlFor="search">
+            {searchLabel ? searchLabel : 'Search'}
+          </label>
+          <Input
+            autoFocus
+            className="w-full"
+            id="search"
+            value={searchValue}
+            onChange={(e) => {
+              setSearchValue(e.target.value);
+              if (e.target.value.length > 0) {
+                debouncedSearch(e.target.value);
+              } else {
+                setMatches([]);
+              }
+            }}
+          />
+          {renderMatches()}
+        </PopoverContent>
+      </Popover>
     </>
   );
 };

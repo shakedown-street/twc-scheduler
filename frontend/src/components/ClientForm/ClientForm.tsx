@@ -1,9 +1,10 @@
 import { ClientModel, TechnicianModel } from '@/api';
-import { Button, Input, Select, Textarea, Toggle, useToast } from '@/ui';
+import { Input, Select, Textarea, Toggle, useToast } from '@/ui';
 import { orderByFirstName } from '@/utils/order';
 import React from 'react';
 import { useForm } from 'react-hook-form';
 import './ClientForm.scss';
+import { Button } from '../ui/button';
 
 export type ClientFormProps = {
   client?: Client;
@@ -109,7 +110,7 @@ export const ClientForm = ({ client, onCancel, onCreate, onDelete, onUpdate }: C
         </p>
         <div className="ClientForm__confirmDelete__actions">
           <Button onClick={() => setConfirmDelete(false)}>Cancel</Button>
-          <Button color="red" onClick={clickConfirmDelete} variant="raised">
+          <Button onClick={clickConfirmDelete} variant="destructive">
             Delete
           </Button>
         </div>
@@ -191,13 +192,15 @@ export const ClientForm = ({ client, onCancel, onCreate, onDelete, onUpdate }: C
       )}
       <div className="ClientForm__actions">
         {client && (
-          <Button color="red" onClick={clickDelete}>
+          <Button onClick={clickDelete} type="button" variant="destructive">
             Delete
           </Button>
         )}
         <div className="flex-1"></div>
-        <Button onClick={() => onCancel?.()}>Cancel</Button>
-        <Button color="primary" disabled={!form.formState.isValid} type="submit" variant="raised">
+        <Button onClick={() => onCancel?.()} variant="ghost">
+          Cancel
+        </Button>
+        <Button disabled={!form.formState.isValid} type="submit">
           Save
         </Button>
       </div>

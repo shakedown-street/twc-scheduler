@@ -3,13 +3,14 @@ import { AvailabilityForm } from '@/components/AvailabilityForm/AvailabilityForm
 import { TechnicianForm } from '@/components/TechnicianForm/TechnicianForm';
 import { useBlocks } from '@/contexts/BlocksContext';
 import { useAuth } from '@/features/auth/contexts/AuthContext';
-import { Button, Card, Checkbox, RadixDialog, Spinner } from '@/ui';
+import { Checkbox, RadixDialog, Spinner } from '@/ui';
 import { isFullBlock } from '@/utils/appointments';
 import { skillLevelColor } from '@/utils/color';
 import { orderByFirstName } from '@/utils/order';
 import { checkTimeIntersection, formatTimeShort } from '@/utils/time';
 import clsx from 'clsx';
 import React from 'react';
+import { Button } from '../ui/button';
 import './TechAvailability.scss';
 
 export const TechAvailability = () => {
@@ -246,98 +247,90 @@ export const TechAvailability = () => {
 
   return (
     <>
-      <Card fluid>
-        <div className="mb-4 flex items-center justify-between gap-4">
-          <h2>Technicians</h2>
-          {user?.is_superuser && (
-            <Button
-              color="primary"
-              onClick={() => setTechnicianForm({ ...technicianForm, open: true })}
-              variant="raised"
-            >
-              Create Technician
-            </Button>
-          )}
-        </div>
-        <div className="mb-4 flex items-center gap-4">
-          <Checkbox checked={showSubOnly} onChange={() => setShowSubOnly(!showSubOnly)} label="Sub only" />
-        </div>
-        <table className="TechAvailability__table">
-          <thead>
-            <tr>
-              <th className="ClientAvailability__table--vertical"></th>
-              <th className="ClientAvailability__table--vertical" title="Technician"></th>
-              <th className="ClientAvailability__table--vertical" title="Skill level">
-                Rating
+      <div className="mb-4 flex items-center justify-between gap-4">
+        <h2 className="text-2xl font-bold">Technicians</h2>
+        {user?.is_superuser && (
+          <Button onClick={() => setTechnicianForm({ ...technicianForm, open: true })}>Create Technician</Button>
+        )}
+      </div>
+      <div className="mb-4 flex items-center gap-4">
+        <Checkbox checked={showSubOnly} onChange={() => setShowSubOnly(!showSubOnly)} label="Sub only" />
+      </div>
+      <table className="TechAvailability__table">
+        <thead>
+          <tr>
+            <th className="ClientAvailability__table--vertical"></th>
+            <th className="ClientAvailability__table--vertical" title="Technician"></th>
+            <th className="ClientAvailability__table--vertical" title="Skill level">
+              Rating
+            </th>
+            <th className="ClientAvailability__table--vertical" title="Spanish speaker">
+              Spa
+            </th>
+            <th className="ClientAvailability__table--vertical" title="Requested hours">
+              Req
+            </th>
+            <th className="ClientAvailability__table--vertical" title="Total available hours">
+              Avail
+            </th>
+            {days.map((day) => (
+              <th key={day} colSpan={blocks.length} className="TechAvailability__table__boldBorder">
+                {['Mon', 'Tue', 'Wed', 'Thu', 'Fri'][day]}
               </th>
-              <th className="ClientAvailability__table--vertical" title="Spanish speaker">
-                Spa
-              </th>
-              <th className="ClientAvailability__table--vertical" title="Requested hours">
-                Req
-              </th>
-              <th className="ClientAvailability__table--vertical" title="Total available hours">
-                Avail
-              </th>
-              {days.map((day) => (
-                <th key={day} colSpan={blocks.length} className="TechAvailability__table__boldBorder">
-                  {['Mon', 'Tue', 'Wed', 'Thu', 'Fri'][day]}
-                </th>
-              ))}
-            </tr>
-          </thead>
-          <tbody>
-            {technicians.map((technician, index) => (
-              <tr key={technician.id}>
-                <td>{index + 1}</td>
-                <td
-                  className="text-nowrap"
-                  style={{
-                    background: technician.bg_color,
-                  }}
-                >
-                  <a
-                    className="cursor-pointer"
-                    onClick={() => {
-                      if (!user?.is_superuser) {
-                        return;
-                      }
-                      openTechnicianForm(technician);
-                    }}
-                    style={{ color: technician.text_color }}
-                  >
-                    {technician.first_name} {technician.last_name}
-                  </a>
-                </td>
-                <td
-                  style={{
-                    background: skillLevelColor(technician.skill_level),
-                    textAlign: 'center',
-                  }}
-                >
-                  {technician.skill_level}
-                </td>
-                <td style={{ textAlign: 'center' }}>
-                  {technician.spanish_speaking && (
-                    <span className="material-symbols-outlined text-sm text-green-700">check</span>
-                  )}
-                </td>
-                <td>{technician.requested_hours}</td>
-                <td>{technician.computed_properties?.total_hours_available}</td>
-                {renderAvailabilities(technician)}
-              </tr>
             ))}
-          </tbody>
-          <tfoot>
-            <tr>
-              <td colSpan={4}></td>
-              <td>{totalRequestedHours()}</td>
-              <td>{totalAvailableHours()}</td>
-              {renderBlockTotals()}
+          </tr>
+        </thead>
+        <tbody>
+          {technicians.map((technician, index) => (
+            <tr key={technician.id}>
+              <td>{index + 1}</td>
+              <td
+                className="text-nowrap"
+                style={{
+                  background: technician.bg_color,
+                }}
+              >
+                <a
+                  className="cursor-pointer"
+                  onClick={() => {
+                    if (!user?.is_superuser) {
+                      return;
+                    }
+                    openTechnicianForm(technician);
+                  }}
+                  style={{ color: technician.text_color }}
+                >
+                  {technician.first_name} {technician.last_name}
+                </a>
+              </td>
+              <td
+                style={{
+                  background: skillLevelColor(technician.skill_level),
+                  textAlign: 'center',
+                }}
+              >
+                {technician.skill_level}
+              </td>
+              <td style={{ textAlign: 'center' }}>
+                {technician.spanish_speaking && (
+                  <span className="material-symbols-outlined text-sm text-green-700">check</span>
+                )}
+              </td>
+              <td>{technician.requested_hours}</td>
+              <td>{technician.computed_properties?.total_hours_available}</td>
+              {renderAvailabilities(technician)}
             </tr>
-          </tfoot>
-        </table>
-      </Card>
+          ))}
+        </tbody>
+        <tfoot>
+          <tr>
+            <td colSpan={4}></td>
+            <td>{totalRequestedHours()}</td>
+            <td>{totalAvailableHours()}</td>
+            {renderBlockTotals()}
+          </tr>
+        </tfoot>
+      </table>
       <RadixDialog
         asDrawer
         title={`${technicianForm.technician ? 'Update' : 'Create'} Technician`}

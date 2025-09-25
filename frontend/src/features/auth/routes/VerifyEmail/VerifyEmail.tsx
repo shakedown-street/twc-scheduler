@@ -1,5 +1,5 @@
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { http } from '@/http';
-import { Card, Container } from '@/ui';
 import React from 'react';
 import { Helmet } from 'react-helmet';
 import { Link, useParams } from 'react-router-dom';
@@ -32,20 +32,28 @@ export const VerifyEmail = () => {
       <Helmet>
         <title>Verify Email | Schedule Builder</title>
       </Helmet>
-      <Container>
+      <div className="container mx-auto px-4">
         <div className="centerPage">
-          <Card fluid>
-            <h1 className="mb-4 text-center">Verify Email</h1>
-            {error ? (
-              <p className="form-error text-center">{error}</p>
-            ) : (
-              <p className="text-center">
-                Your account email has been verified. <Link to="/login">Click here</Link> to login.
-              </p>
-            )}
+          <Card>
+            <CardHeader>
+              <CardTitle>Verify Email</CardTitle>
+            </CardHeader>
+            <CardContent>
+              {error ? (
+                <div className="form-error text-center">{error}</div>
+              ) : (
+                <div className="text-center">
+                  Your account email has been verified.{' '}
+                  <Link className="text-primary font-medium" to="/login">
+                    Click here
+                  </Link>{' '}
+                  to login.
+                </div>
+              )}
+            </CardContent>
           </Card>
         </div>
-      </Container>
+      </div>
     </>
   );
 };

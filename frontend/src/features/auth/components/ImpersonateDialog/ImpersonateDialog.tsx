@@ -1,7 +1,8 @@
 import { UserModel } from '@/api';
-import { Button, SearchPopover } from '@/ui';
+import { SearchPopover } from '@/ui';
 import { useNavigate } from 'react-router-dom';
 import './ImpersonateDialog.scss';
+import { Button } from '@/components/ui/button';
 
 export const ImpersonateDialog = () => {
   const navigate = useNavigate();
@@ -27,7 +28,7 @@ export const ImpersonateDialog = () => {
             return <>{match.email}</>;
           }}
           trigger={
-            <Button fluid variant="outlined">
+            <Button className="w-full" variant="outline">
               Search
             </Button>
           }

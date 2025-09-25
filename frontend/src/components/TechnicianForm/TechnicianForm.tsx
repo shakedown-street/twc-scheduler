@@ -1,7 +1,9 @@
 import { TechnicianModel } from '@/api';
-import { Badge, Button, Input, Textarea, Toggle, useToast } from '@/ui';
+import { Input, Textarea, Toggle, useToast } from '@/ui';
 import React from 'react';
 import { useForm } from 'react-hook-form';
+import { Badge } from '../ui/badge';
+import { Button } from '../ui/button';
 import './TechnicianForm.scss';
 
 export type TechnicianFormProps = {
@@ -99,8 +101,10 @@ export const TechnicianForm = ({ technician, onCancel, onCreate, onDelete, onUpd
           This action cannot be undone.
         </p>
         <div className="TechnicianForm__confirmDelete__actions">
-          <Button onClick={() => setConfirmDelete(false)}>Cancel</Button>
-          <Button color="red" onClick={clickConfirmDelete} variant="raised">
+          <Button onClick={() => setConfirmDelete(false)} variant="ghost">
+            Cancel
+          </Button>
+          <Button onClick={clickConfirmDelete} variant="destructive">
             Delete
           </Button>
         </div>
@@ -159,7 +163,6 @@ export const TechnicianForm = ({ technician, onCancel, onCreate, onDelete, onUpd
           <div className="Input__container">
             <label>Preview</label>
             <Badge
-              size="xs"
               style={{
                 background: backgroundColor,
                 color: textColor,
@@ -173,13 +176,15 @@ export const TechnicianForm = ({ technician, onCancel, onCreate, onDelete, onUpd
       <Textarea rows={3} fluid label="Notes" style={{ resize: 'none' }} {...form.register('notes')} />
       <div className="TechnicianForm__actions">
         {technician && (
-          <Button color="red" onClick={clickDelete}>
+          <Button onClick={clickDelete} type="button" variant="destructive">
             Delete
           </Button>
         )}
         <div className="flex-1"></div>
-        <Button onClick={() => onCancel?.()}>Cancel</Button>
-        <Button color="primary" disabled={!form.formState.isValid} type="submit" variant="raised">
+        <Button onClick={() => onCancel?.()} type="button" variant="ghost">
+          Cancel
+        </Button>
+        <Button disabled={!form.formState.isValid} type="submit">
           Save
         </Button>
       </div>

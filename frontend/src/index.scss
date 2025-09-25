@@ -2,20 +2,6 @@
 @import './scss/variables';
 @import './scss/mixins';
 
-body {
-  @include scrollbar;
-}
-
-a {
-  color: $primary-600;
-}
-
-hr {
-  border: none;
-  border-top: 1px solid $border;
-  margin: 0.5rem 0;
-}
-
 .centerPage {
   max-width: 20rem;
   margin: 3rem auto 1rem;

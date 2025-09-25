@@ -2,7 +2,7 @@ import logo from '@/assets/logo.avif';
 import { ImpersonateDialog } from '@/features/auth/components/ImpersonateDialog/ImpersonateDialog';
 import { useAuth } from '@/features/auth/contexts/AuthContext';
 import { http } from '@/http';
-import { Button, Container, IconButton, RadixDialog, useToast } from '@/ui';
+import { IconButton, RadixDialog, useToast } from '@/ui';
 import clsx from 'clsx';
 import { IdCard, LogOut, Settings, User } from 'lucide-react';
 import React from 'react';
@@ -10,6 +10,7 @@ import { Link, NavLink, useNavigate } from 'react-router-dom';
 import { SettingsDialog } from '../SettingsDialog/SettingsDialog';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '../ui/dropdown-menu';
 import './Nav.scss';
+import { Button } from '../ui/button';
 
 export const Nav = () => {
   const [impersonateDialogOpen, setImpersonateDialogOpen] = React.useState(false);
@@ -36,11 +37,11 @@ export const Nav = () => {
     return (
       <>
         <div className="flex gap-2">
-          {/* <Button color="primary" navigateTo={'/sign-up'}>
-            Sign Up
+          {/* <Button asChild>
+            <Link to="/sign-up">Sign Up</Link>
           </Button> */}
-          <Button color="primary" navigateTo={'/login'}>
-            Login
+          <Button asChild>
+            <Link to="/login">Login</Link>
           </Button>
         </div>
       </>
@@ -82,7 +83,7 @@ export const Nav = () => {
   return (
     <>
       <div className="Nav">
-        <Container>
+        <div className="container mx-auto px-4">
           <div className="Nav__content">
             <Link to="/">
               <img className="Nav__logo" src={logo} />
@@ -138,7 +139,7 @@ export const Nav = () => {
             {/* <div className="Nav__spacer"></div> */}
             {!user ? renderAuthLinks() : renderUserMenu()}
           </div>
-        </Container>
+        </div>
       </div>
       <RadixDialog
         description="Impersonate another user"

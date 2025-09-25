@@ -1,7 +1,7 @@
 import { ClientsOverview } from '@/components/ClientsOverview/ClientsOverview';
 import { ClientTechnicianMatrix } from '@/components/ClientTechnicianMatrix/ClientTechnicianMatrix';
 import { TechniciansOverview } from '@/components/TechniciansOverview/TechniciansOverview';
-import { Container, TabItem, Tabs } from '@/ui';
+import { TabItem, Tabs } from '@/ui';
 import { Helmet } from 'react-helmet';
 import { useSearchParams } from 'react-router-dom';
 
@@ -23,7 +23,7 @@ export const Overview = () => {
       <Helmet>
         <title>Overview | Schedule Builder</title>
       </Helmet>
-      <Container>
+      <div className="container mx-auto px-4">
         <div className="mt-4 mb-12">
           <h1>Overview</h1>
           <Tabs className="mb-4">
@@ -44,7 +44,7 @@ export const Overview = () => {
             {getTab() === 'matrix' && <ClientTechnicianMatrix />}
           </div>
         </div>
-      </Container>
+      </div>
     </>
   );
 };

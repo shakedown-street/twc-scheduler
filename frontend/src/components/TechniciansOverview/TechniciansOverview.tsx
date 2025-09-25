@@ -1,14 +1,16 @@
 import { TechnicianModel } from '@/api';
 import { useBlocks } from '@/contexts/BlocksContext';
 import { useAuth } from '@/features/auth/contexts/AuthContext';
-import { Button, RadixDialog, Spinner } from '@/ui';
-import { RadixHoverCard } from '@/ui/RadixHoverCard/RadixHoverCard';
+import { RadixDialog, Spinner } from '@/ui';
 import { getBlockAppointments, getBlockAvailabilities } from '@/utils/appointments';
 import { dayColor, skillLevelColor, striped } from '@/utils/color';
 import { orderByFirstName } from '@/utils/order';
+import { Info } from 'lucide-react';
 import React from 'react';
 import { AppointmentHover } from '../AppointmentHover/AppointmentHover';
 import { TechnicianForm } from '../TechnicianForm/TechnicianForm';
+import { Button } from '../ui/button';
+import { HoverCard, HoverCardContent, HoverCardTrigger } from '../ui/hover-card';
 import './TechniciansOverview.scss';
 
 export type TechniciansOverviewProps = {
@@ -191,9 +193,12 @@ export const TechniciansOverview = ({ isSubList = false, showLegend = true }: Te
 
       if (user?.hover_cards_enabled) {
         return (
-          <RadixHoverCard key={block.id} portal trigger={hoverTrigger}>
-            <AppointmentHover appointment={appointment} />
-          </RadixHoverCard>
+          <HoverCard key={block.id}>
+            <HoverCardTrigger asChild>{hoverTrigger}</HoverCardTrigger>
+            <HoverCardContent>
+              <AppointmentHover appointment={appointment} />
+            </HoverCardContent>
+          </HoverCard>
         );
       } else {
         return hoverTrigger;
@@ -332,16 +337,15 @@ export const TechniciansOverview = ({ isSubList = false, showLegend = true }: Te
     <>
       <div className="flex flex-col gap-4">
         {showLegend && (
-          <RadixHoverCard
-            align="start"
-            trigger={
-              <Button className="self-start" iconLeading="info" size="xs" variant="outlined">
+          <HoverCard>
+            <HoverCardTrigger asChild>
+              <Button className="self-start" size="sm" variant="outline">
+                <Info />
                 Legend
               </Button>
-            }
-          >
-            {renderLegend()}
-          </RadixHoverCard>
+            </HoverCardTrigger>
+            <HoverCardContent align="start">{renderLegend()}</HoverCardContent>
+          </HoverCard>
         )}
         <table className="TechniciansOverview">
           <colgroup>

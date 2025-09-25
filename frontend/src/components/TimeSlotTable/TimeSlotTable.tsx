@@ -1,5 +1,4 @@
 import { useAuth } from '@/features/auth/contexts/AuthContext';
-import { RadixHoverCard } from '@/ui/RadixHoverCard/RadixHoverCard';
 import { skillLevelColor, striped } from '@/utils/color';
 import {
   addMinutes,
@@ -12,6 +11,7 @@ import {
 } from '@/utils/time';
 import React from 'react';
 import { AppointmentHover } from '../AppointmentHover/AppointmentHover';
+import { HoverCard, HoverCardContent, HoverCardTrigger } from '../ui/hover-card';
 import './TimeSlotTable.scss';
 
 export type TimeSlotTableProps = {
@@ -188,9 +188,12 @@ export const TimeSlotTable = ({
 
       if (user?.hover_cards_enabled) {
         return (
-          <RadixHoverCard key={time} portal trigger={hoverTrigger}>
-            <AppointmentHover appointment={slotAppointment} />
-          </RadixHoverCard>
+          <HoverCard key={time}>
+            <HoverCardTrigger asChild>{hoverTrigger}</HoverCardTrigger>
+            <HoverCardContent>
+              <AppointmentHover appointment={slotAppointment} />
+            </HoverCardContent>
+          </HoverCard>
         );
       } else {
         return hoverTrigger;

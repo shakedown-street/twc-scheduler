@@ -1,5 +1,6 @@
 import { UserModel } from '@/api';
-import { Button, Input } from '@/ui';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/ui';
 import { handleFormErrors } from '@/utils/errors';
 import React from 'react';
 import { useForm } from 'react-hook-form';
@@ -80,7 +81,7 @@ export const SignUpForm = () => {
       </div>
       {errors.root && <p className="form-error">{errors.root.message}</p>}
       <div className="SignUpForm__actions">
-        <Button color="primary" disabled={!form.formState.isValid} fluid type="submit" variant="raised">
+        <Button className="w-full" disabled={!form.formState.isValid} type="submit">
           Sign Up
         </Button>
       </div>

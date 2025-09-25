@@ -1,8 +1,8 @@
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { formatTime, generateTimeSlots } from '@/utils/time';
 import clsx from 'clsx';
 import React from 'react';
 import { Input, InputProps } from '../Input/Input';
-import { RadixPopover } from '../RadixPopover/RadixPopover';
 import './TimeInput.scss';
 
 export type TimeInputProps = {
@@ -20,27 +20,28 @@ export const TimeInput = ({ inputProps, min, max, onChange, value }: TimeInputPr
 
   return (
     <>
-      <RadixPopover
-        align="start"
-        close={false}
-        trigger={<Input iconTrailing="schedule" readOnly type="text" value={formatTime(value)} {...inputProps} />}
-      >
-        <div className="TimeInput__popover">
-          <div className="TimeInput__slots">
-            {timeSlots.map((slot) => {
-              return (
-                <div
-                  key={slot}
-                  className={clsx('TimeInput__slot', { 'TimeInput__slot--active': slot === value })}
-                  onClick={() => onChange(slot)}
-                >
-                  {formatTime(slot)}
-                </div>
-              );
-            })}
+      <Popover>
+        <PopoverTrigger asChild>
+          <Input iconTrailing="schedule" readOnly type="text" value={formatTime(value)} {...inputProps} />
+        </PopoverTrigger>
+        <PopoverContent>
+          <div className="TimeInput__popover">
+            <div className="TimeInput__slots">
+              {timeSlots.map((slot) => {
+                return (
+                  <div
+                    key={slot}
+                    className={clsx('TimeInput__slot', { 'TimeInput__slot--active': slot === value })}
+                    onClick={() => onChange(slot)}
+                  >
+                    {formatTime(slot)}
+                  </div>
+                );
+              })}
+            </div>
           </div>
-        </div>
-      </RadixPopover>
+        </PopoverContent>
+      </Popover>
     </>
   );
 };

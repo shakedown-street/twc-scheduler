@@ -1,5 +1,7 @@
+import { Button } from '@/components/ui/button';
+import { Card, CardContent } from '@/components/ui/card';
 import { http } from '@/http';
-import { Button, Card, useToast } from '@/ui';
+import { useToast } from '@/ui';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import './ImpersonationWarning.scss';
@@ -28,18 +30,18 @@ export const ImpersonationWarning = () => {
 
   return (
     <>
-      <Card className="ImpersonationWarning">
-        <div className="ImpersonationWarning__content">
-          <p>
+      <div className="fixed right-4 bottom-4 w-80 rounded-md border bg-white p-2 shadow">
+        <div className="flex items-center gap-2">
+          <div className="text-muted-foreground text-xs">
             You are currently impersonating <b>{user.email}</b>.
             <br />
             Please remember to disable impersonation when you are done.
-          </p>
-          <Button color="primary" onClick={clickStop} size="xs" variant="ghost">
+          </div>
+          <Button onClick={clickStop} size="sm">
             Stop
           </Button>
         </div>
-      </Card>
+      </div>
     </>
   );
 };

@@ -1,5 +1,6 @@
 import { UserModel } from '@/api';
-import { BasicImageUpload, Button, Input, useToast } from '@/ui';
+import { Button } from '@/components/ui/button';
+import { BasicImageUpload, Input, useToast } from '@/ui';
 import { convertToFormData } from '@/utils/formData';
 import { Controller, useForm } from 'react-hook-form';
 import { useAuth } from '../../contexts/AuthContext';
@@ -89,7 +90,7 @@ export const ProfileForm = () => {
         </div>
         {errors.root && <p className="form-error">{errors.root.message}</p>}
         <div className="ProfileForm__actions">
-          <Button color="primary" disabled={!form.formState.isValid} type="submit" variant="raised">
+          <Button disabled={!form.formState.isValid} type="submit">
             Save
           </Button>
         </div>

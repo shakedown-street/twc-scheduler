@@ -3,13 +3,14 @@ import { AvailabilityForm } from '@/components/AvailabilityForm/AvailabilityForm
 import { ClientForm } from '@/components/ClientForm/ClientForm';
 import { useBlocks } from '@/contexts/BlocksContext';
 import { useAuth } from '@/features/auth/contexts/AuthContext';
-import { Button, Card, Checkbox, RadixDialog, Spinner } from '@/ui';
+import { Card, Checkbox, RadixDialog, Spinner } from '@/ui';
 import { isFullBlock } from '@/utils/appointments';
 import { skillLevelColor } from '@/utils/color';
 import { orderByFirstName } from '@/utils/order';
 import { checkTimeIntersection, formatTimeShort } from '@/utils/time';
 import clsx from 'clsx';
 import React from 'react';
+import { Button } from '../ui/button';
 import './ClientAvailability.scss';
 
 export const ClientAvailability = () => {
@@ -243,106 +244,102 @@ export const ClientAvailability = () => {
 
   return (
     <>
-      <Card fluid>
-        <div className="mb-4 flex items-center justify-between gap-4">
-          <h2>Clients</h2>
-          {user?.is_superuser && (
-            <Button color="primary" onClick={() => setClientForm({ ...clientForm, open: true })} variant="raised">
-              Create Client
-            </Button>
-          )}
-        </div>
-        <div className="mb-4 flex items-center gap-4">
-          <Checkbox
-            checked={showInClinicOnly}
-            onChange={() => setShowInClinicOnly(!showInClinicOnly)}
-            label="In clinic"
-          />
-        </div>
-        <table className="ClientAvailability__table">
-          <thead>
-            <tr>
-              <th className="ClientAvailability__table--vertical"></th>
-              <th title="Client" className="ClientAvailability__table--vertical"></th>
-              <th title="Skill level requirement" className="ClientAvailability__table--vertical">
-                Rating
+      <div className="mb-4 flex items-center justify-between gap-4">
+        <h2 className="text-2xl font-bold">Clients</h2>
+        {user?.is_superuser && (
+          <Button onClick={() => setClientForm({ ...clientForm, open: true })}>Create Client</Button>
+        )}
+      </div>
+      <div className="mb-4 flex items-center gap-4">
+        <Checkbox
+          checked={showInClinicOnly}
+          onChange={() => setShowInClinicOnly(!showInClinicOnly)}
+          label="In clinic"
+        />
+      </div>
+      <table className="ClientAvailability__table">
+        <thead>
+          <tr>
+            <th className="ClientAvailability__table--vertical"></th>
+            <th title="Client" className="ClientAvailability__table--vertical"></th>
+            <th title="Skill level requirement" className="ClientAvailability__table--vertical">
+              Rating
+            </th>
+            <th title="Spanish speaker" className="ClientAvailability__table--vertical">
+              Spa
+            </th>
+            <th title="Evaluation done" className="ClientAvailability__table--vertical">
+              Eval
+            </th>
+            <th title="Currently onboarding" className="ClientAvailability__table--vertical">
+              Onboard
+            </th>
+            <th title="Prescribed hours" className="ClientAvailability__table--vertical">
+              Rx
+            </th>
+            <th title="Total available hours" className="ClientAvailability__table--vertical">
+              Avail
+            </th>
+            {days.map((day) => (
+              <th className="ClientAvailability__table__boldBorder" key={day} colSpan={blocks.length}>
+                {['Mon', 'Tue', 'Wed', 'Thu', 'Fri'][day]}
               </th>
-              <th title="Spanish speaker" className="ClientAvailability__table--vertical">
-                Spa
-              </th>
-              <th title="Evaluation done" className="ClientAvailability__table--vertical">
-                Eval
-              </th>
-              <th title="Currently onboarding" className="ClientAvailability__table--vertical">
-                Onboard
-              </th>
-              <th title="Prescribed hours" className="ClientAvailability__table--vertical">
-                Rx
-              </th>
-              <th title="Total available hours" className="ClientAvailability__table--vertical">
-                Avail
-              </th>
-              {days.map((day) => (
-                <th className="ClientAvailability__table__boldBorder" key={day} colSpan={blocks.length}>
-                  {['Mon', 'Tue', 'Wed', 'Thu', 'Fri'][day]}
-                </th>
-              ))}
-            </tr>
-          </thead>
-          <tbody>
-            {clients.map((client, index) => (
-              <tr key={client.id}>
-                <td>{index + 1}</td>
-                <td className="text-nowrap">
-                  <a
-                    className="cursor-pointer"
-                    onClick={() => {
-                      if (!user?.is_superuser) {
-                        return;
-                      }
-                      openClientForm(client);
-                    }}
-                  >
-                    {client.first_name} {client.last_name}
-                  </a>
-                </td>
-                <td
-                  style={{
-                    background: skillLevelColor(client.req_skill_level),
-                    textAlign: 'center',
+            ))}
+          </tr>
+        </thead>
+        <tbody>
+          {clients.map((client, index) => (
+            <tr key={client.id}>
+              <td>{index + 1}</td>
+              <td className="text-nowrap">
+                <a
+                  className="cursor-pointer"
+                  onClick={() => {
+                    if (!user?.is_superuser) {
+                      return;
+                    }
+                    openClientForm(client);
                   }}
                 >
-                  {client.req_skill_level}
-                </td>
-                <td style={{ textAlign: 'center' }}>
-                  {client.req_spanish_speaking && (
-                    <span className="material-symbols-outlined text-sm text-green-700">check</span>
-                  )}
-                </td>
-                <td style={{ textAlign: 'center' }}>
-                  {client.eval_done && <span className="material-symbols-outlined text-sm text-green-700">check</span>}
-                </td>
-                <td style={{ textAlign: 'center' }}>
-                  {client.is_onboarding && (
-                    <span className="material-symbols-outlined text-sm text-green-700">check</span>
-                  )}
-                </td>
-                <td>{client.prescribed_hours}</td>
-                <td>{client.computed_properties?.total_hours_available}</td>
-                {renderAvailabilities(client)}
-              </tr>
-            ))}
-          </tbody>
-          <tfoot>
-            <tr>
-              <td colSpan={6}></td>
-              <td>{totalPrescribedHours()}</td>
-              <td>{totalAvailableHours()}</td>
-              {renderBlockTotals()}
+                  {client.first_name} {client.last_name}
+                </a>
+              </td>
+              <td
+                style={{
+                  background: skillLevelColor(client.req_skill_level),
+                  textAlign: 'center',
+                }}
+              >
+                {client.req_skill_level}
+              </td>
+              <td style={{ textAlign: 'center' }}>
+                {client.req_spanish_speaking && (
+                  <span className="material-symbols-outlined text-sm text-green-700">check</span>
+                )}
+              </td>
+              <td style={{ textAlign: 'center' }}>
+                {client.eval_done && <span className="material-symbols-outlined text-sm text-green-700">check</span>}
+              </td>
+              <td style={{ textAlign: 'center' }}>
+                {client.is_onboarding && (
+                  <span className="material-symbols-outlined text-sm text-green-700">check</span>
+                )}
+              </td>
+              <td>{client.prescribed_hours}</td>
+              <td>{client.computed_properties?.total_hours_available}</td>
+              {renderAvailabilities(client)}
             </tr>
-          </tfoot>
-        </table>
-      </Card>
+          ))}
+        </tbody>
+        <tfoot>
+          <tr>
+            <td colSpan={6}></td>
+            <td>{totalPrescribedHours()}</td>
+            <td>{totalAvailableHours()}</td>
+            {renderBlockTotals()}
+          </tr>
+        </tfoot>
+      </table>
       <RadixDialog
         asDrawer
         title={`${clientForm.client ? 'Update' : 'Create'} Client`}

@@ -1,8 +1,8 @@
 import { AppointmentModel } from '@/api';
-import { Badge } from '@/ui';
 import { dayToString, formatTime } from '@/utils/time';
 import clsx from 'clsx';
 import React from 'react';
+import { Badge } from '../ui/badge';
 import './AppointmentHover.scss';
 
 export type AppointmentHoverProps = {
@@ -24,7 +24,7 @@ export const AppointmentHover = ({ appointment }: AppointmentHoverProps) => {
         <label>
           <span className="material-symbols-outlined">person</span> Client:
         </label>
-        <Badge size="xs">
+        <Badge>
           {appointment.client?.first_name} {appointment.client?.last_name}
         </Badge>
       </div>
@@ -33,7 +33,6 @@ export const AppointmentHover = ({ appointment }: AppointmentHoverProps) => {
           <span className="material-symbols-outlined">engineering</span> Technician:
         </label>
         <Badge
-          size="xs"
           style={{
             background: appointment.technician?.bg_color,
             color: appointment.technician?.text_color,
@@ -102,7 +101,6 @@ export const AppointmentHover = ({ appointment }: AppointmentHoverProps) => {
             {recommendedSubs.map((sub) => (
               <Badge
                 key={sub.id}
-                size="xs"
                 style={{
                   background: sub.bg_color,
                   color: sub.text_color,

@@ -1,5 +1,6 @@
+import { Button } from '@/components/ui/button';
 import { http } from '@/http';
-import { Button, Input } from '@/ui';
+import { Input } from '@/ui';
 import { handleFormErrors } from '@/utils/errors';
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
@@ -66,7 +67,7 @@ export const PasswordResetConfirmForm = (props: PasswordResetConfirmFormProps) =
       </div>
       {errors.root && <p className="form-error">{errors.root.message}</p>}
       <div className="PasswordResetConfirmForm__actions">
-        <Button color="primary" disabled={!form.formState.isValid} fluid type="submit" variant="raised">
+        <Button className="w-full" disabled={!form.formState.isValid} type="submit">
           Update Password
         </Button>
       </div>

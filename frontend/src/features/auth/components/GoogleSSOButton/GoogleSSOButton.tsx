@@ -1,5 +1,5 @@
+import { Button } from '@/components/ui/button';
 import { http } from '@/http';
-import { Button } from '@/ui';
 import { useGoogleLogin } from '@react-oauth/google';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
@@ -26,7 +26,7 @@ export const GoogleSSOButton = ({ label = 'Sign in with Google' }: GoogleSSOButt
   });
 
   return (
-    <Button fluid onClick={() => googleLogin()} variant="outlined">
+    <Button className="w-full" onClick={() => googleLogin()} variant="outline">
       <div className="flex items-center justify-center gap-2">
         <img src={GoogleSSOLogo} style={{ height: '18px', width: '18px' }} />
         {label}

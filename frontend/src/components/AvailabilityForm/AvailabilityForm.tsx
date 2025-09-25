@@ -1,9 +1,11 @@
 import { AvailabilityModel, ClientModel, TechnicianModel } from '@/api';
-import { Badge, Button, Checkbox, TimeInput, useToast } from '@/ui';
+import { Checkbox, TimeInput, useToast } from '@/ui';
 import { dayToString } from '@/utils/time';
 import React from 'react';
 import { Controller, useForm } from 'react-hook-form';
+import { Badge } from '../ui/badge';
 import './AvailabilityForm.scss';
+import { Button } from '../ui/button';
 
 export type AvailabilityFormProps = {
   instance?: Availability;
@@ -134,8 +136,10 @@ export const AvailabilityForm = ({
           This action cannot be undone.
         </p>
         <div className="AvailabilityForm__confirmDelete__actions">
-          <Button onClick={() => setConfirmDelete(false)}>Cancel</Button>
-          <Button color="red" onClick={clickConfirmDelete} variant="raised">
+          <Button onClick={() => setConfirmDelete(false)} variant="ghost">
+            Cancel
+          </Button>
+          <Button onClick={clickConfirmDelete} variant="destructive">
             Delete
           </Button>
         </div>
@@ -149,13 +153,12 @@ export const AvailabilityForm = ({
         <div className="Input__container">
           <label className="capitalize">{contentType}</label>
           {contentType === 'client' && (
-            <Badge size="xs">
+            <Badge>
               {object.first_name} {object.last_name}
             </Badge>
           )}
           {contentType === 'technician' && (
             <Badge
-              size="xs"
               style={{
                 backgroundColor: (object as Technician).bg_color,
                 color: (object as Technician).text_color,
@@ -229,16 +232,17 @@ export const AvailabilityForm = ({
       <div className="AvailabilityForm__actions">
         {instance && (
           <Button
-            color="red"
             onClick={() => {
               clickDelete();
             }}
+            type="button"
+            variant="destructive"
           >
             Delete
           </Button>
         )}
         <div className="flex-1"></div>
-        <Button color="primary" disabled={!form.formState.isValid} type="submit" variant="raised">
+        <Button disabled={!form.formState.isValid} type="submit">
           {instance ? 'Update' : 'Create'}
         </Button>
       </div>

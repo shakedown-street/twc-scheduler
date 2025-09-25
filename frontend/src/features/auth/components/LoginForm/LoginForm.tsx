@@ -1,5 +1,6 @@
+import { Button } from '@/components/ui/button';
 import { http } from '@/http';
-import { Button, Input, RadixDialog } from '@/ui';
+import { Input, RadixDialog } from '@/ui';
 import { handleFormErrors } from '@/utils/errors';
 import React from 'react';
 import { useForm } from 'react-hook-form';
@@ -69,7 +70,7 @@ export const LoginForm = () => {
         </div>
         {errors.root && <p className="form-error">{errors.root.message}</p>}
         <div className="LoginForm__actions">
-          <Button color="primary" disabled={!form.formState.isValid} fluid type="submit" variant="raised">
+          <Button className="w-full" disabled={!form.formState.isValid} type="submit">
             Login
           </Button>
         </div>

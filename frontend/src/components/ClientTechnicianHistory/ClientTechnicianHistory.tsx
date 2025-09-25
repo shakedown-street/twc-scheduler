@@ -1,10 +1,11 @@
 import { ClientModel } from '@/api';
 import { useAuth } from '@/features/auth/contexts/AuthContext';
-import { Badge, RadixDialog, Spinner } from '@/ui';
+import { RadixDialog, Spinner } from '@/ui';
 import { skillLevelColor } from '@/utils/color';
 import { orderByFirstName } from '@/utils/order';
 import React from 'react';
 import { ClientForm } from '../ClientForm/ClientForm';
+import { Badge } from '../ui/badge';
 import './ClientTechnicianHistory.scss';
 
 export const ClientTechnicianHistory = () => {
@@ -77,7 +78,6 @@ export const ClientTechnicianHistory = () => {
         {technicians.map((t) => (
           <Badge
             key={t.id}
-            size="xs"
             style={{
               background: t.bg_color,
               color: t.text_color,

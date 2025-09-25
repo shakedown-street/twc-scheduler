@@ -1,6 +1,6 @@
 import { ClientAvailability } from '@/components/ClientAvailability/ClientAvailability';
 import { TechAvailability } from '@/components/TechAvailability/TechAvailability';
-import { Container, TabItem, Tabs } from '@/ui';
+import { TabItem, Tabs } from '@/ui';
 import { Helmet } from 'react-helmet';
 import { useSearchParams } from 'react-router-dom';
 
@@ -22,7 +22,7 @@ export const AvailabilityRoute = () => {
       <Helmet>
         <title>Availability | Schedule Builder</title>
       </Helmet>
-      <Container>
+      <div className="container mx-auto px-4">
         <div className="mt-4 mb-12">
           <h1>Availability</h1>
           <Tabs className="mb-4">
@@ -38,7 +38,7 @@ export const AvailabilityRoute = () => {
             {getTab() === 'technicians' && <TechAvailability />}
           </div>
         </div>
-      </Container>
+      </div>
     </>
   );
 };
