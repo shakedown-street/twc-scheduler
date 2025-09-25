@@ -1,6 +1,7 @@
 import { Button } from '@/components/ui/button';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { http } from '@/http';
-import { Input, RadixDialog } from '@/ui';
+import { Input } from '@/ui';
 import { handleFormErrors } from '@/utils/errors';
 import React from 'react';
 import { useForm } from 'react-hook-form';
@@ -75,14 +76,14 @@ export const LoginForm = () => {
           </Button>
         </div>
       </form>
-      <RadixDialog
-        className="p-6"
-        open={resendVerifyOpen}
-        onOpenChange={setResendVerifyOpen}
-        title="Email Verification Required"
-      >
-        <ResendVerifyEmail email={form.getValues('username')} onSuccess={() => setResendVerifyOpen(false)} />
-      </RadixDialog>
+      <Dialog open={resendVerifyOpen} onOpenChange={setResendVerifyOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Email Verification Required</DialogTitle>
+          </DialogHeader>
+          <ResendVerifyEmail email={form.getValues('username')} onSuccess={() => setResendVerifyOpen(false)} />
+        </DialogContent>
+      </Dialog>
     </>
   );
 };

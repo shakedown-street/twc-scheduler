@@ -1,16 +1,17 @@
+import { UserModel } from '@/api';
 import logo from '@/assets/logo.avif';
-import { ImpersonateDialog } from '@/features/auth/components/ImpersonateDialog/ImpersonateDialog';
 import { useAuth } from '@/features/auth/contexts/AuthContext';
 import { http } from '@/http';
-import { IconButton, RadixDialog, useToast } from '@/ui';
+import { IconButton, SearchPopover, useToast } from '@/ui';
 import clsx from 'clsx';
 import { IdCard, LogOut, Settings, User } from 'lucide-react';
 import React from 'react';
 import { Link, NavLink, useNavigate } from 'react-router-dom';
 import { SettingsDialog } from '../SettingsDialog/SettingsDialog';
+import { Button } from '../ui/button';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '../ui/dialog';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '../ui/dropdown-menu';
 import './Nav.scss';
-import { Button } from '../ui/button';
 
 export const Nav = () => {
   const [impersonateDialogOpen, setImpersonateDialogOpen] = React.useState(false);
@@ -19,6 +20,14 @@ export const Nav = () => {
   const navigate = useNavigate();
   const { user, setUser } = useAuth();
   const toast = useToast();
+
+  function impersonate(user: User) {
+    UserModel.detailAction(user.id, 'impersonate', 'get').then((res) => {
+      navigate('/');
+      localStorage.setItem('impersonate', res.data.token);
+      window.location.reload();
+    });
+  }
 
   function logout() {
     http
@@ -141,22 +150,37 @@ export const Nav = () => {
           </div>
         </div>
       </div>
-      <RadixDialog
-        description="Impersonate another user"
-        open={impersonateDialogOpen}
-        onOpenChange={(open) => setImpersonateDialogOpen(open)}
-        title="Impersonate"
-      >
-        <ImpersonateDialog />
-      </RadixDialog>
-      <RadixDialog
-        description="Change your settings"
-        open={settingsDialogOpen}
-        onOpenChange={(open) => setSettingsDialogOpen(open)}
-        title="Settings"
-      >
-        <SettingsDialog onClose={() => setSettingsDialogOpen(false)} />
-      </RadixDialog>
+      <Dialog open={impersonateDialogOpen} onOpenChange={(open) => setImpersonateDialogOpen(open)}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Impersonate User</DialogTitle>
+            <DialogDescription>Search for a user to impersonate</DialogDescription>
+          </DialogHeader>
+          <SearchPopover
+            endpoint="/api/users/"
+            onChange={(value: User) => impersonate(value)}
+            parameter="search"
+            renderMatch={(user: User) => {
+              return <>{user.email}</>;
+            }}
+            trigger={
+              <Button className="w-full" variant="outline">
+                Search
+              </Button>
+            }
+          />
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={settingsDialogOpen} onOpenChange={(open) => setSettingsDialogOpen(open)}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Settings</DialogTitle>
+            <DialogDescription>Change your settings</DialogDescription>
+          </DialogHeader>
+          <SettingsDialog onClose={() => setSettingsDialogOpen(false)} />
+        </DialogContent>
+      </Dialog>
     </>
   );
 };

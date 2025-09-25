@@ -3,7 +3,7 @@ import { AvailabilityForm } from '@/components/AvailabilityForm/AvailabilityForm
 import { TechnicianForm } from '@/components/TechnicianForm/TechnicianForm';
 import { useBlocks } from '@/contexts/BlocksContext';
 import { useAuth } from '@/features/auth/contexts/AuthContext';
-import { Checkbox, RadixDialog, Spinner } from '@/ui';
+import { Checkbox, Spinner } from '@/ui';
 import { isFullBlock } from '@/utils/appointments';
 import { skillLevelColor } from '@/utils/color';
 import { orderByFirstName } from '@/utils/order';
@@ -11,6 +11,8 @@ import { checkTimeIntersection, formatTimeShort } from '@/utils/time';
 import clsx from 'clsx';
 import React from 'react';
 import { Button } from '../ui/button';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '../ui/dialog';
+import { Sheet, SheetContent, SheetHeader, SheetTitle } from '../ui/sheet';
 import './TechAvailability.scss';
 
 export const TechAvailability = () => {
@@ -331,14 +333,14 @@ export const TechAvailability = () => {
           </tr>
         </tfoot>
       </table>
-      <RadixDialog
-        asDrawer
-        title={`${technicianForm.technician ? 'Update' : 'Create'} Technician`}
+      <Sheet
         open={technicianForm.open}
         onOpenChange={(open) => setTechnicianForm({ ...technicianForm, open, technician: undefined })}
       >
-        <div className="p-6">
-          <h3 className="mb-4">{technicianForm.technician ? 'Update' : 'Create'} Technician</h3>
+        <SheetContent>
+          <SheetHeader>
+            <SheetTitle>{technicianForm.technician ? 'Update' : 'Create'} Technician</SheetTitle>
+          </SheetHeader>
           <TechnicianForm
             technician={technicianForm.technician}
             onCancel={() => {
@@ -348,10 +350,9 @@ export const TechAvailability = () => {
             onUpdate={onUpdateTechnician}
             onDelete={onDeleteTechnician}
           />
-        </div>
-      </RadixDialog>
-      <RadixDialog
-        title={`${availabilityForm.instance ? 'Update' : 'Create'} Availability`}
+        </SheetContent>
+      </Sheet>
+      <Dialog
         open={availabilityForm.open}
         onOpenChange={(open) => {
           if (!open) {
@@ -359,8 +360,10 @@ export const TechAvailability = () => {
           }
         }}
       >
-        <div className="p-6">
-          <h3 className="mb-4">{availabilityForm.instance ? 'Update' : 'Create'} Availability</h3>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>{availabilityForm.instance ? 'Update' : 'Create'} Availability</DialogTitle>
+          </DialogHeader>
           {availabilityForm.object && (
             <AvailabilityForm
               contentType="technician"
@@ -374,8 +377,8 @@ export const TechAvailability = () => {
               initialEndTime={availabilityForm.initialEndTime}
             />
           )}
-        </div>
-      </RadixDialog>
+        </DialogContent>
+      </Dialog>
     </>
   );
 };

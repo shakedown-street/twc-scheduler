@@ -1,7 +1,7 @@
 import { TechnicianModel } from '@/api';
 import { useBlocks } from '@/contexts/BlocksContext';
 import { useAuth } from '@/features/auth/contexts/AuthContext';
-import { RadixDialog, Spinner } from '@/ui';
+import { Spinner } from '@/ui';
 import { getBlockAppointments, getBlockAvailabilities } from '@/utils/appointments';
 import { dayColor, skillLevelColor, striped } from '@/utils/color';
 import { orderByFirstName } from '@/utils/order';
@@ -11,6 +11,7 @@ import { AppointmentHover } from '../AppointmentHover/AppointmentHover';
 import { TechnicianForm } from '../TechnicianForm/TechnicianForm';
 import { Button } from '../ui/button';
 import { HoverCard, HoverCardContent, HoverCardTrigger } from '../ui/hover-card';
+import { Sheet, SheetContent, SheetHeader, SheetTitle } from '../ui/sheet';
 import './TechniciansOverview.scss';
 
 export type TechniciansOverviewProps = {
@@ -195,7 +196,7 @@ export const TechniciansOverview = ({ isSubList = false, showLegend = true }: Te
         return (
           <HoverCard key={block.id}>
             <HoverCardTrigger asChild>{hoverTrigger}</HoverCardTrigger>
-            <HoverCardContent>
+            <HoverCardContent className="w-96">
               <AppointmentHover appointment={appointment} />
             </HoverCardContent>
           </HoverCard>
@@ -522,14 +523,14 @@ export const TechniciansOverview = ({ isSubList = false, showLegend = true }: Te
         </table>
       </div>
       {technicianForm.technician && (
-        <RadixDialog
-          asDrawer
-          title={`Update Technician`}
+        <Sheet
           open={technicianForm.open}
           onOpenChange={(open) => setTechnicianForm({ ...technicianForm, open, technician: undefined })}
         >
-          <div className="p-6">
-            <h3 className="mb-4">Update Technician</h3>
+          <SheetContent>
+            <SheetHeader>
+              <SheetTitle>Update Technician</SheetTitle>
+            </SheetHeader>
             <TechnicianForm
               technician={technicianForm.technician}
               onCancel={() => {
@@ -538,8 +539,8 @@ export const TechniciansOverview = ({ isSubList = false, showLegend = true }: Te
               onUpdate={onUpdateTechnician}
               onDelete={onDeleteTechnician}
             />
-          </div>
-        </RadixDialog>
+          </SheetContent>
+        </Sheet>
       )}
     </>
   );

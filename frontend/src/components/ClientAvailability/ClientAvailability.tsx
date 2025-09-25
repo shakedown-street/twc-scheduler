@@ -3,7 +3,7 @@ import { AvailabilityForm } from '@/components/AvailabilityForm/AvailabilityForm
 import { ClientForm } from '@/components/ClientForm/ClientForm';
 import { useBlocks } from '@/contexts/BlocksContext';
 import { useAuth } from '@/features/auth/contexts/AuthContext';
-import { Card, Checkbox, RadixDialog, Spinner } from '@/ui';
+import { Checkbox, Spinner } from '@/ui';
 import { isFullBlock } from '@/utils/appointments';
 import { skillLevelColor } from '@/utils/color';
 import { orderByFirstName } from '@/utils/order';
@@ -11,6 +11,8 @@ import { checkTimeIntersection, formatTimeShort } from '@/utils/time';
 import clsx from 'clsx';
 import React from 'react';
 import { Button } from '../ui/button';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '../ui/dialog';
+import { Sheet, SheetContent, SheetHeader, SheetTitle } from '../ui/sheet';
 import './ClientAvailability.scss';
 
 export const ClientAvailability = () => {
@@ -340,14 +342,11 @@ export const ClientAvailability = () => {
           </tr>
         </tfoot>
       </table>
-      <RadixDialog
-        asDrawer
-        title={`${clientForm.client ? 'Update' : 'Create'} Client`}
-        open={clientForm.open}
-        onOpenChange={(open) => setClientForm({ ...clientForm, open, client: undefined })}
-      >
-        <div className="p-6">
-          <h3 className="mb-4">{clientForm.client ? 'Update' : 'Create'} Client</h3>
+      <Sheet open={clientForm.open} onOpenChange={(open) => setClientForm({ ...clientForm, open, client: undefined })}>
+        <SheetContent>
+          <SheetHeader>
+            <SheetTitle>{clientForm.client ? 'Update' : 'Create'} Client</SheetTitle>
+          </SheetHeader>
           <ClientForm
             client={clientForm.client}
             onCancel={() => {
@@ -357,10 +356,9 @@ export const ClientAvailability = () => {
             onDelete={onDeleteClient}
             onUpdate={onUpdateClient}
           />
-        </div>
-      </RadixDialog>
-      <RadixDialog
-        title={`${availabilityForm.instance ? 'Update' : 'Create'} Availability`}
+        </SheetContent>
+      </Sheet>
+      <Dialog
         open={availabilityForm.open}
         onOpenChange={(open) => {
           if (!open) {
@@ -368,8 +366,10 @@ export const ClientAvailability = () => {
           }
         }}
       >
-        <div className="p-6">
-          <h3 className="mb-4">{availabilityForm.instance ? 'Update' : 'Create'} Availability</h3>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>{availabilityForm.instance ? 'Update' : 'Create'} Availability</DialogTitle>
+          </DialogHeader>
           {availabilityForm.object && (
             <AvailabilityForm
               contentType="client"
@@ -383,8 +383,8 @@ export const ClientAvailability = () => {
               initialEndTime={availabilityForm.initialEndTime}
             />
           )}
-        </div>
-      </RadixDialog>
+        </DialogContent>
+      </Dialog>
     </>
   );
 };

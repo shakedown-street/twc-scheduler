@@ -1,11 +1,12 @@
 import { ClientModel } from '@/api';
 import { useAuth } from '@/features/auth/contexts/AuthContext';
-import { RadixDialog, Spinner } from '@/ui';
+import { Spinner } from '@/ui';
 import { skillLevelColor } from '@/utils/color';
 import { orderByFirstName } from '@/utils/order';
 import React from 'react';
 import { ClientForm } from '../ClientForm/ClientForm';
 import { Badge } from '../ui/badge';
+import { Sheet, SheetContent, SheetHeader, SheetTitle } from '../ui/sheet';
 import './ClientTechnicianHistory.scss';
 
 export const ClientTechnicianHistory = () => {
@@ -143,14 +144,14 @@ export const ClientTechnicianHistory = () => {
         </table>
       </div>
       {clientForm.client && (
-        <RadixDialog
-          asDrawer
-          title={`Update Client`}
+        <Sheet
           open={clientForm.open}
           onOpenChange={(open) => setClientForm({ ...clientForm, open, client: undefined })}
         >
-          <div className="p-6">
-            <h3 className="mb-4">Update Client</h3>
+          <SheetContent>
+            <SheetHeader>
+              <SheetTitle>Update Client</SheetTitle>
+            </SheetHeader>
             <ClientForm
               client={clientForm.client}
               onCancel={() => {
@@ -159,8 +160,8 @@ export const ClientTechnicianHistory = () => {
               onDelete={onDeleteClient}
               onUpdate={onUpdateClient}
             />
-          </div>
-        </RadixDialog>
+          </SheetContent>
+        </Sheet>
       )}
     </>
   );

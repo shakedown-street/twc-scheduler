@@ -37,7 +37,6 @@ export const SettingsDialog = (props: SettingsDialogProps) => {
   return (
     <>
       <div className="SettingsDialog">
-        <h2>Settings</h2>
         <form className="SettingsDialog__form" onSubmit={form.handleSubmit(save)}>
           <div>
             <Checkbox label="Enable Hover Cards" inputSize="xs" {...form.register('hover_cards_enabled')} />

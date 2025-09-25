@@ -1,7 +1,7 @@
 import { TechnicianModel } from '@/api';
 import { useBlocks } from '@/contexts/BlocksContext';
 import { useAuth } from '@/features/auth/contexts/AuthContext';
-import { RadixDialog, Spinner } from '@/ui';
+import { Spinner } from '@/ui';
 import { getBlockAppointments, getBlockAvailabilities } from '@/utils/appointments';
 import { skillLevelColor, striped } from '@/utils/color';
 import { orderByFirstName } from '@/utils/order';
@@ -10,6 +10,7 @@ import React from 'react';
 import { AppointmentHover } from '../AppointmentHover/AppointmentHover';
 import { TechnicianForm } from '../TechnicianForm/TechnicianForm';
 import { HoverCard, HoverCardContent, HoverCardTrigger } from '../ui/hover-card';
+import { Sheet, SheetContent, SheetHeader, SheetTitle } from '../ui/sheet';
 import './TechnicianDayOverview.scss';
 
 export type TechnicianDayOverviewProps = {
@@ -105,7 +106,7 @@ export const TechnicianDayOverview = ({ day }: TechnicianDayOverviewProps) => {
         return (
           <HoverCard key={block.id}>
             <HoverCardTrigger asChild>{hoverTrigger}</HoverCardTrigger>
-            <HoverCardContent>
+            <HoverCardContent className="w-96">
               <AppointmentHover appointment={appointment} />
             </HoverCardContent>
           </HoverCard>
@@ -165,106 +166,104 @@ export const TechnicianDayOverview = ({ day }: TechnicianDayOverviewProps) => {
 
   return (
     <>
-      <div className="flex gap-4">
-        <table className="TechnicianDayOverview">
-          <colgroup>
-            <col width="24px" />
-            <col width="24px" />
-            <col />
-            <col />
-            <col />
-            <col />
-            <col />
-            <col width="24px" />
-            {blocks.map((block) => (
-              <col key={block.id} width="28px" />
+      <table className="TechnicianDayOverview">
+        <colgroup>
+          <col width="24px" />
+          <col width="24px" />
+          <col />
+          <col />
+          <col />
+          <col />
+          <col />
+          <col width="24px" />
+          {blocks.map((block) => (
+            <col key={block.id} width="28px" />
+          ))}
+        </colgroup>
+        <thead>
+          <tr>
+            <th></th>
+            <th title="Skill level"></th>
+            <th title="Spanish speaker">Spa</th>
+            <th title="Technician"></th>
+            <th title="Day hours">{dayToString(day, 'medium')}</th>
+            <th title="Week hours">Week</th>
+            <th title="Hours requested">Req</th>
+            <th title="Available"></th>
+            {blocks.map((block, blockIndex) => (
+              <th
+                key={block.id}
+                style={{
+                  background: block.color,
+                  borderLeftWidth: blockIndex === 0 ? '6px' : '1px',
+                  borderRightWidth: blockIndex === blocks.length - 1 ? '6px' : '1px',
+                }}
+              ></th>
             ))}
-          </colgroup>
-          <thead>
-            <tr>
-              <th></th>
-              <th title="Skill level"></th>
-              <th title="Spanish speaker">Spa</th>
-              <th title="Technician"></th>
-              <th title="Day hours">{dayToString(day, 'medium')}</th>
-              <th title="Week hours">Week</th>
-              <th title="Hours requested">Req</th>
-              <th title="Available"></th>
-              {blocks.map((block, blockIndex) => (
-                <th
-                  key={block.id}
-                  style={{
-                    background: block.color,
-                    borderLeftWidth: blockIndex === 0 ? '6px' : '1px',
-                    borderRightWidth: blockIndex === blocks.length - 1 ? '6px' : '1px',
+          </tr>
+        </thead>
+        <tbody>
+          {technicians.map((technician, index) => (
+            <tr key={technician.id}>
+              <td style={{ background: technician.bg_color, color: technician.text_color, textAlign: 'center' }}>
+                {index + 1}
+              </td>
+              <td style={{ background: skillLevelColor(technician.skill_level), textAlign: 'center' }}>
+                {technician.skill_level}
+              </td>
+              <td
+                style={{
+                  textAlign: 'center',
+                  verticalAlign: 'middle',
+                }}
+              >
+                {technician.spanish_speaking && (
+                  <span className="material-symbols-outlined block text-sm text-green-700">check</span>
+                )}
+              </td>
+              <td className="text-nowrap" style={{ background: technician.bg_color, color: technician.text_color }}>
+                <a
+                  className="cursor-pointer"
+                  onClick={() => {
+                    if (!user?.is_superuser) {
+                      return;
+                    }
+                    openTechnicianForm(technician);
                   }}
-                ></th>
+                  style={{ color: technician.text_color }}
+                >
+                  {technician.first_name} {technician.last_name}
+                </a>
+              </td>
+              <td style={{ textAlign: 'center' }}>{technician.computed_properties?.total_hours_by_day[day]}</td>
+              <td style={{ textAlign: 'center' }}>{technician.computed_properties?.total_hours}</td>
+              <td style={{ textAlign: 'center' }}>{technician.requested_hours}</td>
+              <td
+                style={{
+                  background: 'black',
+                  color: technician.computed_properties?.is_maxed_on_sessions ? '#ef4444' : '#22c55e', // tw-red-500 : tw-green-500
+                  fontWeight: 'bold',
+                  textAlign: 'center',
+                }}
+              >
+                {technician.computed_properties?.is_maxed_on_sessions ? 'M' : 'A'}
+              </td>
+              {blocks.map((block, blockIndex) => (
+                <React.Fragment key={block.id}>{renderBlock(technician, block, blockIndex)}</React.Fragment>
               ))}
             </tr>
-          </thead>
-          <tbody>
-            {technicians.map((technician, index) => (
-              <tr key={technician.id}>
-                <td style={{ background: technician.bg_color, color: technician.text_color, textAlign: 'center' }}>
-                  {index + 1}
-                </td>
-                <td style={{ background: skillLevelColor(technician.skill_level), textAlign: 'center' }}>
-                  {technician.skill_level}
-                </td>
-                <td
-                  style={{
-                    textAlign: 'center',
-                    verticalAlign: 'middle',
-                  }}
-                >
-                  {technician.spanish_speaking && (
-                    <span className="material-symbols-outlined block text-sm text-green-700">check</span>
-                  )}
-                </td>
-                <td className="text-nowrap" style={{ background: technician.bg_color, color: technician.text_color }}>
-                  <a
-                    className="cursor-pointer"
-                    onClick={() => {
-                      if (!user?.is_superuser) {
-                        return;
-                      }
-                      openTechnicianForm(technician);
-                    }}
-                    style={{ color: technician.text_color }}
-                  >
-                    {technician.first_name} {technician.last_name}
-                  </a>
-                </td>
-                <td style={{ textAlign: 'center' }}>{technician.computed_properties?.total_hours_by_day[day]}</td>
-                <td style={{ textAlign: 'center' }}>{technician.computed_properties?.total_hours}</td>
-                <td style={{ textAlign: 'center' }}>{technician.requested_hours}</td>
-                <td
-                  style={{
-                    background: 'black',
-                    color: technician.computed_properties?.is_maxed_on_sessions ? '#ef4444' : '#22c55e', // tw-red-500 : tw-green-500
-                    fontWeight: 'bold',
-                    textAlign: 'center',
-                  }}
-                >
-                  {technician.computed_properties?.is_maxed_on_sessions ? 'M' : 'A'}
-                </td>
-                {blocks.map((block, blockIndex) => (
-                  <React.Fragment key={block.id}>{renderBlock(technician, block, blockIndex)}</React.Fragment>
-                ))}
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+          ))}
+        </tbody>
+      </table>
       {technicianForm.technician && (
-        <RadixDialog
-          asDrawer
-          title={`Update Technician`}
+        <Sheet
           open={technicianForm.open}
           onOpenChange={(open) => setTechnicianForm({ ...technicianForm, open, technician: undefined })}
         >
-          <div className="p-6">
-            <h3 className="mb-4">Update Technician</h3>
+          <SheetContent>
+            <SheetHeader>
+              <SheetTitle>Update Technician</SheetTitle>
+            </SheetHeader>
             <TechnicianForm
               technician={technicianForm.technician}
               onCancel={() => {
@@ -273,8 +272,8 @@ export const TechnicianDayOverview = ({ day }: TechnicianDayOverviewProps) => {
               onUpdate={onUpdateTechnician}
               onDelete={onDeleteTechnician}
             />
-          </div>
-        </RadixDialog>
+          </SheetContent>
+        </Sheet>
       )}
     </>
   );

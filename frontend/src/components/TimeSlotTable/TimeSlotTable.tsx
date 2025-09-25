@@ -190,7 +190,7 @@ export const TimeSlotTable = ({
         return (
           <HoverCard key={time}>
             <HoverCardTrigger asChild>{hoverTrigger}</HoverCardTrigger>
-            <HoverCardContent>
+            <HoverCardContent className="w-96">
               <AppointmentHover appointment={slotAppointment} />
             </HoverCardContent>
           </HoverCard>

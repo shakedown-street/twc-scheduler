@@ -4,16 +4,17 @@ import { ClientForm } from '@/components/ClientForm/ClientForm';
 import { TechnicianDayOverview } from '@/components/TechnicianDayOverview/TechnicianDayOverview';
 import { TherapyAppointmentForm } from '@/components/TherapyAppointmentForm/TherapyAppointmentForm';
 import { TimeSlotTable } from '@/components/TimeSlotTable/TimeSlotTable';
+import { Button } from '@/components/ui/button';
+import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet';
 import { useBlocks } from '@/contexts/BlocksContext';
 import { useAuth } from '@/features/auth/contexts/AuthContext';
-import { RadixDialog, Spinner, TabItem, Tabs } from '@/ui';
+import { Spinner, TabItem, Tabs } from '@/ui';
 import { orderByFirstName } from '@/utils/order';
 import { dayToString } from '@/utils/time';
 import React from 'react';
 import { Helmet } from 'react-helmet';
 import { useSearchParams } from 'react-router-dom';
 import './Schedule.scss';
-import { Button } from '@/components/ui/button';
 
 export const Schedule = () => {
   const [clients, setClients] = React.useState<Client[]>([]);
@@ -321,9 +322,7 @@ export const Schedule = () => {
           />
         </div>
       </div>
-      <RadixDialog
-        asDrawer
-        title={`${appointmentForm.instance ? 'Update' : 'Create'} Appointment`}
+      <Sheet
         open={appointmentForm.open}
         onOpenChange={(open) => {
           if (!open) {
@@ -331,8 +330,10 @@ export const Schedule = () => {
           }
         }}
       >
-        <div className="p-6">
-          <h3 className="mb-4">{appointmentForm.instance ? 'Update' : 'Create'} Appointment</h3>
+        <SheetContent>
+          <SheetHeader>
+            <SheetTitle>{appointmentForm.instance ? 'Update' : 'Create'} Appointment</SheetTitle>
+          </SheetHeader>
           {appointmentForm.client && appointmentForm.block && (
             <AppointmentForm
               onCreate={(created) => onCreateAppointment(created)}
@@ -345,11 +346,9 @@ export const Schedule = () => {
               instance={appointmentForm.instance}
             />
           )}
-        </div>
-      </RadixDialog>
-      <RadixDialog
-        asDrawer
-        title={`${therapyAppointmentForm.instance ? 'Update' : 'Create'} Therapy Appointment`}
+        </SheetContent>
+      </Sheet>
+      <Sheet
         open={therapyAppointmentForm.open}
         onOpenChange={(open) => {
           if (!open) {
@@ -357,8 +356,10 @@ export const Schedule = () => {
           }
         }}
       >
-        <div className="p-6">
-          <h3 className="mb-4">{therapyAppointmentForm.instance ? 'Update' : 'Create'} Therapy Appointment</h3>
+        <SheetContent>
+          <SheetHeader>
+            <SheetTitle>{therapyAppointmentForm.instance ? 'Update' : 'Create'} Therapy Appointment</SheetTitle>
+          </SheetHeader>
           {therapyAppointmentForm.client && (
             <TherapyAppointmentForm
               onCreate={(created) => onCreateTherapyAppointment(created)}
@@ -370,17 +371,17 @@ export const Schedule = () => {
               instance={therapyAppointmentForm.instance}
             />
           )}
-        </div>
-      </RadixDialog>
+        </SheetContent>
+      </Sheet>
       {clientForm.client && (
-        <RadixDialog
-          asDrawer
-          title={`Update Client`}
+        <Sheet
           open={clientForm.open}
           onOpenChange={(open) => setClientForm({ ...clientForm, open, client: undefined })}
         >
-          <div className="p-6">
-            <h3 className="mb-4">Update Client</h3>
+          <SheetContent>
+            <SheetHeader>
+              <SheetTitle>Update Client</SheetTitle>
+            </SheetHeader>
             <ClientForm
               client={clientForm.client}
               onCancel={() => {
@@ -389,22 +390,22 @@ export const Schedule = () => {
               onDelete={onDeleteClient}
               onUpdate={onUpdateClient}
             />
-          </div>
-        </RadixDialog>
+          </SheetContent>
+        </Sheet>
       )}
-      <RadixDialog
-        asDrawer
-        title="Technician Day Overview"
+      <Sheet
         open={technicianDayOverviewOpen}
         onOpenChange={(open) => {
           setTechnicianDayOverviewOpen(open);
         }}
       >
-        <div className="p-6">
-          <h3 className="mb-4">Technician Overview for {dayToString(getDay())}</h3>
+        <SheetContent>
+          <SheetHeader>
+            <SheetTitle>Technician Overview for {dayToString(getDay())}</SheetTitle>
+          </SheetHeader>
           <TechnicianDayOverview day={getDay()} />
-        </div>
-      </RadixDialog>
+        </SheetContent>
+      </Sheet>
     </>
   );
 };

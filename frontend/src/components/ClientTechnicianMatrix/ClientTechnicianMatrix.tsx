@@ -1,10 +1,11 @@
 import { ClientModel, TechnicianModel } from '@/api';
 import { useAuth } from '@/features/auth/contexts/AuthContext';
-import { RadixDialog, Spinner } from '@/ui';
+import { Spinner } from '@/ui';
 import { orderByFirstName } from '@/utils/order';
 import React from 'react';
 import { ClientForm } from '../ClientForm/ClientForm';
 import { TechnicianForm } from '../TechnicianForm/TechnicianForm';
+import { Sheet, SheetContent, SheetHeader, SheetTitle } from '../ui/sheet';
 import './ClientTechnicianMatrix.scss';
 
 export const ClientTechnicianMatrix = () => {
@@ -232,14 +233,14 @@ export const ClientTechnicianMatrix = () => {
         </tbody>
       </table>
       {clientForm.client && (
-        <RadixDialog
-          asDrawer
-          title={`Update Client`}
+        <Sheet
           open={clientForm.open}
           onOpenChange={(open) => setClientForm({ ...clientForm, open, client: undefined })}
         >
-          <div className="p-6">
-            <h3 className="mb-4">Update Client</h3>
+          <SheetContent>
+            <SheetHeader>
+              <SheetTitle>Update Client</SheetTitle>
+            </SheetHeader>
             <ClientForm
               client={clientForm.client}
               onCancel={() => {
@@ -248,18 +249,18 @@ export const ClientTechnicianMatrix = () => {
               onDelete={onDeleteClient}
               onUpdate={onUpdateClient}
             />
-          </div>
-        </RadixDialog>
+          </SheetContent>
+        </Sheet>
       )}
       {technicianForm.technician && (
-        <RadixDialog
-          asDrawer
-          title={`Update Technician`}
+        <Sheet
           open={technicianForm.open}
           onOpenChange={(open) => setTechnicianForm({ ...technicianForm, open, technician: undefined })}
         >
-          <div className="p-6">
-            <h3 className="mb-4">Update Technician</h3>
+          <SheetContent>
+            <SheetHeader>
+              <SheetTitle>Update Technician</SheetTitle>
+            </SheetHeader>
             <TechnicianForm
               technician={technicianForm.technician}
               onCancel={() => {
@@ -268,8 +269,8 @@ export const ClientTechnicianMatrix = () => {
               onUpdate={onUpdateTechnician}
               onDelete={onDeleteTechnician}
             />
-          </div>
-        </RadixDialog>
+          </SheetContent>
+        </Sheet>
       )}
     </>
   );

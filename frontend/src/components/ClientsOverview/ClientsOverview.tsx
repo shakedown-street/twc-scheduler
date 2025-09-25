@@ -1,18 +1,19 @@
 import { ClientModel } from '@/api';
 import { useBlocks } from '@/contexts/BlocksContext';
 import { useAuth } from '@/features/auth/contexts/AuthContext';
-import { RadixDialog, Spinner } from '@/ui';
+import { Spinner } from '@/ui';
 import { getBlockAppointments, getBlockAvailabilities } from '@/utils/appointments';
 import { dayColor, skillLevelColor, striped } from '@/utils/color';
 import { orderByFirstName } from '@/utils/order';
+import { Info } from 'lucide-react';
 import React from 'react';
 import { AppointmentForm } from '../AppointmentForm/AppointmentForm';
 import { AppointmentHover } from '../AppointmentHover/AppointmentHover';
 import { ClientForm } from '../ClientForm/ClientForm';
-import { HoverCard, HoverCardContent, HoverCardTrigger } from '../ui/hover-card';
-import './ClientsOverview.scss';
-import { Info } from 'lucide-react';
 import { Button } from '../ui/button';
+import { HoverCard, HoverCardContent, HoverCardTrigger } from '../ui/hover-card';
+import { Sheet, SheetContent, SheetHeader, SheetTitle } from '../ui/sheet';
+import './ClientsOverview.scss';
 
 export const ClientsOverview = () => {
   const [clients, setClients] = React.useState<Client[]>([]);
@@ -259,7 +260,7 @@ export const ClientsOverview = () => {
         return (
           <HoverCard key={block.id}>
             <HoverCardTrigger asChild>{hoverTrigger}</HoverCardTrigger>
-            <HoverCardContent>
+            <HoverCardContent className="w-96">
               <AppointmentHover appointment={appointment} />
             </HoverCardContent>
           </HoverCard>
@@ -518,9 +519,7 @@ export const ClientsOverview = () => {
           </tfoot>
         </table>
       </div>
-      <RadixDialog
-        asDrawer
-        title={`${appointmentForm.instance ? 'Update' : 'Create'} Appointment`}
+      <Sheet
         open={appointmentForm.open}
         onOpenChange={(open) => {
           if (!open) {
@@ -528,8 +527,10 @@ export const ClientsOverview = () => {
           }
         }}
       >
-        <div className="p-6">
-          <h3 className="mb-4">{appointmentForm.instance ? 'Update' : 'Create'} Appointment</h3>
+        <SheetContent>
+          <SheetHeader>
+            <SheetTitle>{appointmentForm.instance ? 'Update' : 'Create'} Appointment</SheetTitle>
+          </SheetHeader>
           {appointmentForm.client && appointmentForm.block && (
             <AppointmentForm
               onCreate={(created) => onCreateAppointment(created)}
@@ -542,17 +543,17 @@ export const ClientsOverview = () => {
               instance={appointmentForm.instance}
             />
           )}
-        </div>
-      </RadixDialog>
+        </SheetContent>
+      </Sheet>
       {clientForm.client && (
-        <RadixDialog
-          asDrawer
-          title={`Update Client`}
+        <Sheet
           open={clientForm.open}
           onOpenChange={(open) => setClientForm({ ...clientForm, open, client: undefined })}
         >
-          <div className="p-6">
-            <h3 className="mb-4">Update Client</h3>
+          <SheetContent>
+            <SheetHeader>
+              <SheetTitle>Update Client</SheetTitle>
+            </SheetHeader>
             <ClientForm
               client={clientForm.client}
               onCancel={() => {
@@ -561,8 +562,8 @@ export const ClientsOverview = () => {
               onDelete={onDeleteClient}
               onUpdate={onUpdateClient}
             />
-          </div>
-        </RadixDialog>
+          </SheetContent>
+        </Sheet>
       )}
     </>
   );

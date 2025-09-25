@@ -4,7 +4,6 @@ export * from './FileUpload/FileDropArea';
 export * from './FileUpload/FileUploadController';
 export * from './IconButton/IconButton';
 export * from './Input/Input';
-export * from './RadixDialog/RadixDialog';
 export * from './SearchPopover/SearchPopover';
 export * from './Select/Select';
 export * from './Spinner/Spinner';
