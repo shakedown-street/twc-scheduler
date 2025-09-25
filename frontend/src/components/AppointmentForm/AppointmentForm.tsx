@@ -1,10 +1,11 @@
 import { AppointmentModel, ClientModel, TechnicianModel } from '@/api';
-import { Badge, Button, Checkbox, IconButton, RadixTooltip, Select, Textarea, TimeInput, useToast } from '@/ui';
+import { Badge, Button, Checkbox, IconButton, Select, Textarea, TimeInput, useToast } from '@/ui';
 import { orderByFirstName } from '@/utils/order';
 import { dayToString } from '@/utils/time';
 import clsx from 'clsx';
 import React from 'react';
 import { Controller, useForm } from 'react-hook-form';
+import { Tooltip, TooltipContent, TooltipTrigger } from '../ui/tooltip';
 import './AppointmentForm.scss';
 
 export type AppointmentFormProps = {
@@ -423,22 +424,21 @@ export const AppointmentForm = ({
             <div className="Input__container">
               <label style={{ display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
                 Repeats
-                <RadixTooltip
-                  side="right"
-                  portal
-                  trigger={
+                <Tooltip>
+                  <TooltipTrigger asChild>
                     <IconButton radius="full" size="xs">
                       <span className="material-symbols-outlined">help</span>
                     </IconButton>
-                  }
-                >
-                  <div className="text-xs" style={{ lineHeight: '1.5', width: '24rem' }}>
-                    <strong>Note</strong>: Warnings are only shown for the current appointment!
-                    <br />
-                    Creating repeated appointments can result in unintended conflicts such as over booking the
-                    technician or client.
-                  </div>
-                </RadixTooltip>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <div className="w-70 text-xs">
+                      <strong>Note</strong>: Warnings are only shown for the current appointment!
+                      <br />
+                      Creating repeated appointments can result in unintended conflicts such as over booking the
+                      technician or client.
+                    </div>
+                  </TooltipContent>
+                </Tooltip>
               </label>
               <div className="flex gap-1">
                 {['Mon', 'Tue', 'Wed', 'Thur', 'Fri'].map(

@@ -2,7 +2,6 @@ import {
   Badge,
   BasicImageUpload,
   Button,
-  Callout,
   Card,
   Checkbox,
   Container,
@@ -14,7 +13,6 @@ import {
   Radio,
   RadixDialog,
   RadixPopover,
-  RadixTooltip,
   SearchPopover,
   Select,
   Spinner,
@@ -34,7 +32,6 @@ export const StyleGuide = () => {
   const tabs = [
     'Badge',
     'Button',
-    'Callout',
     'Card',
     'Checkbox',
     'DatePicker',
@@ -54,7 +51,6 @@ export const StyleGuide = () => {
     'TimeInput',
     'Toaster',
     'Toggle',
-    'Tooltip',
   ];
 
   const selectOptions = (
@@ -234,86 +230,6 @@ export const StyleGuide = () => {
                       <Button size="xl" variant="raised">
                         Extra Large
                       </Button>
-                    </div>
-                  </div>
-                </div>
-              </>
-            )}
-            {selectedTab === 'Callout' && (
-              <>
-                <div className="StyleGuide__example">
-                  <div className="StyleGuide__example__content gap-4">
-                    <h4>Default</h4>
-                    <Callout>
-                      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla rhoncus tempor neque, sed malesuada
-                      eros dapibus vel. Aliquam in ligula vitae tortor porttitor laoreet iaculis finibus est.
-                    </Callout>
-                    <h4>Color</h4>
-                    <div className="grid w-full grid-cols-3 gap-4">
-                      <Callout header="Header">Default</Callout>
-                      <Callout color="primary" header="Header">
-                        Primary
-                      </Callout>
-                      <Callout color="red" header="Header">
-                        Red
-                      </Callout>
-                      <Callout color="orange" header="Header">
-                        Orange
-                      </Callout>
-                      <Callout color="yellow" header="Header">
-                        Yellow
-                      </Callout>
-                      <Callout color="green" header="Header">
-                        Green
-                      </Callout>
-                      <Callout color="blue" header="Header">
-                        Blue
-                      </Callout>
-                      <Callout color="indigo" header="Header">
-                        Indigo
-                      </Callout>
-                      <Callout color="violet" header="Header">
-                        Violet
-                      </Callout>
-                    </div>
-                    <h4>Icon</h4>
-                    <Callout header="Header" icon="help">
-                      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla rhoncus tempor neque, sed malesuada
-                      eros dapibus vel. Aliquam in ligula vitae tortor porttitor laoreet iaculis finibus est.
-                    </Callout>
-                    <h4>onDismiss</h4>
-                    <Callout header="Header" onDismiss={() => {}}>
-                      Has a close button
-                    </Callout>
-                    <h4>Radius</h4>
-                    <div className="flex items-center gap-4">
-                      <Callout header="Header" radius="none">
-                        None
-                      </Callout>
-                      <Callout header="Header" radius="sm">
-                        Small
-                      </Callout>
-                      <Callout header="Header" radius="md">
-                        Medium
-                      </Callout>
-                      <Callout header="Header" radius="lg">
-                        Large
-                      </Callout>
-                    </div>
-                    <h4>Shadow</h4>
-                    <div className="flex items-center gap-4">
-                      <Callout header="Header" shadow="none">
-                        None
-                      </Callout>
-                      <Callout header="Header" shadow="sm">
-                        Small
-                      </Callout>
-                      <Callout header="Header" shadow="md">
-                        Medium
-                      </Callout>
-                      <Callout header="Header" shadow="lg">
-                        Large
-                      </Callout>
                     </div>
                   </div>
                 </div>
@@ -818,26 +734,6 @@ export const StyleGuide = () => {
                     <Toggle label="Right" labelPosition="right" />
                     <h4>Disabled</h4>
                     <Toggle checked disabled />
-                  </div>
-                </div>
-              </>
-            )}
-            {selectedTab === 'Tooltip' && (
-              <>
-                <div className="StyleGuide__example">
-                  <div className="StyleGuide__example__content gap-4">
-                    <p>Hover the button to see the tooltip</p>
-                    <RadixTooltip
-                      side="right"
-                      sideOffset={4}
-                      trigger={
-                        <IconButton color="primary" radius="full" size="xl" variant="ghost">
-                          <span className="material-symbols-outlined">add</span>
-                        </IconButton>
-                      }
-                    >
-                      Add to library
-                    </RadixTooltip>
                   </div>
                 </div>
               </>
