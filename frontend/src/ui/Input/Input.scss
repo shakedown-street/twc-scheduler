@@ -39,11 +39,6 @@
   outline: none;
   transition: all 0.1s ease-in-out;
 
-  @include placeholder {
-    color: $tw-gray-500;
-    user-select: none;
-  }
-
   &:disabled {
     background-color: $tw-slate-100;
     border-color: $tw-slate-200;

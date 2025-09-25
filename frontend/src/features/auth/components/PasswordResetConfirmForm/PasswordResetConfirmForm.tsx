@@ -48,7 +48,7 @@ export const PasswordResetConfirmForm = (props: PasswordResetConfirmFormProps) =
           type="password"
           {...form.register('new_password1', { required: true })}
         />
-        {errors.new_password1 && <p className="error mt-2">{errors.new_password1.message}</p>}
+        {errors.new_password1 && <p className="form-error mt-2">{errors.new_password1.message}</p>}
       </div>
       <div className="PasswordResetConfirmForm__field">
         <Input
@@ -59,10 +59,12 @@ export const PasswordResetConfirmForm = (props: PasswordResetConfirmFormProps) =
           type="password"
           {...form.register('new_password2', { required: true })}
         />
-        <p className="hint">Passwords must be at least 8 characters, with at least one number and one letter.</p>
-        {errors.new_password2 && <p className="error mt-2">{errors.new_password2.message}</p>}
+        <p className="text-muted-foreground mt-2 text-xs">
+          Passwords must be at least 8 characters, with at least one number and one letter.
+        </p>
+        {errors.new_password2 && <p className="form-error mt-2">{errors.new_password2.message}</p>}
       </div>
-      {errors.root && <p className="error">{errors.root.message}</p>}
+      {errors.root && <p className="form-error">{errors.root.message}</p>}
       <div className="PasswordResetConfirmForm__actions">
         <Button color="primary" disabled={!form.formState.isValid} fluid type="submit" variant="raised">
           Update Password

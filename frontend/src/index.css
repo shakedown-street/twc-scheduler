@@ -118,3 +118,15 @@
     @apply bg-background text-foreground;
   }
 }
+
+.form {
+  @apply flex flex-col gap-4;
+}
+
+.form-group {
+  @apply flex flex-col gap-2;
+}
+
+.form-error {
+  @apply text-destructive text-sm;
+}

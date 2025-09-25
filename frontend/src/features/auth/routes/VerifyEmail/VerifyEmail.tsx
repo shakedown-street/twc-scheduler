@@ -37,7 +37,7 @@ export const VerifyEmail = () => {
           <Card fluid>
             <h1 className="mb-4 text-center">Verify Email</h1>
             {error ? (
-              <p className="error text-center">{error}</p>
+              <p className="form-error text-center">{error}</p>
             ) : (
               <p className="text-center">
                 Your account email has been verified. <Link to="/login">Click here</Link> to login.

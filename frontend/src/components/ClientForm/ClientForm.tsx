@@ -145,7 +145,7 @@ export const ClientForm = ({ client, onCancel, onCreate, onDelete, onUpdate }: C
       <Toggle label="Evaluation Done" {...form.register('eval_done')} />
       <Toggle label="Currently Onboarding" {...form.register('is_onboarding')} />
       <Toggle label="Manually Maxed Out" {...form.register('is_manually_maxed_out')} />
-      <p className="hint">
+      <p className="text-muted-foreground text-xs">
         If checked, this client will be considered maxed out on sessions regardless of their total hours.
       </p>
       <Textarea
@@ -184,7 +184,9 @@ export const ClientForm = ({ client, onCancel, onCreate, onDelete, onUpdate }: C
               </option>
             ))}
           </Select>
-          <div className="hint mt-1">Hold down “Control”, or “Command” on a Mac, to select more than one.</div>
+          <div className="text-muted-foreground mt-1 text-xs">
+            Hold down “Control”, or “Command” on a Mac, to select more than one.
+          </div>
         </div>
       )}
       <div className="ClientForm__actions">

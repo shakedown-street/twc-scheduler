@@ -220,7 +220,7 @@ export const AvailabilityForm = ({
       {contentType === 'technician' && (
         <div>
           <Checkbox label="As sub only" {...form.register('is_sub')} />
-          <p className="hint mt-2">
+          <p className="text-muted-foreground mt-2 text-xs">
             Check this box to indicate that this technician is only available to sub for other technicians during this
             time, and not for their own appointments.
           </p>

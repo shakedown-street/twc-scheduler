@@ -139,11 +139,11 @@ export const TechnicianForm = ({ technician, onCancel, onCreate, onDelete, onUpd
           type="number"
           {...form.register('skill_level', { required: true })}
         />
-        <div className="hint mt-1">Skill level from 1-3</div>
+        <div className="text-muted-foreground mt-1 text-xs">Skill level from 1-3</div>
       </div>
       <Toggle label="Spanish Speaking" {...form.register('spanish_speaking')} />
       <Toggle label="Manually Maxed Out" {...form.register('is_manually_maxed_out')} />
-      <p className="hint">
+      <p className="text-muted-foreground text-xs">
         If checked, this technician will be considered maxed out on sessions regardless of their total hours.
       </p>
       <div className="TechnicianForm__row">

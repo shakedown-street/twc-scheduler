@@ -41,7 +41,7 @@ export const PasswordChangeForm = () => {
             type="password"
             {...form.register('old_password', { required: true })}
           />
-          {errors.old_password && <p className="error mt-2">{errors.old_password.message}</p>}
+          {errors.old_password && <p className="form-error mt-2">{errors.old_password.message}</p>}
         </div>
         <div className="PasswordChangeForm__field">
           <Input
@@ -51,7 +51,7 @@ export const PasswordChangeForm = () => {
             type="password"
             {...form.register('new_password1', { required: true })}
           />
-          {errors.new_password1 && <p className="error mt-2">{errors.new_password1.message}</p>}
+          {errors.new_password1 && <p className="form-error mt-2">{errors.new_password1.message}</p>}
         </div>
         <div className="PasswordChangeForm__field">
           <Input
@@ -61,9 +61,9 @@ export const PasswordChangeForm = () => {
             type="password"
             {...form.register('new_password2', { required: true })}
           />
-          {errors.new_password2 && <p className="error mt-2">{errors.new_password2.message}</p>}
+          {errors.new_password2 && <p className="form-error mt-2">{errors.new_password2.message}</p>}
         </div>
-        {errors.root && <p className="error">{errors.root.message}</p>}
+        {errors.root && <p className="form-error">{errors.root.message}</p>}
         <div className="PasswordChangeForm__actions">
           <Button color="primary" disabled={!form.formState.isValid} type="submit" variant="raised">
             Change Password

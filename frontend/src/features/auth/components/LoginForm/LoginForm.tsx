@@ -54,7 +54,7 @@ export const LoginForm = () => {
             type="email"
             {...form.register('username', { required: true })}
           />
-          {errors.username && <p className="error mt-2">{errors.username.message}</p>}
+          {errors.username && <p className="form-error mt-2">{errors.username.message}</p>}
         </div>
         <div className="LoginForm__field">
           <Input
@@ -65,9 +65,9 @@ export const LoginForm = () => {
             type="password"
             {...form.register('password', { required: true })}
           />
-          {errors.password && <p className="error mt-2">{errors.password.message}</p>}
+          {errors.password && <p className="form-error mt-2">{errors.password.message}</p>}
         </div>
-        {errors.root && <p className="error">{errors.root.message}</p>}
+        {errors.root && <p className="form-error">{errors.root.message}</p>}
         <div className="LoginForm__actions">
           <Button color="primary" disabled={!form.formState.isValid} fluid type="submit" variant="raised">
             Login

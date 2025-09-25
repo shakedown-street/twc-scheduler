@@ -374,7 +374,9 @@ export const AppointmentForm = ({
               setOverrideBlockTimes((prev) => !prev);
             }}
           />
-          <p className="hint mt-2">Check to allow setting start and end times outside of the block times.</p>
+          <p className="text-muted-foreground mt-2 text-xs">
+            Check to allow setting start and end times outside of the block times.
+          </p>
         </div>
       </div>
       <div>

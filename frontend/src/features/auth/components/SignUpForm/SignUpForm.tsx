@@ -51,7 +51,7 @@ export const SignUpForm = () => {
           type="email"
           {...form.register('email', { required: true })}
         />
-        {errors.email && <p className="error mt-2">{errors.email.message}</p>}
+        {errors.email && <p className="form-error mt-2">{errors.email.message}</p>}
       </div>
       <div className="SignUpForm__field">
         <Input
@@ -62,7 +62,7 @@ export const SignUpForm = () => {
           type="password"
           {...form.register('password1', { required: true })}
         />
-        {errors.password1 && <p className="error mt-2">{errors.password1.message}</p>}
+        {errors.password1 && <p className="form-error mt-2">{errors.password1.message}</p>}
       </div>
       <div className="SignUpForm__field">
         <Input
@@ -73,10 +73,12 @@ export const SignUpForm = () => {
           type="password"
           {...form.register('password2', { required: true })}
         />
-        <p className="hint">Passwords must be at least 8 characters, with at least one number and one letter.</p>
-        {errors.password2 && <p className="error mt-2">{errors.password2.message}</p>}
+        <p className="text-muted-foreground mt-2 text-xs">
+          Passwords must be at least 8 characters, with at least one number and one letter.
+        </p>
+        {errors.password2 && <p className="form-error mt-2">{errors.password2.message}</p>}
       </div>
-      {errors.root && <p className="error">{errors.root.message}</p>}
+      {errors.root && <p className="form-error">{errors.root.message}</p>}
       <div className="SignUpForm__actions">
         <Button color="primary" disabled={!form.formState.isValid} fluid type="submit" variant="raised">
           Sign Up

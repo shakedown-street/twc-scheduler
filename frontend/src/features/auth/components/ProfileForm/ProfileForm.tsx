@@ -70,24 +70,24 @@ export const ProfileForm = () => {
               <BasicImageUpload initialSrc={user?.image || undefined} onRemove={removeImage} onChange={onChange} />
             )}
           />
-          {errors.image && <p className="error mt-2">{errors.image.message}</p>}
+          {errors.image && <p className="form-error mt-2">{errors.image.message}</p>}
         </div>
         <div className="ProfileForm__field">
           <Input fluid id="email" label="Email" readOnly value={user?.email} />
         </div>
         <div className="ProfileForm__field">
           <Input fluid id="first_name" label="First Name" {...form.register('first_name')} />
-          {errors.first_name && <p className="error mt-2">{errors.first_name.message}</p>}
+          {errors.first_name && <p className="form-error mt-2">{errors.first_name.message}</p>}
         </div>
         <div className="ProfileForm__field">
           <Input fluid id="last_name" label="Last Name" {...form.register('last_name')} />
-          {errors.last_name && <p className="error mt-2">{errors.last_name.message}</p>}
+          {errors.last_name && <p className="form-error mt-2">{errors.last_name.message}</p>}
         </div>
         <div className="ProfileForm__field">
           <Input fluid id="phone" label="Phone" {...form.register('phone')} />
-          {errors.phone && <p className="error mt-2">{errors.phone.message}</p>}
+          {errors.phone && <p className="form-error mt-2">{errors.phone.message}</p>}
         </div>
-        {errors.root && <p className="error">{errors.root.message}</p>}
+        {errors.root && <p className="form-error">{errors.root.message}</p>}
         <div className="ProfileForm__actions">
           <Button color="primary" disabled={!form.formState.isValid} type="submit" variant="raised">
             Save

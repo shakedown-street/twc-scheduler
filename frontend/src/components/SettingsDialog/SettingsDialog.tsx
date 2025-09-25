@@ -40,7 +40,9 @@ export const SettingsDialog = (props: SettingsDialogProps) => {
         <form className="SettingsDialog__form" onSubmit={form.handleSubmit(save)}>
           <div>
             <Checkbox label="Enable Hover Cards" inputSize="xs" {...form.register('hover_cards_enabled')} />
-            <p className="hint mt-2">Enable hover cards for quick info on users and events (default enabled).</p>
+            <p className="text-muted-foreground mt-2 text-xs">
+              Enable hover cards for quick info on users and events (default enabled).
+            </p>
           </div>
           <div className="SettingsDialog__form__actions">
             <Button onClick={props.onClose}>Cancel</Button>

@@ -42,9 +42,9 @@ export const PasswordResetForm = () => {
           type="email"
           {...form.register('email', { required: true })}
         />
-        {errors.email && <p className="error mt-2">{errors.email.message}</p>}
+        {errors.email && <p className="form-error mt-2">{errors.email.message}</p>}
       </div>
-      {errors.root && <p className="error">{errors.root.message}</p>}
+      {errors.root && <p className="form-error">{errors.root.message}</p>}
       <div className="PasswordResetForm__actions">
         <Button color="primary" disabled={!form.formState.isValid} fluid type="submit" variant="raised">
           Send Recovery Link

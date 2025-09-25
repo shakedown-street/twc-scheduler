@@ -589,7 +589,7 @@ export const StyleGuide = () => {
                       ]}
                       value={multiSelectValue}
                     />
-                    <p className="hint mt-4">(I'm thinking of deprecating this component)</p>
+                    <p className="text-muted-foreground mt-4 text-xs">(I'm thinking of deprecating this component)</p>
                   </div>
                 </div>
               </>
