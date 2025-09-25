@@ -17,7 +17,7 @@ export const Spinner = ({ className, message, size = 'md', ...rest }: SpinnerPro
           {
             [`Spinner--size--${size}`]: size,
           },
-          className
+          className,
         )}
         {...rest}
       ></div>

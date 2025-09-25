@@ -18,10 +18,10 @@ export const Card = ({ className, fluid, interactive = false, radius = 'md', sha
         {
           'Card--fluid': fluid,
           'Card--interactive': interactive,
-          [`radius-${radius}`]: radius,
+          [`rounded-${radius}`]: radius,
           [`shadow-${shadow}`]: shadow,
         },
-        className
+        className,
       )}
       {...rest}
     />

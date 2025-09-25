@@ -27,7 +27,7 @@ export function handleNonFieldErrors(errorResponse: any, callback: (nonFieldErro
  */
 export function handleFieldErrors(
   errorResponse: any,
-  callback: (fieldErrors: Record<string, string | string[]>) => void
+  callback: (fieldErrors: Record<string, string | string[]>) => void,
 ) {
   const { detail, non_field_errors, ...rest } = errorResponse.response.data;
 

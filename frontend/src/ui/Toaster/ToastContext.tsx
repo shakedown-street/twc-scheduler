@@ -49,7 +49,7 @@ export const ToastProvider = (props: ToastProviderProps) => {
     setToasts(
       toastsRef.current.filter((toast) => {
         return toast.id !== id;
-      })
+      }),
     );
   };
 

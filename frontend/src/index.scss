@@ -1,11 +1,10 @@
-@import './scss/functions';
+// @import './scss/functions';
 @import './scss/tailwind-colors';
 @import './scss/variables';
 @import './scss/mixins';
-@import './scss/defaults';
-@import './scss/keyframes';
-@import './scss/typography';
-@import './scss/utils';
+// @import './scss/defaults';
+// @import './scss/keyframes';
+// @import './scss/typography';
 
 body {
   @include scrollbar;

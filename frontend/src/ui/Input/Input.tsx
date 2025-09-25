@@ -29,7 +29,7 @@ export const Input = React.forwardRef(
       variant = 'default',
       ...rest
     }: InputProps,
-    ref: React.ForwardedRef<HTMLInputElement>
+    ref: React.ForwardedRef<HTMLInputElement>,
   ) => {
     return (
       <div
@@ -50,9 +50,9 @@ export const Input = React.forwardRef(
                 'Input--iconTrailing': iconTrailing,
                 [`Input--size--${inputSize}`]: inputSize,
                 [`Input--variant--${variant}`]: variant,
-                [`radius-${radius}`]: radius,
+                [`rounded-${radius}`]: radius,
               },
-              className
+              className,
             )}
             id={id}
             ref={ref}
@@ -61,5 +61,5 @@ export const Input = React.forwardRef(
         </div>
       </div>
     );
-  }
+  },
 );

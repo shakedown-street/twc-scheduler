@@ -75,14 +75,14 @@ export const ClientsOverview = () => {
   function totalHoursByDay(day: number) {
     return clients.reduce(
       (acc, client) => acc + (client.computed_properties ? client.computed_properties.total_hours_by_day[day] : 0),
-      0
+      0,
     );
   }
 
   function totalHours() {
     return clients.reduce(
       (acc, client) => acc + (client.computed_properties ? client.computed_properties.total_hours : 0),
-      0
+      0,
     );
   }
 
@@ -114,7 +114,7 @@ export const ClientsOverview = () => {
     day: number,
     block: Block,
     availability: Availability | undefined,
-    instance: Appointment | undefined = undefined
+    instance: Appointment | undefined = undefined,
   ) {
     if (!user?.is_superuser) {
       return;
@@ -151,7 +151,7 @@ export const ClientsOverview = () => {
           return c;
         }
         return c;
-      })
+      }),
     );
     closeAppointmentForm();
   }
@@ -164,7 +164,7 @@ export const ClientsOverview = () => {
           return c;
         }
         return c;
-      })
+      }),
     );
     closeAppointmentForm();
   }
@@ -174,7 +174,7 @@ export const ClientsOverview = () => {
       prev.map((c) => {
         c.appointments = c.appointments?.filter((a) => a.id !== deleted.id);
         return c;
-      })
+      }),
     );
     closeAppointmentForm();
   }
@@ -346,11 +346,11 @@ export const ClientsOverview = () => {
 
   return (
     <>
-      <div className="flex flex-column gap-4">
+      <div className="flex flex-col gap-4">
         <RadixHoverCard
           align="start"
           trigger={
-            <Button className="align-self-start" iconLeading="info" size="xs" variant="outlined">
+            <Button className="self-start" iconLeading="info" size="xs" variant="outlined">
               Legend
             </Button>
           }
@@ -426,7 +426,7 @@ export const ClientsOverview = () => {
                   }}
                 >
                   {client.req_spanish_speaking && (
-                    <span className="material-symbols-outlined text-color-green text-size-sm display-block">check</span>
+                    <span className="material-symbols-outlined block text-sm text-green-700">check</span>
                   )}
                 </td>
                 <td className="text-nowrap">

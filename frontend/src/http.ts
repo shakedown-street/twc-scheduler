@@ -87,7 +87,7 @@ export class BaseModel<T = any> {
     action: string,
     method: string,
     data: any = {},
-    params: Params = {}
+    params: Params = {},
   ): Promise<AxiosResponse<any>> {
     return http.request({
       url: `${this.endpoint}${id}/${action}/`,

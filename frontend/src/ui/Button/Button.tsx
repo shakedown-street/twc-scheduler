@@ -34,7 +34,7 @@ export const Button = React.forwardRef(
       variant = 'default',
       ...rest
     }: ButtonProps,
-    ref: React.ForwardedRef<HTMLButtonElement> | React.ForwardedRef<HTMLAnchorElement>
+    ref: React.ForwardedRef<HTMLButtonElement> | React.ForwardedRef<HTMLAnchorElement>,
   ) => {
     const buttonClass = clsx(
       {
@@ -44,9 +44,9 @@ export const Button = React.forwardRef(
         [`Button--color--${color}`]: color,
         [`Button--size--${size}`]: size,
         [`Button--variant--${variant}`]: variant,
-        [`radius-${radius}`]: radius,
+        [`rounded-${radius}`]: radius,
       },
-      className
+      className,
     );
 
     if (navigateTo) {
@@ -66,5 +66,5 @@ export const Button = React.forwardRef(
         {iconTrailing && <span className="iconTrailing material-symbols-outlined">{iconTrailing}</span>}
       </button>
     );
-  }
+  },
 );

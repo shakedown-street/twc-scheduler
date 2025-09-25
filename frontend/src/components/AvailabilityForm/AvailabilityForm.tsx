@@ -147,7 +147,7 @@ export const AvailabilityForm = ({
     <form className="AvailabilityForm" onSubmit={form.handleSubmit(onSubmit)}>
       <div className="AvailabilityForm__row">
         <div className="Input__container">
-          <label className="text-capitalize">{contentType}</label>
+          <label className="capitalize">{contentType}</label>
           {contentType === 'client' && (
             <Badge size="xs">
               {object.first_name} {object.last_name}

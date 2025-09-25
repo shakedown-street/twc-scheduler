@@ -161,7 +161,7 @@ export const AppointmentForm = ({
         start_time: startTime,
         end_time: endTime,
         appointment: instance ? instance.id : undefined,
-      }
+      },
     )
       .then((technicians) => {
         setAvailableTechnicians(orderByFirstName<Technician>(technicians.data));
@@ -188,7 +188,7 @@ export const AppointmentForm = ({
       'get_repeatable_appointment_days',
       'get',
       {},
-      { day, start_time: startTime, end_time: endTime, tech_id: technician }
+      { day, start_time: startTime, end_time: endTime, tech_id: technician },
     ).then((days) => {
       setRepeatableAppointmentDays(days.data);
     });
@@ -206,7 +206,7 @@ export const AppointmentForm = ({
         day,
         start_time: startTime,
         end_time: endTime,
-      }
+      },
     ).then((warnings) => {
       setWarnings(warnings.data);
     });
@@ -430,7 +430,7 @@ export const AppointmentForm = ({
                     </IconButton>
                   }
                 >
-                  <div className="text-size-xs" style={{ lineHeight: '1.5', width: '24rem' }}>
+                  <div className="text-xs" style={{ lineHeight: '1.5', width: '24rem' }}>
                     <strong>Note</strong>: Warnings are only shown for the current appointment!
                     <br />
                     Creating repeated appointments can result in unintended conflicts such as over booking the
@@ -461,7 +461,7 @@ export const AppointmentForm = ({
                       >
                         {dayStr}
                       </Button>
-                    )
+                    ),
                 )}
               </div>
             </div>

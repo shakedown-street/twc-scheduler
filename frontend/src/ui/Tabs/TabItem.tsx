@@ -15,7 +15,7 @@ export const TabItem = ({ active, children, className, onClick, ...rest }: TabIt
           {
             'TabItem--active': active,
           },
-          className
+          className,
         )}
         onClick={(e) => {
           const target = e.target as HTMLButtonElement;

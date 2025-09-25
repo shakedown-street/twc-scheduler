@@ -215,7 +215,7 @@ export const TechnicianDayOverview = ({ day }: TechnicianDayOverviewProps) => {
                   }}
                 >
                   {technician.spanish_speaking && (
-                    <span className="material-symbols-outlined text-color-green text-size-sm display-block">check</span>
+                    <span className="material-symbols-outlined block text-sm text-green-700">check</span>
                   )}
                 </td>
                 <td className="text-nowrap" style={{ background: technician.bg_color, color: technician.text_color }}>

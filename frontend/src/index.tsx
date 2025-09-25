@@ -10,5 +10,5 @@ const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement)
 root.render(
   <AppProvider>
     <RouterProvider router={router} />
-  </AppProvider>
+  </AppProvider>,
 );

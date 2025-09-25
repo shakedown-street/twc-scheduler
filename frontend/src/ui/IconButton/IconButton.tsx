@@ -26,16 +26,16 @@ export const IconButton = React.forwardRef(
       variant = 'default',
       ...rest
     }: IconButtonProps,
-    ref: React.ForwardedRef<HTMLButtonElement> | React.ForwardedRef<HTMLAnchorElement>
+    ref: React.ForwardedRef<HTMLButtonElement> | React.ForwardedRef<HTMLAnchorElement>,
   ) => {
     const iconButtonClass = clsx(
       {
         [`IconButton--color--${color}`]: color,
         [`IconButton--size--${size}`]: size,
         [`IconButton--variant--${variant}`]: variant,
-        [`radius-${radius}`]: radius,
+        [`rounded-${radius}`]: radius,
       },
-      className
+      className,
     );
 
     if (navigateTo) {
@@ -58,5 +58,5 @@ export const IconButton = React.forwardRef(
         {...rest}
       ></button>
     );
-  }
+  },
 );

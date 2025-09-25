@@ -23,5 +23,5 @@ export const Radio = React.forwardRef(
         </label>
       </>
     );
-  }
+  },
 );

@@ -28,7 +28,7 @@ export const Textarea = React.forwardRef(
       variant = 'default',
       ...rest
     }: TextareaProps,
-    ref: React.ForwardedRef<HTMLTextAreaElement>
+    ref: React.ForwardedRef<HTMLTextAreaElement>,
   ) => {
     return (
       <div
@@ -52,9 +52,9 @@ export const Textarea = React.forwardRef(
                 'Input--iconTrailing': iconTrailing,
                 [`Input--size--${inputSize}`]: inputSize,
                 [`Input--variant--${variant}`]: variant,
-                [`radius-${radius}`]: radius,
+                [`rounded-${radius}`]: radius,
               },
-              className
+              className,
             )}
             id={id}
             ref={ref}
@@ -63,5 +63,5 @@ export const Textarea = React.forwardRef(
         </div>
       </div>
     );
-  }
+  },
 );

@@ -108,7 +108,7 @@ export const StyleGuide = () => {
                 <div className="StyleGuide__example">
                   <div className="StyleGuide__example__content gap-4">
                     <h4>Color</h4>
-                    <div className="grid grid-columns-3 gap-4 justify-items-center">
+                    <div className="grid grid-cols-3 justify-items-center gap-4">
                       <Badge>Default</Badge>
                       <Badge color="primary">Primary</Badge>
                       <Badge color="red">Red</Badge>
@@ -120,7 +120,7 @@ export const StyleGuide = () => {
                       <Badge color="violet">Violet</Badge>
                     </div>
                     <h4>Radius</h4>
-                    <div className="flex align-center gap-4">
+                    <div className="flex items-center gap-4">
                       <Badge radius="none">None</Badge>
                       <Badge radius="sm">Small</Badge>
                       <Badge radius="md">Medium</Badge>
@@ -128,7 +128,7 @@ export const StyleGuide = () => {
                       <Badge radius="2xl">2XL</Badge>
                     </div>
                     <h4>Size</h4>
-                    <div className="flex align-center gap-4">
+                    <div className="flex items-center gap-4">
                       <Badge size="xs">Extra Small</Badge>
                       <Badge size="sm">Small</Badge>
                       <Badge size="md">Medium</Badge>
@@ -144,13 +144,13 @@ export const StyleGuide = () => {
                 <div className="StyleGuide__example">
                   <div className="StyleGuide__example__content gap-4">
                     <h4>Variant</h4>
-                    <div className="flex align-center gap-4">
+                    <div className="flex items-center gap-4">
                       <Button>Default</Button>
                       <Button variant="outlined">Outlined</Button>
                       <Button variant="ghost">Ghost</Button>
                       <Button variant="raised">Raised</Button>
                     </div>
-                    <div className="flex align-center gap-4">
+                    <div className="flex items-center gap-4">
                       <Button color="primary">Default</Button>
                       <Button color="primary" variant="outlined">
                         Outlined
@@ -163,7 +163,7 @@ export const StyleGuide = () => {
                       </Button>
                     </div>
                     <h4>Color</h4>
-                    <div className="grid grid-columns-3 gap-4">
+                    <div className="grid grid-cols-3 gap-4">
                       <Button variant="raised">Default</Button>
                       <Button color="primary" variant="raised">
                         Primary
@@ -191,7 +191,7 @@ export const StyleGuide = () => {
                       </Button>
                     </div>
                     <h4>Icon</h4>
-                    <div className="flex align-center gap-4">
+                    <div className="flex items-center gap-4">
                       <Button iconLeading="edit" variant="raised">
                         Leading
                       </Button>
@@ -200,7 +200,7 @@ export const StyleGuide = () => {
                       </Button>
                     </div>
                     <h4>Radius</h4>
-                    <div className="flex align-center gap-4">
+                    <div className="flex items-center gap-4">
                       <Button radius="none" variant="raised">
                         None
                       </Button>
@@ -218,7 +218,7 @@ export const StyleGuide = () => {
                       </Button>
                     </div>
                     <h4>Size</h4>
-                    <div className="flex align-center gap-4">
+                    <div className="flex items-center gap-4">
                       <Button size="xs" variant="raised">
                         Extra Small
                       </Button>
@@ -249,7 +249,7 @@ export const StyleGuide = () => {
                       eros dapibus vel. Aliquam in ligula vitae tortor porttitor laoreet iaculis finibus est.
                     </Callout>
                     <h4>Color</h4>
-                    <div className="grid grid-columns-3 gap-4" style={{ width: '100%' }}>
+                    <div className="grid w-full grid-cols-3 gap-4">
                       <Callout header="Header">Default</Callout>
                       <Callout color="primary" header="Header">
                         Primary
@@ -286,7 +286,7 @@ export const StyleGuide = () => {
                       Has a close button
                     </Callout>
                     <h4>Radius</h4>
-                    <div className="flex align-center gap-4">
+                    <div className="flex items-center gap-4">
                       <Callout header="Header" radius="none">
                         None
                       </Callout>
@@ -301,7 +301,7 @@ export const StyleGuide = () => {
                       </Callout>
                     </div>
                     <h4>Shadow</h4>
-                    <div className="flex align-center gap-4">
+                    <div className="flex items-center gap-4">
                       <Callout header="Header" shadow="none">
                         None
                       </Callout>
@@ -329,7 +329,7 @@ export const StyleGuide = () => {
                       <p>Content</p>
                     </Card>
                     <h4>Radius</h4>
-                    <div className="flex align-center gap-4">
+                    <div className="flex items-center gap-4">
                       <Card radius="none">
                         <h4>None</h4>
                         <p>Content</p>
@@ -348,7 +348,7 @@ export const StyleGuide = () => {
                       </Card>
                     </div>
                     <h4>Shadow</h4>
-                    <div className="flex align-center gap-4">
+                    <div className="flex items-center gap-4">
                       <Card shadow="none">
                         <h4>None</h4>
                         <p>Content</p>
@@ -472,7 +472,7 @@ export const StyleGuide = () => {
                       </IconButton>
                     </div>
                     <h4>Color</h4>
-                    <div className="grid grid-columns-3 gap-4">
+                    <div className="grid grid-cols-3 gap-4">
                       <IconButton>
                         <span className="material-symbols-outlined">edit</span>
                       </IconButton>
@@ -520,7 +520,7 @@ export const StyleGuide = () => {
                       </IconButton>
                     </div>
                     <h4>Size</h4>
-                    <div className="flex align-center gap-4">
+                    <div className="flex items-center gap-4">
                       <IconButton size="xs" variant="raised">
                         <span className="material-symbols-outlined">edit</span>
                       </IconButton>
@@ -686,7 +686,7 @@ export const StyleGuide = () => {
                     <h4>Message</h4>
                     <Spinner message="Fetching Updates..." />
                     <h4>Sizes</h4>
-                    <div className="flex align-center gap-4">
+                    <div className="flex items-center gap-4">
                       <Spinner message="Extra Small" size="xs" />
                       <Spinner message="Small" size="sm" />
                       <Spinner message="Medium" size="md" />

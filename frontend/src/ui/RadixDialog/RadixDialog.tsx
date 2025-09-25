@@ -48,7 +48,7 @@ export const RadixDialog = ({
             RadixDialog__content: !asDrawer,
             RadixDrawer__content: asDrawer,
           },
-          className
+          className,
         )}
       >
         {close && (

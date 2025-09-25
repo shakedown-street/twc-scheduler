@@ -13,7 +13,7 @@ export const SubList = () => {
       <Container>
         <div className="mt-4 mb-12">
           <h1>Sub List</h1>
-          <div className="flex align-start gap-4">
+          <div className="flex items-start gap-4">
             <TechniciansOverview isSubList showLegend={false} />
             <ClientTechnicianHistory />
           </div>

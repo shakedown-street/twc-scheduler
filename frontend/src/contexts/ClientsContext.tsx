@@ -65,7 +65,7 @@ export const ClientsProvider = (props: ClientsProviderProps) => {
           return c;
         }
         return c;
-      })
+      }),
     );
   }
 
@@ -77,7 +77,7 @@ export const ClientsProvider = (props: ClientsProviderProps) => {
           return c;
         }
         return c;
-      })
+      }),
     );
   }
 
@@ -86,7 +86,7 @@ export const ClientsProvider = (props: ClientsProviderProps) => {
       prev.map((c) => {
         c.availabilities = c.availabilities?.filter((a) => a.id !== availability.id);
         return c;
-      })
+      }),
     );
   }
 
@@ -98,7 +98,7 @@ export const ClientsProvider = (props: ClientsProviderProps) => {
           return c;
         }
         return c;
-      })
+      }),
     );
   }
 
@@ -110,7 +110,7 @@ export const ClientsProvider = (props: ClientsProviderProps) => {
           return c;
         }
         return c;
-      })
+      }),
     );
   }
 
@@ -119,7 +119,7 @@ export const ClientsProvider = (props: ClientsProviderProps) => {
       prev.map((c) => {
         c.appointments = c.appointments?.filter((a) => a.id !== appointment.id);
         return c;
-      })
+      }),
     );
   }
 

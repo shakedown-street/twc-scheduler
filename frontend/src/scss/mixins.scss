@@ -90,19 +90,6 @@
 }
 
 // Flex
-@mixin flex-center {
-  align-items: center;
-  display: flex;
-  justify-content: center;
-}
-@mixin flex-column {
-  display: flex;
-  flex-direction: column;
-}
-@mixin flex-row {
-  display: flex;
-  flex-direction: row;
-}
 
 // Placeholder
 @mixin optional-at-root($sel) {

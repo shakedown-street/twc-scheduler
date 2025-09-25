@@ -21,7 +21,7 @@ export function debounceRef(callback: (value: any) => void, delay: number) {
   const ref = React.useRef(
     debounce((v: any) => {
       callback(v);
-    }, delay)
+    }, delay),
   );
 
   return ref.current;

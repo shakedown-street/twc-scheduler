@@ -16,7 +16,7 @@ export const SignUp = () => {
             <h1 className="mb-4 text-center">Sign Up</h1>
             <SignUpForm />
             {import.meta.env.VITE_GOOGLE_OAUTH2_CLIENT_ID && (
-              <div className="flex flex-column gap-2 mt-6">
+              <div className="mt-6 flex flex-col gap-2">
                 <GoogleSSOButton label="Sign up with Google" />
               </div>
             )}

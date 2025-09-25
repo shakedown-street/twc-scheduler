@@ -102,7 +102,7 @@ export const Schedule = () => {
     day: number,
     block: Block,
     availability: Availability | undefined,
-    instance: Appointment | undefined = undefined
+    instance: Appointment | undefined = undefined,
   ) {
     if (!user?.is_superuser) {
       return;
@@ -139,7 +139,7 @@ export const Schedule = () => {
           return c;
         }
         return c;
-      })
+      }),
     );
     closeAppointmentForm();
   }
@@ -152,7 +152,7 @@ export const Schedule = () => {
           return c;
         }
         return c;
-      })
+      }),
     );
     closeAppointmentForm();
   }
@@ -162,7 +162,7 @@ export const Schedule = () => {
       prev.map((c) => {
         c.appointments = c.appointments?.filter((a) => a.id !== deleted.id);
         return c;
-      })
+      }),
     );
     closeAppointmentForm();
   }
@@ -171,7 +171,7 @@ export const Schedule = () => {
     client: Client,
     day: number,
     initialStartTime: string,
-    instance: TherapyAppointment | undefined = undefined
+    instance: TherapyAppointment | undefined = undefined,
   ) {
     if (!user?.is_superuser) {
       return;
@@ -207,7 +207,7 @@ export const Schedule = () => {
           return c;
         }
         return c;
-      })
+      }),
     );
     closeTherapyAppointmentForm();
   }
@@ -220,7 +220,7 @@ export const Schedule = () => {
           return c;
         }
         return c;
-      })
+      }),
     );
     closeTherapyAppointmentForm();
   }
@@ -230,7 +230,7 @@ export const Schedule = () => {
       prev.map((c) => {
         c.therapy_appointments = c.therapy_appointments?.filter((a) => a.id !== deleted.id);
         return c;
-      })
+      }),
     );
     closeTherapyAppointmentForm();
   }
@@ -295,7 +295,7 @@ export const Schedule = () => {
               {dayToString(getDay())} Technician Overview
             </Button>
           </div>
-          <p className="mb-4 text-size-xs text-color-muted">
+          <p className="mb-4 text-xs text-gray-700">
             <b>NOTE</b>: Click any time slot while holding the "Shift" key to add/remove OT, ST, and MH appointments
           </p>
           <TimeSlotTable

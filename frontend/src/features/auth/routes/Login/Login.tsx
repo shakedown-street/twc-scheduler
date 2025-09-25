@@ -14,11 +14,11 @@ export const Login = () => {
             <h1 className="mb-4 text-center">Login</h1>
             <LoginForm />
             {/* {import.meta.env.VITE_GOOGLE_OAUTH2_CLIENT_ID && (
-              <div className="flex flex-column gap-2 mt-6">
+              <div className="flex flex-col gap-2 mt-6">
                 <GoogleSSOButton />
               </div>
             )}
-            <Link className="display-block mt-6 text-center" to="/password-reset">
+            <Link className="block mt-6 text-center" to="/password-reset">
               Password Reset
             </Link>
             <p className="mt-6 text-center">

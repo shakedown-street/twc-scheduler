@@ -25,8 +25,8 @@ export const FileDropArea = ({
         <div className="FileDropArea">
           <div className="FileDropArea__dropzone" {...dragProps}>
             <div className="FileDropArea__dropzone__info">
-              <div className="text-weight-medium">Drop files here</div>
-              <div className="text-size-sm">or</div>
+              <div className="font-medium">Drop files here</div>
+              <div className="text-sm">or</div>
               <Button onClick={openFileInput} size="xs" variant="outlined">
                 Browse Files
               </Button>

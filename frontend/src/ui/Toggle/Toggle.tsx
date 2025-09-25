@@ -14,7 +14,7 @@ export type ToggleProps = React.InputHTMLAttributes<HTMLInputElement> & {
 export const Toggle = React.forwardRef(
   (
     { checked, className, inputSize = 'md', label, labelPosition = 'left', ...rest }: ToggleProps,
-    ref: React.ForwardedRef<HTMLInputElement>
+    ref: React.ForwardedRef<HTMLInputElement>,
   ) => {
     return (
       <>
@@ -30,5 +30,5 @@ export const Toggle = React.forwardRef(
         </label>
       </>
     );
-  }
+  },
 );

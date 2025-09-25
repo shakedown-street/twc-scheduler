@@ -85,7 +85,7 @@ export const ClientAvailability = () => {
       (availability) =>
         availability.day === day &&
         checkTimeIntersection(availability.start_time, availability.end_time, block.start_time, block.end_time) &&
-        (!showInClinicOnly || availability.in_clinic)
+        (!showInClinicOnly || availability.in_clinic),
     );
   }
 
@@ -130,7 +130,7 @@ export const ClientAvailability = () => {
     client: Client,
     day: number,
     block: Block,
-    instance: Availability | undefined = undefined
+    instance: Availability | undefined = undefined,
   ) {
     setAvailabilityForm({
       ...availabilityForm,
@@ -165,7 +165,7 @@ export const ClientAvailability = () => {
             return c;
           }
           return c;
-        })
+        }),
       );
       closeAvailabilityForm();
     });
@@ -198,17 +198,17 @@ export const ClientAvailability = () => {
             }}
           >
             {blockAvailability && (
-              <div className="flex align-center gap-1">
+              <div className="flex items-center gap-1">
                 <div className="text-nowrap">
                   {formatTimeShort(blockAvailability.start_time)}-{formatTimeShort(blockAvailability.end_time)}
                 </div>
                 {blockAvailability.in_clinic && (
-                  <span className="material-symbols-outlined text-size-sm" title="In clinic">
+                  <span className="material-symbols-outlined text-sm" title="In clinic">
                     location_on
                   </span>
                 )}
                 {!isFullBlock(blockAvailability, block) && (
-                  <span className="material-symbols-outlined text-color-red text-size-sm" title="Partially available">
+                  <span className="material-symbols-outlined text-sm text-red-700" title="Partially available">
                     warning
                   </span>
                 )}
@@ -216,7 +216,7 @@ export const ClientAvailability = () => {
             )}
           </td>
         );
-      })
+      }),
     );
   }
 
@@ -233,7 +233,7 @@ export const ClientAvailability = () => {
         >
           {countClientsAvailableForBlock(day, block)}
         </td>
-      ))
+      )),
     );
   }
 
@@ -244,7 +244,7 @@ export const ClientAvailability = () => {
   return (
     <>
       <Card fluid>
-        <div className="flex align-center justify-between gap-4 mb-4">
+        <div className="mb-4 flex items-center justify-between gap-4">
           <h2>Clients</h2>
           {user?.is_superuser && (
             <Button color="primary" onClick={() => setClientForm({ ...clientForm, open: true })} variant="raised">
@@ -252,7 +252,7 @@ export const ClientAvailability = () => {
             </Button>
           )}
         </div>
-        <div className="flex align-center gap-4 mb-4">
+        <div className="mb-4 flex items-center gap-4">
           <Checkbox
             checked={showInClinicOnly}
             onChange={() => setShowInClinicOnly(!showInClinicOnly)}
@@ -316,17 +316,15 @@ export const ClientAvailability = () => {
                 </td>
                 <td style={{ textAlign: 'center' }}>
                   {client.req_spanish_speaking && (
-                    <span className="material-symbols-outlined text-color-green text-size-sm">check</span>
+                    <span className="material-symbols-outlined text-sm text-green-700">check</span>
                   )}
                 </td>
                 <td style={{ textAlign: 'center' }}>
-                  {client.eval_done && (
-                    <span className="material-symbols-outlined text-color-green text-size-sm">check</span>
-                  )}
+                  {client.eval_done && <span className="material-symbols-outlined text-sm text-green-700">check</span>}
                 </td>
                 <td style={{ textAlign: 'center' }}>
                   {client.is_onboarding && (
-                    <span className="material-symbols-outlined text-color-green text-size-sm">check</span>
+                    <span className="material-symbols-outlined text-sm text-green-700">check</span>
                   )}
                 </td>
                 <td>{client.prescribed_hours}</td>

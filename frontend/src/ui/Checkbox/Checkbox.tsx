@@ -11,7 +11,7 @@ export type CheckboxProps = React.InputHTMLAttributes<HTMLInputElement> & {
 export const Checkbox = React.forwardRef(
   (
     { className, checked, inputSize = 'md', label, ...rest }: CheckboxProps,
-    ref: React.ForwardedRef<HTMLInputElement>
+    ref: React.ForwardedRef<HTMLInputElement>,
   ) => {
     return (
       <>
@@ -26,5 +26,5 @@ export const Checkbox = React.forwardRef(
         </label>
       </>
     );
-  }
+  },
 );

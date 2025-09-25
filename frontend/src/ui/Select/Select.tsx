@@ -26,7 +26,7 @@ export const Select = React.forwardRef(
       variant = 'default',
       ...rest
     }: SelectProps,
-    ref: React.ForwardedRef<HTMLSelectElement>
+    ref: React.ForwardedRef<HTMLSelectElement>,
   ) => {
     return (
       <>
@@ -45,9 +45,9 @@ export const Select = React.forwardRef(
                   'Input--iconLeading': iconLeading,
                   [`Input--size--${inputSize}`]: inputSize,
                   [`Input--variant--${variant}`]: variant,
-                  [`radius-${radius}`]: radius,
+                  [`rounded-${radius}`]: radius,
                 },
-                className
+                className,
               )}
               id={id}
               ref={ref}
@@ -57,5 +57,5 @@ export const Select = React.forwardRef(
         </div>
       </>
     );
-  }
+  },
 );

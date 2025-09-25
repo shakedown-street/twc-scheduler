@@ -60,7 +60,7 @@ export const Tabs = ({ children, className, fluid, ...rest }: TabsProps) => {
           {
             'Tabs--fluid': fluid,
           },
-          className
+          className,
         )}
         onScroll={(e) => {
           onScroll(e);

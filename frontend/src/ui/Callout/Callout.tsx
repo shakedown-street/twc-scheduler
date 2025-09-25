@@ -31,10 +31,10 @@ export const Callout = ({
         {
           [`Callout--color--${color}`]: color,
           'Callout--withIcon': icon,
-          [`radius-${radius}`]: radius,
+          [`rounded-${radius}`]: radius,
           [`shadow-${shadow}`]: shadow,
         },
-        className
+        className,
       )}
       {...rest}
     >

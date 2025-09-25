@@ -27,7 +27,7 @@ export const GoogleSSOButton = ({ label = 'Sign in with Google' }: GoogleSSOButt
 
   return (
     <Button fluid onClick={() => googleLogin()} variant="outlined">
-      <div className="flex align-center justify-center gap-2">
+      <div className="flex items-center justify-center gap-2">
         <img src={GoogleSSOLogo} style={{ height: '18px', width: '18px' }} />
         {label}
       </div>

@@ -79,7 +79,7 @@ export const TechAvailability = () => {
   function totalAvailableHours() {
     return technicians.reduce(
       (total, technician) => total + (technician.computed_properties?.total_hours_available || 0),
-      0
+      0,
     );
   }
 
@@ -88,7 +88,7 @@ export const TechAvailability = () => {
       (availability) =>
         availability.day === day &&
         checkTimeIntersection(availability.start_time, availability.end_time, block.start_time, block.end_time) &&
-        (!showSubOnly || availability.is_sub)
+        (!showSubOnly || availability.is_sub),
     );
   }
 
@@ -133,7 +133,7 @@ export const TechAvailability = () => {
     technician: Technician,
     day: number,
     block: Block,
-    instance: Availability | undefined = undefined
+    instance: Availability | undefined = undefined,
   ) {
     setAvailabilityForm({
       ...availabilityForm,
@@ -168,7 +168,7 @@ export const TechAvailability = () => {
             return t;
           }
           return t;
-        })
+        }),
       );
       closeAvailabilityForm();
     });
@@ -201,17 +201,17 @@ export const TechAvailability = () => {
             }}
           >
             {blockAvailability && (
-              <div className="flex align-center gap-1">
+              <div className="flex items-center gap-1">
                 <div className="text-nowrap">
                   {formatTimeShort(blockAvailability.start_time)}-{formatTimeShort(blockAvailability.end_time)}
                 </div>
                 {blockAvailability.is_sub && (
-                  <span className="material-symbols-outlined text-size-sm" title="Sub only">
+                  <span className="material-symbols-outlined text-sm" title="Sub only">
                     swap_horiz
                   </span>
                 )}
                 {!isFullBlock(blockAvailability, block) && (
-                  <span className="material-symbols-outlined text-color-red text-size-sm" title="Partially available">
+                  <span className="material-symbols-outlined text-sm text-red-700" title="Partially available">
                     warning
                   </span>
                 )}
@@ -219,7 +219,7 @@ export const TechAvailability = () => {
             )}
           </td>
         );
-      })
+      }),
     );
   }
 
@@ -236,7 +236,7 @@ export const TechAvailability = () => {
         >
           {countTechniciansAvailableForBlock(day, block)}
         </td>
-      ))
+      )),
     );
   }
 
@@ -247,7 +247,7 @@ export const TechAvailability = () => {
   return (
     <>
       <Card fluid>
-        <div className="flex align-center justify-between gap-4 mb-4">
+        <div className="mb-4 flex items-center justify-between gap-4">
           <h2>Technicians</h2>
           {user?.is_superuser && (
             <Button
@@ -259,7 +259,7 @@ export const TechAvailability = () => {
             </Button>
           )}
         </div>
-        <div className="flex align-center gap-4 mb-4">
+        <div className="mb-4 flex items-center gap-4">
           <Checkbox checked={showSubOnly} onChange={() => setShowSubOnly(!showSubOnly)} label="Sub only" />
         </div>
         <table className="TechAvailability__table">
@@ -319,7 +319,7 @@ export const TechAvailability = () => {
                 </td>
                 <td style={{ textAlign: 'center' }}>
                   {technician.spanish_speaking && (
-                    <span className="material-symbols-outlined text-color-green text-size-sm">check</span>
+                    <span className="material-symbols-outlined text-sm text-green-700">check</span>
                   )}
                 </td>
                 <td>{technician.requested_hours}</td>

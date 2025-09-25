@@ -25,7 +25,7 @@ export type TimeSlotTableProps = {
     client: Client,
     block: Block,
     appointment: Appointment,
-    availability?: Availability
+    availability?: Availability,
   ) => void;
   onShiftClick?: (client: Client, time: string, therapyAppointment?: TherapyAppointment) => void;
 };
@@ -47,7 +47,11 @@ export const TimeSlotTable = ({
   React.useEffect(() => {
     // NOTE: We show an hour before the first block and an hour after the last block
     setTimeSlots(
-      generateTimeSlots(removeMinutes(blocks[0].start_time, 60), addMinutes(blocks[blocks.length - 1].end_time, 60), 15)
+      generateTimeSlots(
+        removeMinutes(blocks[0].start_time, 60),
+        addMinutes(blocks[blocks.length - 1].end_time, 60),
+        15,
+      ),
     );
   }, [blocks]);
 
@@ -265,7 +269,7 @@ export const TimeSlotTable = ({
               }}
             >
               {client.req_spanish_speaking && (
-                <span className="material-symbols-outlined text-color-green text-size-sm display-block">check</span>
+                <span className="material-symbols-outlined block text-sm text-green-700">check</span>
               )}
             </td>
             <td style={{ textAlign: 'center' }}>{client.computed_properties?.total_hours_by_day[day]}</td>

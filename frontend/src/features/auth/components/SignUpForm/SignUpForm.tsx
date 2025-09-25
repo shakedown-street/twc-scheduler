@@ -33,7 +33,7 @@ export const SignUpForm = () => {
   if (submitted) {
     return (
       <>
-        <h2 className="text-center mb-4">Almost there!</h2>
+        <h2 className="mb-4 text-center">Almost there!</h2>
         <p className="text-center">Please check your email to verify your account.</p>
       </>
     );

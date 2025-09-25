@@ -17,9 +17,9 @@ export const Badge = ({ className, color, radius = 'md', size = 'md', ...rest }:
         {
           [`Badge--color--${color}`]: color,
           [`Badge--size--${size}`]: size,
-          [`radius-${radius}`]: radius,
+          [`rounded-${radius}`]: radius,
         },
-        className
+        className,
       )}
       {...rest}
     />

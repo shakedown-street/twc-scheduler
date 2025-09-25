@@ -65,14 +65,14 @@ export const TechniciansOverview = ({ isSubList = false, showLegend = true }: Te
     return technicians.reduce(
       (acc, technician) =>
         acc + (technician.computed_properties ? technician.computed_properties.total_hours_by_day[day] : 0),
-      0
+      0,
     );
   }
 
   function totalHours() {
     return technicians.reduce(
       (acc, technician) => acc + (technician.computed_properties ? technician.computed_properties.total_hours : 0),
-      0
+      0,
     );
   }
 
@@ -330,12 +330,12 @@ export const TechniciansOverview = ({ isSubList = false, showLegend = true }: Te
 
   return (
     <>
-      <div className="flex flex-column gap-4">
+      <div className="flex flex-col gap-4">
         {showLegend && (
           <RadixHoverCard
             align="start"
             trigger={
-              <Button className="align-self-start" iconLeading="info" size="xs" variant="outlined">
+              <Button className="self-start" iconLeading="info" size="xs" variant="outlined">
                 Legend
               </Button>
             }
@@ -422,7 +422,7 @@ export const TechniciansOverview = ({ isSubList = false, showLegend = true }: Te
                   }}
                 >
                   {technician.spanish_speaking && (
-                    <span className="material-symbols-outlined text-color-green text-size-sm display-block">check</span>
+                    <span className="material-symbols-outlined block text-sm text-green-700">check</span>
                   )}
                 </td>
                 <td className="text-nowrap" style={{ background: technician.bg_color, color: technician.text_color }}>
