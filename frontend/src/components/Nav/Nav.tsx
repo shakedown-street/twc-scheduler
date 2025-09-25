@@ -3,11 +3,12 @@ import { ImpersonateDialog } from '@/features/auth/components/ImpersonateDialog/
 import { useAuth } from '@/features/auth/contexts/AuthContext';
 import { http } from '@/http';
 import { Button, Container, IconButton, RadixDialog, useToast } from '@/ui';
-import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
 import clsx from 'clsx';
+import { IdCard, LogOut, Settings, User } from 'lucide-react';
 import React from 'react';
 import { Link, NavLink, useNavigate } from 'react-router-dom';
 import { SettingsDialog } from '../SettingsDialog/SettingsDialog';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '../ui/dropdown-menu';
 import './Nav.scss';
 
 export const Nav = () => {
@@ -48,43 +49,33 @@ export const Nav = () => {
 
   function renderUserMenu() {
     return (
-      <DropdownMenu.Root>
-        <DropdownMenu.Trigger asChild>
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
           <IconButton>
             <span className="material-symbols-outlined">menu</span>
           </IconButton>
-        </DropdownMenu.Trigger>
-        <DropdownMenu.Portal>
-          <DropdownMenu.Content align="end" className="DropdownMenu__content">
-            <DropdownMenu.Item className="DropdownMenu__item" onClick={() => navigate('/profile')}>
-              <div className="DropdownMenu__icon">
-                <span className="material-symbols-outlined">person</span>
-              </div>
-              Profile
-            </DropdownMenu.Item>
-            {user?.is_superuser && (
-              <DropdownMenu.Item className="DropdownMenu__item" onClick={() => setImpersonateDialogOpen(true)}>
-                <div className="DropdownMenu__icon">
-                  <span className="material-symbols-outlined">id_card</span>
-                </div>
-                Impersonate
-              </DropdownMenu.Item>
-            )}
-            <DropdownMenu.Item className="DropdownMenu__item" onClick={() => setSettingsDialogOpen(true)}>
-              <div className="DropdownMenu__icon">
-                <span className="material-symbols-outlined">settings</span>
-              </div>
-              Settings
-            </DropdownMenu.Item>
-            <DropdownMenu.Item className="DropdownMenu__item" onClick={() => logout()}>
-              <div className="DropdownMenu__icon">
-                <span className="material-symbols-outlined">logout</span>
-              </div>
-              Logout
-            </DropdownMenu.Item>
-          </DropdownMenu.Content>
-        </DropdownMenu.Portal>
-      </DropdownMenu.Root>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="end">
+          <DropdownMenuItem onClick={() => navigate('/profile')}>
+            <User />
+            Profile
+          </DropdownMenuItem>
+          {user?.is_superuser && (
+            <DropdownMenuItem onClick={() => setImpersonateDialogOpen(true)}>
+              <IdCard />
+              Impersonate
+            </DropdownMenuItem>
+          )}
+          <DropdownMenuItem onClick={() => setSettingsDialogOpen(true)}>
+            <Settings />
+            Settings
+          </DropdownMenuItem>
+          <DropdownMenuItem onClick={() => logout()}>
+            <LogOut />
+            Logout
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
     );
   }
 
