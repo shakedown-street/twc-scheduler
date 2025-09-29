@@ -1,3 +1,5 @@
+/* eslint-disable react-refresh/only-export-components */
+
 import { UserModel } from '@/api';
 import { Loader } from 'lucide-react';
 import React from 'react';
@@ -17,7 +19,8 @@ export type AuthProviderProps = {
 
 export const AuthProvider = (props: AuthProviderProps) => {
   const [user, setUser] = React.useState<User | undefined>();
-  // userLoading must be set to true initially, otherwise refreshing on protected routes will redirect to login
+  // userLoading must be set to true initially
+  // otherwise refreshing on protected routes will redirect to login
   const [userLoading, setUserLoading] = React.useState(true);
 
   React.useEffect(() => {
@@ -44,14 +47,14 @@ export const AuthProvider = (props: AuthProviderProps) => {
 
   if (userLoading) {
     return (
-      <div className="mt-12 flex items-center justify-center">
+      <div className="flex h-screen items-center justify-center">
         <Loader className="h-8 w-8 animate-spin" />
       </div>
     );
   }
 
   return (
-    <AuthContext.Provider
+    <AuthContext
       value={{
         getUser,
         setUser,
@@ -59,12 +62,12 @@ export const AuthProvider = (props: AuthProviderProps) => {
       }}
     >
       {props.children}
-    </AuthContext.Provider>
+    </AuthContext>
   );
 };
 
 export const useAuth = () => {
-  const context = React.useContext(AuthContext);
+  const context = React.use(AuthContext);
 
   if (context === undefined) {
     throw new Error('useAuth must be used within an AuthProvider');

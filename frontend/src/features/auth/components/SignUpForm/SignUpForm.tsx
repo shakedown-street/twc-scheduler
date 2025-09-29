@@ -1,10 +1,13 @@
 import { UserModel } from '@/api';
+import { ErrorMessage } from '@/components/ErrorMessage/ErrorMessage';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { setFormErrors } from '@/utils/errors';
 import React from 'react';
 import { useForm } from 'react-hook-form';
+import { GoogleSSOButton } from '../GoogleSSOButton/GoogleSSOButton';
+import { PasswordHint } from '../PasswordHint/PasswordHint';
 
 export type SignUpFormData = {
   email: string;
@@ -19,24 +22,23 @@ export const SignUpForm = () => {
 
   const { errors } = form.formState;
 
-  function onSubmit(data: SignUpFormData) {
-    UserModel.create(data)
-      .then(() => {
-        setSubmitted(true);
-      })
-      .catch((err) => {
-        form.resetField('password1');
-        form.resetField('password2');
-        setFormErrors(form, err);
-      });
+  async function onSubmit(data: SignUpFormData) {
+    try {
+      await UserModel.create(data);
+      setSubmitted(true);
+    } catch (err) {
+      form.resetField('password1');
+      form.resetField('password2');
+      setFormErrors(form, err);
+    }
   }
 
   if (submitted) {
     return (
-      <>
-        <h2 className="mb-4 text-center text-lg font-bold">Almost there!</h2>
-        <div className="text-center">Please check your email to verify your account.</div>
-      </>
+      <div className="space-y-2 text-center">
+        <h2 className="text-lg font-bold">Almost there!</h2>
+        <div>Please check your email to verify your account.</div>
+      </div>
     );
   }
 
@@ -45,7 +47,7 @@ export const SignUpForm = () => {
       <div className="form-group">
         <Label htmlFor="email">Email</Label>
         <Input autoFocus id="email" placeholder="Email" type="email" {...form.register('email', { required: true })} />
-        {errors.email && <div className="form-error">{errors.email.message}</div>}
+        <ErrorMessage>{errors.email?.message}</ErrorMessage>
       </div>
       <div className="form-group">
         <Label htmlFor="password1">Password</Label>
@@ -55,7 +57,8 @@ export const SignUpForm = () => {
           type="password"
           {...form.register('password1', { required: true })}
         />
-        {errors.password1 && <div className="form-error">{errors.password1.message}</div>}
+        <PasswordHint />
+        <ErrorMessage>{errors.password1?.message}</ErrorMessage>
       </div>
       <div className="form-group">
         <Label htmlFor="password2">Password (Again)</Label>
@@ -65,15 +68,13 @@ export const SignUpForm = () => {
           type="password"
           {...form.register('password2', { required: true })}
         />
-        <div className="text-muted-foreground text-xs">
-          Passwords must be at least 8 characters, with at least one number and one letter.
-        </div>
-        {errors.password2 && <div className="form-error">{errors.password2.message}</div>}
+        <ErrorMessage>{errors.password2?.message}</ErrorMessage>
       </div>
-      {errors.root && <div className="form-error">{errors.root.message}</div>}
+      <ErrorMessage>{errors.root?.message}</ErrorMessage>
       <Button disabled={!form.formState.isValid} type="submit">
         Sign Up
       </Button>
+      {import.meta.env.VITE_GOOGLE_OAUTH2_CLIENT_ID && <GoogleSSOButton />}
     </form>
   );
 };

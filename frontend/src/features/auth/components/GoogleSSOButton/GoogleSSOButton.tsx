@@ -1,15 +1,15 @@
 import { Button } from '@/components/ui/button';
 import { http } from '@/lib/http';
 import { useGoogleLogin } from '@react-oauth/google';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 import { useAuth } from '../../contexts/AuthContext';
 import GoogleSSOLogo from './GoogleSSOLogo.svg';
 
-export type GoogleSSOButtonProps = {
+export type GoogleSSOButtonProps = React.ComponentProps<'button'> & {
   label?: string;
 };
 
-export const GoogleSSOButton = ({ label = 'Sign in with Google' }: GoogleSSOButtonProps) => {
+export const GoogleSSOButton = ({ children = 'Login with Google', ...props }: GoogleSSOButtonProps) => {
   const navigate = useNavigate();
   const { setUser } = useAuth();
 
@@ -26,11 +26,9 @@ export const GoogleSSOButton = ({ label = 'Sign in with Google' }: GoogleSSOButt
   });
 
   return (
-    <Button className="w-full" onClick={() => googleLogin()} variant="outline">
-      <div className="flex items-center justify-center gap-2">
-        <img src={GoogleSSOLogo} style={{ height: '18px', width: '18px' }} />
-        {label}
-      </div>
+    <Button onClick={() => googleLogin()} type="button" variant="outline" {...props}>
+      <img className="size-4" src={GoogleSSOLogo} />
+      {children}
     </Button>
   );
 };

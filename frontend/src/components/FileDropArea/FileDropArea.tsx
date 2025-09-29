@@ -149,9 +149,9 @@ export const FileDropArea = ({
         </div>
       </div>
       {files.length > 0 && (
-        <ul className="mt-4 flex max-h-48 w-full flex-col overflow-auto">
+        <ul className="mt-2 flex max-h-48 w-full flex-col overflow-auto">
           {files.map((file, index) => (
-            <li className="hover:gray-100 flex items-center gap-4 px-2 py-1 not-last:border-b" key={file.name}>
+            <li className="flex items-center gap-4 px-2 py-1 not-last:border-b" key={file.name}>
               {showImagePreview && (
                 <img className="h-8 w-8 rounded-md bg-white object-contain" src={objectUrls[index]} alt={file.name} />
               )}
