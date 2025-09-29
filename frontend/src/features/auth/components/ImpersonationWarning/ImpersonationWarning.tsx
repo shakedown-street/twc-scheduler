@@ -1,25 +1,24 @@
-import { useNavigate } from 'react-router-dom';
-import { http } from '~/http';
-import { Button, Card, useToast } from '~/ui';
+import { Button } from '@/components/ui/button';
+import { http } from '@/lib/http';
+import { toastError } from '@/utils/errors';
+import { useNavigate } from 'react-router';
 import { useAuth } from '../../contexts/AuthContext';
-import './ImpersonationWarning.scss';
 
 export const ImpersonationWarning = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
-  const toast = useToast();
 
   const impersonate = localStorage.getItem('impersonate');
 
-  function clickStop() {
-    http
-      .post('/api/token-auth/logout/')
-      .catch((err) => toast.errorResponse(err))
-      .finally(() => {
-        navigate('/');
-        localStorage.removeItem('impersonate');
-        window.location.reload();
-      });
+  async function clickStop() {
+    try {
+      await http.post('/api/token-auth/logout/');
+      navigate('/');
+      localStorage.removeItem('impersonate');
+      window.location.reload();
+    } catch (err) {
+      toastError(err);
+    }
   }
 
   if (!user || !impersonate) {
@@ -28,18 +27,16 @@ export const ImpersonationWarning = () => {
 
   return (
     <>
-      <Card className="ImpersonationWarning">
-        <div className="ImpersonationWarning__content">
-          <p>
-            You are currently impersonating <b>{user.email}</b>.
-            <br />
-            Please remember to disable impersonation when you are done.
-          </p>
-          <Button color="primary" onClick={clickStop} size="xs" variant="ghost">
-            Stop
-          </Button>
+      <div className="bg-background fixed right-4 bottom-4 flex w-70 items-center gap-2 rounded border p-2 shadow">
+        <div className="text-muted-foreground text-xs">
+          You are currently impersonating <b>{user.email}</b>.
+          <br />
+          Please remember to disable impersonation when you are done.
         </div>
-      </Card>
+        <Button onClick={clickStop} size="sm">
+          Stop
+        </Button>
+      </div>
     </>
   );
 };

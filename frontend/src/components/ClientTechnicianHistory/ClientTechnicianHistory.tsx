@@ -1,12 +1,12 @@
+import { ClientModel } from '@/api';
+import { useAuth } from '@/features/auth/contexts/AuthContext';
+import { skillLevelColor } from '@/utils/color';
+import { orderByFirstName } from '@/utils/order';
+import { Loader } from 'lucide-react';
 import React from 'react';
-import { ClientModel } from '~/api';
-import { useAuth } from '~/features/auth/contexts/AuthContext';
-import { Client } from '~/types/Client';
-import { Technician } from '~/types/Technician';
-import { Badge, RadixDialog, Spinner } from '~/ui';
-import { skillLevelColor } from '~/utils/color';
-import { orderByFirstName } from '~/utils/order';
 import { ClientForm } from '../ClientForm/ClientForm';
+import { Badge } from '../ui/badge';
+import { Sheet, SheetContent, SheetHeader, SheetTitle } from '../ui/sheet';
 import './ClientTechnicianHistory.scss';
 
 export const ClientTechnicianHistory = () => {
@@ -79,7 +79,6 @@ export const ClientTechnicianHistory = () => {
         {technicians.map((t) => (
           <Badge
             key={t.id}
-            size="xs"
             style={{
               background: t.bg_color,
               color: t.text_color,
@@ -93,7 +92,11 @@ export const ClientTechnicianHistory = () => {
   }
 
   if (clientsLoading) {
-    return <Spinner className="mt-8" message="Loading clients..." />;
+    return (
+      <div className="mt-12 flex items-center justify-center">
+        <Loader className="h-8 w-8 animate-spin" />
+      </div>
+    );
   }
 
   return (
@@ -121,7 +124,7 @@ export const ClientTechnicianHistory = () => {
               <tr key={client.id}>
                 <td className="text-nowrap">
                   <a
-                    className="cursor-pointer"
+                    className="text-primary cursor-pointer"
                     onClick={() => {
                       if (!user?.is_superuser) {
                         return;
@@ -132,7 +135,9 @@ export const ClientTechnicianHistory = () => {
                     {client.first_name} {client.last_name}
                   </a>
                 </td>
-                <td style={{ background: skillLevelColor(client.req_skill_level), textAlign: 'center' }}>
+                <td
+                  style={{ background: skillLevelColor(client.req_skill_level), color: 'black', textAlign: 'center' }}
+                >
                   {client.req_skill_level}
                 </td>
                 <td>{displayTechnicians(client.current_technicians)}</td>
@@ -145,14 +150,14 @@ export const ClientTechnicianHistory = () => {
         </table>
       </div>
       {clientForm.client && (
-        <RadixDialog
-          asDrawer
-          title={`Update Client`}
+        <Sheet
           open={clientForm.open}
           onOpenChange={(open) => setClientForm({ ...clientForm, open, client: undefined })}
         >
-          <div className="p-6">
-            <h3 className="mb-4">Update Client</h3>
+          <SheetContent>
+            <SheetHeader>
+              <SheetTitle>Update Client</SheetTitle>
+            </SheetHeader>
             <ClientForm
               client={clientForm.client}
               onCancel={() => {
@@ -161,8 +166,8 @@ export const ClientTechnicianHistory = () => {
               onDelete={onDeleteClient}
               onUpdate={onUpdateClient}
             />
-          </div>
-        </RadixDialog>
+          </SheetContent>
+        </Sheet>
       )}
     </>
   );

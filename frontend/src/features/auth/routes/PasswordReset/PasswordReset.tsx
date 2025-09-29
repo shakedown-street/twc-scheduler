@@ -1,25 +1,24 @@
-import { Helmet } from 'react-helmet';
-import { Link } from 'react-router-dom';
-import { Card, Container } from '~/ui';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Link } from 'react-router';
 import { PasswordResetForm } from '../../components/PasswordResetForm/PasswordResetForm';
 
 export const PasswordReset = () => {
   return (
     <>
-      <Helmet>
-        <title>Password Reset | Schedule Builder</title>
-      </Helmet>
-      <Container>
-        <div className="centerPage">
-          <Card fluid>
-            <h1 className="mb-4 text-center">Password Reset</h1>
+      <title>Password Reset | PROJECT_NAME</title>
+      <div className="mx-auto my-12 w-full max-w-sm px-4">
+        <Card>
+          <CardHeader>
+            <CardTitle>Password Reset</CardTitle>
+          </CardHeader>
+          <CardContent>
             <PasswordResetForm />
-            <Link className="display-block mt-6 text-center" to="/login">
+            <Link className="text-primary mt-4 block text-center text-sm font-medium hover:underline" to="/login">
               Back to Login
             </Link>
-          </Card>
-        </div>
-      </Container>
+          </CardContent>
+        </Card>
+      </div>
     </>
   );
 };

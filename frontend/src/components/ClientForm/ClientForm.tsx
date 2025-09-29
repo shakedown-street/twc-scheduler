@@ -1,11 +1,17 @@
+import { ClientModel, TechnicianModel } from '@/api';
+import { toastError } from '@/utils/errors';
+import { orderByFirstName } from '@/utils/order';
+import { TooltipTrigger } from '@radix-ui/react-tooltip';
+import { Info } from 'lucide-react';
 import React from 'react';
-import { useForm } from 'react-hook-form';
-import { ClientModel, TechnicianModel } from '~/api';
-import { Client } from '~/types/Client';
-import { Technician } from '~/types/Technician';
-import { Button, Input, Select, Textarea, Toggle, useToast } from '~/ui';
-import { orderByFirstName } from '~/utils/order';
-import './ClientForm.scss';
+import { Controller, useForm } from 'react-hook-form';
+import { Button } from '../ui/button';
+import { Checkbox } from '../ui/checkbox';
+import { Input } from '../ui/input';
+import { Label } from '../ui/label';
+import { Select } from '../ui/select';
+import { Textarea } from '../ui/textarea';
+import { Tooltip, TooltipContent } from '../ui/tooltip';
 
 export type ClientFormProps = {
   client?: Client;
@@ -34,7 +40,6 @@ export const ClientForm = ({ client, onCancel, onCreate, onDelete, onUpdate }: C
   const [technicians, setTechnicians] = React.useState<Technician[]>([]);
 
   const form = useForm<ClientFormData>();
-  const toast = useToast();
 
   React.useEffect(() => {
     if (!client) {
@@ -53,7 +58,7 @@ export const ClientForm = ({ client, onCancel, onCreate, onDelete, onUpdate }: C
       past_technicians: client.past_technicians.map((tech) => tech.id),
       is_manually_maxed_out: client.is_manually_maxed_out || false,
     });
-  }, [client, form.reset]);
+  }, [client, form]);
 
   React.useEffect(() => {
     TechnicianModel.all({
@@ -77,7 +82,7 @@ export const ClientForm = ({ client, onCancel, onCreate, onDelete, onUpdate }: C
         setConfirmDelete(false);
       })
       .catch((err) => {
-        toast.errorResponse(err);
+        toastError(err);
       });
   }
 
@@ -88,7 +93,7 @@ export const ClientForm = ({ client, onCancel, onCreate, onDelete, onUpdate }: C
           onUpdate?.(updated.data);
         })
         .catch((err) => {
-          toast.errorResponse(err);
+          toastError(err);
         });
       return;
     }
@@ -97,21 +102,21 @@ export const ClientForm = ({ client, onCancel, onCreate, onDelete, onUpdate }: C
         onCreate?.(created.data);
       })
       .catch((err) => {
-        toast.errorResponse(err);
+        toastError(err);
       });
   }
 
   if (confirmDelete) {
     return (
-      <div className="ClientForm__confirmDelete">
-        <p>
+      <div className="flex flex-col gap-4">
+        <div>
           Are you sure you want to delete {client?.first_name} {client?.last_name}?
           <br />
           This action cannot be undone.
-        </p>
-        <div className="ClientForm__confirmDelete__actions">
+        </div>
+        <div className="flex items-center justify-end gap-4">
           <Button onClick={() => setConfirmDelete(false)}>Cancel</Button>
-          <Button color="red" onClick={clickConfirmDelete} variant="raised">
+          <Button onClick={clickConfirmDelete} variant="destructive">
             Delete
           </Button>
         </div>
@@ -120,84 +125,139 @@ export const ClientForm = ({ client, onCancel, onCreate, onDelete, onUpdate }: C
   }
 
   return (
-    <form className="ClientForm" onSubmit={form.handleSubmit(onSubmit)}>
-      <div className="ClientForm__row">
-        <Input fluid label="First Name" id="first_name" {...form.register('first_name', { required: true })} />
-        <Input fluid label="Last Name" id="last_name" {...form.register('last_name', { required: true })} />
+    <form className="form" onSubmit={form.handleSubmit(onSubmit)}>
+      <div className="form-row">
+        <div className="form-group">
+          <Label htmlFor="first_name">First Name</Label>
+          <Input id="first_name" {...form.register('first_name', { required: true })} />
+        </div>
+        <div className="form-group">
+          <Label htmlFor="last_name">Last Name</Label>
+          <Input id="last_name" {...form.register('last_name', { required: true })} />
+        </div>
       </div>
-      <div className="ClientForm__row">
-        <Input
-          fluid
-          id="prescribed_hours"
-          label="Prescribed Hours"
-          type="number"
-          {...form.register('prescribed_hours', { required: true })}
-        />
-        <Input
-          fluid
-          id="req_skill_level"
-          label="Required Skill Level"
-          min={1}
-          max={3}
-          type="number"
-          {...form.register('req_skill_level', { required: true })}
+      <div className="form-row">
+        <div className="form-group">
+          <Label htmlFor="prescribed_hours">Prescribed Hours</Label>
+          <Input id="prescribed_hours" type="number" {...form.register('prescribed_hours', { required: true })} />
+        </div>
+        <div className="form-group">
+          <Label htmlFor="req_skill_level">Required Skill Level</Label>
+          <Input
+            id="req_skill_level"
+            min={1}
+            max={3}
+            type="number"
+            {...form.register('req_skill_level', { required: true })}
+          />
+        </div>
+      </div>
+      <div className="form-group">
+        <div className="flex items-center gap-2">
+          <Controller
+            control={form.control}
+            name="req_spanish_speaking"
+            render={({ field }) => (
+              <Checkbox
+                checked={field.value}
+                id="req_spanish_speaking"
+                onCheckedChange={() => field.onChange(!field.value)}
+              />
+            )}
+          />
+          <Label htmlFor="req_spanish_speaking">Require Spanish Speaking</Label>
+        </div>
+      </div>
+      <div className="form-group">
+        <div className="flex items-center gap-2">
+          <Controller
+            control={form.control}
+            name="eval_done"
+            render={({ field }) => (
+              <Checkbox checked={field.value} id="eval_done" onCheckedChange={() => field.onChange(!field.value)} />
+            )}
+          />
+          <Label htmlFor="eval_done">Evaluation Done</Label>
+        </div>
+      </div>
+      <div className="form-group">
+        <div className="flex items-center gap-2">
+          <Controller
+            control={form.control}
+            name="is_onboarding"
+            render={({ field }) => (
+              <Checkbox checked={field.value} id="is_onboarding" onCheckedChange={() => field.onChange(!field.value)} />
+            )}
+          />
+          <Label htmlFor="is_onboarding">Currently Onboarding</Label>
+        </div>
+      </div>
+      <div className="form-group">
+        <div className="flex items-center gap-2">
+          <Controller
+            control={form.control}
+            name="is_manually_maxed_out"
+            render={({ field }) => (
+              <Checkbox
+                checked={field.value}
+                id="is_manually_maxed_out"
+                onCheckedChange={() => field.onChange(!field.value)}
+              />
+            )}
+          />
+          <Label htmlFor="is_manually_maxed_out">
+            Manually Maxed Out
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Info size="16" />
+              </TooltipTrigger>
+              <TooltipContent className="w-64">
+                If checked, this client will be considered maxed out on sessions regardless of their total hours.
+              </TooltipContent>
+            </Tooltip>
+          </Label>
+        </div>
+      </div>
+      <div className="form-group">
+        <Label htmlFor="notes">Notes</Label>
+        <Textarea className="resize-none" id="notes" rows={3} {...form.register('notes')} />
+      </div>
+      <div className="form-group">
+        <Label htmlFor="sub_notes">Sub Notes</Label>
+        <Textarea
+          className="resize-none"
+          id="sub_notes"
+          placeholder='E.g. "No males"'
+          rows={3}
+          {...form.register('sub_notes')}
         />
       </div>
-      <Toggle label="Require Spanish Speaking" {...form.register('req_spanish_speaking')} />
-      <Toggle label="Evaluation Done" {...form.register('eval_done')} />
-      <Toggle label="Currently Onboarding" {...form.register('is_onboarding')} />
-      <Toggle label="Manually Maxed Out" {...form.register('is_manually_maxed_out')} />
-      <p className="hint">
-        If checked, this client will be considered maxed out on sessions regardless of their total hours.
-      </p>
-      <Textarea
-        rows={3}
-        fluid
-        id="notes"
-        label="Notes"
-        inputSize="xs"
-        style={{ resize: 'none' }}
-        {...form.register('notes')}
-      />
-      <Textarea
-        rows={3}
-        fluid
-        id="sub_notes"
-        label="Sub Notes"
-        inputSize="xs"
-        placeholder='E.g. "No males"'
-        style={{ resize: 'none' }}
-        {...form.register('sub_notes')}
-      />
       {technicians.length > 0 && (
-        <div>
-          <Select
-            className="ClientForm__pastTechnicians"
-            label="Past Technicians"
-            id="past_technicians"
-            fluid
-            multiple
-            inputSize="xs"
-            {...form.register('past_technicians')}
-          >
+        <div className="form-group">
+          <Label htmlFor="past_technicians">Past Technicians</Label>
+          <Select className="h-30" id="past_technicians" multiple {...form.register('past_technicians')}>
             {technicians.map((technician) => (
               <option key={technician.id} value={technician.id}>
                 {technician.first_name} {technician.last_name}
               </option>
             ))}
           </Select>
-          <div className="hint mt-1">Hold down “Control”, or “Command” on a Mac, to select more than one.</div>
+          <div className="text-muted-foreground text-xs">
+            Hold down “Control”, or “Command” on a Mac, to select more than one.
+          </div>
         </div>
       )}
-      <div className="ClientForm__actions">
+      <div className="flex items-center gap-4">
         {client && (
-          <Button color="red" onClick={clickDelete}>
+          <Button onClick={clickDelete} type="button" variant="destructive">
             Delete
           </Button>
         )}
         <div className="flex-1"></div>
-        <Button onClick={() => onCancel?.()}>Cancel</Button>
-        <Button color="primary" disabled={!form.formState.isValid} type="submit" variant="raised">
+        <Button onClick={() => onCancel?.()} variant="ghost">
+          Cancel
+        </Button>
+        <Button disabled={!form.formState.isValid} type="submit">
           Save
         </Button>
       </div>

@@ -1,14 +1,16 @@
-import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
-import clsx from 'clsx';
+import { UserModel } from '@/api';
+import logoSmall from '@/assets/logo-small.png';
+import { useAuth } from '@/features/auth/contexts/AuthContext';
+import { http } from '@/lib/http';
+import { toastError } from '@/utils/errors';
+import { ArrowLeftRight, Calendar, CalendarCheck, IdCard, List, LogOut, Menu, Settings, User } from 'lucide-react';
 import React from 'react';
-import { Link, NavLink, useNavigate } from 'react-router-dom';
-import logo from '~/assets/logo.avif';
-import { ImpersonateDialog } from '~/features/auth/components/ImpersonateDialog/ImpersonateDialog';
-import { useAuth } from '~/features/auth/contexts/AuthContext';
-import { http } from '~/http';
-import { Button, Container, IconButton, RadixDialog, useToast } from '~/ui';
+import { Link, NavLink, useNavigate } from 'react-router';
+import { SearchPopover } from '../SearchPopover/SearchPopover';
 import { SettingsDialog } from '../SettingsDialog/SettingsDialog';
-import './Nav.scss';
+import { Button } from '../ui/button';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '../ui/dialog';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '../ui/dropdown-menu';
 
 export const Nav = () => {
   const [impersonateDialogOpen, setImpersonateDialogOpen] = React.useState(false);
@@ -16,13 +18,20 @@ export const Nav = () => {
 
   const navigate = useNavigate();
   const { user, setUser } = useAuth();
-  const toast = useToast();
+
+  function impersonate(user: User) {
+    UserModel.detailAction(user.id, 'impersonate', 'get').then((res) => {
+      navigate('/');
+      localStorage.setItem('impersonate', res.data.token);
+      window.location.reload();
+    });
+  }
 
   function logout() {
     http
       .post('/api/token-auth/logout/')
       .then()
-      .catch((err) => toast.errorResponse(err))
+      .catch((err) => toastError(err))
       .finally(() => {
         localStorage.removeItem('token');
         localStorage.removeItem('impersonate');
@@ -35,11 +44,11 @@ export const Nav = () => {
     return (
       <>
         <div className="flex gap-2">
-          {/* <Button color="primary" navigateTo={'/sign-up'}>
-            Sign Up
+          {/* <Button asChild>
+            <Link to="/sign-up">Sign Up</Link>
           </Button> */}
-          <Button color="primary" navigateTo={'/login'}>
-            Login
+          <Button asChild>
+            <Link to="/login">Login</Link>
           </Button>
         </div>
       </>
@@ -48,123 +57,109 @@ export const Nav = () => {
 
   function renderUserMenu() {
     return (
-      <DropdownMenu.Root>
-        <DropdownMenu.Trigger asChild>
-          <IconButton>
-            <span className="material-symbols-outlined">menu</span>
-          </IconButton>
-        </DropdownMenu.Trigger>
-        <DropdownMenu.Portal>
-          <DropdownMenu.Content align="end" className="DropdownMenu__content">
-            <DropdownMenu.Item className="DropdownMenu__item" onClick={() => navigate('/profile')}>
-              <div className="DropdownMenu__icon">
-                <span className="material-symbols-outlined">person</span>
-              </div>
-              Profile
-            </DropdownMenu.Item>
-            {user?.is_superuser && (
-              <DropdownMenu.Item className="DropdownMenu__item" onClick={() => setImpersonateDialogOpen(true)}>
-                <div className="DropdownMenu__icon">
-                  <span className="material-symbols-outlined">id_card</span>
-                </div>
-                Impersonate
-              </DropdownMenu.Item>
-            )}
-            <DropdownMenu.Item className="DropdownMenu__item" onClick={() => setSettingsDialogOpen(true)}>
-              <div className="DropdownMenu__icon">
-                <span className="material-symbols-outlined">settings</span>
-              </div>
-              Settings
-            </DropdownMenu.Item>
-            <DropdownMenu.Item className="DropdownMenu__item" onClick={() => logout()}>
-              <div className="DropdownMenu__icon">
-                <span className="material-symbols-outlined">logout</span>
-              </div>
-              Logout
-            </DropdownMenu.Item>
-          </DropdownMenu.Content>
-        </DropdownMenu.Portal>
-      </DropdownMenu.Root>
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button size="icon" variant="ghost">
+            <Menu />
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="end">
+          <DropdownMenuItem onClick={() => navigate('/profile')}>
+            <User />
+            Profile
+          </DropdownMenuItem>
+          {user?.is_superuser && (
+            <DropdownMenuItem onClick={() => setImpersonateDialogOpen(true)}>
+              <IdCard />
+              Impersonate
+            </DropdownMenuItem>
+          )}
+          <DropdownMenuItem onClick={() => setSettingsDialogOpen(true)}>
+            <Settings />
+            Settings
+          </DropdownMenuItem>
+          <DropdownMenuItem onClick={() => logout()}>
+            <LogOut />
+            Logout
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
     );
   }
 
   return (
     <>
-      <div className="Nav">
-        <Container>
-          <div className="Nav__content">
-            <Link to="/">
-              <img className="Nav__logo" src={logo} />
-            </Link>
-            {user && (
-              <div className="Nav__links">
-                <NavLink
-                  to="/"
-                  className={({ isActive }) => {
-                    return clsx('Nav__link', {
-                      'Nav__link--active': isActive,
-                    });
-                  }}
-                >
-                  <span className="material-symbols-outlined">edit_calendar</span>
-                  Schedule
-                </NavLink>
-                <NavLink
-                  to="/overview"
-                  className={({ isActive }) => {
-                    return clsx('Nav__link', {
-                      'Nav__link--active': isActive,
-                    });
-                  }}
-                >
-                  <span className="material-symbols-outlined">overview</span>
-                  Overview
-                </NavLink>
-                <NavLink
-                  to="/availability"
-                  className={({ isActive }) => {
-                    return clsx('Nav__link', {
-                      'Nav__link--active': isActive,
-                    });
-                  }}
-                >
-                  <span className="material-symbols-outlined">event_available</span>
-                  Availability
-                </NavLink>
-                <NavLink
-                  to="/sub-list"
-                  className={({ isActive }) => {
-                    return clsx('Nav__link', {
-                      'Nav__link--active': isActive,
-                    });
-                  }}
-                >
-                  <span className="material-symbols-outlined">swap_horiz</span>
-                  Sub List
-                </NavLink>
-              </div>
-            )}
-            {/* <div className="Nav__spacer"></div> */}
-            {!user ? renderAuthLinks() : renderUserMenu()}
-          </div>
-        </Container>
+      <div className="bg-background shadow">
+        <div className="container mx-auto flex items-center gap-2 px-4 py-2">
+          <Link to="/">
+            <img className="h-10" src={logoSmall} />
+          </Link>
+          {user && (
+            <div className="flex items-center gap-1">
+              <NavLink to="/">
+                {({ isActive }) => (
+                  <Button size="sm" variant={isActive ? 'default' : 'ghost'}>
+                    <Calendar size="18" /> Schedule
+                  </Button>
+                )}
+              </NavLink>
+              <NavLink to="/overview">
+                {({ isActive }) => (
+                  <Button size="sm" variant={isActive ? 'default' : 'ghost'}>
+                    <List size="18" /> Overview
+                  </Button>
+                )}
+              </NavLink>
+              <NavLink to="/availability">
+                {({ isActive }) => (
+                  <Button size="sm" variant={isActive ? 'default' : 'ghost'}>
+                    <CalendarCheck size="18" /> Availability
+                  </Button>
+                )}
+              </NavLink>
+              <NavLink to="/sub-list">
+                {({ isActive }) => (
+                  <Button size="sm" variant={isActive ? 'default' : 'ghost'}>
+                    <ArrowLeftRight size="18" /> Sub List
+                  </Button>
+                )}
+              </NavLink>
+            </div>
+          )}
+          <div className="flex-1"></div>
+          {!user ? renderAuthLinks() : renderUserMenu()}
+        </div>
       </div>
-      <RadixDialog
-        description="Impersonate another user"
-        open={impersonateDialogOpen}
-        onOpenChange={(open) => setImpersonateDialogOpen(open)}
-        title="Impersonate"
-      >
-        <ImpersonateDialog />
-      </RadixDialog>
-      <RadixDialog
-        description="Change your settings"
-        open={settingsDialogOpen}
-        onOpenChange={(open) => setSettingsDialogOpen(open)}
-        title="Settings"
-      >
-        <SettingsDialog onClose={() => setSettingsDialogOpen(false)} />
-      </RadixDialog>
+      <Dialog open={impersonateDialogOpen} onOpenChange={(open) => setImpersonateDialogOpen(open)}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Impersonate User</DialogTitle>
+            <DialogDescription>Search for a user to impersonate</DialogDescription>
+          </DialogHeader>
+          <SearchPopover
+            endpoint="/api/users/"
+            onChange={(value: User) => impersonate(value)}
+            parameter="search"
+            renderMatch={(user: User) => {
+              return <>{user.email}</>;
+            }}
+            trigger={
+              <Button className="w-full" variant="outline">
+                Search
+              </Button>
+            }
+          />
+        </DialogContent>
+      </Dialog>
+      <Dialog open={settingsDialogOpen} onOpenChange={(open) => setSettingsDialogOpen(open)}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Settings</DialogTitle>
+            <DialogDescription>Configure your user settings</DialogDescription>
+          </DialogHeader>
+          <SettingsDialog onClose={() => setSettingsDialogOpen(false)} />
+        </DialogContent>
+      </Dialog>
     </>
   );
 };

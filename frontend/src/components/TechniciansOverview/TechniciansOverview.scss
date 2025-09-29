@@ -1,7 +1,5 @@
-@import '~/scss/mixins';
-@import '~/scss/variables';
-
 .TechniciansOverview {
+  border-collapse: collapse;
   // width: 100%;
 
   thead {
@@ -26,11 +24,11 @@
       }
 
       &:nth-child(even) {
-        background-color: $tw-gray-200;
+        background-color: var(--muted);
       }
 
       &:hover {
-        background-color: $tw-gray-300;
+        background-color: var(--border);
       }
     }
   }
@@ -45,7 +43,7 @@
       }
 
       &:hover {
-        background-color: $tw-gray-200;
+        background-color: var(--border);
       }
     }
   }
@@ -66,7 +64,7 @@
   }
 
   &__legend {
-    @include radius-md;
+    border-radius: 0.375rem;
     display: flex;
     flex-direction: column;
     gap: 0.25rem;
@@ -78,10 +76,10 @@
       gap: 0.25rem;
 
       &__color {
-        @include font-bold;
         align-items: center;
         border: 1px solid black;
         display: flex;
+        font-weight: 700;
         justify-content: center;
         position: relative;
         height: 1.5rem;

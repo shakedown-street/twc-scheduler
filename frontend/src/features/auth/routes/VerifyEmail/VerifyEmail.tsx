@@ -1,8 +1,8 @@
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { http } from '@/lib/http';
+import { extractError } from '@/utils/errors';
 import React from 'react';
-import { Helmet } from 'react-helmet';
-import { Link, useParams } from 'react-router-dom';
-import { http } from '~/http';
-import { Card, Container } from '~/ui';
+import { Link, useParams } from 'react-router';
 
 export const VerifyEmail = () => {
   const [error, setError] = React.useState('');
@@ -10,42 +10,42 @@ export const VerifyEmail = () => {
   const { uid, token } = useParams();
 
   React.useEffect(() => {
-    setError('');
-    http
-      .post('/api/verify-email/', { uid, token })
-      .then(() => {})
-      .catch((err) => {
-        const { detail, non_field_errors } = err.response.data;
+    async function verifyEmail() {
+      setError('');
 
-        if (detail) {
-          setError(detail);
-        } else if (non_field_errors) {
-          setError(non_field_errors[0]);
-        } else {
-          setError('An error occurred. Please try again.');
-        }
-      });
-  }, []);
+      try {
+        await http.post('/api/verify-email/', { uid, token });
+      } catch (err) {
+        setError(extractError(err));
+      }
+    }
+
+    verifyEmail();
+  }, [uid, token]);
 
   return (
     <>
-      <Helmet>
-        <title>Verify Email | Schedule Builder</title>
-      </Helmet>
-      <Container>
-        <div className="centerPage">
-          <Card fluid>
-            <h1 className="mb-4 text-center">Verify Email</h1>
+      <title>Verify Email | PROJECT_NAME</title>
+      <div className="mx-auto my-12 w-full max-w-sm px-4">
+        <Card>
+          <CardHeader>
+            <CardTitle>Verify Email</CardTitle>
+          </CardHeader>
+          <CardContent>
             {error ? (
-              <p className="error text-center">{error}</p>
+              <div className="form-error text-center">{error}</div>
             ) : (
-              <p className="text-center">
-                Your account email has been verified. <Link to="/login">Click here</Link> to login.
-              </p>
+              <div className="text-center">
+                Your account email has been verified.{' '}
+                <Link className="text-primary font-medium hover:underline" to="/login">
+                  Click here
+                </Link>{' '}
+                to login.
+              </div>
             )}
-          </Card>
-        </div>
-      </Container>
+          </CardContent>
+        </Card>
+      </div>
     </>
   );
 };

@@ -1,11 +1,14 @@
+import { TherapyAppointmentModel } from '@/api';
+import { toastError } from '@/utils/errors';
+import { addMinutes, dayToString } from '@/utils/time';
 import React from 'react';
 import { Controller, useForm } from 'react-hook-form';
-import { TherapyAppointmentModel } from '~/api';
-import { Client } from '~/types/Client';
-import { TherapyAppointment } from '~/types/TherapyAppointment';
-import { Badge, Button, Select, Textarea, TimeInput, useToast } from '~/ui';
-import { addMinutes, dayToString } from '~/utils/time';
-import './TherapyAppointmentForm.scss';
+import { TimeInput } from '../TimeInput/TimeInput';
+import { Badge } from '../ui/badge';
+import { Button } from '../ui/button';
+import { Label } from '../ui/label';
+import { Select } from '../ui/select';
+import { Textarea } from '../ui/textarea';
 
 export type TherapyAppointmentFormProps = {
   client: Client;
@@ -36,7 +39,6 @@ export const TherapyAppointmentForm = ({
   const [confirmDelete, setConfirmDelete] = React.useState(false);
 
   const form = useForm<TherapyAppointmentFormData>();
-  const toast = useToast();
 
   React.useEffect(() => {
     // Reset form values when the instance or initialStartTime changes
@@ -55,7 +57,7 @@ export const TherapyAppointmentForm = ({
         notes: '',
       });
     }
-  }, [instance, initialStartTime]);
+  }, [instance, initialStartTime, form]);
 
   function createTherapyAppointment(data: TherapyAppointmentFormData) {
     if (!client) {
@@ -70,7 +72,7 @@ export const TherapyAppointmentForm = ({
         onCreate?.(created.data);
       })
       .catch((err) => {
-        toast.errorResponse(err);
+        toastError(err);
       });
   }
 
@@ -87,7 +89,7 @@ export const TherapyAppointmentForm = ({
         onUpdate?.(updated.data);
       })
       .catch((err) => {
-        toast.errorResponse(err);
+        toastError(err);
       });
   }
 
@@ -113,21 +115,23 @@ export const TherapyAppointmentForm = ({
         setConfirmDelete(false);
       })
       .catch((err) => {
-        toast.errorResponse(err);
+        toastError(err);
       });
   }
 
   if (confirmDelete) {
     return (
-      <div className="TherapyAppointmentForm__confirmDelete">
+      <div className="flex flex-col gap-4">
         <p>
           Are you sure you want to delete this therapy appointment?
           <br />
           This action cannot be undone.
         </p>
-        <div className="TherapyAppointmentForm__confirmDelete__actions">
-          <Button onClick={() => setConfirmDelete(false)}>Cancel</Button>
-          <Button color="red" onClick={clickConfirmDelete} variant="raised">
+        <div className="flex items-center justify-end gap-4">
+          <Button onClick={() => setConfirmDelete(false)} variant="ghost">
+            Cancel
+          </Button>
+          <Button onClick={clickConfirmDelete} variant="destructive">
             Delete
           </Button>
         </div>
@@ -136,48 +140,42 @@ export const TherapyAppointmentForm = ({
   }
 
   return (
-    <form className="TherapyAppointmentForm" onSubmit={form.handleSubmit(onSubmit)}>
-      <div className="TherapyAppointmentForm__row">
-        <div className="Input__container">
-          <label>Client</label>
-          <Badge size="xs">
-            {client.first_name} {client.last_name}
-          </Badge>
-        </div>
+    <form className="form" onSubmit={form.handleSubmit(onSubmit)}>
+      <div className="form-group">
+        <Label>Client</Label>
+        <Badge>
+          {client.first_name} {client.last_name}
+        </Badge>
       </div>
       {client.notes && (
-        <div className="TherapyAppointmentForm__row TherapyAppointmentForm__row--notes">
-          <div className="Input__container">
-            <label>Client notes</label>
-            <div className="TherapyAppointmentForm__notes">{client.notes}</div>
+        <div className="form-group">
+          <Label>Client notes</Label>
+          <div className="size-xs bg-muted text-muted-foreground max-h-24 w-full overflow-y-auto rounded p-2 whitespace-pre-wrap">
+            {client.notes}
           </div>
         </div>
       )}
-      <div className="TherapyAppointmentForm__row">
-        <div className="Input__container">
-          <label>Day</label>
-          <p>{dayToString(day)}</p>
-        </div>
+      <div className="form-group">
+        <Label>Day</Label>
+        <Badge>{dayToString(day)}</Badge>
       </div>
-      <div className="TherapyAppointmentForm__row">
+      <div className="form-row">
         <Controller
           control={form.control}
           name="start_time"
           render={({ field }) => {
             return (
-              <TimeInput
-                inputProps={{
-                  fluid: true,
-                  id: 'start_time',
-                  label: 'Start time',
-                }}
-                min="09:00:00"
-                max="19:00:00"
-                onChange={(value) => {
-                  field.onChange(value);
-                }}
-                value={field.value}
-              />
+              <div className="form-group">
+                <Label htmlFor="start_time">Start time</Label>
+                <TimeInput
+                  min="09:00:00"
+                  max="19:00:00"
+                  onChange={(value) => {
+                    field.onChange(value);
+                  }}
+                  value={field.value}
+                />
+              </div>
             );
           }}
         />
@@ -186,43 +184,47 @@ export const TherapyAppointmentForm = ({
           name="end_time"
           render={({ field }) => {
             return (
-              <TimeInput
-                inputProps={{
-                  fluid: true,
-                  id: 'end_time',
-                  label: 'End time',
-                }}
-                min={initialStartTime}
-                max="19:00:00"
-                onChange={(value) => {
-                  field.onChange(value);
-                }}
-                value={field.value}
-              />
+              <div className="form-group">
+                <Label htmlFor="end_time">End time</Label>
+                <TimeInput
+                  min={initialStartTime}
+                  max="19:00:00"
+                  onChange={(value) => {
+                    field.onChange(value);
+                  }}
+                  value={field.value}
+                />
+              </div>
             );
           }}
         />
       </div>
-      <Select fluid label="Therapy Type" {...form.register('therapy_type', { required: true })}>
-        <option value="">Select a type</option>
-        <option value="ot">Occupational Therapy</option>
-        <option value="st">Speech Therapy</option>
-        <option value="mh">Mental Health</option>
-      </Select>
-      <Textarea fluid label="Appointment notes" rows={6} {...form.register('notes')} />
-      <div className="TherapyAppointmentForm__actions">
+      <div className="form-group">
+        <Label id="therapy_type">Therapy Type</Label>
+        <Select id="therapy_type" {...form.register('therapy_type', { required: true })}>
+          <option value="">Select a type</option>
+          <option value="ot">Occupational Therapy</option>
+          <option value="st">Speech Therapy</option>
+          <option value="mh">Mental Health</option>
+        </Select>
+      </div>
+      <div className="form-group">
+        <Label htmlFor="notes">Notes</Label>
+        <Textarea className="resize-none" id="notes" rows={6} {...form.register('notes')} />
+      </div>
+      <div className="flex items-center justify-between gap-4">
         {instance && (
           <Button
-            color="red"
             onClick={() => {
               clickDelete();
             }}
+            type="button"
+            variant="destructive"
           >
             Delete
           </Button>
         )}
-        <div className="flex-1"></div>
-        <Button color="primary" disabled={!form.formState.isValid} type="submit" variant="raised">
+        <Button disabled={!form.formState.isValid} type="submit">
           {instance ? 'Update' : 'Create'}
         </Button>
       </div>

@@ -5,7 +5,4 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    args:
-      - MODE=:staging
-    environment:
-      NODE_ENV: production
+    command: npm run build:staging

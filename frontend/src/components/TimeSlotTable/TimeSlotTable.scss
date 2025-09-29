@@ -1,7 +1,5 @@
-@import '~/scss/mixins';
-@import '~/scss/variables';
-
 .TimeSlotTable {
+  border-collapse: collapse;
   width: 100%;
 
   thead {
@@ -27,28 +25,8 @@
       }
 
       &:hover {
-        background-color: $tw-gray-200;
+        background-color: var(--border);
       }
-    }
-  }
-
-  &__slot {
-    @include font-bold;
-    color: white;
-    position: relative;
-    text-align: center !important;
-    text-transform: uppercase;
-    width: 2rem;
-
-    &__corner {
-      background-color: black;
-      color: white;
-      font-size: 0.5rem;
-      position: absolute;
-      padding: 0.125rem;
-      line-height: 1;
-      right: 0;
-      top: 0;
     }
   }
 }

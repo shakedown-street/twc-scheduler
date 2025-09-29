@@ -1,7 +1,6 @@
-@import '~/scss/variables';
-@import '~/scss/mixins';
-
 .ClientTechnicianMatrix {
+  border-collapse: collapse;
+
   thead {
     tr {
       th {
@@ -24,7 +23,7 @@
       }
 
       &:hover {
-        background-color: $tw-gray-200;
+        background-color: var(--border);
       }
     }
   }

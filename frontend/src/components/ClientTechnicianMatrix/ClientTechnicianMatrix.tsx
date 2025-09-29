@@ -1,12 +1,11 @@
+import { ClientModel, TechnicianModel } from '@/api';
+import { useAuth } from '@/features/auth/contexts/AuthContext';
+import { orderByFirstName } from '@/utils/order';
+import { Loader } from 'lucide-react';
 import React from 'react';
-import { ClientModel, TechnicianModel } from '~/api';
-import { useAuth } from '~/features/auth/contexts/AuthContext';
-import { Client } from '~/types/Client';
-import { Technician } from '~/types/Technician';
-import { RadixDialog, Spinner } from '~/ui';
-import { orderByFirstName } from '~/utils/order';
 import { ClientForm } from '../ClientForm/ClientForm';
 import { TechnicianForm } from '../TechnicianForm/TechnicianForm';
+import { Sheet, SheetContent, SheetHeader, SheetTitle } from '../ui/sheet';
 import './ClientTechnicianMatrix.scss';
 
 export const ClientTechnicianMatrix = () => {
@@ -145,7 +144,11 @@ export const ClientTechnicianMatrix = () => {
   }
 
   if (loadingClients || loadingTechnicians) {
-    return <Spinner className="mt-8" message="Loading matrix..." />;
+    return (
+      <div className="mt-12 flex items-center justify-center">
+        <Loader className="h-8 w-8 animate-spin" />
+      </div>
+    );
   }
 
   return (
@@ -192,7 +195,7 @@ export const ClientTechnicianMatrix = () => {
                   <td>{index + 1}</td>
                   <td className="text-nowrap" style={{ textAlign: 'left' }}>
                     <a
-                      className="cursor-pointer"
+                      className="text-primary cursor-pointer"
                       onClick={() => {
                         if (!user?.is_superuser) {
                           return;
@@ -212,7 +215,11 @@ export const ClientTechnicianMatrix = () => {
                         onMouseLeave={() => handleColumnHoverLeave()}
                         style={{
                           background:
-                            count > 0 ? technician.bg_color : hoveredColumn === technicianIndex ? '#e5e7eb' : undefined,
+                            count > 0
+                              ? technician.bg_color
+                              : hoveredColumn === technicianIndex
+                                ? 'var(--border)'
+                                : undefined,
                           color: count > 0 ? technician.text_color : undefined,
                         }}
                       >
@@ -223,6 +230,7 @@ export const ClientTechnicianMatrix = () => {
                   <td
                     style={{
                       background: getTotalTechsColor(total),
+                      color: 'black',
                     }}
                   >
                     {total > 0 ? total : ''}
@@ -234,14 +242,14 @@ export const ClientTechnicianMatrix = () => {
         </tbody>
       </table>
       {clientForm.client && (
-        <RadixDialog
-          asDrawer
-          title={`Update Client`}
+        <Sheet
           open={clientForm.open}
           onOpenChange={(open) => setClientForm({ ...clientForm, open, client: undefined })}
         >
-          <div className="p-6">
-            <h3 className="mb-4">Update Client</h3>
+          <SheetContent>
+            <SheetHeader>
+              <SheetTitle>Update Client</SheetTitle>
+            </SheetHeader>
             <ClientForm
               client={clientForm.client}
               onCancel={() => {
@@ -250,18 +258,18 @@ export const ClientTechnicianMatrix = () => {
               onDelete={onDeleteClient}
               onUpdate={onUpdateClient}
             />
-          </div>
-        </RadixDialog>
+          </SheetContent>
+        </Sheet>
       )}
       {technicianForm.technician && (
-        <RadixDialog
-          asDrawer
-          title={`Update Technician`}
+        <Sheet
           open={technicianForm.open}
           onOpenChange={(open) => setTechnicianForm({ ...technicianForm, open, technician: undefined })}
         >
-          <div className="p-6">
-            <h3 className="mb-4">Update Technician</h3>
+          <SheetContent>
+            <SheetHeader>
+              <SheetTitle>Update Technician</SheetTitle>
+            </SheetHeader>
             <TechnicianForm
               technician={technicianForm.technician}
               onCancel={() => {
@@ -270,8 +278,8 @@ export const ClientTechnicianMatrix = () => {
               onUpdate={onUpdateTechnician}
               onDelete={onDeleteTechnician}
             />
-          </div>
-        </RadixDialog>
+          </SheetContent>
+        </Sheet>
       )}
     </>
   );

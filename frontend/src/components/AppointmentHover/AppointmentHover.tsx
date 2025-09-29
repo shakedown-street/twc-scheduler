@@ -1,10 +1,9 @@
-import clsx from 'clsx';
+import { AppointmentModel } from '@/api';
+import { dayToString, formatTime } from '@/utils/time';
+import { ArrowLeftRight, Calendar, CircleCheck, CircleX, GraduationCap, MapPin, NotebookPen, User } from 'lucide-react';
 import React from 'react';
-import { AppointmentModel } from '~/api';
-import { Appointment } from '~/types/Appointment';
-import { Technician } from '~/types/Technician';
-import { Badge } from '~/ui';
-import { dayToString, formatTime } from '~/utils/time';
+import { Badge } from '../ui/badge';
+import { Label } from '../ui/label';
 import './AppointmentHover.scss';
 
 export type AppointmentHoverProps = {
@@ -18,24 +17,23 @@ export const AppointmentHover = ({ appointment }: AppointmentHoverProps) => {
     AppointmentModel.detailAction(appointment.id, 'find_recommended_subs', 'get').then((res) => {
       setRecommendedSubs(res.data);
     });
-  }, []);
+  }, [appointment]);
 
   return (
-    <div className="AppointmentHover">
+    <div className="flex flex-col">
       <div className="AppointmentHover__row">
-        <label>
-          <span className="material-symbols-outlined">person</span> Client:
-        </label>
-        <Badge size="xs">
+        <Label>
+          <User size="16" /> Client:
+        </Label>
+        <Badge>
           {appointment.client?.first_name} {appointment.client?.last_name}
         </Badge>
       </div>
       <div className="AppointmentHover__row">
-        <label>
-          <span className="material-symbols-outlined">engineering</span> Technician:
-        </label>
+        <Label>
+          <User size="16" /> Technician:
+        </Label>
         <Badge
-          size="xs"
           style={{
             background: appointment.technician?.bg_color,
             color: appointment.technician?.text_color,
@@ -45,66 +43,59 @@ export const AppointmentHover = ({ appointment }: AppointmentHoverProps) => {
         </Badge>
       </div>
       <div className="AppointmentHover__row">
-        <label>
-          <span className="material-symbols-outlined">calendar_today</span> Time:
-        </label>
+        <Label>
+          <Calendar size="16" /> Time:
+        </Label>
         <div>
           {dayToString(appointment.day, 'medium')} from {formatTime(appointment.start_time)} to{' '}
           {formatTime(appointment.end_time)}
         </div>
       </div>
       <div className="AppointmentHover__row">
-        <label>
-          <span className="material-symbols-outlined">location_on</span> In clinic:
-        </label>
-        <span
-          className={clsx('material-symbols-outlined', 'AppointmentHover__inClinic', {
-            'AppointmentHover__inClinic--true': appointment.in_clinic,
-            'AppointmentHover__inClinic--false': !appointment.in_clinic,
-          })}
-        >
-          {appointment.in_clinic ? 'check_circle' : 'cancel'}
-        </span>
+        <Label>
+          <MapPin size="16" /> In clinic:
+        </Label>
+        {appointment.in_clinic ? (
+          <CircleCheck className="text-green-700" size="16" />
+        ) : (
+          <CircleX className="text-red-700" size="16" />
+        )}
       </div>
       <div className="AppointmentHover__row">
-        <label>
-          <span className="material-symbols-outlined">school</span> Preschool/Adaptive:
-        </label>
-        <span
-          className={clsx('material-symbols-outlined', 'AppointmentHover__inClinic', {
-            'AppointmentHover__inClinic--true': appointment.is_preschool_or_adaptive,
-            'AppointmentHover__inClinic--false': !appointment.is_preschool_or_adaptive,
-          })}
-        >
-          {appointment.is_preschool_or_adaptive ? 'check_circle' : 'cancel'}
-        </span>
+        <Label>
+          <GraduationCap size="16" /> Preschool/adaptive:
+        </Label>
+        {appointment.is_preschool_or_adaptive ? (
+          <CircleCheck className="text-green-700" size="16" />
+        ) : (
+          <CircleX className="text-red-700" size="16" />
+        )}
       </div>
       {appointment.client?.notes && (
         <div className="AppointmentHover__row AppointmentHover__row--notes">
-          <label>
-            <span className="material-symbols-outlined">note</span> Client notes:
-          </label>
+          <Label>
+            <NotebookPen size="16" /> Client notes:
+          </Label>
           <div className="AppointmentHover__notes">{appointment.client?.notes}</div>
         </div>
       )}
       {appointment.notes && (
         <div className="AppointmentHover__row AppointmentHover__row--notes">
-          <label>
-            <span className="material-symbols-outlined">note</span> Appointment notes:
-          </label>
+          <Label>
+            <NotebookPen size="16" /> Appointment notes:
+          </Label>
           <div className="AppointmentHover__notes">{appointment.notes}</div>
         </div>
       )}
       {recommendedSubs.length > 0 && (
         <div className="AppointmentHover__row AppointmentHover__row--recommendedSubs">
-          <label>
-            <span className="material-symbols-outlined">swap_horiz</span> Recommended subs:
-          </label>
-          <div className="AppointmentHover__recommendedSubs">
+          <Label>
+            <ArrowLeftRight size="16" /> Recommended subs:
+          </Label>
+          <div className="flex flex-wrap gap-1">
             {recommendedSubs.map((sub) => (
               <Badge
                 key={sub.id}
-                size="xs"
                 style={{
                   background: sub.bg_color,
                   color: sub.text_color,

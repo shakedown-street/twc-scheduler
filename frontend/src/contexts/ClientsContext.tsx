@@ -1,10 +1,9 @@
+/* eslint-disable react-refresh/only-export-components */
+
+import { ClientModel } from '@/api';
+import { orderByFirstName } from '@/utils/order';
+import { Loader } from 'lucide-react';
 import React from 'react';
-import { ClientModel } from '~/api';
-import { Appointment } from '~/types/Appointment';
-import { Availability } from '~/types/Availability';
-import { Client } from '~/types/Client';
-import { Spinner } from '~/ui';
-import { orderByFirstName } from '~/utils/order';
 
 // Not in use ATM
 
@@ -68,7 +67,7 @@ export const ClientsProvider = (props: ClientsProviderProps) => {
           return c;
         }
         return c;
-      })
+      }),
     );
   }
 
@@ -80,7 +79,7 @@ export const ClientsProvider = (props: ClientsProviderProps) => {
           return c;
         }
         return c;
-      })
+      }),
     );
   }
 
@@ -89,7 +88,7 @@ export const ClientsProvider = (props: ClientsProviderProps) => {
       prev.map((c) => {
         c.availabilities = c.availabilities?.filter((a) => a.id !== availability.id);
         return c;
-      })
+      }),
     );
   }
 
@@ -101,7 +100,7 @@ export const ClientsProvider = (props: ClientsProviderProps) => {
           return c;
         }
         return c;
-      })
+      }),
     );
   }
 
@@ -113,7 +112,7 @@ export const ClientsProvider = (props: ClientsProviderProps) => {
           return c;
         }
         return c;
-      })
+      }),
     );
   }
 
@@ -122,12 +121,16 @@ export const ClientsProvider = (props: ClientsProviderProps) => {
       prev.map((c) => {
         c.appointments = c.appointments?.filter((a) => a.id !== appointment.id);
         return c;
-      })
+      }),
     );
   }
 
   if (loading) {
-    return <Spinner className="mt-8" message="Loading clients..." />;
+    return (
+      <div className="mt-12 flex items-center justify-center">
+        <Loader className="h-8 w-8 animate-spin" />
+      </div>
+    );
   }
 
   return (

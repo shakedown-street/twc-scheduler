@@ -1,49 +1,33 @@
-import React from 'react';
-import { Helmet } from 'react-helmet';
-import { Card, Container, TabItem, Tabs } from '~/ui';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { PasswordChangeForm } from '../../components/PasswordChangeForm/PasswordChangeForm';
 import { ProfileForm } from '../../components/ProfileForm/ProfileForm';
 
 export const Profile = () => {
-  const [selectedTab, setSelectedTab] = React.useState<'profile' | 'password'>('profile');
-
   return (
     <>
-      <Helmet>
-        <title>Profile | Schedule Builder</title>
-      </Helmet>
-      <Container>
-        <div className="centerPage">
-          <Card className="p-0" fluid>
-            <Tabs fluid>
-              <TabItem
-                active={selectedTab === 'profile'}
-                onClick={() => {
-                  setSelectedTab('profile');
-                }}
-              >
-                Profile
-              </TabItem>
-              <TabItem
-                active={selectedTab === 'password'}
-                onClick={() => {
-                  setSelectedTab('password');
-                }}
-              >
-                Password
-              </TabItem>
+      <title>Profile | PROJECT_NAME</title>
+      <div className="mx-auto my-12 w-full max-w-lg px-4">
+        <Card>
+          <CardHeader>
+            <CardTitle>Profile</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <Tabs defaultValue="profile">
+              <TabsList className="mb-4 w-full">
+                <TabsTrigger value="profile">Profile</TabsTrigger>
+                <TabsTrigger value="password">Password</TabsTrigger>
+              </TabsList>
+              <TabsContent value="profile">
+                <ProfileForm />
+              </TabsContent>
+              <TabsContent value="password">
+                <PasswordChangeForm />
+              </TabsContent>
             </Tabs>
-            <div className="p-6">
-              {selectedTab === 'profile' && <ProfileForm />}
-              {selectedTab === 'password' && (
-                <>
-                  <PasswordChangeForm />
-                </>
-              )}
-            </div>
-          </Card>
-        </div>
-      </Container>
+          </CardContent>
+        </Card>
+      </div>
     </>
   );
 };

@@ -1,7 +1,7 @@
-@import '~/scss/mixins';
-@import '~/scss/variables';
-
 .TechnicianDayOverview {
+  border-collapse: collapse;
+  width: 100%;
+
   thead {
     tr {
       th {
@@ -23,8 +23,12 @@
         text-align: left;
       }
 
+      &:nth-child(even) {
+        background-color: var(--muted);
+      }
+
       &:hover {
-        background-color: $tw-gray-200;
+        background-color: var(--border);
       }
     }
   }
@@ -39,7 +43,7 @@
       }
 
       &:hover {
-        background-color: $tw-gray-200;
+        background-color: var(--border);
       }
     }
   }

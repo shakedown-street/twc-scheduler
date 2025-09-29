@@ -1,12 +1,15 @@
+import { AvailabilityModel, ClientModel, TechnicianModel } from '@/api';
+import { toastError } from '@/utils/errors';
+import { dayToString } from '@/utils/time';
+import { Info } from 'lucide-react';
 import React from 'react';
 import { Controller, useForm } from 'react-hook-form';
-import { AvailabilityModel, ClientModel, TechnicianModel } from '~/api';
-import { Availability } from '~/types/Availability';
-import { Client } from '~/types/Client';
-import { Technician } from '~/types/Technician';
-import { Badge, Button, Checkbox, TimeInput, useToast } from '~/ui';
-import { dayToString } from '~/utils/time';
-import './AvailabilityForm.scss';
+import { TimeInput } from '../TimeInput/TimeInput';
+import { Badge } from '../ui/badge';
+import { Button } from '../ui/button';
+import { Checkbox } from '../ui/checkbox';
+import { Label } from '../ui/label';
+import { Tooltip, TooltipContent, TooltipTrigger } from '../ui/tooltip';
 
 export type AvailabilityFormProps = {
   instance?: Availability;
@@ -41,7 +44,6 @@ export const AvailabilityForm = ({
   const [confirmDelete, setConfirmDelete] = React.useState(false);
 
   const form = useForm<AvailabilityFormData>();
-  const toast = useToast();
 
   React.useEffect(() => {
     if (instance) {
@@ -83,7 +85,7 @@ export const AvailabilityForm = ({
         onCreate?.(object, created.data);
       })
       .catch((err) => {
-        toast.errorResponse(err);
+        toastError(err);
       });
   }
 
@@ -98,7 +100,7 @@ export const AvailabilityForm = ({
         onUpdate?.(object, updated.data);
       })
       .catch((err) => {
-        toast.errorResponse(err);
+        toastError(err);
       });
   }
 
@@ -124,21 +126,23 @@ export const AvailabilityForm = ({
         setConfirmDelete(false);
       })
       .catch((err) => {
-        toast.errorResponse(err);
+        toastError(err);
       });
   }
 
   if (confirmDelete) {
     return (
-      <div className="AvailabilityForm__confirmDelete">
+      <div className="flex flex-col gap-4">
         <p>
           Are you sure you want to delete this availability?
           <br />
           This action cannot be undone.
         </p>
-        <div className="AvailabilityForm__confirmDelete__actions">
-          <Button onClick={() => setConfirmDelete(false)}>Cancel</Button>
-          <Button color="red" onClick={clickConfirmDelete} variant="raised">
+        <div className="flex items-center justify-between gap-4">
+          <Button onClick={() => setConfirmDelete(false)} variant="ghost">
+            Cancel
+          </Button>
+          <Button onClick={clickConfirmDelete} variant="destructive">
             Delete
           </Button>
         </div>
@@ -147,53 +151,46 @@ export const AvailabilityForm = ({
   }
 
   return (
-    <form className="AvailabilityForm" onSubmit={form.handleSubmit(onSubmit)}>
-      <div className="AvailabilityForm__row">
-        <div className="Input__container">
-          <label className="text-capitalize">{contentType}</label>
-          {contentType === 'client' && (
-            <Badge size="xs">
-              {object.first_name} {object.last_name}
-            </Badge>
-          )}
-          {contentType === 'technician' && (
-            <Badge
-              size="xs"
-              style={{
-                backgroundColor: (object as Technician).bg_color,
-                color: (object as Technician).text_color,
-              }}
-            >
-              {object.first_name} {object.last_name}
-            </Badge>
-          )}
-        </div>
+    <form className="form" onSubmit={form.handleSubmit(onSubmit)}>
+      <div className="form-group">
+        <Label className="capitalize">{contentType}</Label>
+        {contentType === 'client' && (
+          <Badge>
+            {object.first_name} {object.last_name}
+          </Badge>
+        )}
+        {contentType === 'technician' && (
+          <Badge
+            style={{
+              background: (object as Technician).bg_color,
+              color: (object as Technician).text_color,
+            }}
+          >
+            {object.first_name} {object.last_name}
+          </Badge>
+        )}
       </div>
-      <div className="AvailabilityForm__row">
-        <div className="Input__container">
-          <label>Day</label>
-          <p>{dayToString(day)}</p>
-        </div>
+      <div className="form-group">
+        <Label>Day</Label>
+        <Badge>{dayToString(day)}</Badge>
       </div>
-      <div className="AvailabilityForm__row">
+      <div className="form-row">
         <Controller
           control={form.control}
           name="start_time"
           render={({ field }) => {
             return (
-              <TimeInput
-                inputProps={{
-                  fluid: true,
-                  id: 'start_time',
-                  label: 'Start time',
-                }}
-                min={initialStartTime}
-                max={initialEndTime}
-                onChange={(value) => {
-                  field.onChange(value);
-                }}
-                value={field.value}
-              />
+              <div className="form-group">
+                <Label htmlFor="start_time">Start time</Label>
+                <TimeInput
+                  min={initialStartTime}
+                  max={initialEndTime}
+                  onChange={(value) => {
+                    field.onChange(value);
+                  }}
+                  value={field.value}
+                />
+              </div>
             );
           }}
         />
@@ -202,46 +199,74 @@ export const AvailabilityForm = ({
           name="end_time"
           render={({ field }) => {
             return (
-              <TimeInput
-                inputProps={{
-                  fluid: true,
-                  id: 'end_time',
-                  label: 'End time',
-                }}
-                min={initialStartTime}
-                max={initialEndTime}
-                onChange={(value) => {
-                  field.onChange(value);
-                }}
-                value={field.value}
-              />
+              <div className="form-group">
+                <Label htmlFor="end_time">End time</Label>
+                <TimeInput
+                  min={initialStartTime}
+                  max={initialEndTime}
+                  onChange={(value) => {
+                    field.onChange(value);
+                  }}
+                  value={field.value}
+                />
+              </div>
             );
           }}
         />
       </div>
-      {contentType === 'client' && <Checkbox label="In clinic" {...form.register('in_clinic')} />}
-      {contentType === 'technician' && (
-        <div>
-          <Checkbox label="As sub only" {...form.register('is_sub')} />
-          <p className="hint mt-2">
-            Check this box to indicate that this technician is only available to sub for other technicians during this
-            time, and not for their own appointments.
-          </p>
+      {contentType === 'client' && (
+        <div className="form-group">
+          <div className="flex items-center gap-2">
+            <Controller
+              control={form.control}
+              name="in_clinic"
+              render={({ field }) => (
+                <Checkbox id="in_clinic" checked={field.value} onCheckedChange={() => field.onChange(!field.value)} />
+              )}
+            />
+            <Label htmlFor="in_clinic">In clinic</Label>
+          </div>
         </div>
       )}
-      <div className="AvailabilityForm__actions">
+      {contentType === 'technician' && (
+        <div className="form-group">
+          <div className="flex items-center gap-2">
+            <Controller
+              control={form.control}
+              name="is_sub"
+              render={({ field }) => (
+                <Checkbox checked={field.value} id="is_sub" onCheckedChange={() => field.onChange(!field.value)} />
+              )}
+            />
+            <Label htmlFor="is_sub">
+              As sub only
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Info size="16" />
+                </TooltipTrigger>
+                <TooltipContent className="w-64">
+                  Check this box to indicate that this technician is only available to sub for other technicians during
+                  this time, and not for their own appointments.
+                </TooltipContent>
+              </Tooltip>
+            </Label>
+          </div>
+        </div>
+      )}
+      <div className="flex justify-end">
         {instance && (
           <Button
-            color="red"
             onClick={() => {
               clickDelete();
             }}
+            type="button"
+            variant="destructive"
           >
             Delete
           </Button>
         )}
         <div className="flex-1"></div>
-        <Button color="primary" disabled={!form.formState.isValid} type="submit" variant="raised">
+        <Button disabled={!form.formState.isValid} type="submit">
           {instance ? 'Update' : 'Create'}
         </Button>
       </div>

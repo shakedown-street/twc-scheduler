@@ -1,31 +1,27 @@
-import { Helmet } from 'react-helmet';
-import { Link } from 'react-router-dom';
-import { Card, Container } from '~/ui';
-import { GoogleSSOButton } from '../../components/GoogleSSOButton/GoogleSSOButton';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Link } from 'react-router';
 import { SignUpForm } from '../../components/SignUpForm/SignUpForm';
 
 export const SignUp = () => {
   return (
     <>
-      <Helmet>
-        <title>Sign Up | Schedule Builder</title>
-      </Helmet>
-      <Container>
-        <div className="centerPage">
-          <Card fluid>
-            <h1 className="mb-4 text-center">Sign Up</h1>
+      <title>Sign Up | PROJECT_NAME</title>
+      <div className="mx-auto my-12 w-full max-w-sm px-4">
+        <Card>
+          <CardHeader>
+            <CardTitle>Sign Up</CardTitle>
+          </CardHeader>
+          <CardContent>
             <SignUpForm />
-            {import.meta.env.VITE_GOOGLE_OAUTH2_CLIENT_ID && (
-              <div className="flex flex-column gap-2 mt-6">
-                <GoogleSSOButton label="Sign up with Google" />
-              </div>
-            )}
-            <p className="mt-6 text-center">
-              Already have an account? <Link to="/login">Log In</Link>
-            </p>
-          </Card>
-        </div>
-      </Container>
+            <div className="mt-4 text-center text-sm">
+              Already have an account?{' '}
+              <Link className="text-primary font-medium hover:underline" to="/login">
+                Login
+              </Link>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
     </>
   );
 };

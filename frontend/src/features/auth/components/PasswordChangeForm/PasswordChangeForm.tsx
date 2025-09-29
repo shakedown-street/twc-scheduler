@@ -1,8 +1,12 @@
+import { ErrorMessage } from '@/components/ErrorMessage/ErrorMessage';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { http } from '@/lib/http';
+import { setFormErrors } from '@/utils/errors';
 import { useForm } from 'react-hook-form';
-import { http } from '~/http';
-import { Button, Input, useToast } from '~/ui';
-import { handleFormErrors } from '~/utils/errors';
-import './PasswordChangeForm.scss';
+import { toast } from 'sonner';
+import { PasswordHint } from '../PasswordHint/PasswordHint';
 
 export type PasswordChangeFormData = {
   old_password: string;
@@ -12,63 +16,58 @@ export type PasswordChangeFormData = {
 
 export const PasswordChangeForm = () => {
   const form = useForm<PasswordChangeFormData>();
-  const toast = useToast();
 
   const { errors } = form.formState;
 
-  function onSubmit(data: PasswordChangeFormData) {
-    http
-      .post('/api/password-change/', data)
-      .then((token) => {
-        localStorage.setItem('token', token.data.token);
-        form.reset();
-        toast.success('Your password has been changed');
-      })
-      .catch((err) => {
-        handleFormErrors(form, err);
-      });
+  async function onSubmit(data: PasswordChangeFormData) {
+    try {
+      const token = await http.post('/api/password-change/', data);
+      localStorage.setItem('token', token.data.token);
+      form.reset();
+      toast.success('Your password has been changed');
+    } catch (err) {
+      setFormErrors(form, err);
+    }
   }
 
   return (
     <>
-      <form className="PasswordChangeForm" onSubmit={form.handleSubmit(onSubmit)}>
-        <div className="PasswordChangeForm__field">
+      <form className="form" onSubmit={form.handleSubmit(onSubmit)}>
+        <div className="form-group">
+          <Label htmlFor="old_password">Current Password</Label>
           <Input
-            autoFocus
-            fluid
             id="old_password"
-            label="Current Password"
+            placeholder="Current Password"
             type="password"
             {...form.register('old_password', { required: true })}
           />
-          {errors.old_password && <p className="error mt-2">{errors.old_password.message}</p>}
+          <ErrorMessage>{errors.old_password?.message}</ErrorMessage>
         </div>
-        <div className="PasswordChangeForm__field">
+        <div className="form-group">
+          <Label htmlFor="new_password1">New Password</Label>
           <Input
-            fluid
             id="new_password1"
-            label="New Password"
+            placeholder="New Password"
             type="password"
             {...form.register('new_password1', { required: true })}
           />
-          {errors.new_password1 && <p className="error mt-2">{errors.new_password1.message}</p>}
+          <PasswordHint />
+          <ErrorMessage>{errors.new_password1?.message}</ErrorMessage>
         </div>
-        <div className="PasswordChangeForm__field">
+        <div className="form-group">
+          <Label htmlFor="new_password2">New Password (Again)</Label>
           <Input
-            fluid
             id="new_password2"
-            label="New Password (Again)"
+            placeholder="New Password (Again)"
             type="password"
             {...form.register('new_password2', { required: true })}
           />
-          {errors.new_password2 && <p className="error mt-2">{errors.new_password2.message}</p>}
+          <ErrorMessage>{errors.new_password2?.message}</ErrorMessage>
         </div>
-        {errors.root && <p className="error">{errors.root.message}</p>}
-        <div className="PasswordChangeForm__actions">
-          <Button color="primary" disabled={!form.formState.isValid} type="submit" variant="raised">
-            Change Password
-          </Button>
-        </div>
+        <ErrorMessage>{errors.root?.message}</ErrorMessage>
+        <Button disabled={!form.formState.isValid} type="submit">
+          Change Password
+        </Button>
       </form>
     </>
   );

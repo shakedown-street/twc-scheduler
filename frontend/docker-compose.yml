@@ -5,7 +5,4 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    args:
-      - MODE=:development
-    environment:
-      NODE_ENV: development
+    command: npm run build

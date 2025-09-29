@@ -1,32 +1,26 @@
-import { Helmet } from 'react-helmet';
-import { Card, Container } from '~/ui';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { LoginForm } from '../../components/LoginForm/LoginForm';
 
 export const Login = () => {
   return (
     <>
-      <Helmet>
-        <title>Login | Schedule Builder</title>
-      </Helmet>
-      <Container>
-        <div className="centerPage">
-          <Card fluid>
-            <h1 className="mb-4 text-center">Login</h1>
+      <title>Login | PROJECT_NAME</title>
+      <div className="mx-auto my-12 w-full max-w-sm px-4">
+        <Card>
+          <CardHeader>
+            <CardTitle>Login</CardTitle>
+          </CardHeader>
+          <CardContent>
             <LoginForm />
-            {/* {import.meta.env.VITE_GOOGLE_OAUTH2_CLIENT_ID && (
-              <div className="flex flex-column gap-2 mt-6">
-                <GoogleSSOButton />
-              </div>
-            )}
-            <Link className="display-block mt-6 text-center" to="/password-reset">
-              Password Reset
-            </Link>
-            <p className="mt-6 text-center">
-              Don't have an account? <Link to="/sign-up">Sign Up</Link>
-            </p> */}
-          </Card>
-        </div>
-      </Container>
+            {/* <div className="mt-4 text-center text-sm">
+              Don't have an account?{' '}
+              <Link className="text-primary font-medium hover:underline" to="/sign-up">
+                Sign Up
+              </Link>
+            </div> */}
+          </CardContent>
+        </Card>
+      </div>
     </>
   );
 };

@@ -1,18 +1,20 @@
+import { ClientModel } from '@/api';
+import { AvailabilityForm } from '@/components/AvailabilityForm/AvailabilityForm';
+import { ClientForm } from '@/components/ClientForm/ClientForm';
+import { useBlocks } from '@/contexts/BlocksContext';
+import { useAuth } from '@/features/auth/contexts/AuthContext';
+import { isFullBlock } from '@/utils/appointments';
+import { skillLevelColor } from '@/utils/color';
+import { orderByFirstName } from '@/utils/order';
+import { checkTimeIntersection, formatTimeShort } from '@/utils/time';
 import clsx from 'clsx';
+import { AlertTriangle, Check, Loader, MapPin } from 'lucide-react';
 import React from 'react';
-import { ClientModel } from '~/api';
-import { AvailabilityForm } from '~/components/AvailabilityForm/AvailabilityForm';
-import { ClientForm } from '~/components/ClientForm/ClientForm';
-import { useBlocks } from '~/contexts/BlocksContext';
-import { useAuth } from '~/features/auth/contexts/AuthContext';
-import { Availability } from '~/types/Availability';
-import { Block } from '~/types/Block';
-import { Client } from '~/types/Client';
-import { Button, Card, Checkbox, RadixDialog, Spinner } from '~/ui';
-import { isFullBlock } from '~/utils/appointments';
-import { skillLevelColor } from '~/utils/color';
-import { orderByFirstName } from '~/utils/order';
-import { checkTimeIntersection, formatTimeShort } from '~/utils/time';
+import { Button } from '../ui/button';
+import { Checkbox } from '../ui/checkbox';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '../ui/dialog';
+import { Label } from '../ui/label';
+import { Sheet, SheetContent, SheetHeader, SheetTitle } from '../ui/sheet';
 import './ClientAvailability.scss';
 
 export const ClientAvailability = () => {
@@ -88,7 +90,7 @@ export const ClientAvailability = () => {
       (availability) =>
         availability.day === day &&
         checkTimeIntersection(availability.start_time, availability.end_time, block.start_time, block.end_time) &&
-        (!showInClinicOnly || availability.in_clinic)
+        (!showInClinicOnly || availability.in_clinic),
     );
   }
 
@@ -133,7 +135,7 @@ export const ClientAvailability = () => {
     client: Client,
     day: number,
     block: Block,
-    instance: Availability | undefined = undefined
+    instance: Availability | undefined = undefined,
   ) {
     setAvailabilityForm({
       ...availabilityForm,
@@ -168,7 +170,7 @@ export const ClientAvailability = () => {
             return c;
           }
           return c;
-        })
+        }),
       );
       closeAvailabilityForm();
     });
@@ -201,25 +203,17 @@ export const ClientAvailability = () => {
             }}
           >
             {blockAvailability && (
-              <div className="flex align-center gap-1">
+              <div className="flex items-center gap-1">
                 <div className="text-nowrap">
                   {formatTimeShort(blockAvailability.start_time)}-{formatTimeShort(blockAvailability.end_time)}
                 </div>
-                {blockAvailability.in_clinic && (
-                  <span className="material-symbols-outlined text-size-sm" title="In clinic">
-                    location_on
-                  </span>
-                )}
-                {!isFullBlock(blockAvailability, block) && (
-                  <span className="material-symbols-outlined text-color-red text-size-sm" title="Partially available">
-                    warning
-                  </span>
-                )}
+                {blockAvailability.in_clinic && <MapPin size="14" />}
+                {!isFullBlock(blockAvailability, block) && <AlertTriangle className="text-red-700" size="14" />}
               </div>
             )}
           </td>
         );
-      })
+      }),
     );
   }
 
@@ -236,126 +230,119 @@ export const ClientAvailability = () => {
         >
           {countClientsAvailableForBlock(day, block)}
         </td>
-      ))
+      )),
     );
   }
 
   if (clientsLoading) {
-    return <Spinner className="mt-8" message="Loading clients..." />;
+    return (
+      <div className="mt-12 flex items-center justify-center">
+        <Loader className="h-8 w-8 animate-spin" />
+      </div>
+    );
   }
 
   return (
     <>
-      <Card fluid>
-        <div className="flex align-center justify-between gap-4 mb-4">
-          <h2>Clients</h2>
-          {user?.is_superuser && (
-            <Button color="primary" onClick={() => setClientForm({ ...clientForm, open: true })} variant="raised">
-              Create Client
-            </Button>
-          )}
-        </div>
-        <div className="flex align-center gap-4 mb-4">
-          <Checkbox
-            checked={showInClinicOnly}
-            onChange={() => setShowInClinicOnly(!showInClinicOnly)}
-            label="In clinic"
-          />
-        </div>
-        <table className="ClientAvailability__table">
-          <thead>
-            <tr>
-              <th className="ClientAvailability__table--vertical"></th>
-              <th title="Client" className="ClientAvailability__table--vertical"></th>
-              <th title="Skill level requirement" className="ClientAvailability__table--vertical">
-                Rating
+      <div className="mb-4 flex items-center justify-between gap-4">
+        <h2 className="text-xl font-bold">Clients</h2>
+        {user?.is_superuser && (
+          <Button onClick={() => setClientForm({ ...clientForm, open: true })}>Create Client</Button>
+        )}
+      </div>
+      <div className="mb-4 flex items-center gap-2">
+        <Checkbox
+          checked={showInClinicOnly}
+          id="in_clinic_filter"
+          onCheckedChange={() => setShowInClinicOnly(!showInClinicOnly)}
+        />
+        <Label htmlFor="in_clinic_filter">In clinic only</Label>
+      </div>
+      <table className="ClientAvailability__table">
+        <thead>
+          <tr>
+            <th className="ClientAvailability__table--vertical"></th>
+            <th title="Client" className="ClientAvailability__table--vertical"></th>
+            <th title="Skill level requirement" className="ClientAvailability__table--vertical">
+              Rating
+            </th>
+            <th title="Spanish speaker" className="ClientAvailability__table--vertical">
+              Spa
+            </th>
+            <th title="Evaluation done" className="ClientAvailability__table--vertical">
+              Eval
+            </th>
+            <th title="Currently onboarding" className="ClientAvailability__table--vertical">
+              Onboard
+            </th>
+            <th title="Prescribed hours" className="ClientAvailability__table--vertical">
+              Rx
+            </th>
+            <th title="Total available hours" className="ClientAvailability__table--vertical">
+              Avail
+            </th>
+            {days.map((day) => (
+              <th className="ClientAvailability__table__boldBorder" key={day} colSpan={blocks.length}>
+                {['Mon', 'Tue', 'Wed', 'Thu', 'Fri'][day]}
               </th>
-              <th title="Spanish speaker" className="ClientAvailability__table--vertical">
-                Spa
-              </th>
-              <th title="Evaluation done" className="ClientAvailability__table--vertical">
-                Eval
-              </th>
-              <th title="Currently onboarding" className="ClientAvailability__table--vertical">
-                Onboard
-              </th>
-              <th title="Prescribed hours" className="ClientAvailability__table--vertical">
-                Rx
-              </th>
-              <th title="Total available hours" className="ClientAvailability__table--vertical">
-                Avail
-              </th>
-              {days.map((day) => (
-                <th className="ClientAvailability__table__boldBorder" key={day} colSpan={blocks.length}>
-                  {['Mon', 'Tue', 'Wed', 'Thu', 'Fri'][day]}
-                </th>
-              ))}
-            </tr>
-          </thead>
-          <tbody>
-            {clients.map((client, index) => (
-              <tr key={client.id}>
-                <td>{index + 1}</td>
-                <td className="text-nowrap">
-                  <a
-                    className="cursor-pointer"
-                    onClick={() => {
-                      if (!user?.is_superuser) {
-                        return;
-                      }
-                      openClientForm(client);
-                    }}
-                  >
-                    {client.first_name} {client.last_name}
-                  </a>
-                </td>
-                <td
-                  style={{
-                    background: skillLevelColor(client.req_skill_level),
-                    textAlign: 'center',
+            ))}
+          </tr>
+        </thead>
+        <tbody>
+          {clients.map((client, index) => (
+            <tr key={client.id}>
+              <td>{index + 1}</td>
+              <td className="text-nowrap">
+                <a
+                  className="text-primary cursor-pointer"
+                  onClick={() => {
+                    if (!user?.is_superuser) {
+                      return;
+                    }
+                    openClientForm(client);
                   }}
                 >
-                  {client.req_skill_level}
-                </td>
-                <td style={{ textAlign: 'center' }}>
-                  {client.req_spanish_speaking && (
-                    <span className="material-symbols-outlined text-color-green text-size-sm">check</span>
-                  )}
-                </td>
-                <td style={{ textAlign: 'center' }}>
-                  {client.eval_done && (
-                    <span className="material-symbols-outlined text-color-green text-size-sm">check</span>
-                  )}
-                </td>
-                <td style={{ textAlign: 'center' }}>
-                  {client.is_onboarding && (
-                    <span className="material-symbols-outlined text-color-green text-size-sm">check</span>
-                  )}
-                </td>
-                <td>{client.prescribed_hours}</td>
-                <td>{client.computed_properties?.total_hours_available}</td>
-                {renderAvailabilities(client)}
-              </tr>
-            ))}
-          </tbody>
-          <tfoot>
-            <tr>
-              <td colSpan={6}></td>
-              <td>{totalPrescribedHours()}</td>
-              <td>{totalAvailableHours()}</td>
-              {renderBlockTotals()}
+                  {client.first_name} {client.last_name}
+                </a>
+              </td>
+              <td
+                style={{
+                  background: skillLevelColor(client.req_skill_level),
+                  color: 'black',
+                  textAlign: 'center',
+                }}
+              >
+                {client.req_skill_level}
+              </td>
+              <td style={{ textAlign: 'center' }}>
+                {client.req_spanish_speaking && <Check className="text-green-700" size="14" />}
+              </td>
+              <td style={{ textAlign: 'center' }}>
+                {client.eval_done && <Check className="text-green-700" size="14" />}
+              </td>
+              <td style={{ textAlign: 'center' }}>
+                {client.is_onboarding && <Check className="text-green-700" size="14" />}
+              </td>
+              <td>{client.prescribed_hours}</td>
+              <td>{client.computed_properties?.total_hours_available}</td>
+              {renderAvailabilities(client)}
             </tr>
-          </tfoot>
-        </table>
-      </Card>
-      <RadixDialog
-        asDrawer
-        title={`${clientForm.client ? 'Update' : 'Create'} Client`}
-        open={clientForm.open}
-        onOpenChange={(open) => setClientForm({ ...clientForm, open, client: undefined })}
-      >
-        <div className="p-6">
-          <h3 className="mb-4">{clientForm.client ? 'Update' : 'Create'} Client</h3>
+          ))}
+        </tbody>
+        <tfoot>
+          <tr>
+            <td colSpan={6}></td>
+            <td>{totalPrescribedHours()}</td>
+            <td>{totalAvailableHours()}</td>
+            {renderBlockTotals()}
+          </tr>
+        </tfoot>
+      </table>
+      <Sheet open={clientForm.open} onOpenChange={(open) => setClientForm({ ...clientForm, open, client: undefined })}>
+        <SheetContent>
+          <SheetHeader>
+            <SheetTitle>{clientForm.client ? 'Update' : 'Create'} Client</SheetTitle>
+          </SheetHeader>
           <ClientForm
             client={clientForm.client}
             onCancel={() => {
@@ -365,10 +352,9 @@ export const ClientAvailability = () => {
             onDelete={onDeleteClient}
             onUpdate={onUpdateClient}
           />
-        </div>
-      </RadixDialog>
-      <RadixDialog
-        title={`${availabilityForm.instance ? 'Update' : 'Create'} Availability`}
+        </SheetContent>
+      </Sheet>
+      <Dialog
         open={availabilityForm.open}
         onOpenChange={(open) => {
           if (!open) {
@@ -376,14 +362,16 @@ export const ClientAvailability = () => {
           }
         }}
       >
-        <div className="p-6">
-          <h3 className="mb-4">{availabilityForm.instance ? 'Update' : 'Create'} Availability</h3>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>{availabilityForm.instance ? 'Update' : 'Create'} Availability</DialogTitle>
+          </DialogHeader>
           {availabilityForm.object && (
             <AvailabilityForm
               contentType="client"
-              onCreate={(client, _) => refetchClient(client as Client)}
-              onUpdate={(client, _) => refetchClient(client as Client)}
-              onDelete={(client, _) => refetchClient(client as Client)}
+              onCreate={(client) => refetchClient(client as Client)}
+              onUpdate={(client) => refetchClient(client as Client)}
+              onDelete={(client) => refetchClient(client as Client)}
               instance={availabilityForm.instance}
               object={availabilityForm.object}
               day={availabilityForm.day}
@@ -391,8 +379,8 @@ export const ClientAvailability = () => {
               initialEndTime={availabilityForm.initialEndTime}
             />
           )}
-        </div>
-      </RadixDialog>
+        </DialogContent>
+      </Dialog>
     </>
   );
 };

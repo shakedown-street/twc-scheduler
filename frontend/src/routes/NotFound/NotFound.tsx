@@ -1,22 +1,23 @@
-import { Helmet } from 'react-helmet';
-import { Button, Card, Container } from '~/ui';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Link } from 'react-router';
 
 export const NotFound = () => {
   return (
     <>
-      <Helmet>
-        <title>Page Not Found | Schedule Builder</title>
-      </Helmet>
-      <Container>
-        <div className="centerPage">
-          <Card fluid>
-            <h1 className="mb-4 text-center">Page Not Found</h1>
-            <Button color="primary" fluid navigateTo="/">
-              Go home
+      <title>Page Not Found | PROJECT_NAME</title>
+      <div className="mx-auto my-12 w-full max-w-sm px-4">
+        <Card>
+          <CardHeader>
+            <CardTitle>Page Not Found</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <Button className="w-full" asChild>
+              <Link to="/">Go home</Link>
             </Button>
-          </Card>
-        </div>
-      </Container>
+          </CardContent>
+        </Card>
+      </div>
     </>
   );
 };

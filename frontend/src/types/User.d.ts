@@ -1,4 +1,4 @@
-export type User = {
+type User = {
   id: string;
   last_login: string | null;
   is_superuser: boolean;
@@ -11,8 +11,6 @@ export type User = {
   is_active: boolean;
   is_staff: boolean;
   is_verified: boolean;
-  groups: any[];
-  user_permissions: any[];
 
   hover_cards_enabled: boolean;
 };

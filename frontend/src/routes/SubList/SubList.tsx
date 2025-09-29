@@ -1,24 +1,19 @@
-import { Helmet } from 'react-helmet';
-import { ClientTechnicianHistory } from '~/components/ClientTechnicianHistory/ClientTechnicianHistory';
-import { TechniciansOverview } from '~/components/TechniciansOverview/TechniciansOverview';
-import { Container } from '~/ui';
-import './SubList.scss';
+import { ClientTechnicianHistory } from '@/components/ClientTechnicianHistory/ClientTechnicianHistory';
+import { TechniciansOverview } from '@/components/TechniciansOverview/TechniciansOverview';
 
 export const SubList = () => {
   return (
     <>
-      <Helmet>
-        <title>Sub List | Schedule Builder</title>
-      </Helmet>
-      <Container>
+      <title>Sub List | Schedule Builder</title>
+      <div className="container mx-auto px-4">
         <div className="mt-4 mb-12">
-          <h1>Sub List</h1>
-          <div className="flex align-start gap-4">
+          <h1 className="mb-4 text-2xl font-bold">Sub List</h1>
+          <div className="flex items-start gap-4">
             <TechniciansOverview isSubList showLegend={false} />
             <ClientTechnicianHistory />
           </div>
         </div>
-      </Container>
+      </div>
     </>
   );
 };

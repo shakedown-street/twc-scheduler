@@ -1,23 +1,19 @@
+import { ClientModel } from '@/api';
+import { AppointmentForm } from '@/components/AppointmentForm/AppointmentForm';
+import { ClientForm } from '@/components/ClientForm/ClientForm';
+import { TechnicianDayOverview } from '@/components/TechnicianDayOverview/TechnicianDayOverview';
+import { TherapyAppointmentForm } from '@/components/TherapyAppointmentForm/TherapyAppointmentForm';
+import { TimeSlotTable } from '@/components/TimeSlotTable/TimeSlotTable';
+import { Button } from '@/components/ui/button';
+import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet';
+import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { useBlocks } from '@/contexts/BlocksContext';
+import { useAuth } from '@/features/auth/contexts/AuthContext';
+import { orderByFirstName } from '@/utils/order';
+import { dayToString } from '@/utils/time';
+import { Loader } from 'lucide-react';
 import React from 'react';
-import { Helmet } from 'react-helmet';
-import { useSearchParams } from 'react-router-dom';
-import { ClientModel } from '~/api';
-import { AppointmentForm } from '~/components/AppointmentForm/AppointmentForm';
-import { ClientForm } from '~/components/ClientForm/ClientForm';
-import { TechnicianDayOverview } from '~/components/TechnicianDayOverview/TechnicianDayOverview';
-import { TherapyAppointmentForm } from '~/components/TherapyAppointmentForm/TherapyAppointmentForm';
-import { TimeSlotTable } from '~/components/TimeSlotTable/TimeSlotTable';
-import { useBlocks } from '~/contexts/BlocksContext';
-import { useAuth } from '~/features/auth/contexts/AuthContext';
-import { Appointment } from '~/types/Appointment';
-import { Availability } from '~/types/Availability';
-import { Block } from '~/types/Block';
-import { Client } from '~/types/Client';
-import { TherapyAppointment } from '~/types/TherapyAppointment';
-import { Button, Container, RadixDialog, Spinner, TabItem, Tabs } from '~/ui';
-import { orderByFirstName } from '~/utils/order';
-import { dayToString } from '~/utils/time';
-import './Schedule.scss';
+import { useSearchParams } from 'react-router';
 
 export const Schedule = () => {
   const [clients, setClients] = React.useState<Client[]>([]);
@@ -107,7 +103,7 @@ export const Schedule = () => {
     day: number,
     block: Block,
     availability: Availability | undefined,
-    instance: Appointment | undefined = undefined
+    instance: Appointment | undefined = undefined,
   ) {
     if (!user?.is_superuser) {
       return;
@@ -144,7 +140,7 @@ export const Schedule = () => {
           return c;
         }
         return c;
-      })
+      }),
     );
     closeAppointmentForm();
   }
@@ -157,7 +153,7 @@ export const Schedule = () => {
           return c;
         }
         return c;
-      })
+      }),
     );
     closeAppointmentForm();
   }
@@ -167,7 +163,7 @@ export const Schedule = () => {
       prev.map((c) => {
         c.appointments = c.appointments?.filter((a) => a.id !== deleted.id);
         return c;
-      })
+      }),
     );
     closeAppointmentForm();
   }
@@ -176,7 +172,7 @@ export const Schedule = () => {
     client: Client,
     day: number,
     initialStartTime: string,
-    instance: TherapyAppointment | undefined = undefined
+    instance: TherapyAppointment | undefined = undefined,
   ) {
     if (!user?.is_superuser) {
       return;
@@ -212,7 +208,7 @@ export const Schedule = () => {
           return c;
         }
         return c;
-      })
+      }),
     );
     closeTherapyAppointmentForm();
   }
@@ -225,7 +221,7 @@ export const Schedule = () => {
           return c;
         }
         return c;
-      })
+      }),
     );
     closeTherapyAppointmentForm();
   }
@@ -235,7 +231,7 @@ export const Schedule = () => {
       prev.map((c) => {
         c.therapy_appointments = c.therapy_appointments?.filter((a) => a.id !== deleted.id);
         return c;
-      })
+      }),
     );
     closeTherapyAppointmentForm();
   }
@@ -267,40 +263,34 @@ export const Schedule = () => {
   }
 
   if (clientsLoading) {
-    return <Spinner className="mt-8" message="Loading clients..." />;
+    return (
+      <div className="mt-12 flex items-center justify-center">
+        <Loader className="h-8 w-8 animate-spin" />
+      </div>
+    );
   }
 
   return (
     <>
-      <Helmet>
-        <title>Schedule | Schedule Builder</title>
-      </Helmet>
-      <Container>
+      <title>Schedule | Schedule Builder</title>
+      <div className="container mx-auto px-4">
         <div className="mt-4 mb-12">
-          <h1>Schedule</h1>
-          <div className="Schedule__header">
-            <Tabs>
-              <TabItem active={getDay() === 0} onClick={() => setDay(0)}>
-                Monday
-              </TabItem>
-              <TabItem active={getDay() === 1} onClick={() => setDay(1)}>
-                Tuesday
-              </TabItem>
-              <TabItem active={getDay() === 2} onClick={() => setDay(2)}>
-                Wednesday
-              </TabItem>
-              <TabItem active={getDay() === 3} onClick={() => setDay(3)}>
-                Thursday
-              </TabItem>
-              <TabItem active={getDay() === 4} onClick={() => setDay(4)}>
-                Friday
-              </TabItem>
+          <h1 className="text-2xl font-bold">Schedule</h1>
+          <div className="bg-background sticky top-0 z-1 flex items-center justify-between py-4">
+            <Tabs onValueChange={(value) => setDay(parseInt(value))} value={getDay().toString()}>
+              <TabsList>
+                <TabsTrigger value="0">Monday</TabsTrigger>
+                <TabsTrigger value="1">Tuesday</TabsTrigger>
+                <TabsTrigger value="2">Wednesday</TabsTrigger>
+                <TabsTrigger value="3">Thursday</TabsTrigger>
+                <TabsTrigger value="4">Friday</TabsTrigger>
+              </TabsList>
             </Tabs>
-            <Button color="primary" onClick={() => setTechnicianDayOverviewOpen(true)} variant="ghost">
+            <Button onClick={() => setTechnicianDayOverviewOpen(true)} variant="outline">
               {dayToString(getDay())} Technician Overview
             </Button>
           </div>
-          <p className="mb-4 text-size-xs text-color-muted">
+          <p className="text-muted-foreground mb-4 text-xs">
             <b>NOTE</b>: Click any time slot while holding the "Shift" key to add/remove OT, ST, and MH appointments
           </p>
           <TimeSlotTable
@@ -324,10 +314,8 @@ export const Schedule = () => {
             }}
           />
         </div>
-      </Container>
-      <RadixDialog
-        asDrawer
-        title={`${appointmentForm.instance ? 'Update' : 'Create'} Appointment`}
+      </div>
+      <Sheet
         open={appointmentForm.open}
         onOpenChange={(open) => {
           if (!open) {
@@ -335,8 +323,10 @@ export const Schedule = () => {
           }
         }}
       >
-        <div className="p-6">
-          <h3 className="mb-4">{appointmentForm.instance ? 'Update' : 'Create'} Appointment</h3>
+        <SheetContent>
+          <SheetHeader>
+            <SheetTitle>{appointmentForm.instance ? 'Update' : 'Create'} Appointment</SheetTitle>
+          </SheetHeader>
           {appointmentForm.client && appointmentForm.block && (
             <AppointmentForm
               onCreate={(created) => onCreateAppointment(created)}
@@ -349,11 +339,9 @@ export const Schedule = () => {
               instance={appointmentForm.instance}
             />
           )}
-        </div>
-      </RadixDialog>
-      <RadixDialog
-        asDrawer
-        title={`${therapyAppointmentForm.instance ? 'Update' : 'Create'} Therapy Appointment`}
+        </SheetContent>
+      </Sheet>
+      <Sheet
         open={therapyAppointmentForm.open}
         onOpenChange={(open) => {
           if (!open) {
@@ -361,8 +349,10 @@ export const Schedule = () => {
           }
         }}
       >
-        <div className="p-6">
-          <h3 className="mb-4">{therapyAppointmentForm.instance ? 'Update' : 'Create'} Therapy Appointment</h3>
+        <SheetContent>
+          <SheetHeader>
+            <SheetTitle>{therapyAppointmentForm.instance ? 'Update' : 'Create'} Therapy Appointment</SheetTitle>
+          </SheetHeader>
           {therapyAppointmentForm.client && (
             <TherapyAppointmentForm
               onCreate={(created) => onCreateTherapyAppointment(created)}
@@ -374,17 +364,17 @@ export const Schedule = () => {
               instance={therapyAppointmentForm.instance}
             />
           )}
-        </div>
-      </RadixDialog>
+        </SheetContent>
+      </Sheet>
       {clientForm.client && (
-        <RadixDialog
-          asDrawer
-          title={`Update Client`}
+        <Sheet
           open={clientForm.open}
           onOpenChange={(open) => setClientForm({ ...clientForm, open, client: undefined })}
         >
-          <div className="p-6">
-            <h3 className="mb-4">Update Client</h3>
+          <SheetContent>
+            <SheetHeader>
+              <SheetTitle>Update Client</SheetTitle>
+            </SheetHeader>
             <ClientForm
               client={clientForm.client}
               onCancel={() => {
@@ -393,22 +383,22 @@ export const Schedule = () => {
               onDelete={onDeleteClient}
               onUpdate={onUpdateClient}
             />
-          </div>
-        </RadixDialog>
+          </SheetContent>
+        </Sheet>
       )}
-      <RadixDialog
-        asDrawer
-        title="Technician Day Overview"
+      <Sheet
         open={technicianDayOverviewOpen}
         onOpenChange={(open) => {
           setTechnicianDayOverviewOpen(open);
         }}
       >
-        <div className="p-6">
-          <h3 className="mb-4">Technician Overview for {dayToString(getDay())}</h3>
+        <SheetContent>
+          <SheetHeader>
+            <SheetTitle>Technician Overview for {dayToString(getDay())}</SheetTitle>
+          </SheetHeader>
           <TechnicianDayOverview day={getDay()} />
-        </div>
-      </RadixDialog>
+        </SheetContent>
+      </Sheet>
     </>
   );
 };

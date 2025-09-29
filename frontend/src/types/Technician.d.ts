@@ -1,7 +1,4 @@
-import { Appointment } from './Appointment';
-import { Availability } from './Availability';
-
-export type Technician = {
+type Technician = {
   id: string;
   created_at: string;
   updated_at: string;

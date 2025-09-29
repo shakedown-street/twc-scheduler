@@ -1,12 +1,5 @@
-import React from 'react';
-import { useAuth } from '~/features/auth/contexts/AuthContext';
-import { Appointment } from '~/types/Appointment';
-import { Availability } from '~/types/Availability';
-import { Block } from '~/types/Block';
-import { Client } from '~/types/Client';
-import { TherapyAppointment } from '~/types/TherapyAppointment';
-import { RadixHoverCard } from '~/ui/RadixHoverCard/RadixHoverCard';
-import { skillLevelColor, striped } from '~/utils/color';
+import { useAuth } from '@/features/auth/contexts/AuthContext';
+import { skillLevelColor, striped } from '@/utils/color';
 import {
   addMinutes,
   dayToString,
@@ -15,9 +8,12 @@ import {
   isBetweenInclusiveStart,
   isOnTheHour,
   removeMinutes,
-} from '~/utils/time';
+} from '@/utils/time';
+import React from 'react';
 import { AppointmentHover } from '../AppointmentHover/AppointmentHover';
+import { HoverCard, HoverCardContent, HoverCardTrigger } from '../ui/hover-card';
 import './TimeSlotTable.scss';
+import { Check } from 'lucide-react';
 
 export type TimeSlotTableProps = {
   blocks: Block[];
@@ -30,7 +26,7 @@ export type TimeSlotTableProps = {
     client: Client,
     block: Block,
     appointment: Appointment,
-    availability?: Availability
+    availability?: Availability,
   ) => void;
   onShiftClick?: (client: Client, time: string, therapyAppointment?: TherapyAppointment) => void;
 };
@@ -52,7 +48,11 @@ export const TimeSlotTable = ({
   React.useEffect(() => {
     // NOTE: We show an hour before the first block and an hour after the last block
     setTimeSlots(
-      generateTimeSlots(removeMinutes(blocks[0].start_time, 60), addMinutes(blocks[blocks.length - 1].end_time, 60), 15)
+      generateTimeSlots(
+        removeMinutes(blocks[0].start_time, 60),
+        addMinutes(blocks[blocks.length - 1].end_time, 60),
+        15,
+      ),
     );
   }, [blocks]);
 
@@ -109,17 +109,17 @@ export const TimeSlotTable = ({
     }
     if (slotAppointment && !slotTherapyAppointment) {
       if (slotAppointment.in_clinic) {
-        const bgColor = slotAppointment.technician?.bg_color || 'white';
-        const textColor = slotAppointment.technician?.text_color || 'black';
+        const bgColor = slotAppointment.technician?.bg_color || 'var(--background)';
+        const textColor = slotAppointment.technician?.text_color || 'var(--foreground)';
         return striped(textColor, bgColor);
       }
-      return slotAppointment.technician?.bg_color || 'white';
+      return slotAppointment.technician?.bg_color || 'var(--background)';
     }
     if (slotAvailability) {
       return '#cbd5e1'; // tw-slate-300
     }
     if (slotBlock) {
-      return 'white';
+      return 'var(--background)';
     }
     return '#404040'; // tw-neutral-700
   }
@@ -162,7 +162,9 @@ export const TimeSlotTable = ({
   function renderSlotCorner(slotAppointment: Appointment | undefined) {
     const cornerText = slotAppointment && slotAppointment.is_preschool_or_adaptive ? 'PA' : '';
     if (cornerText) {
-      return <div className="TimeSlotTable__slot__corner">{cornerText}</div>;
+      return (
+        <div className="absolute top-0 right-0 bg-black p-0.5 text-[8px] leading-none text-white">{cornerText}</div>
+      );
     }
     return null;
   }
@@ -173,7 +175,7 @@ export const TimeSlotTable = ({
     if (slotAppointment) {
       const hoverTrigger = (
         <td
-          className="TimeSlotTable__slot"
+          className="relative w-8 text-center font-bold text-white uppercase"
           style={{
             borderLeft: isOnTheHour(time) ? '2px solid black' : undefined,
             background: slotBackground(time, client),
@@ -189,9 +191,12 @@ export const TimeSlotTable = ({
 
       if (user?.hover_cards_enabled) {
         return (
-          <RadixHoverCard key={time} portal trigger={hoverTrigger}>
-            <AppointmentHover appointment={slotAppointment} />
-          </RadixHoverCard>
+          <HoverCard key={time}>
+            <HoverCardTrigger asChild>{hoverTrigger}</HoverCardTrigger>
+            <HoverCardContent className="w-96">
+              <AppointmentHover appointment={slotAppointment} />
+            </HoverCardContent>
+          </HoverCard>
         );
       } else {
         return hoverTrigger;
@@ -201,7 +206,7 @@ export const TimeSlotTable = ({
     return (
       <td
         key={time}
-        className="TimeSlotTable__slot"
+        className="relative w-8 text-center font-bold text-white uppercase"
         style={{
           borderLeft: isOnTheHour(time) ? '2px solid black' : undefined,
           background: slotBackground(time, client),
@@ -237,8 +242,8 @@ export const TimeSlotTable = ({
               key={slot}
               style={{
                 borderLeft: isOnTheHour(slot) ? '2px solid black' : undefined,
-                background: getSlotBlock(slot) ? 'white' : '#404040',
-                color: getSlotBlock(slot) ? 'black' : 'white',
+                background: getSlotBlock(slot) ? 'var(--background)' : '#404040',
+                color: getSlotBlock(slot) ? 'var(--foreground)' : 'white',
                 fontWeight: isOnTheHour(slot) ? 'bold' : 'light',
               }}
             >
@@ -252,7 +257,7 @@ export const TimeSlotTable = ({
           <tr key={client.id}>
             <td className="text-nowrap">
               <a
-                className="cursor-pointer"
+                className="text-primary cursor-pointer"
                 onClick={() => {
                   onClickClient?.(client);
                 }}
@@ -260,7 +265,7 @@ export const TimeSlotTable = ({
                 {client.first_name} {client.last_name}
               </a>
             </td>
-            <td style={{ background: skillLevelColor(client.req_skill_level), textAlign: 'center' }}>
+            <td style={{ background: skillLevelColor(client.req_skill_level), color: 'black', textAlign: 'center' }}>
               {client.req_skill_level}
             </td>
             <td
@@ -269,9 +274,7 @@ export const TimeSlotTable = ({
                 verticalAlign: 'middle',
               }}
             >
-              {client.req_spanish_speaking && (
-                <span className="material-symbols-outlined text-color-green text-size-sm display-block">check</span>
-              )}
+              {client.req_spanish_speaking && <Check className="text-green-700" size="14" />}
             </td>
             <td style={{ textAlign: 'center' }}>{client.computed_properties?.total_hours_by_day[day]}</td>
             <td style={{ textAlign: 'center' }}>{client.computed_properties?.total_hours}</td>

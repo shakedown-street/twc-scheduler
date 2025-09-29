@@ -1,16 +1,16 @@
+import { TechnicianModel } from '@/api';
+import { useBlocks } from '@/contexts/BlocksContext';
+import { useAuth } from '@/features/auth/contexts/AuthContext';
+import { getBlockAppointments, getBlockAvailabilities } from '@/utils/appointments';
+import { dayColor, skillLevelColor, striped } from '@/utils/color';
+import { orderByFirstName } from '@/utils/order';
+import { Check, Info, Loader } from 'lucide-react';
 import React from 'react';
-import { TechnicianModel } from '~/api';
-import { useBlocks } from '~/contexts/BlocksContext';
-import { useAuth } from '~/features/auth/contexts/AuthContext';
-import { Block } from '~/types/Block';
-import { Technician } from '~/types/Technician';
-import { Button, RadixDialog, Spinner } from '~/ui';
-import { RadixHoverCard } from '~/ui/RadixHoverCard/RadixHoverCard';
-import { getBlockAppointments, getBlockAvailabilities } from '~/utils/appointments';
-import { dayColor, skillLevelColor, striped } from '~/utils/color';
-import { orderByFirstName } from '~/utils/order';
 import { AppointmentHover } from '../AppointmentHover/AppointmentHover';
 import { TechnicianForm } from '../TechnicianForm/TechnicianForm';
+import { Button } from '../ui/button';
+import { HoverCard, HoverCardContent, HoverCardTrigger } from '../ui/hover-card';
+import { Sheet, SheetContent, SheetHeader, SheetTitle } from '../ui/sheet';
 import './TechniciansOverview.scss';
 
 export type TechniciansOverviewProps = {
@@ -67,14 +67,14 @@ export const TechniciansOverview = ({ isSubList = false, showLegend = true }: Te
     return technicians.reduce(
       (acc, technician) =>
         acc + (technician.computed_properties ? technician.computed_properties.total_hours_by_day[day] : 0),
-      0
+      0,
     );
   }
 
   function totalHours() {
     return technicians.reduce(
       (acc, technician) => acc + (technician.computed_properties ? technician.computed_properties.total_hours : 0),
-      0
+      0,
     );
   }
 
@@ -138,8 +138,8 @@ export const TechniciansOverview = ({ isSubList = false, showLegend = true }: Te
     // Render sub list blocks
     if (isSubList) {
       if (isAvailableToSub) {
-        let background = '#1d4ed8'; // tw-blue-700
-        let color = 'white';
+        const background = '#1d4ed8'; // tw-blue-700
+        const color = 'white';
         return (
           <td
             key={block.id}
@@ -193,9 +193,12 @@ export const TechniciansOverview = ({ isSubList = false, showLegend = true }: Te
 
       if (user?.hover_cards_enabled) {
         return (
-          <RadixHoverCard key={block.id} portal trigger={hoverTrigger}>
-            <AppointmentHover appointment={appointment} />
-          </RadixHoverCard>
+          <HoverCard key={block.id}>
+            <HoverCardTrigger asChild>{hoverTrigger}</HoverCardTrigger>
+            <HoverCardContent className="w-96">
+              <AppointmentHover appointment={appointment} />
+            </HoverCardContent>
+          </HoverCard>
         );
       } else {
         return hoverTrigger;
@@ -204,7 +207,7 @@ export const TechniciansOverview = ({ isSubList = false, showLegend = true }: Te
 
     // Render availability blocks
     if (blockAvailabilities.length > 0) {
-      let background = 'black'; // tw-slate-300
+      let background = 'black';
       let color = '#22c55e'; // tw-green-500
       let letter = 'A';
       if (technician.computed_properties?.is_maxed_on_sessions) {
@@ -252,16 +255,11 @@ export const TechniciansOverview = ({ isSubList = false, showLegend = true }: Te
       return (
         <div className="TechniciansOverview__legend">
           <div className="TechniciansOverview__legend__example">
-            <div className="TechniciansOverview__legend__example__color" style={{ background: '#404040' }}></div>
+            <div className="TechniciansOverview__legend__example__color bg-neutral-700"></div>
             <span>Unavailable</span>
           </div>
           <div className="TechniciansOverview__legend__example">
-            <div
-              className="TechniciansOverview__legend__example__color"
-              style={{ background: '#1d4ed8', color: 'white' }}
-            >
-              S
-            </div>
+            <div className="TechniciansOverview__legend__example__color bg-blue-700 text-white">S</div>
             <span>Available to sub</span>
           </div>
         </div>
@@ -271,42 +269,27 @@ export const TechniciansOverview = ({ isSubList = false, showLegend = true }: Te
     return (
       <div className="TechniciansOverview__legend">
         <div className="TechniciansOverview__legend__example">
-          <div className="TechniciansOverview__legend__example__color" style={{ background: '#404040' }}></div>
+          <div className="TechniciansOverview__legend__example__color bg-neutral-700"></div>
           <span>Unavailable</span>
         </div>
         <div className="TechniciansOverview__legend__example">
-          <div
-            className="TechniciansOverview__legend__example__color"
-            style={{ background: 'black', color: '#22c55e' }}
-          >
-            A
-          </div>
+          <div className="TechniciansOverview__legend__example__color bg-black text-green-500">A</div>
           <span>Available</span>
         </div>
         <div className="TechniciansOverview__legend__example">
-          <div
-            className="TechniciansOverview__legend__example__color"
-            style={{ background: '#1d4ed8', color: 'white' }}
-          >
-            S
-          </div>
+          <div className="TechniciansOverview__legend__example__color bg-blue-700 text-white">S</div>
           <span>Available to sub</span>
         </div>
         <div className="TechniciansOverview__legend__example">
-          <div
-            className="TechniciansOverview__legend__example__color"
-            style={{ background: 'black', color: '#b91c1c' }}
-          >
-            M
-          </div>
+          <div className="TechniciansOverview__legend__example__color bg-black text-red-500">M</div>
           <span>Maxed on sessions</span>
         </div>
         <div className="TechniciansOverview__legend__example">
-          <div className="TechniciansOverview__legend__example__color" style={{ background: '#15803d' }}></div>
+          <div className="TechniciansOverview__legend__example__color bg-green-700"></div>
           <span>Has session</span>
         </div>
         <div className="TechniciansOverview__legend__example">
-          <div className="TechniciansOverview__legend__example__color" style={{ background: '#eab308' }}></div>
+          <div className="TechniciansOverview__legend__example__color bg-yellow-500"></div>
           <span>Client onboarding</span>
         </div>
         <div className="TechniciansOverview__legend__example">
@@ -317,33 +300,36 @@ export const TechniciansOverview = ({ isSubList = false, showLegend = true }: Te
           <span>In clinic</span>
         </div>
         <div className="TechniciansOverview__legend__example">
-          <div className="TechniciansOverview__legend__example__color">
+          <div className="TechniciansOverview__legend__example__color bg-background">
             <div className="TechniciansOverview__legend__example__color__corner">PA</div>
           </div>
-          <span>Preschool/Adaptive</span>
+          <span>Preschool/adaptive</span>
         </div>
       </div>
     );
   }
 
   if (techniciansLoading) {
-    return <Spinner className="mt-8" message="Loading technicians..." />;
+    return (
+      <div className="mt-12 flex items-center justify-center">
+        <Loader className="h-8 w-8 animate-spin" />
+      </div>
+    );
   }
 
   return (
     <>
-      <div className="flex flex-column gap-4">
+      <div className="flex flex-col gap-4">
         {showLegend && (
-          <RadixHoverCard
-            align="start"
-            trigger={
-              <Button className="align-self-start" iconLeading="info" size="xs" variant="outlined">
+          <HoverCard>
+            <HoverCardTrigger asChild>
+              <Button className="self-start" size="sm" variant="outline">
+                <Info />
                 Legend
               </Button>
-            }
-          >
-            {renderLegend()}
-          </RadixHoverCard>
+            </HoverCardTrigger>
+            <HoverCardContent align="start">{renderLegend()}</HoverCardContent>
+          </HoverCard>
         )}
         <table className="TechniciansOverview">
           <colgroup>
@@ -398,6 +384,7 @@ export const TechniciansOverview = ({ isSubList = false, showLegend = true }: Te
                         background: dayColor(dayIndex),
                         borderLeftWidth: blockIndex === 0 ? '6px' : '1px',
                         borderRightWidth: blockIndex === blocks.length - 1 ? '6px' : '1px',
+                        color: 'black',
                       }}
                     >
                       {day}
@@ -414,7 +401,9 @@ export const TechniciansOverview = ({ isSubList = false, showLegend = true }: Te
                 <td style={{ background: technician.bg_color, color: technician.text_color, textAlign: 'center' }}>
                   {index + 1}
                 </td>
-                <td style={{ background: skillLevelColor(technician.skill_level), textAlign: 'center' }}>
+                <td
+                  style={{ background: skillLevelColor(technician.skill_level), color: 'black', textAlign: 'center' }}
+                >
                   {technician.skill_level}
                 </td>
                 <td
@@ -423,9 +412,7 @@ export const TechniciansOverview = ({ isSubList = false, showLegend = true }: Te
                     verticalAlign: 'middle',
                   }}
                 >
-                  {technician.spanish_speaking && (
-                    <span className="material-symbols-outlined text-color-green text-size-sm display-block">check</span>
-                  )}
+                  {technician.spanish_speaking && <Check className="text-green-700" size="14" />}
                 </td>
                 <td className="text-nowrap" style={{ background: technician.bg_color, color: technician.text_color }}>
                   <a
@@ -520,14 +507,14 @@ export const TechniciansOverview = ({ isSubList = false, showLegend = true }: Te
         </table>
       </div>
       {technicianForm.technician && (
-        <RadixDialog
-          asDrawer
-          title={`Update Technician`}
+        <Sheet
           open={technicianForm.open}
           onOpenChange={(open) => setTechnicianForm({ ...technicianForm, open, technician: undefined })}
         >
-          <div className="p-6">
-            <h3 className="mb-4">Update Technician</h3>
+          <SheetContent>
+            <SheetHeader>
+              <SheetTitle>Update Technician</SheetTitle>
+            </SheetHeader>
             <TechnicianForm
               technician={technicianForm.technician}
               onCancel={() => {
@@ -536,8 +523,8 @@ export const TechniciansOverview = ({ isSubList = false, showLegend = true }: Te
               onUpdate={onUpdateTechnician}
               onDelete={onDeleteTechnician}
             />
-          </div>
-        </RadixDialog>
+          </SheetContent>
+        </Sheet>
       )}
     </>
   );

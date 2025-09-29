@@ -1,19 +1,17 @@
+import { ClientModel } from '@/api';
+import { useBlocks } from '@/contexts/BlocksContext';
+import { useAuth } from '@/features/auth/contexts/AuthContext';
+import { getBlockAppointments, getBlockAvailabilities } from '@/utils/appointments';
+import { dayColor, skillLevelColor, striped } from '@/utils/color';
+import { orderByFirstName } from '@/utils/order';
+import { Check, Info, Loader } from 'lucide-react';
 import React from 'react';
-import { ClientModel } from '~/api';
-import { useBlocks } from '~/contexts/BlocksContext';
-import { useAuth } from '~/features/auth/contexts/AuthContext';
-import { Appointment } from '~/types/Appointment';
-import { Availability } from '~/types/Availability';
-import { Block } from '~/types/Block';
-import { Client } from '~/types/Client';
-import { Button, RadixDialog, Spinner } from '~/ui';
-import { RadixHoverCard } from '~/ui/RadixHoverCard/RadixHoverCard';
-import { getBlockAppointments, getBlockAvailabilities } from '~/utils/appointments';
-import { dayColor, skillLevelColor, striped } from '~/utils/color';
-import { orderByFirstName } from '~/utils/order';
 import { AppointmentForm } from '../AppointmentForm/AppointmentForm';
 import { AppointmentHover } from '../AppointmentHover/AppointmentHover';
 import { ClientForm } from '../ClientForm/ClientForm';
+import { Button } from '../ui/button';
+import { HoverCard, HoverCardContent, HoverCardTrigger } from '../ui/hover-card';
+import { Sheet, SheetContent, SheetHeader, SheetTitle } from '../ui/sheet';
 import './ClientsOverview.scss';
 
 export const ClientsOverview = () => {
@@ -79,14 +77,14 @@ export const ClientsOverview = () => {
   function totalHoursByDay(day: number) {
     return clients.reduce(
       (acc, client) => acc + (client.computed_properties ? client.computed_properties.total_hours_by_day[day] : 0),
-      0
+      0,
     );
   }
 
   function totalHours() {
     return clients.reduce(
       (acc, client) => acc + (client.computed_properties ? client.computed_properties.total_hours : 0),
-      0
+      0,
     );
   }
 
@@ -118,7 +116,7 @@ export const ClientsOverview = () => {
     day: number,
     block: Block,
     availability: Availability | undefined,
-    instance: Appointment | undefined = undefined
+    instance: Appointment | undefined = undefined,
   ) {
     if (!user?.is_superuser) {
       return;
@@ -155,7 +153,7 @@ export const ClientsOverview = () => {
           return c;
         }
         return c;
-      })
+      }),
     );
     closeAppointmentForm();
   }
@@ -168,7 +166,7 @@ export const ClientsOverview = () => {
           return c;
         }
         return c;
-      })
+      }),
     );
     closeAppointmentForm();
   }
@@ -178,7 +176,7 @@ export const ClientsOverview = () => {
       prev.map((c) => {
         c.appointments = c.appointments?.filter((a) => a.id !== deleted.id);
         return c;
-      })
+      }),
     );
     closeAppointmentForm();
   }
@@ -233,10 +231,10 @@ export const ClientsOverview = () => {
     // Render appointment blocks
     if (blockAppointments.length > 0) {
       const appointment = blockAppointments[0];
-      let background = appointment.technician?.bg_color || 'white';
+      let background = appointment.technician?.bg_color || 'var(--background)';
       if (appointment.in_clinic) {
-        const bgColor = appointment.technician?.bg_color || 'white';
-        const textColor = appointment.technician?.text_color || 'black';
+        const bgColor = appointment.technician?.bg_color || 'var(--background)';
+        const textColor = appointment.technician?.text_color || 'var(--foreground)';
         background = striped(textColor, bgColor);
       }
 
@@ -259,9 +257,12 @@ export const ClientsOverview = () => {
 
       if (user?.hover_cards_enabled) {
         return (
-          <RadixHoverCard key={block.id} portal trigger={hoverTrigger}>
-            <AppointmentHover appointment={appointment} />
-          </RadixHoverCard>
+          <HoverCard key={block.id}>
+            <HoverCardTrigger asChild>{hoverTrigger}</HoverCardTrigger>
+            <HoverCardContent className="w-96">
+              <AppointmentHover appointment={appointment} />
+            </HoverCardContent>
+          </HoverCard>
         );
       } else {
         return hoverTrigger;
@@ -312,19 +313,15 @@ export const ClientsOverview = () => {
     return (
       <div className="ClientsOverview__legend">
         <div className="ClientsOverview__legend__example">
-          <div className="ClientsOverview__legend__example__color" style={{ background: '#404040' }}></div>
+          <div className="ClientsOverview__legend__example__color bg-neutral-700"></div>
           <span>Unavailable</span>
         </div>
         <div className="ClientsOverview__legend__example">
-          <div className="ClientsOverview__legend__example__color" style={{ background: 'black', color: '#22c55e' }}>
-            A
-          </div>
+          <div className="ClientsOverview__legend__example__color bg-black text-green-500">A</div>
           <span>Available</span>
         </div>
         <div className="ClientsOverview__legend__example">
-          <div className="ClientsOverview__legend__example__color" style={{ background: 'black', color: '#b91c1c' }}>
-            M
-          </div>
+          <div className="ClientsOverview__legend__example__color bg-black text-red-500">M</div>
           <span>Maxed on sessions</span>
         </div>
         <div className="ClientsOverview__legend__example">
@@ -335,32 +332,35 @@ export const ClientsOverview = () => {
           <span>In clinic</span>
         </div>
         <div className="ClientsOverview__legend__example">
-          <div className="ClientsOverview__legend__example__color">
+          <div className="ClientsOverview__legend__example__color bg-background">
             <div className="ClientsOverview__legend__example__color__corner">PA</div>
           </div>
-          <span>Preschool/Adaptive</span>
+          <span>Preschool/adaptive</span>
         </div>
       </div>
     );
   }
 
   if (clientsLoading) {
-    return <Spinner className="mt-8" message="Loading clients..." />;
+    return (
+      <div className="mt-12 flex items-center justify-center">
+        <Loader className="h-8 w-8 animate-spin" />
+      </div>
+    );
   }
 
   return (
     <>
-      <div className="flex flex-column gap-4">
-        <RadixHoverCard
-          align="start"
-          trigger={
-            <Button className="align-self-start" iconLeading="info" size="xs" variant="outlined">
+      <div className="flex flex-col gap-4">
+        <HoverCard>
+          <HoverCardTrigger asChild>
+            <Button className="self-start" size="sm" variant="outline">
+              <Info />
               Legend
             </Button>
-          }
-        >
-          {renderLegend()}
-        </RadixHoverCard>
+          </HoverCardTrigger>
+          <HoverCardContent align="start">{renderLegend()}</HoverCardContent>
+        </HoverCard>
         <table className="ClientsOverview">
           <colgroup>
             <col width="24px" />
@@ -406,6 +406,7 @@ export const ClientsOverview = () => {
                         background: dayColor(dayIndex),
                         borderLeftWidth: blockIndex === 0 ? '6px' : '1px',
                         borderRightWidth: blockIndex === blocks.length - 1 ? '6px' : '1px',
+                        color: 'black',
                       }}
                     >
                       {day}
@@ -420,7 +421,9 @@ export const ClientsOverview = () => {
             {clients.map((client, index) => (
               <tr key={client.id}>
                 <td style={{ textAlign: 'center' }}>{index + 1}</td>
-                <td style={{ background: skillLevelColor(client.req_skill_level), textAlign: 'center' }}>
+                <td
+                  style={{ background: skillLevelColor(client.req_skill_level), color: 'black', textAlign: 'center' }}
+                >
                   {client.req_skill_level}
                 </td>
                 <td
@@ -429,13 +432,11 @@ export const ClientsOverview = () => {
                     verticalAlign: 'middle',
                   }}
                 >
-                  {client.req_spanish_speaking && (
-                    <span className="material-symbols-outlined text-color-green text-size-sm display-block">check</span>
-                  )}
+                  {client.req_spanish_speaking && <Check className="text-green-700" size="14" />}
                 </td>
                 <td className="text-nowrap">
                   <a
-                    className="cursor-pointer"
+                    className="text-primary cursor-pointer"
                     onClick={() => {
                       if (!user?.is_superuser) {
                         return;
@@ -518,9 +519,7 @@ export const ClientsOverview = () => {
           </tfoot>
         </table>
       </div>
-      <RadixDialog
-        asDrawer
-        title={`${appointmentForm.instance ? 'Update' : 'Create'} Appointment`}
+      <Sheet
         open={appointmentForm.open}
         onOpenChange={(open) => {
           if (!open) {
@@ -528,8 +527,10 @@ export const ClientsOverview = () => {
           }
         }}
       >
-        <div className="p-6">
-          <h3 className="mb-4">{appointmentForm.instance ? 'Update' : 'Create'} Appointment</h3>
+        <SheetContent>
+          <SheetHeader>
+            <SheetTitle>{appointmentForm.instance ? 'Update' : 'Create'} Appointment</SheetTitle>
+          </SheetHeader>
           {appointmentForm.client && appointmentForm.block && (
             <AppointmentForm
               onCreate={(created) => onCreateAppointment(created)}
@@ -542,17 +543,17 @@ export const ClientsOverview = () => {
               instance={appointmentForm.instance}
             />
           )}
-        </div>
-      </RadixDialog>
+        </SheetContent>
+      </Sheet>
       {clientForm.client && (
-        <RadixDialog
-          asDrawer
-          title={`Update Client`}
+        <Sheet
           open={clientForm.open}
           onOpenChange={(open) => setClientForm({ ...clientForm, open, client: undefined })}
         >
-          <div className="p-6">
-            <h3 className="mb-4">Update Client</h3>
+          <SheetContent>
+            <SheetHeader>
+              <SheetTitle>Update Client</SheetTitle>
+            </SheetHeader>
             <ClientForm
               client={clientForm.client}
               onCancel={() => {
@@ -561,8 +562,8 @@ export const ClientsOverview = () => {
               onDelete={onDeleteClient}
               onUpdate={onUpdateClient}
             />
-          </div>
-        </RadixDialog>
+          </SheetContent>
+        </Sheet>
       )}
     </>
   );

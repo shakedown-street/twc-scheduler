@@ -1,6 +1,6 @@
-import { http } from '~/http';
-import { Button, useToast } from '~/ui';
-import './ResendVerifyEmail.scss';
+import { Button } from '@/components/ui/button';
+import { http } from '@/lib/http';
+import { toastError } from '@/utils/errors';
 
 export type ResendVerifyEmailProps = {
   email: string;
@@ -8,34 +8,22 @@ export type ResendVerifyEmailProps = {
 };
 
 export const ResendVerifyEmail = ({ email, onSuccess }: ResendVerifyEmailProps) => {
-  const toast = useToast();
-
-  function clickResendVerifyEmail() {
-    http
-      .post('/api/resend-verify-email/', {
+  async function clickResendVerifyEmail() {
+    try {
+      http.post('/api/resend-verify-email/', {
         email,
-      })
-      .then(() => {
-        onSuccess?.();
-      })
-      .catch((err) => {
-        toast.errorResponse(err);
       });
+      onSuccess?.();
+    } catch (err) {
+      toastError(err);
+    }
   }
 
   return (
     <>
-      <div className="ResendVerifyEmail">
-        <h2 className="text-center">Email Verification Required</h2>
-        <p className="text-center mb-4">
-          Please check <strong>{email}</strong>
-          <br />
-          for a verification email from us.
-        </p>
-        <Button color="primary" fluid onClick={clickResendVerifyEmail} variant="raised">
-          Resend Verification Email
-        </Button>
-      </div>
+      <Button className="w-full" onClick={clickResendVerifyEmail}>
+        Resend Verification Email
+      </Button>
     </>
   );
 };

@@ -1,6 +1,5 @@
-import { Helmet } from 'react-helmet';
-import { useParams } from 'react-router-dom';
-import { Card, Container } from '~/ui';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { useParams } from 'react-router';
 import { PasswordResetConfirmForm } from '../../components/PasswordResetConfirmForm/PasswordResetConfirmForm';
 
 export const PasswordResetConfirm = () => {
@@ -8,18 +7,17 @@ export const PasswordResetConfirm = () => {
 
   return (
     <>
-      <Helmet>
-        <title>Password Reset | Schedule Builder</title>
-      </Helmet>
-      <Container>
-        <div className="centerPage">
-          <Card fluid>
-            <h1 className="mb-4 text-center">Password Reset</h1>
-            <h4 className="mb-4 text-center">Create a new password.</h4>
+      <title>Password Reset | PROJECT_NAME</title>
+      <div className="mx-auto my-12 w-full max-w-sm px-4">
+        <Card>
+          <CardHeader>
+            <CardTitle>Password Reset</CardTitle>
+          </CardHeader>
+          <CardContent>
             <PasswordResetConfirmForm uid={uid} token={token} />
-          </Card>
-        </div>
-      </Container>
+          </CardContent>
+        </Card>
+      </div>
     </>
   );
 };

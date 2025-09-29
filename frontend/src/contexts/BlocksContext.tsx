@@ -1,7 +1,8 @@
+/* eslint-disable react-refresh/only-export-components */
+
+import { BlockModel } from '@/api';
+import { Loader } from 'lucide-react';
 import React from 'react';
-import { BlockModel } from '~/api';
-import { Block } from '~/types/Block';
-import { Spinner } from '~/ui';
 
 export type BlocksContextType = {
   blocks: Block[];
@@ -29,7 +30,11 @@ export const BlocksProvider = (props: BlocksProviderProps) => {
   }, []);
 
   if (loading) {
-    return <Spinner className="mt-8" message="Loading blocks..." />;
+    return (
+      <div className="mt-12 flex items-center justify-center">
+        <Loader className="h-8 w-8 animate-spin" />
+      </div>
+    );
   }
 
   return <BlocksContext.Provider value={{ blocks }}>{props.children}</BlocksContext.Provider>;
