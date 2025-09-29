@@ -195,7 +195,7 @@ export const ClientTechnicianMatrix = () => {
                   <td>{index + 1}</td>
                   <td className="text-nowrap" style={{ textAlign: 'left' }}>
                     <a
-                      className="cursor-pointer"
+                      className="text-primary cursor-pointer"
                       onClick={() => {
                         if (!user?.is_superuser) {
                           return;

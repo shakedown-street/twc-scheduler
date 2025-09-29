@@ -9,7 +9,6 @@ import { Button } from '../ui/button';
 import { Label } from '../ui/label';
 import { Select } from '../ui/select';
 import { Textarea } from '../ui/textarea';
-import './TherapyAppointmentForm.scss';
 
 export type TherapyAppointmentFormProps = {
   client: Client;
@@ -122,13 +121,13 @@ export const TherapyAppointmentForm = ({
 
   if (confirmDelete) {
     return (
-      <div className="TherapyAppointmentForm__confirmDelete">
+      <div className="flex flex-col gap-4">
         <p>
           Are you sure you want to delete this therapy appointment?
           <br />
           This action cannot be undone.
         </p>
-        <div className="TherapyAppointmentForm__confirmDelete__actions">
+        <div className="flex items-center justify-end gap-4">
           <Button onClick={() => setConfirmDelete(false)} variant="ghost">
             Cancel
           </Button>
@@ -141,30 +140,26 @@ export const TherapyAppointmentForm = ({
   }
 
   return (
-    <form className="TherapyAppointmentForm" onSubmit={form.handleSubmit(onSubmit)}>
-      <div className="TherapyAppointmentForm__row">
-        <div className="Input__container">
-          <label>Client</label>
-          <Badge>
-            {client.first_name} {client.last_name}
-          </Badge>
-        </div>
+    <form className="form" onSubmit={form.handleSubmit(onSubmit)}>
+      <div className="form-group">
+        <Label>Client</Label>
+        <Badge>
+          {client.first_name} {client.last_name}
+        </Badge>
       </div>
       {client.notes && (
-        <div className="TherapyAppointmentForm__row TherapyAppointmentForm__row--notes">
-          <div className="Input__container">
-            <label>Client notes</label>
-            <div className="TherapyAppointmentForm__notes">{client.notes}</div>
+        <div className="form-group">
+          <Label>Client notes</Label>
+          <div className="size-xs bg-muted text-muted-foreground max-h-24 w-full overflow-y-auto rounded p-2 whitespace-pre-wrap">
+            {client.notes}
           </div>
         </div>
       )}
-      <div className="TherapyAppointmentForm__row">
-        <div className="Input__container">
-          <label>Day</label>
-          <p>{dayToString(day)}</p>
-        </div>
+      <div className="form-group">
+        <Label>Day</Label>
+        <Badge>{dayToString(day)}</Badge>
       </div>
-      <div className="TherapyAppointmentForm__row">
+      <div className="form-row">
         <Controller
           control={form.control}
           name="start_time"
@@ -217,7 +212,7 @@ export const TherapyAppointmentForm = ({
         <Label htmlFor="notes">Notes</Label>
         <Textarea className="resize-none" id="notes" rows={6} {...form.register('notes')} />
       </div>
-      <div className="TherapyAppointmentForm__actions">
+      <div className="flex items-center justify-between gap-4">
         {instance && (
           <Button
             onClick={() => {
@@ -229,7 +224,6 @@ export const TherapyAppointmentForm = ({
             Delete
           </Button>
         )}
-        <div className="flex-1"></div>
         <Button disabled={!form.formState.isValid} type="submit">
           {instance ? 'Update' : 'Create'}
         </Button>

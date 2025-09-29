@@ -124,7 +124,7 @@ export const ClientTechnicianHistory = () => {
               <tr key={client.id}>
                 <td className="text-nowrap">
                   <a
-                    className="cursor-pointer"
+                    className="text-primary cursor-pointer"
                     onClick={() => {
                       if (!user?.is_superuser) {
                         return;

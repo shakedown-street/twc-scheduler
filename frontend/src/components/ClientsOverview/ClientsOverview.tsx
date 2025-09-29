@@ -313,19 +313,15 @@ export const ClientsOverview = () => {
     return (
       <div className="ClientsOverview__legend">
         <div className="ClientsOverview__legend__example">
-          <div className="ClientsOverview__legend__example__color" style={{ background: '#404040' }}></div>
+          <div className="ClientsOverview__legend__example__color bg-neutral-700"></div>
           <span>Unavailable</span>
         </div>
         <div className="ClientsOverview__legend__example">
-          <div className="ClientsOverview__legend__example__color" style={{ background: 'black', color: '#22c55e' }}>
-            A
-          </div>
+          <div className="ClientsOverview__legend__example__color bg-black text-green-500">A</div>
           <span>Available</span>
         </div>
         <div className="ClientsOverview__legend__example">
-          <div className="ClientsOverview__legend__example__color" style={{ background: 'black', color: '#b91c1c' }}>
-            M
-          </div>
+          <div className="ClientsOverview__legend__example__color bg-black text-red-500">M</div>
           <span>Maxed on sessions</span>
         </div>
         <div className="ClientsOverview__legend__example">
@@ -437,7 +433,7 @@ export const ClientsOverview = () => {
                 </td>
                 <td className="text-nowrap">
                   <a
-                    className="cursor-pointer"
+                    className="text-primary cursor-pointer"
                     onClick={() => {
                       if (!user?.is_superuser) {
                         return;

@@ -1,9 +1,7 @@
-@import '@/scss/mixins';
 @import '@/scss/variables';
 
 .ClientTechnicianHistory {
   &__container {
-    @include scrollbar;
     max-height: 50rem;
     overflow: auto;
   }

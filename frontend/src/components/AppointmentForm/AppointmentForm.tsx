@@ -316,7 +316,7 @@ export const AppointmentForm = ({
       {client.notes && (
         <div className="form-group">
           <Label>Client notes</Label>
-          <div className="max-h-24 w-full overflow-y-auto bg-gray-100 p-2 text-xs whitespace-pre-wrap">
+          <div className="bg-muted text-muted-foreground max-h-24 w-full overflow-y-auto rounded p-2 text-xs whitespace-pre-wrap">
             {client.notes}
           </div>
         </div>

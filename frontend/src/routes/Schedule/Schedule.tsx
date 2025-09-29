@@ -275,8 +275,8 @@ export const Schedule = () => {
       <title>Schedule | Schedule Builder</title>
       <div className="container mx-auto px-4">
         <div className="mt-4 mb-12">
-          <h1 className="mb-4 text-2xl font-bold">Schedule</h1>
-          <div className="sticky top-0 mb-4 flex items-center justify-between bg-white">
+          <h1 className="text-2xl font-bold">Schedule</h1>
+          <div className="bg-background sticky top-0 z-1 flex items-center justify-between py-4">
             <Tabs onValueChange={(value) => setDay(parseInt(value))} value={getDay().toString()}>
               <TabsList>
                 <TabsTrigger value="0">Monday</TabsTrigger>
@@ -290,7 +290,7 @@ export const Schedule = () => {
               {dayToString(getDay())} Technician Overview
             </Button>
           </div>
-          <p className="mb-4 text-xs text-gray-700">
+          <p className="text-muted-foreground mb-4 text-xs">
             <b>NOTE</b>: Click any time slot while holding the "Shift" key to add/remove OT, ST, and MH appointments
           </p>
           <TimeSlotTable

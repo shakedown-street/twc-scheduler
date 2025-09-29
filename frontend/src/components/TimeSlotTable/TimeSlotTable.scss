@@ -1,4 +1,3 @@
-@import '@/scss/mixins';
 @import '@/scss/variables';
 
 .TimeSlotTable {
@@ -29,26 +28,6 @@
       &:hover {
         background-color: $tw-gray-200;
       }
-    }
-  }
-
-  &__slot {
-    @include font-bold;
-    color: white;
-    position: relative;
-    text-align: center !important;
-    text-transform: uppercase;
-    width: 2rem;
-
-    &__corner {
-      background-color: black;
-      color: white;
-      font-size: 0.5rem;
-      position: absolute;
-      padding: 0.125rem;
-      line-height: 1;
-      right: 0;
-      top: 0;
     }
   }
 }

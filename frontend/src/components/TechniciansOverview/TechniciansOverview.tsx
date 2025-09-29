@@ -255,16 +255,11 @@ export const TechniciansOverview = ({ isSubList = false, showLegend = true }: Te
       return (
         <div className="TechniciansOverview__legend">
           <div className="TechniciansOverview__legend__example">
-            <div className="TechniciansOverview__legend__example__color" style={{ background: '#404040' }}></div>
+            <div className="TechniciansOverview__legend__example__color bg-neutral-700"></div>
             <span>Unavailable</span>
           </div>
           <div className="TechniciansOverview__legend__example">
-            <div
-              className="TechniciansOverview__legend__example__color"
-              style={{ background: '#1d4ed8', color: 'white' }}
-            >
-              S
-            </div>
+            <div className="TechniciansOverview__legend__example__color bg-blue-700 text-white">S</div>
             <span>Available to sub</span>
           </div>
         </div>
@@ -274,42 +269,27 @@ export const TechniciansOverview = ({ isSubList = false, showLegend = true }: Te
     return (
       <div className="TechniciansOverview__legend">
         <div className="TechniciansOverview__legend__example">
-          <div className="TechniciansOverview__legend__example__color" style={{ background: '#404040' }}></div>
+          <div className="TechniciansOverview__legend__example__color bg-neutral-700"></div>
           <span>Unavailable</span>
         </div>
         <div className="TechniciansOverview__legend__example">
-          <div
-            className="TechniciansOverview__legend__example__color"
-            style={{ background: 'black', color: '#22c55e' }}
-          >
-            A
-          </div>
+          <div className="TechniciansOverview__legend__example__color bg-black text-green-500">A</div>
           <span>Available</span>
         </div>
         <div className="TechniciansOverview__legend__example">
-          <div
-            className="TechniciansOverview__legend__example__color"
-            style={{ background: '#1d4ed8', color: 'white' }}
-          >
-            S
-          </div>
+          <div className="TechniciansOverview__legend__example__color bg-blue-700 text-white">S</div>
           <span>Available to sub</span>
         </div>
         <div className="TechniciansOverview__legend__example">
-          <div
-            className="TechniciansOverview__legend__example__color"
-            style={{ background: 'black', color: '#b91c1c' }}
-          >
-            M
-          </div>
+          <div className="TechniciansOverview__legend__example__color bg-black text-red-500">M</div>
           <span>Maxed on sessions</span>
         </div>
         <div className="TechniciansOverview__legend__example">
-          <div className="TechniciansOverview__legend__example__color" style={{ background: '#15803d' }}></div>
+          <div className="TechniciansOverview__legend__example__color bg-green-700"></div>
           <span>Has session</span>
         </div>
         <div className="TechniciansOverview__legend__example">
-          <div className="TechniciansOverview__legend__example__color" style={{ background: '#eab308' }}></div>
+          <div className="TechniciansOverview__legend__example__color bg-yellow-500"></div>
           <span>Client onboarding</span>
         </div>
         <div className="TechniciansOverview__legend__example">

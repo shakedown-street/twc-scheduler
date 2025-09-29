@@ -1,5 +1,4 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Link } from 'react-router';
 import { LoginForm } from '../../components/LoginForm/LoginForm';
 
 export const Login = () => {

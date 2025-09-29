@@ -254,8 +254,8 @@ export const TechAvailability = () => {
         )}
       </div>
       <div className="mb-4 flex items-center gap-2">
-        <Checkbox checked={showSubOnly} id="sub_nly" onCheckedChange={() => setShowSubOnly(!showSubOnly)} />
-        <Label htmlFor="sub_nly">Sub only</Label>
+        <Checkbox checked={showSubOnly} id="is_sub_filter" onCheckedChange={() => setShowSubOnly(!showSubOnly)} />
+        <Label htmlFor="is_sub_filter">Sub only</Label>
       </div>
       <table className="TechAvailability__table">
         <thead>

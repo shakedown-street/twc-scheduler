@@ -162,7 +162,9 @@ export const TimeSlotTable = ({
   function renderSlotCorner(slotAppointment: Appointment | undefined) {
     const cornerText = slotAppointment && slotAppointment.is_preschool_or_adaptive ? 'PA' : '';
     if (cornerText) {
-      return <div className="TimeSlotTable__slot__corner">{cornerText}</div>;
+      return (
+        <div className="absolute top-0 right-0 bg-black p-0.5 text-[8px] leading-none text-white">{cornerText}</div>
+      );
     }
     return null;
   }
@@ -173,7 +175,7 @@ export const TimeSlotTable = ({
     if (slotAppointment) {
       const hoverTrigger = (
         <td
-          className="TimeSlotTable__slot"
+          className="relative w-8 text-center font-bold text-white uppercase"
           style={{
             borderLeft: isOnTheHour(time) ? '2px solid black' : undefined,
             background: slotBackground(time, client),
@@ -204,7 +206,7 @@ export const TimeSlotTable = ({
     return (
       <td
         key={time}
-        className="TimeSlotTable__slot"
+        className="relative w-8 text-center font-bold text-white uppercase"
         style={{
           borderLeft: isOnTheHour(time) ? '2px solid black' : undefined,
           background: slotBackground(time, client),
@@ -255,7 +257,7 @@ export const TimeSlotTable = ({
           <tr key={client.id}>
             <td className="text-nowrap">
               <a
-                className="cursor-pointer"
+                className="text-primary cursor-pointer"
                 onClick={() => {
                   onClickClient?.(client);
                 }}

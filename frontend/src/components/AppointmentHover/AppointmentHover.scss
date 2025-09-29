@@ -1,5 +1,4 @@
 @import '@/scss/variables';
-@import '@/scss/mixins';
 
 .AppointmentHover {
   &__row {
@@ -21,10 +20,10 @@
     }
 
     label {
-      @include font-medium;
       align-items: center;
       display: flex;
       gap: 0.25rem;
+      font-weight: 500;
 
       span {
         font-size: 1.25rem;
@@ -43,7 +42,6 @@
   }
 
   &__notes {
-    @include scrollbar;
     background-color: $tw-gray-100;
     font-size: 0.75rem;
     line-height: 1.5;

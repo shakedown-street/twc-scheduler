@@ -10,7 +10,6 @@ import { Button } from '../ui/button';
 import { Checkbox } from '../ui/checkbox';
 import { Label } from '../ui/label';
 import { Tooltip, TooltipContent, TooltipTrigger } from '../ui/tooltip';
-import './AvailabilityForm.scss';
 
 export type AvailabilityFormProps = {
   instance?: Availability;
@@ -133,13 +132,13 @@ export const AvailabilityForm = ({
 
   if (confirmDelete) {
     return (
-      <div className="AvailabilityForm__confirmDelete">
+      <div className="flex flex-col gap-4">
         <p>
           Are you sure you want to delete this availability?
           <br />
           This action cannot be undone.
         </p>
-        <div className="AvailabilityForm__confirmDelete__actions">
+        <div className="flex items-center justify-between gap-4">
           <Button onClick={() => setConfirmDelete(false)} variant="ghost">
             Cancel
           </Button>
@@ -153,31 +152,27 @@ export const AvailabilityForm = ({
 
   return (
     <form className="form" onSubmit={form.handleSubmit(onSubmit)}>
-      <div className="form-row">
-        <div className="Input__container">
-          <label className="capitalize">{contentType}</label>
-          {contentType === 'client' && (
-            <Badge>
-              {object.first_name} {object.last_name}
-            </Badge>
-          )}
-          {contentType === 'technician' && (
-            <Badge
-              style={{
-                backgroundColor: (object as Technician).bg_color,
-                color: (object as Technician).text_color,
-              }}
-            >
-              {object.first_name} {object.last_name}
-            </Badge>
-          )}
-        </div>
+      <div className="form-group">
+        <Label className="capitalize">{contentType}</Label>
+        {contentType === 'client' && (
+          <Badge>
+            {object.first_name} {object.last_name}
+          </Badge>
+        )}
+        {contentType === 'technician' && (
+          <Badge
+            style={{
+              background: (object as Technician).bg_color,
+              color: (object as Technician).text_color,
+            }}
+          >
+            {object.first_name} {object.last_name}
+          </Badge>
+        )}
       </div>
-      <div className="form-row">
-        <div className="Input__container">
-          <label>Day</label>
-          <p>{dayToString(day)}</p>
-        </div>
+      <div className="form-group">
+        <Label>Day</Label>
+        <Badge>{dayToString(day)}</Badge>
       </div>
       <div className="form-row">
         <Controller
@@ -219,7 +214,6 @@ export const AvailabilityForm = ({
           }}
         />
       </div>
-
       {contentType === 'client' && (
         <div className="form-group">
           <div className="flex items-center gap-2">
@@ -259,7 +253,7 @@ export const AvailabilityForm = ({
           </div>
         </div>
       )}
-      <div className="AvailabilityForm__actions">
+      <div className="flex justify-end">
         {instance && (
           <Button
             onClick={() => {

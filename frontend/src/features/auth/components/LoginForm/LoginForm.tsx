@@ -7,7 +7,7 @@ import { http } from '@/lib/http';
 import { handleDetailError, setFormErrors } from '@/utils/errors';
 import React from 'react';
 import { useForm } from 'react-hook-form';
-import { Link, useNavigate } from 'react-router';
+import { useNavigate } from 'react-router';
 import { useAuth } from '../../contexts/AuthContext';
 import { GoogleSSOButton } from '../GoogleSSOButton/GoogleSSOButton';
 import { ResendVerifyEmail } from '../ResendVerifyEmail/ResendVerifyEmail';

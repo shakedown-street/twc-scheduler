@@ -253,10 +253,10 @@ export const ClientAvailability = () => {
       <div className="mb-4 flex items-center gap-2">
         <Checkbox
           checked={showInClinicOnly}
-          id="in_clinic"
+          id="in_clinic_filter"
           onCheckedChange={() => setShowInClinicOnly(!showInClinicOnly)}
         />
-        <Label htmlFor="in_clinic">In clinic only</Label>
+        <Label htmlFor="in_clinic_filter">In clinic only</Label>
       </div>
       <table className="ClientAvailability__table">
         <thead>
@@ -294,7 +294,7 @@ export const ClientAvailability = () => {
               <td>{index + 1}</td>
               <td className="text-nowrap">
                 <a
-                  className="cursor-pointer"
+                  className="text-primary cursor-pointer"
                   onClick={() => {
                     if (!user?.is_superuser) {
                       return;

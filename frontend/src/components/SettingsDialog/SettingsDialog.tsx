@@ -7,7 +7,6 @@ import { Button } from '../ui/button';
 import { Checkbox } from '../ui/checkbox';
 import { Label } from '../ui/label';
 import { Tooltip, TooltipContent, TooltipTrigger } from '../ui/tooltip';
-import './SettingsDialog.scss';
 
 export type SettingsDialogProps = {
   onClose: () => void;
@@ -39,42 +38,40 @@ export const SettingsDialog = (props: SettingsDialogProps) => {
 
   return (
     <>
-      <div className="SettingsDialog">
-        <form className="form" onSubmit={form.handleSubmit(save)}>
-          <div className="form-group">
-            <div className="flex items-center gap-2">
-              <Controller
-                control={form.control}
-                name="hover_cards_enabled"
-                render={({ field }) => (
-                  <Checkbox
-                    checked={field.value}
-                    id="hover_cards_enabled"
-                    onCheckedChange={() => field.onChange(!field.value)}
-                  />
-                )}
-              />
-              <Label htmlFor="hover_cards_enabled">
-                Enable Hover Cards
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <Info size="16" />
-                  </TooltipTrigger>
-                  <TooltipContent className="w-64">
-                    Enable hover cards for quick info on users and events (default enabled).
-                  </TooltipContent>
-                </Tooltip>
-              </Label>
-            </div>
+      <form className="form" onSubmit={form.handleSubmit(save)}>
+        <div className="form-group">
+          <div className="flex items-center gap-2">
+            <Controller
+              control={form.control}
+              name="hover_cards_enabled"
+              render={({ field }) => (
+                <Checkbox
+                  checked={field.value}
+                  id="hover_cards_enabled"
+                  onCheckedChange={() => field.onChange(!field.value)}
+                />
+              )}
+            />
+            <Label htmlFor="hover_cards_enabled">
+              Enable Hover Cards
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Info size="16" />
+                </TooltipTrigger>
+                <TooltipContent className="w-64">
+                  Enable hover cards for quick info on users and events (default enabled).
+                </TooltipContent>
+              </Tooltip>
+            </Label>
           </div>
-          <div className="SettingsDialog__form__actions">
-            <Button onClick={props.onClose} type="button" variant="ghost">
-              Cancel
-            </Button>
-            <Button type="submit">Save</Button>
-          </div>
-        </form>
-      </div>
+        </div>
+        <div className="flex items-center justify-end gap-2">
+          <Button onClick={props.onClose} type="button" variant="ghost">
+            Cancel
+          </Button>
+          <Button type="submit">Save</Button>
+        </div>
+      </form>
     </>
   );
 };

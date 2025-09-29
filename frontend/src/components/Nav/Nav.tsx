@@ -1,9 +1,8 @@
 import { UserModel } from '@/api';
-import logo from '@/assets/logo.avif';
+import logoSmall from '@/assets/logo-small.png';
 import { useAuth } from '@/features/auth/contexts/AuthContext';
 import { http } from '@/lib/http';
 import { toastError } from '@/utils/errors';
-import clsx from 'clsx';
 import { ArrowLeftRight, Calendar, CalendarCheck, IdCard, List, LogOut, Menu, Settings, User } from 'lucide-react';
 import React from 'react';
 import { Link, NavLink, useNavigate } from 'react-router-dom';
@@ -12,7 +11,6 @@ import { SettingsDialog } from '../SettingsDialog/SettingsDialog';
 import { Button } from '../ui/button';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '../ui/dialog';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '../ui/dropdown-menu';
-import './Nav.scss';
 
 export const Nav = () => {
   const [impersonateDialogOpen, setImpersonateDialogOpen] = React.useState(false);
@@ -91,62 +89,45 @@ export const Nav = () => {
 
   return (
     <>
-      <div className="Nav">
-        <div className="container mx-auto px-4">
-          <div className="Nav__content">
-            <Link to="/">
-              <img className="Nav__logo" src={logo} />
-            </Link>
-            {user && (
-              <div className="Nav__links">
-                <NavLink
-                  to="/"
-                  className={({ isActive }) => {
-                    return clsx('Nav__link', {
-                      'Nav__link--active': isActive,
-                    });
-                  }}
-                >
-                  <Calendar size="18" />
-                  Schedule
-                </NavLink>
-                <NavLink
-                  to="/overview"
-                  className={({ isActive }) => {
-                    return clsx('Nav__link', {
-                      'Nav__link--active': isActive,
-                    });
-                  }}
-                >
-                  <List size="18" />
-                  Overview
-                </NavLink>
-                <NavLink
-                  to="/availability"
-                  className={({ isActive }) => {
-                    return clsx('Nav__link', {
-                      'Nav__link--active': isActive,
-                    });
-                  }}
-                >
-                  <CalendarCheck size="18" />
-                  Availability
-                </NavLink>
-                <NavLink
-                  to="/sub-list"
-                  className={({ isActive }) => {
-                    return clsx('Nav__link', {
-                      'Nav__link--active': isActive,
-                    });
-                  }}
-                >
-                  <ArrowLeftRight size="18" />
-                  Sub List
-                </NavLink>
-              </div>
-            )}
-            {!user ? renderAuthLinks() : renderUserMenu()}
-          </div>
+      <div className="bg-background shadow">
+        <div className="container mx-auto flex items-center gap-2 px-4 py-2">
+          <Link to="/">
+            <img className="h-10" src={logoSmall} />
+          </Link>
+          {user && (
+            <div className="flex items-center gap-1">
+              <NavLink to="/">
+                {({ isActive }) => (
+                  <Button size="sm" variant={isActive ? 'default' : 'ghost'}>
+                    <Calendar size="18" /> Schedule
+                  </Button>
+                )}
+              </NavLink>
+              <NavLink to="/overview">
+                {({ isActive }) => (
+                  <Button size="sm" variant={isActive ? 'default' : 'ghost'}>
+                    <List size="18" /> Overview
+                  </Button>
+                )}
+              </NavLink>
+              <NavLink to="/availability">
+                {({ isActive }) => (
+                  <Button size="sm" variant={isActive ? 'default' : 'ghost'}>
+                    <CalendarCheck size="18" /> Availability
+                  </Button>
+                )}
+              </NavLink>
+              <NavLink to="/sub-list">
+                {({ isActive }) => (
+                  <Button size="sm" variant={isActive ? 'default' : 'ghost'}>
+                    <ArrowLeftRight size="18" /> Sub List
+                  </Button>
+                )}
+              </NavLink>
+            </div>
+          )}
+          <div className="flex-1"></div>
+          {!user ? renderAuthLinks() : renderUserMenu()}
         </div>
       </div>
       <Dialog open={impersonateDialogOpen} onOpenChange={(open) => setImpersonateDialogOpen(open)}>
@@ -174,7 +155,7 @@ export const Nav = () => {
         <DialogContent>
           <DialogHeader>
             <DialogTitle>Settings</DialogTitle>
-            <DialogDescription>Change your settings</DialogDescription>
+            <DialogDescription>Configure your user settings</DialogDescription>
           </DialogHeader>
           <SettingsDialog onClose={() => setSettingsDialogOpen(false)} />
         </DialogContent>
