@@ -1,21 +1,21 @@
-Django==5.2.4
-djangorestframework==3.16.0
-django-auditlog==3.1.2
+Django==5.2.6
+djangorestframework==3.16.1
+django-auditlog==3.2.1
 django-colorfield==0.14.0
-django-cors-headers==4.7.0
+django-cors-headers==4.9.0
 django-encrypted-model-fields==0.6.5
 django-extensions==4.1
 django-filter==25.1
 django-rest-knox==5.0.2
 Pillow==11.3.0
-requests==2.32.4
+requests==2.32.5
 
 # asynchronous tasks
 celery~=5.5.2
 redis~=6.0.0
 
 # social auth
-social-auth-app-django==5.4.3
+social-auth-app-django==5.5.1
 
 # payments/subscriptions
 stripe==12.1.0
