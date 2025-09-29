@@ -53,7 +53,7 @@ class AppointmentViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         qs = super().get_queryset()
 
-        qs = qs.filter(schedule=request.schedule)
+        qs = qs.filter(schedule=self.request.schedule)
 
         return qs
 
