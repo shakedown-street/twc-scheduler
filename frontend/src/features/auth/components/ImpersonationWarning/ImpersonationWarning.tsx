@@ -27,7 +27,7 @@ export const ImpersonationWarning = () => {
 
   return (
     <>
-      <div className="fixed right-4 bottom-4 flex w-70 items-center gap-2 rounded border p-2 shadow">
+      <div className="bg-background fixed right-4 bottom-4 flex w-70 items-center gap-2 rounded border p-2 shadow">
         <div className="text-muted-foreground text-xs">
           You are currently impersonating <b>{user.email}</b>.
           <br />

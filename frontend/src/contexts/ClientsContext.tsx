@@ -1,3 +1,5 @@
+/* eslint-disable react-refresh/only-export-components */
+
 import { ClientModel } from '@/api';
 import { orderByFirstName } from '@/utils/order';
 import { Loader } from 'lucide-react';

@@ -1,7 +1,7 @@
 import { ClientAvailability } from '@/components/ClientAvailability/ClientAvailability';
 import { TechAvailability } from '@/components/TechAvailability/TechAvailability';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { useSearchParams } from 'react-router-dom';
+import { useSearchParams } from 'react-router';
 
 export const AvailabilityRoute = () => {
   const [searchParams, setSearchParams] = useSearchParams();

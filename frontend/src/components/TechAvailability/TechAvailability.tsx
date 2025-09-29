@@ -365,9 +365,9 @@ export const TechAvailability = () => {
           {availabilityForm.object && (
             <AvailabilityForm
               contentType="technician"
-              onCreate={(technician, _) => refetchTechnician(technician as Technician)}
-              onUpdate={(technician, _) => refetchTechnician(technician as Technician)}
-              onDelete={(technician, _) => refetchTechnician(technician as Technician)}
+              onCreate={(technician) => refetchTechnician(technician as Technician)}
+              onUpdate={(technician) => refetchTechnician(technician as Technician)}
+              onDelete={(technician) => refetchTechnician(technician as Technician)}
               instance={availabilityForm.instance}
               object={availabilityForm.object}
               day={availabilityForm.day}

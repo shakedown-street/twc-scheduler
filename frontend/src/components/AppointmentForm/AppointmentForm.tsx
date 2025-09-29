@@ -231,7 +231,7 @@ export const AppointmentForm = ({
       .then((created) => {
         // NOTE: The appointment create endpoint returns an array instead of a single
         // appointment, to support repeat appointments
-        onCreate?.(created.data as any as Appointment[]);
+        onCreate?.(created.data as unknown as Appointment[]);
       })
       .catch((err) => {
         toastError(err);

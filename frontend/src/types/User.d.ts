@@ -11,8 +11,6 @@ type User = {
   is_active: boolean;
   is_staff: boolean;
   is_verified: boolean;
-  groups: any[];
-  user_permissions: any[];
 
   hover_cards_enabled: boolean;
 };

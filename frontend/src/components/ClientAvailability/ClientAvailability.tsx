@@ -369,9 +369,9 @@ export const ClientAvailability = () => {
           {availabilityForm.object && (
             <AvailabilityForm
               contentType="client"
-              onCreate={(client, _) => refetchClient(client as Client)}
-              onUpdate={(client, _) => refetchClient(client as Client)}
-              onDelete={(client, _) => refetchClient(client as Client)}
+              onCreate={(client) => refetchClient(client as Client)}
+              onUpdate={(client) => refetchClient(client as Client)}
+              onDelete={(client) => refetchClient(client as Client)}
               instance={availabilityForm.instance}
               object={availabilityForm.object}
               day={availabilityForm.day}

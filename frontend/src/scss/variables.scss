@@ -1,4 +1,6 @@
-@import './tailwind-colors';
+@use './tailwind-colors' as *;
+
+@forward './tailwind-colors';
 // colors
 
 // NOTE: Search project-wide to see where colors are used before deleting them.

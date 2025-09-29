@@ -2,7 +2,7 @@ import { ClientsOverview } from '@/components/ClientsOverview/ClientsOverview';
 import { ClientTechnicianMatrix } from '@/components/ClientTechnicianMatrix/ClientTechnicianMatrix';
 import { TechniciansOverview } from '@/components/TechniciansOverview/TechniciansOverview';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { useSearchParams } from 'react-router-dom';
+import { useSearchParams } from 'react-router';
 
 export const Overview = () => {
   const [searchParams, setSearchParams] = useSearchParams();

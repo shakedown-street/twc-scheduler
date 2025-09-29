@@ -17,7 +17,7 @@ export const AppointmentHover = ({ appointment }: AppointmentHoverProps) => {
     AppointmentModel.detailAction(appointment.id, 'find_recommended_subs', 'get').then((res) => {
       setRecommendedSubs(res.data);
     });
-  }, []);
+  }, [appointment]);
 
   return (
     <div className="flex flex-col">

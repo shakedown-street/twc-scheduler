@@ -138,8 +138,8 @@ export const TechniciansOverview = ({ isSubList = false, showLegend = true }: Te
     // Render sub list blocks
     if (isSubList) {
       if (isAvailableToSub) {
-        let background = '#1d4ed8'; // tw-blue-700
-        let color = 'white';
+        const background = '#1d4ed8'; // tw-blue-700
+        const color = 'white';
         return (
           <td
             key={block.id}

@@ -1,3 +1,5 @@
+@use 'sass:map';
+
 // Tailwind default color palette as SCSS variables with helpful maps and lists
 // https://tailwindcss.com/docs/customizing-colors#default-color-palette
 
@@ -24,17 +26,17 @@ $tw-slate-list: (
   '950': #020617,
 );
 
-$tw-slate-50: map-get($tw-slate-list, '50');
-$tw-slate-100: map-get($tw-slate-list, '100');
-$tw-slate-200: map-get($tw-slate-list, '200');
-$tw-slate-300: map-get($tw-slate-list, '300');
-$tw-slate-400: map-get($tw-slate-list, '400');
-$tw-slate-500: map-get($tw-slate-list, '500');
-$tw-slate-600: map-get($tw-slate-list, '600');
-$tw-slate-700: map-get($tw-slate-list, '700');
-$tw-slate-800: map-get($tw-slate-list, '800');
-$tw-slate-900: map-get($tw-slate-list, '900');
-$tw-slate-950: map-get($tw-slate-list, '950');
+$tw-slate-50: map.get($tw-slate-list, '50');
+$tw-slate-100: map.get($tw-slate-list, '100');
+$tw-slate-200: map.get($tw-slate-list, '200');
+$tw-slate-300: map.get($tw-slate-list, '300');
+$tw-slate-400: map.get($tw-slate-list, '400');
+$tw-slate-500: map.get($tw-slate-list, '500');
+$tw-slate-600: map.get($tw-slate-list, '600');
+$tw-slate-700: map.get($tw-slate-list, '700');
+$tw-slate-800: map.get($tw-slate-list, '800');
+$tw-slate-900: map.get($tw-slate-list, '900');
+$tw-slate-950: map.get($tw-slate-list, '950');
 
 //  Gray
 //  ───────────────────────────────────
@@ -53,17 +55,17 @@ $tw-gray-list: (
   '950': #030712,
 );
 
-$tw-gray-50: map-get($tw-gray-list, '50');
-$tw-gray-100: map-get($tw-gray-list, '100');
-$tw-gray-200: map-get($tw-gray-list, '200');
-$tw-gray-300: map-get($tw-gray-list, '300');
-$tw-gray-400: map-get($tw-gray-list, '400');
-$tw-gray-500: map-get($tw-gray-list, '500');
-$tw-gray-600: map-get($tw-gray-list, '600');
-$tw-gray-700: map-get($tw-gray-list, '700');
-$tw-gray-800: map-get($tw-gray-list, '800');
-$tw-gray-900: map-get($tw-gray-list, '900');
-$tw-gray-950: map-get($tw-gray-list, '950');
+$tw-gray-50: map.get($tw-gray-list, '50');
+$tw-gray-100: map.get($tw-gray-list, '100');
+$tw-gray-200: map.get($tw-gray-list, '200');
+$tw-gray-300: map.get($tw-gray-list, '300');
+$tw-gray-400: map.get($tw-gray-list, '400');
+$tw-gray-500: map.get($tw-gray-list, '500');
+$tw-gray-600: map.get($tw-gray-list, '600');
+$tw-gray-700: map.get($tw-gray-list, '700');
+$tw-gray-800: map.get($tw-gray-list, '800');
+$tw-gray-900: map.get($tw-gray-list, '900');
+$tw-gray-950: map.get($tw-gray-list, '950');
 
 //  Zinc
 //  ───────────────────────────────────
@@ -82,17 +84,17 @@ $tw-zinc-list: (
   '950': #09090b,
 );
 
-$tw-zinc-50: map-get($tw-zinc-list, '50');
-$tw-zinc-100: map-get($tw-zinc-list, '100');
-$tw-zinc-200: map-get($tw-zinc-list, '200');
-$tw-zinc-300: map-get($tw-zinc-list, '300');
-$tw-zinc-400: map-get($tw-zinc-list, '400');
-$tw-zinc-500: map-get($tw-zinc-list, '500');
-$tw-zinc-600: map-get($tw-zinc-list, '600');
-$tw-zinc-700: map-get($tw-zinc-list, '700');
-$tw-zinc-800: map-get($tw-zinc-list, '800');
-$tw-zinc-900: map-get($tw-zinc-list, '900');
-$tw-zinc-950: map-get($tw-zinc-list, '950');
+$tw-zinc-50: map.get($tw-zinc-list, '50');
+$tw-zinc-100: map.get($tw-zinc-list, '100');
+$tw-zinc-200: map.get($tw-zinc-list, '200');
+$tw-zinc-300: map.get($tw-zinc-list, '300');
+$tw-zinc-400: map.get($tw-zinc-list, '400');
+$tw-zinc-500: map.get($tw-zinc-list, '500');
+$tw-zinc-600: map.get($tw-zinc-list, '600');
+$tw-zinc-700: map.get($tw-zinc-list, '700');
+$tw-zinc-800: map.get($tw-zinc-list, '800');
+$tw-zinc-900: map.get($tw-zinc-list, '900');
+$tw-zinc-950: map.get($tw-zinc-list, '950');
 
 //  Neutral
 //  ───────────────────────────────────
@@ -111,17 +113,17 @@ $tw-neutral-list: (
   '950': #0a0a0a,
 );
 
-$tw-neutral-50: map-get($tw-neutral-list, '50');
-$tw-neutral-100: map-get($tw-neutral-list, '100');
-$tw-neutral-200: map-get($tw-neutral-list, '200');
-$tw-neutral-300: map-get($tw-neutral-list, '300');
-$tw-neutral-400: map-get($tw-neutral-list, '400');
-$tw-neutral-500: map-get($tw-neutral-list, '500');
-$tw-neutral-600: map-get($tw-neutral-list, '600');
-$tw-neutral-700: map-get($tw-neutral-list, '700');
-$tw-neutral-800: map-get($tw-neutral-list, '800');
-$tw-neutral-900: map-get($tw-neutral-list, '900');
-$tw-neutral-950: map-get($tw-neutral-list, '950');
+$tw-neutral-50: map.get($tw-neutral-list, '50');
+$tw-neutral-100: map.get($tw-neutral-list, '100');
+$tw-neutral-200: map.get($tw-neutral-list, '200');
+$tw-neutral-300: map.get($tw-neutral-list, '300');
+$tw-neutral-400: map.get($tw-neutral-list, '400');
+$tw-neutral-500: map.get($tw-neutral-list, '500');
+$tw-neutral-600: map.get($tw-neutral-list, '600');
+$tw-neutral-700: map.get($tw-neutral-list, '700');
+$tw-neutral-800: map.get($tw-neutral-list, '800');
+$tw-neutral-900: map.get($tw-neutral-list, '900');
+$tw-neutral-950: map.get($tw-neutral-list, '950');
 
 //  Stone
 //  ───────────────────────────────────
@@ -140,17 +142,17 @@ $tw-stone-list: (
   '950': #0c0a09,
 );
 
-$tw-stone-50: map-get($tw-stone-list, '50');
-$tw-stone-100: map-get($tw-stone-list, '100');
-$tw-stone-200: map-get($tw-stone-list, '200');
-$tw-stone-300: map-get($tw-stone-list, '300');
-$tw-stone-400: map-get($tw-stone-list, '400');
-$tw-stone-500: map-get($tw-stone-list, '500');
-$tw-stone-600: map-get($tw-stone-list, '600');
-$tw-stone-700: map-get($tw-stone-list, '700');
-$tw-stone-800: map-get($tw-stone-list, '800');
-$tw-stone-900: map-get($tw-stone-list, '900');
-$tw-stone-950: map-get($tw-stone-list, '950');
+$tw-stone-50: map.get($tw-stone-list, '50');
+$tw-stone-100: map.get($tw-stone-list, '100');
+$tw-stone-200: map.get($tw-stone-list, '200');
+$tw-stone-300: map.get($tw-stone-list, '300');
+$tw-stone-400: map.get($tw-stone-list, '400');
+$tw-stone-500: map.get($tw-stone-list, '500');
+$tw-stone-600: map.get($tw-stone-list, '600');
+$tw-stone-700: map.get($tw-stone-list, '700');
+$tw-stone-800: map.get($tw-stone-list, '800');
+$tw-stone-900: map.get($tw-stone-list, '900');
+$tw-stone-950: map.get($tw-stone-list, '950');
 
 //  Red
 //  ───────────────────────────────────
@@ -169,17 +171,17 @@ $tw-red-list: (
   '950': #450a0a,
 );
 
-$tw-red-50: map-get($tw-red-list, '50');
-$tw-red-100: map-get($tw-red-list, '100');
-$tw-red-200: map-get($tw-red-list, '200');
-$tw-red-300: map-get($tw-red-list, '300');
-$tw-red-400: map-get($tw-red-list, '400');
-$tw-red-500: map-get($tw-red-list, '500');
-$tw-red-600: map-get($tw-red-list, '600');
-$tw-red-700: map-get($tw-red-list, '700');
-$tw-red-800: map-get($tw-red-list, '800');
-$tw-red-900: map-get($tw-red-list, '900');
-$tw-red-950: map-get($tw-red-list, '950');
+$tw-red-50: map.get($tw-red-list, '50');
+$tw-red-100: map.get($tw-red-list, '100');
+$tw-red-200: map.get($tw-red-list, '200');
+$tw-red-300: map.get($tw-red-list, '300');
+$tw-red-400: map.get($tw-red-list, '400');
+$tw-red-500: map.get($tw-red-list, '500');
+$tw-red-600: map.get($tw-red-list, '600');
+$tw-red-700: map.get($tw-red-list, '700');
+$tw-red-800: map.get($tw-red-list, '800');
+$tw-red-900: map.get($tw-red-list, '900');
+$tw-red-950: map.get($tw-red-list, '950');
 
 //  Orange
 //  ───────────────────────────────────
@@ -198,17 +200,17 @@ $tw-orange-list: (
   '950': #431407,
 );
 
-$tw-orange-50: map-get($tw-orange-list, '50');
-$tw-orange-100: map-get($tw-orange-list, '100');
-$tw-orange-200: map-get($tw-orange-list, '200');
-$tw-orange-300: map-get($tw-orange-list, '300');
-$tw-orange-400: map-get($tw-orange-list, '400');
-$tw-orange-500: map-get($tw-orange-list, '500');
-$tw-orange-600: map-get($tw-orange-list, '600');
-$tw-orange-700: map-get($tw-orange-list, '700');
-$tw-orange-800: map-get($tw-orange-list, '800');
-$tw-orange-900: map-get($tw-orange-list, '900');
-$tw-orange-950: map-get($tw-orange-list, '950');
+$tw-orange-50: map.get($tw-orange-list, '50');
+$tw-orange-100: map.get($tw-orange-list, '100');
+$tw-orange-200: map.get($tw-orange-list, '200');
+$tw-orange-300: map.get($tw-orange-list, '300');
+$tw-orange-400: map.get($tw-orange-list, '400');
+$tw-orange-500: map.get($tw-orange-list, '500');
+$tw-orange-600: map.get($tw-orange-list, '600');
+$tw-orange-700: map.get($tw-orange-list, '700');
+$tw-orange-800: map.get($tw-orange-list, '800');
+$tw-orange-900: map.get($tw-orange-list, '900');
+$tw-orange-950: map.get($tw-orange-list, '950');
 
 //  Amber
 //  ───────────────────────────────────
@@ -227,17 +229,17 @@ $tw-amber-list: (
   '950': #451a03,
 );
 
-$tw-amber-50: map-get($tw-amber-list, '50');
-$tw-amber-100: map-get($tw-amber-list, '100');
-$tw-amber-200: map-get($tw-amber-list, '200');
-$tw-amber-300: map-get($tw-amber-list, '300');
-$tw-amber-400: map-get($tw-amber-list, '400');
-$tw-amber-500: map-get($tw-amber-list, '500');
-$tw-amber-600: map-get($tw-amber-list, '600');
-$tw-amber-700: map-get($tw-amber-list, '700');
-$tw-amber-800: map-get($tw-amber-list, '800');
-$tw-amber-900: map-get($tw-amber-list, '900');
-$tw-amber-950: map-get($tw-amber-list, '950');
+$tw-amber-50: map.get($tw-amber-list, '50');
+$tw-amber-100: map.get($tw-amber-list, '100');
+$tw-amber-200: map.get($tw-amber-list, '200');
+$tw-amber-300: map.get($tw-amber-list, '300');
+$tw-amber-400: map.get($tw-amber-list, '400');
+$tw-amber-500: map.get($tw-amber-list, '500');
+$tw-amber-600: map.get($tw-amber-list, '600');
+$tw-amber-700: map.get($tw-amber-list, '700');
+$tw-amber-800: map.get($tw-amber-list, '800');
+$tw-amber-900: map.get($tw-amber-list, '900');
+$tw-amber-950: map.get($tw-amber-list, '950');
 
 //  Yellow
 //  ───────────────────────────────────
@@ -256,17 +258,17 @@ $tw-yellow-list: (
   '950': #422006,
 );
 
-$tw-yellow-50: map-get($tw-yellow-list, '50');
-$tw-yellow-100: map-get($tw-yellow-list, '100');
-$tw-yellow-200: map-get($tw-yellow-list, '200');
-$tw-yellow-300: map-get($tw-yellow-list, '300');
-$tw-yellow-400: map-get($tw-yellow-list, '400');
-$tw-yellow-500: map-get($tw-yellow-list, '500');
-$tw-yellow-600: map-get($tw-yellow-list, '600');
-$tw-yellow-700: map-get($tw-yellow-list, '700');
-$tw-yellow-800: map-get($tw-yellow-list, '800');
-$tw-yellow-900: map-get($tw-yellow-list, '900');
-$tw-yellow-950: map-get($tw-yellow-list, '950');
+$tw-yellow-50: map.get($tw-yellow-list, '50');
+$tw-yellow-100: map.get($tw-yellow-list, '100');
+$tw-yellow-200: map.get($tw-yellow-list, '200');
+$tw-yellow-300: map.get($tw-yellow-list, '300');
+$tw-yellow-400: map.get($tw-yellow-list, '400');
+$tw-yellow-500: map.get($tw-yellow-list, '500');
+$tw-yellow-600: map.get($tw-yellow-list, '600');
+$tw-yellow-700: map.get($tw-yellow-list, '700');
+$tw-yellow-800: map.get($tw-yellow-list, '800');
+$tw-yellow-900: map.get($tw-yellow-list, '900');
+$tw-yellow-950: map.get($tw-yellow-list, '950');
 
 //  Lime
 //  ───────────────────────────────────
@@ -285,17 +287,17 @@ $tw-lime-list: (
   '950': #1a2e05,
 );
 
-$tw-lime-50: map-get($tw-lime-list, '50');
-$tw-lime-100: map-get($tw-lime-list, '100');
-$tw-lime-200: map-get($tw-lime-list, '200');
-$tw-lime-300: map-get($tw-lime-list, '300');
-$tw-lime-400: map-get($tw-lime-list, '400');
-$tw-lime-500: map-get($tw-lime-list, '500');
-$tw-lime-600: map-get($tw-lime-list, '600');
-$tw-lime-700: map-get($tw-lime-list, '700');
-$tw-lime-800: map-get($tw-lime-list, '800');
-$tw-lime-900: map-get($tw-lime-list, '900');
-$tw-lime-950: map-get($tw-lime-list, '950');
+$tw-lime-50: map.get($tw-lime-list, '50');
+$tw-lime-100: map.get($tw-lime-list, '100');
+$tw-lime-200: map.get($tw-lime-list, '200');
+$tw-lime-300: map.get($tw-lime-list, '300');
+$tw-lime-400: map.get($tw-lime-list, '400');
+$tw-lime-500: map.get($tw-lime-list, '500');
+$tw-lime-600: map.get($tw-lime-list, '600');
+$tw-lime-700: map.get($tw-lime-list, '700');
+$tw-lime-800: map.get($tw-lime-list, '800');
+$tw-lime-900: map.get($tw-lime-list, '900');
+$tw-lime-950: map.get($tw-lime-list, '950');
 
 //  Green
 //  ───────────────────────────────────
@@ -314,17 +316,17 @@ $tw-green-list: (
   '950': #052e16,
 );
 
-$tw-green-50: map-get($tw-green-list, '50');
-$tw-green-100: map-get($tw-green-list, '100');
-$tw-green-200: map-get($tw-green-list, '200');
-$tw-green-300: map-get($tw-green-list, '300');
-$tw-green-400: map-get($tw-green-list, '400');
-$tw-green-500: map-get($tw-green-list, '500');
-$tw-green-600: map-get($tw-green-list, '600');
-$tw-green-700: map-get($tw-green-list, '700');
-$tw-green-800: map-get($tw-green-list, '800');
-$tw-green-900: map-get($tw-green-list, '900');
-$tw-green-950: map-get($tw-green-list, '950');
+$tw-green-50: map.get($tw-green-list, '50');
+$tw-green-100: map.get($tw-green-list, '100');
+$tw-green-200: map.get($tw-green-list, '200');
+$tw-green-300: map.get($tw-green-list, '300');
+$tw-green-400: map.get($tw-green-list, '400');
+$tw-green-500: map.get($tw-green-list, '500');
+$tw-green-600: map.get($tw-green-list, '600');
+$tw-green-700: map.get($tw-green-list, '700');
+$tw-green-800: map.get($tw-green-list, '800');
+$tw-green-900: map.get($tw-green-list, '900');
+$tw-green-950: map.get($tw-green-list, '950');
 
 //  Emerald
 //  ───────────────────────────────────
@@ -343,17 +345,17 @@ $tw-emerald-list: (
   '950': #022c22,
 );
 
-$tw-emerald-50: map-get($tw-emerald-list, '50');
-$tw-emerald-100: map-get($tw-emerald-list, '100');
-$tw-emerald-200: map-get($tw-emerald-list, '200');
-$tw-emerald-300: map-get($tw-emerald-list, '300');
-$tw-emerald-400: map-get($tw-emerald-list, '400');
-$tw-emerald-500: map-get($tw-emerald-list, '500');
-$tw-emerald-600: map-get($tw-emerald-list, '600');
-$tw-emerald-700: map-get($tw-emerald-list, '700');
-$tw-emerald-800: map-get($tw-emerald-list, '800');
-$tw-emerald-900: map-get($tw-emerald-list, '900');
-$tw-emerald-950: map-get($tw-emerald-list, '950');
+$tw-emerald-50: map.get($tw-emerald-list, '50');
+$tw-emerald-100: map.get($tw-emerald-list, '100');
+$tw-emerald-200: map.get($tw-emerald-list, '200');
+$tw-emerald-300: map.get($tw-emerald-list, '300');
+$tw-emerald-400: map.get($tw-emerald-list, '400');
+$tw-emerald-500: map.get($tw-emerald-list, '500');
+$tw-emerald-600: map.get($tw-emerald-list, '600');
+$tw-emerald-700: map.get($tw-emerald-list, '700');
+$tw-emerald-800: map.get($tw-emerald-list, '800');
+$tw-emerald-900: map.get($tw-emerald-list, '900');
+$tw-emerald-950: map.get($tw-emerald-list, '950');
 
 //  Teal
 //  ───────────────────────────────────
@@ -372,17 +374,17 @@ $tw-teal-list: (
   '950': #042f2e,
 );
 
-$tw-teal-50: map-get($tw-teal-list, '50');
-$tw-teal-100: map-get($tw-teal-list, '100');
-$tw-teal-200: map-get($tw-teal-list, '200');
-$tw-teal-300: map-get($tw-teal-list, '300');
-$tw-teal-400: map-get($tw-teal-list, '400');
-$tw-teal-500: map-get($tw-teal-list, '500');
-$tw-teal-600: map-get($tw-teal-list, '600');
-$tw-teal-700: map-get($tw-teal-list, '700');
-$tw-teal-800: map-get($tw-teal-list, '800');
-$tw-teal-900: map-get($tw-teal-list, '900');
-$tw-teal-950: map-get($tw-teal-list, '950');
+$tw-teal-50: map.get($tw-teal-list, '50');
+$tw-teal-100: map.get($tw-teal-list, '100');
+$tw-teal-200: map.get($tw-teal-list, '200');
+$tw-teal-300: map.get($tw-teal-list, '300');
+$tw-teal-400: map.get($tw-teal-list, '400');
+$tw-teal-500: map.get($tw-teal-list, '500');
+$tw-teal-600: map.get($tw-teal-list, '600');
+$tw-teal-700: map.get($tw-teal-list, '700');
+$tw-teal-800: map.get($tw-teal-list, '800');
+$tw-teal-900: map.get($tw-teal-list, '900');
+$tw-teal-950: map.get($tw-teal-list, '950');
 
 //  Cyan
 //  ───────────────────────────────────
@@ -401,17 +403,17 @@ $tw-cyan-list: (
   '950': #083344,
 );
 
-$tw-cyan-50: map-get($tw-cyan-list, '50');
-$tw-cyan-100: map-get($tw-cyan-list, '100');
-$tw-cyan-200: map-get($tw-cyan-list, '200');
-$tw-cyan-300: map-get($tw-cyan-list, '300');
-$tw-cyan-400: map-get($tw-cyan-list, '400');
-$tw-cyan-500: map-get($tw-cyan-list, '500');
-$tw-cyan-600: map-get($tw-cyan-list, '600');
-$tw-cyan-700: map-get($tw-cyan-list, '700');
-$tw-cyan-800: map-get($tw-cyan-list, '800');
-$tw-cyan-900: map-get($tw-cyan-list, '900');
-$tw-cyan-950: map-get($tw-cyan-list, '950');
+$tw-cyan-50: map.get($tw-cyan-list, '50');
+$tw-cyan-100: map.get($tw-cyan-list, '100');
+$tw-cyan-200: map.get($tw-cyan-list, '200');
+$tw-cyan-300: map.get($tw-cyan-list, '300');
+$tw-cyan-400: map.get($tw-cyan-list, '400');
+$tw-cyan-500: map.get($tw-cyan-list, '500');
+$tw-cyan-600: map.get($tw-cyan-list, '600');
+$tw-cyan-700: map.get($tw-cyan-list, '700');
+$tw-cyan-800: map.get($tw-cyan-list, '800');
+$tw-cyan-900: map.get($tw-cyan-list, '900');
+$tw-cyan-950: map.get($tw-cyan-list, '950');
 
 //  Sky
 //  ───────────────────────────────────
@@ -430,17 +432,17 @@ $tw-sky-list: (
   '950': #082f49,
 );
 
-$tw-sky-50: map-get($tw-sky-list, '50');
-$tw-sky-100: map-get($tw-sky-list, '100');
-$tw-sky-200: map-get($tw-sky-list, '200');
-$tw-sky-300: map-get($tw-sky-list, '300');
-$tw-sky-400: map-get($tw-sky-list, '400');
-$tw-sky-500: map-get($tw-sky-list, '500');
-$tw-sky-600: map-get($tw-sky-list, '600');
-$tw-sky-700: map-get($tw-sky-list, '700');
-$tw-sky-800: map-get($tw-sky-list, '800');
-$tw-sky-900: map-get($tw-sky-list, '900');
-$tw-sky-950: map-get($tw-sky-list, '950');
+$tw-sky-50: map.get($tw-sky-list, '50');
+$tw-sky-100: map.get($tw-sky-list, '100');
+$tw-sky-200: map.get($tw-sky-list, '200');
+$tw-sky-300: map.get($tw-sky-list, '300');
+$tw-sky-400: map.get($tw-sky-list, '400');
+$tw-sky-500: map.get($tw-sky-list, '500');
+$tw-sky-600: map.get($tw-sky-list, '600');
+$tw-sky-700: map.get($tw-sky-list, '700');
+$tw-sky-800: map.get($tw-sky-list, '800');
+$tw-sky-900: map.get($tw-sky-list, '900');
+$tw-sky-950: map.get($tw-sky-list, '950');
 
 //  Blue
 //  ───────────────────────────────────
@@ -459,17 +461,17 @@ $tw-blue-list: (
   '950': #172554,
 );
 
-$tw-blue-50: map-get($tw-blue-list, '50');
-$tw-blue-100: map-get($tw-blue-list, '100');
-$tw-blue-200: map-get($tw-blue-list, '200');
-$tw-blue-300: map-get($tw-blue-list, '300');
-$tw-blue-400: map-get($tw-blue-list, '400');
-$tw-blue-500: map-get($tw-blue-list, '500');
-$tw-blue-600: map-get($tw-blue-list, '600');
-$tw-blue-700: map-get($tw-blue-list, '700');
-$tw-blue-800: map-get($tw-blue-list, '800');
-$tw-blue-900: map-get($tw-blue-list, '900');
-$tw-blue-950: map-get($tw-blue-list, '950');
+$tw-blue-50: map.get($tw-blue-list, '50');
+$tw-blue-100: map.get($tw-blue-list, '100');
+$tw-blue-200: map.get($tw-blue-list, '200');
+$tw-blue-300: map.get($tw-blue-list, '300');
+$tw-blue-400: map.get($tw-blue-list, '400');
+$tw-blue-500: map.get($tw-blue-list, '500');
+$tw-blue-600: map.get($tw-blue-list, '600');
+$tw-blue-700: map.get($tw-blue-list, '700');
+$tw-blue-800: map.get($tw-blue-list, '800');
+$tw-blue-900: map.get($tw-blue-list, '900');
+$tw-blue-950: map.get($tw-blue-list, '950');
 
 //  Indigo
 //  ───────────────────────────────────
@@ -488,17 +490,17 @@ $tw-indigo-list: (
   '950': #1e1b4b,
 );
 
-$tw-indigo-50: map-get($tw-indigo-list, '50');
-$tw-indigo-100: map-get($tw-indigo-list, '100');
-$tw-indigo-200: map-get($tw-indigo-list, '200');
-$tw-indigo-300: map-get($tw-indigo-list, '300');
-$tw-indigo-400: map-get($tw-indigo-list, '400');
-$tw-indigo-500: map-get($tw-indigo-list, '500');
-$tw-indigo-600: map-get($tw-indigo-list, '600');
-$tw-indigo-700: map-get($tw-indigo-list, '700');
-$tw-indigo-800: map-get($tw-indigo-list, '800');
-$tw-indigo-900: map-get($tw-indigo-list, '900');
-$tw-indigo-950: map-get($tw-indigo-list, '950');
+$tw-indigo-50: map.get($tw-indigo-list, '50');
+$tw-indigo-100: map.get($tw-indigo-list, '100');
+$tw-indigo-200: map.get($tw-indigo-list, '200');
+$tw-indigo-300: map.get($tw-indigo-list, '300');
+$tw-indigo-400: map.get($tw-indigo-list, '400');
+$tw-indigo-500: map.get($tw-indigo-list, '500');
+$tw-indigo-600: map.get($tw-indigo-list, '600');
+$tw-indigo-700: map.get($tw-indigo-list, '700');
+$tw-indigo-800: map.get($tw-indigo-list, '800');
+$tw-indigo-900: map.get($tw-indigo-list, '900');
+$tw-indigo-950: map.get($tw-indigo-list, '950');
 
 //  Violet
 //  ───────────────────────────────────
@@ -517,17 +519,17 @@ $tw-violet-list: (
   '950': #2e1065,
 );
 
-$tw-violet-50: map-get($tw-violet-list, '50');
-$tw-violet-100: map-get($tw-violet-list, '100');
-$tw-violet-200: map-get($tw-violet-list, '200');
-$tw-violet-300: map-get($tw-violet-list, '300');
-$tw-violet-400: map-get($tw-violet-list, '400');
-$tw-violet-500: map-get($tw-violet-list, '500');
-$tw-violet-600: map-get($tw-violet-list, '600');
-$tw-violet-700: map-get($tw-violet-list, '700');
-$tw-violet-800: map-get($tw-violet-list, '800');
-$tw-violet-900: map-get($tw-violet-list, '900');
-$tw-violet-950: map-get($tw-violet-list, '950');
+$tw-violet-50: map.get($tw-violet-list, '50');
+$tw-violet-100: map.get($tw-violet-list, '100');
+$tw-violet-200: map.get($tw-violet-list, '200');
+$tw-violet-300: map.get($tw-violet-list, '300');
+$tw-violet-400: map.get($tw-violet-list, '400');
+$tw-violet-500: map.get($tw-violet-list, '500');
+$tw-violet-600: map.get($tw-violet-list, '600');
+$tw-violet-700: map.get($tw-violet-list, '700');
+$tw-violet-800: map.get($tw-violet-list, '800');
+$tw-violet-900: map.get($tw-violet-list, '900');
+$tw-violet-950: map.get($tw-violet-list, '950');
 
 //  Purple
 //  ───────────────────────────────────
@@ -546,17 +548,17 @@ $tw-purple-list: (
   '950': #3b0764,
 );
 
-$tw-purple-50: map-get($tw-purple-list, '50');
-$tw-purple-100: map-get($tw-purple-list, '100');
-$tw-purple-200: map-get($tw-purple-list, '200');
-$tw-purple-300: map-get($tw-purple-list, '300');
-$tw-purple-400: map-get($tw-purple-list, '400');
-$tw-purple-500: map-get($tw-purple-list, '500');
-$tw-purple-600: map-get($tw-purple-list, '600');
-$tw-purple-700: map-get($tw-purple-list, '700');
-$tw-purple-800: map-get($tw-purple-list, '800');
-$tw-purple-900: map-get($tw-purple-list, '900');
-$tw-purple-950: map-get($tw-purple-list, '950');
+$tw-purple-50: map.get($tw-purple-list, '50');
+$tw-purple-100: map.get($tw-purple-list, '100');
+$tw-purple-200: map.get($tw-purple-list, '200');
+$tw-purple-300: map.get($tw-purple-list, '300');
+$tw-purple-400: map.get($tw-purple-list, '400');
+$tw-purple-500: map.get($tw-purple-list, '500');
+$tw-purple-600: map.get($tw-purple-list, '600');
+$tw-purple-700: map.get($tw-purple-list, '700');
+$tw-purple-800: map.get($tw-purple-list, '800');
+$tw-purple-900: map.get($tw-purple-list, '900');
+$tw-purple-950: map.get($tw-purple-list, '950');
 
 //  Fuchsia
 //  ───────────────────────────────────
@@ -575,17 +577,17 @@ $tw-fuchsia-list: (
   '950': #4a044e,
 );
 
-$tw-fuchsia-50: map-get($tw-fuchsia-list, '50');
-$tw-fuchsia-100: map-get($tw-fuchsia-list, '100');
-$tw-fuchsia-200: map-get($tw-fuchsia-list, '200');
-$tw-fuchsia-300: map-get($tw-fuchsia-list, '300');
-$tw-fuchsia-400: map-get($tw-fuchsia-list, '400');
-$tw-fuchsia-500: map-get($tw-fuchsia-list, '500');
-$tw-fuchsia-600: map-get($tw-fuchsia-list, '600');
-$tw-fuchsia-700: map-get($tw-fuchsia-list, '700');
-$tw-fuchsia-800: map-get($tw-fuchsia-list, '800');
-$tw-fuchsia-900: map-get($tw-fuchsia-list, '900');
-$tw-fuchsia-950: map-get($tw-fuchsia-list, '950');
+$tw-fuchsia-50: map.get($tw-fuchsia-list, '50');
+$tw-fuchsia-100: map.get($tw-fuchsia-list, '100');
+$tw-fuchsia-200: map.get($tw-fuchsia-list, '200');
+$tw-fuchsia-300: map.get($tw-fuchsia-list, '300');
+$tw-fuchsia-400: map.get($tw-fuchsia-list, '400');
+$tw-fuchsia-500: map.get($tw-fuchsia-list, '500');
+$tw-fuchsia-600: map.get($tw-fuchsia-list, '600');
+$tw-fuchsia-700: map.get($tw-fuchsia-list, '700');
+$tw-fuchsia-800: map.get($tw-fuchsia-list, '800');
+$tw-fuchsia-900: map.get($tw-fuchsia-list, '900');
+$tw-fuchsia-950: map.get($tw-fuchsia-list, '950');
 
 //  Pink
 //  ───────────────────────────────────
@@ -604,17 +606,17 @@ $tw-pink-list: (
   '950': #500724,
 );
 
-$tw-pink-50: map-get($tw-pink-list, '50');
-$tw-pink-100: map-get($tw-pink-list, '100');
-$tw-pink-200: map-get($tw-pink-list, '200');
-$tw-pink-300: map-get($tw-pink-list, '300');
-$tw-pink-400: map-get($tw-pink-list, '400');
-$tw-pink-500: map-get($tw-pink-list, '500');
-$tw-pink-600: map-get($tw-pink-list, '600');
-$tw-pink-700: map-get($tw-pink-list, '700');
-$tw-pink-800: map-get($tw-pink-list, '800');
-$tw-pink-900: map-get($tw-pink-list, '900');
-$tw-pink-950: map-get($tw-pink-list, '950');
+$tw-pink-50: map.get($tw-pink-list, '50');
+$tw-pink-100: map.get($tw-pink-list, '100');
+$tw-pink-200: map.get($tw-pink-list, '200');
+$tw-pink-300: map.get($tw-pink-list, '300');
+$tw-pink-400: map.get($tw-pink-list, '400');
+$tw-pink-500: map.get($tw-pink-list, '500');
+$tw-pink-600: map.get($tw-pink-list, '600');
+$tw-pink-700: map.get($tw-pink-list, '700');
+$tw-pink-800: map.get($tw-pink-list, '800');
+$tw-pink-900: map.get($tw-pink-list, '900');
+$tw-pink-950: map.get($tw-pink-list, '950');
 
 //  Rose
 //  ───────────────────────────────────
@@ -633,17 +635,17 @@ $tw-rose-list: (
   '950': #4c0519,
 );
 
-$tw-rose-50: map-get($tw-rose-list, '50');
-$tw-rose-100: map-get($tw-rose-list, '100');
-$tw-rose-200: map-get($tw-rose-list, '200');
-$tw-rose-300: map-get($tw-rose-list, '300');
-$tw-rose-400: map-get($tw-rose-list, '400');
-$tw-rose-500: map-get($tw-rose-list, '500');
-$tw-rose-600: map-get($tw-rose-list, '600');
-$tw-rose-700: map-get($tw-rose-list, '700');
-$tw-rose-800: map-get($tw-rose-list, '800');
-$tw-rose-900: map-get($tw-rose-list, '900');
-$tw-rose-950: map-get($tw-rose-list, '950');
+$tw-rose-50: map.get($tw-rose-list, '50');
+$tw-rose-100: map.get($tw-rose-list, '100');
+$tw-rose-200: map.get($tw-rose-list, '200');
+$tw-rose-300: map.get($tw-rose-list, '300');
+$tw-rose-400: map.get($tw-rose-list, '400');
+$tw-rose-500: map.get($tw-rose-list, '500');
+$tw-rose-600: map.get($tw-rose-list, '600');
+$tw-rose-700: map.get($tw-rose-list, '700');
+$tw-rose-800: map.get($tw-rose-list, '800');
+$tw-rose-900: map.get($tw-rose-list, '900');
+$tw-rose-950: map.get($tw-rose-list, '950');
 
 //  Color list
 //  ───────────────────────────────────

@@ -57,7 +57,7 @@ export const TherapyAppointmentForm = ({
         notes: '',
       });
     }
-  }, [instance, initialStartTime]);
+  }, [instance, initialStartTime, form]);
 
   function createTherapyAppointment(data: TherapyAppointmentFormData) {
     if (!client) {

@@ -56,7 +56,7 @@ export const TechnicianForm = ({ technician, onCancel, onCreate, onDelete, onUpd
       notes: technician.notes,
       is_manually_maxed_out: technician.is_manually_maxed_out || false,
     });
-  }, [technician, form.reset]);
+  }, [technician, form]);
 
   function clickDelete() {
     setConfirmDelete(true);

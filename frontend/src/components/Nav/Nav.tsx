@@ -5,7 +5,7 @@ import { http } from '@/lib/http';
 import { toastError } from '@/utils/errors';
 import { ArrowLeftRight, Calendar, CalendarCheck, IdCard, List, LogOut, Menu, Settings, User } from 'lucide-react';
 import React from 'react';
-import { Link, NavLink, useNavigate } from 'react-router-dom';
+import { Link, NavLink, useNavigate } from 'react-router';
 import { SearchPopover } from '../SearchPopover/SearchPopover';
 import { SettingsDialog } from '../SettingsDialog/SettingsDialog';
 import { Button } from '../ui/button';

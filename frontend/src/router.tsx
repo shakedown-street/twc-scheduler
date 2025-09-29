@@ -1,4 +1,6 @@
-import { Navigate, RouteObject } from 'react-router-dom';
+/* eslint-disable react-refresh/only-export-components */
+
+import { Navigate, type RouteObject } from 'react-router';
 import { App } from './App';
 import { useAuth } from './features/auth/contexts/AuthContext';
 import { Login } from './features/auth/routes/Login/Login';

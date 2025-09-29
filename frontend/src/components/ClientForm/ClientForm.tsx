@@ -58,7 +58,7 @@ export const ClientForm = ({ client, onCancel, onCreate, onDelete, onUpdate }: C
       past_technicians: client.past_technicians.map((tech) => tech.id),
       is_manually_maxed_out: client.is_manually_maxed_out || false,
     });
-  }, [client, form.reset]);
+  }, [client, form]);
 
   React.useEffect(() => {
     TechnicianModel.all({

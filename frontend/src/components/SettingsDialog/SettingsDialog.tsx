@@ -25,7 +25,7 @@ export const SettingsDialog = (props: SettingsDialogProps) => {
       return;
     }
     form.setValue('hover_cards_enabled', user.hover_cards_enabled ?? false);
-  }, [user]);
+  }, [user, form]);
 
   async function save(data: SettingsFormData) {
     if (!user) {

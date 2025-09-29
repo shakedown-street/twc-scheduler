@@ -13,7 +13,7 @@ import { orderByFirstName } from '@/utils/order';
 import { dayToString } from '@/utils/time';
 import { Loader } from 'lucide-react';
 import React from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { useSearchParams } from 'react-router';
 
 export const Schedule = () => {
   const [clients, setClients] = React.useState<Client[]>([]);

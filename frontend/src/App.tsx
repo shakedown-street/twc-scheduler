@@ -1,8 +1,7 @@
-import { Outlet } from 'react-router-dom';
-import { Toaster } from 'sonner';
+import { Outlet } from 'react-router';
 import { Nav } from './components/Nav/Nav';
+import { Toaster } from './components/ui/sonner';
 import { ImpersonationWarning } from './features/auth/components/ImpersonationWarning/ImpersonationWarning';
-import './index.css';
 
 export const App = () => {
   return (
