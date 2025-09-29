@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 import axios, { type AxiosResponse } from 'axios';
 
 export const http = axios.create({

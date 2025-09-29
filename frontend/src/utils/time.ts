@@ -43,7 +43,6 @@ export function isBetween(time: string, start: string, end: string) {
   const parsedTime = parseTime(time);
   const parsedStart = parseTime(start);
   const parsedEnd = parseTime(end);
-
   return isAfter(parsedTime, parsedStart) && isBefore(parsedTime, parsedEnd);
 }
 
@@ -56,7 +55,6 @@ export function isBetweenInclusive(time: string, start: string, end: string) {
   const parsedTime = parseTime(time);
   const parsedStart = parseTime(start);
   const parsedEnd = parseTime(end);
-
   return !isBefore(parsedTime, parsedStart) && !isAfter(parsedTime, parsedEnd);
 }
 
@@ -69,7 +67,6 @@ export function isBetweenInclusiveStart(time: string, start: string, end: string
   const parsedTime = parseTime(time);
   const parsedStart = parseTime(start);
   const parsedEnd = parseTime(end);
-
   return !isBefore(parsedTime, parsedStart) && isBefore(parsedTime, parsedEnd);
 }
 
@@ -82,7 +79,6 @@ export function isBetweenInclusiveEnd(time: string, start: string, end: string) 
   const parsedTime = parseTime(time);
   const parsedStart = parseTime(start);
   const parsedEnd = parseTime(end);
-
   return isAfter(parsedTime, parsedStart) && !isAfter(parsedTime, parsedEnd);
 }
 
@@ -97,12 +93,8 @@ export function checkTimeIntersection(aStart: string, aEnd: string, bStart: stri
  * Format a time string in the format "HH:mm:ss" to "h:mm a"
  */
 export function formatTime(time: string) {
-  try {
-    const parsedTime = parse(time, 'HH:mm:ss', new Date());
-    return format(parsedTime, 'h:mm a');
-  } catch (error) {
-    return time;
-  }
+  const parsedTime = parse(time, 'HH:mm:ss', new Date());
+  return format(parsedTime, 'h:mm a');
 }
 
 /**
@@ -110,7 +102,6 @@ export function formatTime(time: string) {
  */
 export function formatTimeShort(time: string) {
   const parsedTime = parse(time, 'HH:mm:ss', new Date());
-
   return isOnTheHour(time) ? format(parsedTime, 'h') : format(parsedTime, 'h:mm');
 }
 
@@ -121,7 +112,6 @@ export function formatTimeShort(time: string) {
  */
 export function formatTimeTimeline(time: string) {
   const parsedTime = parse(time, 'HH:mm:ss', new Date());
-
   return isOnTheHour(time) ? format(parsedTime, 'h') : format(parsedTime, 'm');
 }
 
@@ -145,6 +135,7 @@ export function generateTimeSlots(startTime: string, endTime: string, interval: 
   let currentTime = startTime;
   while (currentTime < endTime) {
     timeSlots.push(currentTime);
+    // eslint-disable-next-line prefer-const
     let [hours, minutes, seconds] = currentTime.split(':').map(Number);
     minutes += interval;
     if (minutes >= 60) {
