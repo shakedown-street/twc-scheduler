@@ -72,6 +72,7 @@ class TherapyAppointmentAdmin(admin.ModelAdmin):
     list_display = (
         "client",
         "therapy_type",
+        "schedule",
         "day",
         "start_time",
         "end_time",

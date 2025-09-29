@@ -319,7 +319,7 @@ export const TechniciansOverview = ({ isSubList = false, showLegend = true }: Te
 
   return (
     <>
-      <div className="flex flex-col gap-4">
+      <div className="flex flex-col gap-2">
         {showLegend && (
           <HoverCard>
             <HoverCardTrigger asChild>

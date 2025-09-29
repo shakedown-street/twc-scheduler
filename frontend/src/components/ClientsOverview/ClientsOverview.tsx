@@ -351,7 +351,7 @@ export const ClientsOverview = () => {
 
   return (
     <>
-      <div className="flex flex-col gap-4">
+      <div className="flex flex-col gap-2">
         <HoverCard>
           <HoverCardTrigger asChild>
             <Button className="self-start" size="sm" variant="outline">

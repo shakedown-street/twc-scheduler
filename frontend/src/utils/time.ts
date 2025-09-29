@@ -93,8 +93,12 @@ export function checkTimeIntersection(aStart: string, aEnd: string, bStart: stri
  * Format a time string in the format "HH:mm:ss" to "h:mm a"
  */
 export function formatTime(time: string) {
-  const parsedTime = parse(time, 'HH:mm:ss', new Date());
-  return format(parsedTime, 'h:mm a');
+  try {
+    const parsedTime = parse(time, 'HH:mm:ss', new Date());
+    return format(parsedTime, 'h:mm a');
+  } catch {
+    return time;
+  }
 }
 
 /**
