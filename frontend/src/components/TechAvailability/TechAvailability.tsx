@@ -307,6 +307,7 @@ export const TechAvailability = () => {
               <td
                 style={{
                   background: skillLevelColor(technician.skill_level),
+                  color: 'black',
                   textAlign: 'center',
                 }}
               >

@@ -215,7 +215,11 @@ export const ClientTechnicianMatrix = () => {
                         onMouseLeave={() => handleColumnHoverLeave()}
                         style={{
                           background:
-                            count > 0 ? technician.bg_color : hoveredColumn === technicianIndex ? '#e5e7eb' : undefined,
+                            count > 0
+                              ? technician.bg_color
+                              : hoveredColumn === technicianIndex
+                                ? 'var(--border)'
+                                : undefined,
                           color: count > 0 ? technician.text_color : undefined,
                         }}
                       >
@@ -226,6 +230,7 @@ export const ClientTechnicianMatrix = () => {
                   <td
                     style={{
                       background: getTotalTechsColor(total),
+                      color: 'black',
                     }}
                   >
                     {total > 0 ? total : ''}

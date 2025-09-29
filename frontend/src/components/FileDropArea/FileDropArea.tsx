@@ -153,7 +153,11 @@ export const FileDropArea = ({
           {files.map((file, index) => (
             <li className="flex items-center gap-4 px-2 py-1 not-last:border-b" key={file.name}>
               {showImagePreview && (
-                <img className="h-8 w-8 rounded-md bg-white object-contain" src={objectUrls[index]} alt={file.name} />
+                <img
+                  className="bg-background h-8 w-8 rounded-md object-contain"
+                  src={objectUrls[index]}
+                  alt={file.name}
+                />
               )}
               <div className="flex-1 text-xs">{file.name}</div>
               {showFileSize && <div className="text-xs text-nowrap">{formatBytes(file.size, 1)}</div>}

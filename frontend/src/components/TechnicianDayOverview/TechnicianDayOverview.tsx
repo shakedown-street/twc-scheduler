@@ -118,7 +118,7 @@ export const TechnicianDayOverview = ({ day }: TechnicianDayOverviewProps) => {
 
     // Render availability blocks
     if (blockAvailabilities.length > 0) {
-      let background = 'black'; // tw-slate-300
+      let background = 'black';
       let color = '#22c55e'; // tw-green-500
       let letter = 'A';
       if (technician.computed_properties?.is_maxed_on_sessions) {
@@ -212,7 +212,7 @@ export const TechnicianDayOverview = ({ day }: TechnicianDayOverviewProps) => {
               <td style={{ background: technician.bg_color, color: technician.text_color, textAlign: 'center' }}>
                 {index + 1}
               </td>
-              <td style={{ background: skillLevelColor(technician.skill_level), textAlign: 'center' }}>
+              <td style={{ background: skillLevelColor(technician.skill_level), color: 'black', textAlign: 'center' }}>
                 {technician.skill_level}
               </td>
               <td

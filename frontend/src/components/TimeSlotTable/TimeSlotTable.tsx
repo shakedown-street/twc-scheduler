@@ -109,17 +109,17 @@ export const TimeSlotTable = ({
     }
     if (slotAppointment && !slotTherapyAppointment) {
       if (slotAppointment.in_clinic) {
-        const bgColor = slotAppointment.technician?.bg_color || 'white';
-        const textColor = slotAppointment.technician?.text_color || 'black';
+        const bgColor = slotAppointment.technician?.bg_color || 'var(--background)';
+        const textColor = slotAppointment.technician?.text_color || 'var(--foreground)';
         return striped(textColor, bgColor);
       }
-      return slotAppointment.technician?.bg_color || 'white';
+      return slotAppointment.technician?.bg_color || 'var(--background)';
     }
     if (slotAvailability) {
       return '#cbd5e1'; // tw-slate-300
     }
     if (slotBlock) {
-      return 'white';
+      return 'var(--background)';
     }
     return '#404040'; // tw-neutral-700
   }
@@ -242,8 +242,8 @@ export const TimeSlotTable = ({
               key={slot}
               style={{
                 borderLeft: isOnTheHour(slot) ? '2px solid black' : undefined,
-                background: getSlotBlock(slot) ? 'white' : '#404040',
-                color: getSlotBlock(slot) ? 'black' : 'white',
+                background: getSlotBlock(slot) ? 'var(--background)' : '#404040',
+                color: getSlotBlock(slot) ? 'var(--foreground)' : 'white',
                 fontWeight: isOnTheHour(slot) ? 'bold' : 'light',
               }}
             >
@@ -265,7 +265,7 @@ export const TimeSlotTable = ({
                 {client.first_name} {client.last_name}
               </a>
             </td>
-            <td style={{ background: skillLevelColor(client.req_skill_level), textAlign: 'center' }}>
+            <td style={{ background: skillLevelColor(client.req_skill_level), color: 'black', textAlign: 'center' }}>
               {client.req_skill_level}
             </td>
             <td

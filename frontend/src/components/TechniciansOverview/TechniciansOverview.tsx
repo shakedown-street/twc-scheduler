@@ -207,7 +207,7 @@ export const TechniciansOverview = ({ isSubList = false, showLegend = true }: Te
 
     // Render availability blocks
     if (blockAvailabilities.length > 0) {
-      let background = 'black'; // tw-slate-300
+      let background = 'black';
       let color = '#22c55e'; // tw-green-500
       let letter = 'A';
       if (technician.computed_properties?.is_maxed_on_sessions) {
@@ -300,10 +300,10 @@ export const TechniciansOverview = ({ isSubList = false, showLegend = true }: Te
           <span>In clinic</span>
         </div>
         <div className="TechniciansOverview__legend__example">
-          <div className="TechniciansOverview__legend__example__color">
+          <div className="TechniciansOverview__legend__example__color bg-background">
             <div className="TechniciansOverview__legend__example__color__corner">PA</div>
           </div>
-          <span>Preschool/Adaptive</span>
+          <span>Preschool/adaptive</span>
         </div>
       </div>
     );
@@ -384,6 +384,7 @@ export const TechniciansOverview = ({ isSubList = false, showLegend = true }: Te
                         background: dayColor(dayIndex),
                         borderLeftWidth: blockIndex === 0 ? '6px' : '1px',
                         borderRightWidth: blockIndex === blocks.length - 1 ? '6px' : '1px',
+                        color: 'black',
                       }}
                     >
                       {day}
@@ -400,7 +401,9 @@ export const TechniciansOverview = ({ isSubList = false, showLegend = true }: Te
                 <td style={{ background: technician.bg_color, color: technician.text_color, textAlign: 'center' }}>
                   {index + 1}
                 </td>
-                <td style={{ background: skillLevelColor(technician.skill_level), textAlign: 'center' }}>
+                <td
+                  style={{ background: skillLevelColor(technician.skill_level), color: 'black', textAlign: 'center' }}
+                >
                   {technician.skill_level}
                 </td>
                 <td

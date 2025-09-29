@@ -1,6 +1,7 @@
 @import '@/scss/variables';
 
 .TimeSlotTable {
+  border-collapse: collapse;
   width: 100%;
 
   thead {
@@ -26,7 +27,7 @@
       }
 
       &:hover {
-        background-color: $tw-gray-200;
+        background-color: var(--border);
       }
     }
   }

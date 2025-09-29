@@ -422,7 +422,7 @@ export const AppointmentForm = ({
               />
             )}
           />
-          <Label htmlFor="is_preschool_or_adaptive">Preschool/Adaptive</Label>
+          <Label htmlFor="is_preschool_or_adaptive">Preschool/adaptive</Label>
         </div>
       </div>
       <div className="form-group">

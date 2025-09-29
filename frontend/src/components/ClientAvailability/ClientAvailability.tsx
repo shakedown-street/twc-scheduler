@@ -308,6 +308,7 @@ export const ClientAvailability = () => {
               <td
                 style={{
                   background: skillLevelColor(client.req_skill_level),
+                  color: 'black',
                   textAlign: 'center',
                 }}
               >

@@ -1,6 +1,8 @@
 @import '@/scss/variables';
 
 .ClientTechnicianHistory {
+  border-collapse: collapse;
+
   &__container {
     max-height: 50rem;
     overflow: auto;

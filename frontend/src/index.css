@@ -81,8 +81,6 @@
     'Noto Color Emoji';
   --font-mono:
     'Geist Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
-  --primary: #5c9bd3;
-  --ring: var(--primary);
 }
 
 .dark {

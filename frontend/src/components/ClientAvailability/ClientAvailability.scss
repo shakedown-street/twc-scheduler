@@ -2,6 +2,7 @@
 
 .ClientAvailability {
   &__table {
+    border-collapse: collapse;
     width: 100%;
 
     &--vertical {
@@ -11,7 +12,7 @@
     thead {
       tr {
         th {
-          border: 1px solid $tw-gray-900;
+          border: 1px solid black;
           font-size: 0.625rem;
           padding: 0.25rem;
           text-align: left;
@@ -22,14 +23,14 @@
     tbody {
       tr {
         td {
-          border: 1px solid $tw-gray-900;
+          border: 1px solid black;
           font-size: 0.75rem;
           padding: 0.25rem;
           text-align: left;
         }
 
         &:hover {
-          background-color: $tw-gray-200;
+          background-color: var(--border);
         }
       }
     }
@@ -37,40 +38,40 @@
     tfoot {
       tr {
         td {
-          border: 1px solid $tw-gray-900;
+          border: 1px solid black;
           font-size: 0.625rem;
           padding: 0.25rem;
           text-align: left;
         }
 
         &:hover {
-          background-color: $tw-gray-200;
+          background-color: var(--border);
         }
       }
     }
 
     &__boldBorder {
-      border-left: 6px solid $tw-gray-900 !important;
-      border-right: 6px solid $tw-gray-900 !important;
+      border-left: 6px solid black !important;
+      border-right: 6px solid black !important;
     }
 
     &__block {
       background-color: $tw-gray-400;
+      color: black;
       cursor: pointer;
       width: 4.5rem;
 
       &--first {
-        border-left: 6px solid $tw-gray-900 !important;
+        border-left: 6px solid black !important;
       }
 
       &--last {
-        border-right: 6px solid $tw-gray-900 !important;
+        border-right: 6px solid black !important;
       }
 
       &__count {
         background-color: $tw-green-100 !important;
-        border-top: 2px solid $tw-gray-900 !important;
-        background-color: white;
+        border-top: 2px solid black !important;
       }
     }
   }

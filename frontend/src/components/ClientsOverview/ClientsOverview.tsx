@@ -231,10 +231,10 @@ export const ClientsOverview = () => {
     // Render appointment blocks
     if (blockAppointments.length > 0) {
       const appointment = blockAppointments[0];
-      let background = appointment.technician?.bg_color || 'white';
+      let background = appointment.technician?.bg_color || 'var(--background)';
       if (appointment.in_clinic) {
-        const bgColor = appointment.technician?.bg_color || 'white';
-        const textColor = appointment.technician?.text_color || 'black';
+        const bgColor = appointment.technician?.bg_color || 'var(--background)';
+        const textColor = appointment.technician?.text_color || 'var(--foreground)';
         background = striped(textColor, bgColor);
       }
 
@@ -332,10 +332,10 @@ export const ClientsOverview = () => {
           <span>In clinic</span>
         </div>
         <div className="ClientsOverview__legend__example">
-          <div className="ClientsOverview__legend__example__color">
+          <div className="ClientsOverview__legend__example__color bg-background">
             <div className="ClientsOverview__legend__example__color__corner">PA</div>
           </div>
-          <span>Preschool/Adaptive</span>
+          <span>Preschool/adaptive</span>
         </div>
       </div>
     );
@@ -406,6 +406,7 @@ export const ClientsOverview = () => {
                         background: dayColor(dayIndex),
                         borderLeftWidth: blockIndex === 0 ? '6px' : '1px',
                         borderRightWidth: blockIndex === blocks.length - 1 ? '6px' : '1px',
+                        color: 'black',
                       }}
                     >
                       {day}
@@ -420,7 +421,9 @@ export const ClientsOverview = () => {
             {clients.map((client, index) => (
               <tr key={client.id}>
                 <td style={{ textAlign: 'center' }}>{index + 1}</td>
-                <td style={{ background: skillLevelColor(client.req_skill_level), textAlign: 'center' }}>
+                <td
+                  style={{ background: skillLevelColor(client.req_skill_level), color: 'black', textAlign: 'center' }}
+                >
                   {client.req_skill_level}
                 </td>
                 <td
