@@ -5,7 +5,7 @@ import { getBlockAppointments, getBlockAvailabilities } from '@/utils/appointmen
 import { skillLevelColor, striped } from '@/utils/color';
 import { orderByFirstName } from '@/utils/order';
 import { dayToString } from '@/utils/time';
-import { Loader } from 'lucide-react';
+import { Check, Loader } from 'lucide-react';
 import React from 'react';
 import { AppointmentHover } from '../AppointmentHover/AppointmentHover';
 import { TechnicianForm } from '../TechnicianForm/TechnicianForm';
@@ -221,9 +221,7 @@ export const TechnicianDayOverview = ({ day }: TechnicianDayOverviewProps) => {
                   verticalAlign: 'middle',
                 }}
               >
-                {technician.spanish_speaking && (
-                  <span className="material-symbols-outlined block text-sm text-green-700">check</span>
-                )}
+                {technician.spanish_speaking && <Check className="text-green-700" size="14" />}
               </td>
               <td className="text-nowrap" style={{ background: technician.bg_color, color: technician.text_color }}>
                 <a

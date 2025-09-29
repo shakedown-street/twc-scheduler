@@ -4,7 +4,7 @@ import { useAuth } from '@/features/auth/contexts/AuthContext';
 import { http } from '@/lib/http';
 import { toastError } from '@/utils/errors';
 import clsx from 'clsx';
-import { IdCard, LogOut, Menu, Settings, User } from 'lucide-react';
+import { ArrowLeftRight, Calendar, CalendarCheck, IdCard, List, LogOut, Menu, Settings, User } from 'lucide-react';
 import React from 'react';
 import { Link, NavLink, useNavigate } from 'react-router-dom';
 import { SearchPopover } from '../SearchPopover/SearchPopover';
@@ -107,7 +107,7 @@ export const Nav = () => {
                     });
                   }}
                 >
-                  <span className="material-symbols-outlined">edit_calendar</span>
+                  <Calendar size="18" />
                   Schedule
                 </NavLink>
                 <NavLink
@@ -118,7 +118,7 @@ export const Nav = () => {
                     });
                   }}
                 >
-                  <span className="material-symbols-outlined">overview</span>
+                  <List size="18" />
                   Overview
                 </NavLink>
                 <NavLink
@@ -129,7 +129,7 @@ export const Nav = () => {
                     });
                   }}
                 >
-                  <span className="material-symbols-outlined">event_available</span>
+                  <CalendarCheck size="18" />
                   Availability
                 </NavLink>
                 <NavLink
@@ -140,7 +140,7 @@ export const Nav = () => {
                     });
                   }}
                 >
-                  <span className="material-symbols-outlined">swap_horiz</span>
+                  <ArrowLeftRight size="18" />
                   Sub List
                 </NavLink>
               </div>

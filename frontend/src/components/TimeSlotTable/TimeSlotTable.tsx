@@ -13,6 +13,7 @@ import React from 'react';
 import { AppointmentHover } from '../AppointmentHover/AppointmentHover';
 import { HoverCard, HoverCardContent, HoverCardTrigger } from '../ui/hover-card';
 import './TimeSlotTable.scss';
+import { Check } from 'lucide-react';
 
 export type TimeSlotTableProps = {
   blocks: Block[];
@@ -271,9 +272,7 @@ export const TimeSlotTable = ({
                 verticalAlign: 'middle',
               }}
             >
-              {client.req_spanish_speaking && (
-                <span className="material-symbols-outlined block text-sm text-green-700">check</span>
-              )}
+              {client.req_spanish_speaking && <Check className="text-green-700" size="14" />}
             </td>
             <td style={{ textAlign: 'center' }}>{client.computed_properties?.total_hours_by_day[day]}</td>
             <td style={{ textAlign: 'center' }}>{client.computed_properties?.total_hours}</td>

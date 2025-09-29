@@ -8,7 +8,7 @@ import { skillLevelColor } from '@/utils/color';
 import { orderByFirstName } from '@/utils/order';
 import { checkTimeIntersection, formatTimeShort } from '@/utils/time';
 import clsx from 'clsx';
-import { Loader } from 'lucide-react';
+import { AlertTriangle, Check, Loader, MapPin } from 'lucide-react';
 import React from 'react';
 import { Button } from '../ui/button';
 import { Checkbox } from '../ui/checkbox';
@@ -207,16 +207,8 @@ export const ClientAvailability = () => {
                 <div className="text-nowrap">
                   {formatTimeShort(blockAvailability.start_time)}-{formatTimeShort(blockAvailability.end_time)}
                 </div>
-                {blockAvailability.in_clinic && (
-                  <span className="material-symbols-outlined text-sm" title="In clinic">
-                    location_on
-                  </span>
-                )}
-                {!isFullBlock(blockAvailability, block) && (
-                  <span className="material-symbols-outlined text-sm text-red-700" title="Partially available">
-                    warning
-                  </span>
-                )}
+                {blockAvailability.in_clinic && <MapPin size="14" />}
+                {!isFullBlock(blockAvailability, block) && <AlertTriangle className="text-red-700" size="14" />}
               </div>
             )}
           </td>
@@ -322,17 +314,13 @@ export const ClientAvailability = () => {
                 {client.req_skill_level}
               </td>
               <td style={{ textAlign: 'center' }}>
-                {client.req_spanish_speaking && (
-                  <span className="material-symbols-outlined text-sm text-green-700">check</span>
-                )}
+                {client.req_spanish_speaking && <Check className="text-green-700" size="14" />}
               </td>
               <td style={{ textAlign: 'center' }}>
-                {client.eval_done && <span className="material-symbols-outlined text-sm text-green-700">check</span>}
+                {client.eval_done && <Check className="text-green-700" size="14" />}
               </td>
               <td style={{ textAlign: 'center' }}>
-                {client.is_onboarding && (
-                  <span className="material-symbols-outlined text-sm text-green-700">check</span>
-                )}
+                {client.is_onboarding && <Check className="text-green-700" size="14" />}
               </td>
               <td>{client.prescribed_hours}</td>
               <td>{client.computed_properties?.total_hours_available}</td>

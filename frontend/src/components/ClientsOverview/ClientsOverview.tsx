@@ -4,7 +4,7 @@ import { useAuth } from '@/features/auth/contexts/AuthContext';
 import { getBlockAppointments, getBlockAvailabilities } from '@/utils/appointments';
 import { dayColor, skillLevelColor, striped } from '@/utils/color';
 import { orderByFirstName } from '@/utils/order';
-import { Info, Loader } from 'lucide-react';
+import { Check, Info, Loader } from 'lucide-react';
 import React from 'react';
 import { AppointmentForm } from '../AppointmentForm/AppointmentForm';
 import { AppointmentHover } from '../AppointmentHover/AppointmentHover';
@@ -433,9 +433,7 @@ export const ClientsOverview = () => {
                     verticalAlign: 'middle',
                   }}
                 >
-                  {client.req_spanish_speaking && (
-                    <span className="material-symbols-outlined block text-sm text-green-700">check</span>
-                  )}
+                  {client.req_spanish_speaking && <Check className="text-green-700" size="14" />}
                 </td>
                 <td className="text-nowrap">
                   <a

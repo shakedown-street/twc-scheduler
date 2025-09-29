@@ -8,7 +8,7 @@ import { skillLevelColor } from '@/utils/color';
 import { orderByFirstName } from '@/utils/order';
 import { checkTimeIntersection, formatTimeShort } from '@/utils/time';
 import clsx from 'clsx';
-import { Loader } from 'lucide-react';
+import { AlertTriangle, ArrowLeftRight, Check, Loader } from 'lucide-react';
 import React from 'react';
 import { Button } from '../ui/button';
 import { Checkbox } from '../ui/checkbox';
@@ -210,16 +210,8 @@ export const TechAvailability = () => {
                 <div className="text-nowrap">
                   {formatTimeShort(blockAvailability.start_time)}-{formatTimeShort(blockAvailability.end_time)}
                 </div>
-                {blockAvailability.is_sub && (
-                  <span className="material-symbols-outlined text-sm" title="Sub only">
-                    swap_horiz
-                  </span>
-                )}
-                {!isFullBlock(blockAvailability, block) && (
-                  <span className="material-symbols-outlined text-sm text-red-700" title="Partially available">
-                    warning
-                  </span>
-                )}
+                {blockAvailability.is_sub && <ArrowLeftRight size="14" />}
+                {!isFullBlock(blockAvailability, block) && <AlertTriangle className="text-red-700" size="14" />}
               </div>
             )}
           </td>
@@ -321,9 +313,7 @@ export const TechAvailability = () => {
                 {technician.skill_level}
               </td>
               <td style={{ textAlign: 'center' }}>
-                {technician.spanish_speaking && (
-                  <span className="material-symbols-outlined text-sm text-green-700">check</span>
-                )}
+                {technician.spanish_speaking && <Check className="text-green-700" size="14" />}
               </td>
               <td>{technician.requested_hours}</td>
               <td>{technician.computed_properties?.total_hours_available}</td>

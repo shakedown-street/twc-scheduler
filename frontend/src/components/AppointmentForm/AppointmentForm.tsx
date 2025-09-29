@@ -3,7 +3,7 @@ import { toastError } from '@/utils/errors';
 import { orderByFirstName } from '@/utils/order';
 import { dayToString } from '@/utils/time';
 import clsx from 'clsx';
-import { AlertTriangle } from 'lucide-react';
+import { AlertTriangle, Info } from 'lucide-react';
 import React from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { TimeInput } from '../TimeInput/TimeInput';
@@ -323,7 +323,29 @@ export const AppointmentForm = ({
       )}
       <div className="form-group">
         <Label>Day</Label>
-        <div>{dayToString(day)}</div>
+        <Badge>{dayToString(day)}</Badge>
+      </div>
+      <div className="form-group">
+        <div className="flex items-center gap-2">
+          <Checkbox
+            checked={overrideBlockTimes}
+            id="override_block_times"
+            onCheckedChange={() => {
+              setOverrideBlockTimes((prev) => !prev);
+            }}
+          />
+          <Label htmlFor="override_block_times">
+            Override block times
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Info size="16" />
+              </TooltipTrigger>
+              <TooltipContent className="w-64">
+                Check to allow setting start and end times outside of the block times.
+              </TooltipContent>
+            </Tooltip>
+          </Label>
+        </div>
       </div>
       <div className="form-row">
         <Controller
@@ -364,21 +386,6 @@ export const AppointmentForm = ({
             );
           }}
         />
-      </div>
-      <div className="form-group">
-        <div className="flex items-center gap-2">
-          <Checkbox
-            checked={overrideBlockTimes}
-            id="override_block_times"
-            onCheckedChange={() => {
-              setOverrideBlockTimes((prev) => !prev);
-            }}
-          />
-          <Label htmlFor="override_block_times">Override block times</Label>
-        </div>
-        <p className="text-muted-foreground text-xs">
-          Check to allow setting start and end times outside of the block times.
-        </p>
       </div>
       <div className="form-group">
         <div className="flex items-center gap-2">

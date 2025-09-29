@@ -4,7 +4,7 @@ import { useAuth } from '@/features/auth/contexts/AuthContext';
 import { getBlockAppointments, getBlockAvailabilities } from '@/utils/appointments';
 import { dayColor, skillLevelColor, striped } from '@/utils/color';
 import { orderByFirstName } from '@/utils/order';
-import { Info, Loader } from 'lucide-react';
+import { Check, Info, Loader } from 'lucide-react';
 import React from 'react';
 import { AppointmentHover } from '../AppointmentHover/AppointmentHover';
 import { TechnicianForm } from '../TechnicianForm/TechnicianForm';
@@ -429,9 +429,7 @@ export const TechniciansOverview = ({ isSubList = false, showLegend = true }: Te
                     verticalAlign: 'middle',
                   }}
                 >
-                  {technician.spanish_speaking && (
-                    <span className="material-symbols-outlined block text-sm text-green-700">check</span>
-                  )}
+                  {technician.spanish_speaking && <Check className="text-green-700" size="14" />}
                 </td>
                 <td className="text-nowrap" style={{ background: technician.bg_color, color: technician.text_color }}>
                   <a
