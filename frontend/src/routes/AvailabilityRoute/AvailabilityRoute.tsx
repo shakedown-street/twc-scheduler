@@ -1,7 +1,6 @@
 import { ClientAvailability } from '@/components/ClientAvailability/ClientAvailability';
 import { TechAvailability } from '@/components/TechAvailability/TechAvailability';
-import { TabItem, Tabs } from '@/ui';
-import { Helmet } from 'react-helmet';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useSearchParams } from 'react-router-dom';
 
 export const AvailabilityRoute = () => {
@@ -19,24 +18,22 @@ export const AvailabilityRoute = () => {
 
   return (
     <>
-      <Helmet>
-        <title>Availability | Schedule Builder</title>
-      </Helmet>
+      <title>Availability | Schedule Builder</title>
       <div className="container mx-auto px-4">
         <div className="mt-4 mb-12">
-          <h1>Availability</h1>
-          <Tabs className="mb-4">
-            <TabItem active={getTab() === 'clients'} onClick={() => setTab('clients')}>
-              Clients
-            </TabItem>
-            <TabItem active={getTab() === 'technicians'} onClick={() => setTab('technicians')}>
-              Technicians
-            </TabItem>
+          <h1 className="mb-4 text-2xl font-bold">Availability</h1>
+          <Tabs onValueChange={setTab} value={getTab()}>
+            <TabsList>
+              <TabsTrigger value="clients">Clients</TabsTrigger>
+              <TabsTrigger value="technicians">Technicians</TabsTrigger>
+            </TabsList>
+            <TabsContent value="clients">
+              <ClientAvailability />
+            </TabsContent>
+            <TabsContent value="technicians">
+              <TechAvailability />
+            </TabsContent>
           </Tabs>
-          <div>
-            {getTab() === 'clients' && <ClientAvailability />}
-            {getTab() === 'technicians' && <TechAvailability />}
-          </div>
         </div>
       </div>
     </>

@@ -1,7 +1,6 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { http } from '@/http';
+import { http } from '@/lib/http';
 import React from 'react';
-import { Helmet } from 'react-helmet';
 import { Link, useParams } from 'react-router-dom';
 
 export const VerifyEmail = () => {
@@ -29,9 +28,7 @@ export const VerifyEmail = () => {
 
   return (
     <>
-      <Helmet>
-        <title>Verify Email | Schedule Builder</title>
-      </Helmet>
+      <title>Verify Email | Schedule Builder</title>
       <div className="container mx-auto px-4">
         <div className="centerPage">
           <Card>

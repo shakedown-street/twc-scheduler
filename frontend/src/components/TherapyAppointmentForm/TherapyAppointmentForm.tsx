@@ -1,10 +1,14 @@
 import { TherapyAppointmentModel } from '@/api';
-import { Select, Textarea, TimeInput, useToast } from '@/ui';
+import { toastError } from '@/utils/errors';
 import { addMinutes, dayToString } from '@/utils/time';
 import React from 'react';
 import { Controller, useForm } from 'react-hook-form';
+import { TimeInput } from '../TimeInput/TimeInput';
 import { Badge } from '../ui/badge';
 import { Button } from '../ui/button';
+import { Label } from '../ui/label';
+import { Select } from '../ui/select';
+import { Textarea } from '../ui/textarea';
 import './TherapyAppointmentForm.scss';
 
 export type TherapyAppointmentFormProps = {
@@ -36,7 +40,6 @@ export const TherapyAppointmentForm = ({
   const [confirmDelete, setConfirmDelete] = React.useState(false);
 
   const form = useForm<TherapyAppointmentFormData>();
-  const toast = useToast();
 
   React.useEffect(() => {
     // Reset form values when the instance or initialStartTime changes
@@ -70,7 +73,7 @@ export const TherapyAppointmentForm = ({
         onCreate?.(created.data);
       })
       .catch((err) => {
-        toast.errorResponse(err);
+        toastError(err);
       });
   }
 
@@ -87,7 +90,7 @@ export const TherapyAppointmentForm = ({
         onUpdate?.(updated.data);
       })
       .catch((err) => {
-        toast.errorResponse(err);
+        toastError(err);
       });
   }
 
@@ -113,7 +116,7 @@ export const TherapyAppointmentForm = ({
         setConfirmDelete(false);
       })
       .catch((err) => {
-        toast.errorResponse(err);
+        toastError(err);
       });
   }
 
@@ -167,19 +170,17 @@ export const TherapyAppointmentForm = ({
           name="start_time"
           render={({ field }) => {
             return (
-              <TimeInput
-                inputProps={{
-                  fluid: true,
-                  id: 'start_time',
-                  label: 'Start time',
-                }}
-                min="09:00:00"
-                max="19:00:00"
-                onChange={(value) => {
-                  field.onChange(value);
-                }}
-                value={field.value}
-              />
+              <div className="form-group">
+                <Label htmlFor="start_time">Start time</Label>
+                <TimeInput
+                  min="09:00:00"
+                  max="19:00:00"
+                  onChange={(value) => {
+                    field.onChange(value);
+                  }}
+                  value={field.value}
+                />
+              </div>
             );
           }}
         />
@@ -188,30 +189,34 @@ export const TherapyAppointmentForm = ({
           name="end_time"
           render={({ field }) => {
             return (
-              <TimeInput
-                inputProps={{
-                  fluid: true,
-                  id: 'end_time',
-                  label: 'End time',
-                }}
-                min={initialStartTime}
-                max="19:00:00"
-                onChange={(value) => {
-                  field.onChange(value);
-                }}
-                value={field.value}
-              />
+              <div className="form-group">
+                <Label htmlFor="end_time">End time</Label>
+                <TimeInput
+                  min={initialStartTime}
+                  max="19:00:00"
+                  onChange={(value) => {
+                    field.onChange(value);
+                  }}
+                  value={field.value}
+                />
+              </div>
             );
           }}
         />
       </div>
-      <Select fluid label="Therapy Type" {...form.register('therapy_type', { required: true })}>
-        <option value="">Select a type</option>
-        <option value="ot">Occupational Therapy</option>
-        <option value="st">Speech Therapy</option>
-        <option value="mh">Mental Health</option>
-      </Select>
-      <Textarea fluid label="Appointment notes" rows={6} {...form.register('notes')} />
+      <div className="form-group">
+        <Label id="therapy_type">Therapy Type</Label>
+        <Select id="therapy_type" {...form.register('therapy_type', { required: true })}>
+          <option value="">Select a type</option>
+          <option value="ot">Occupational Therapy</option>
+          <option value="st">Speech Therapy</option>
+          <option value="mh">Mental Health</option>
+        </Select>
+      </div>
+      <div className="form-group">
+        <Label htmlFor="notes">Notes</Label>
+        <Textarea className="resize-none" id="notes" rows={6} {...form.register('notes')} />
+      </div>
       <div className="TherapyAppointmentForm__actions">
         {instance && (
           <Button

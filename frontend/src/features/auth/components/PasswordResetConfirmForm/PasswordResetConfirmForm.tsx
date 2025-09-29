@@ -1,10 +1,10 @@
 import { Button } from '@/components/ui/button';
-import { http } from '@/http';
-import { Input } from '@/ui';
-import { handleFormErrors } from '@/utils/errors';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { http } from '@/lib/http';
+import { setFormErrors } from '@/utils/errors';
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
-import './PasswordResetConfirmForm.scss';
 
 export type PasswordResetConfirmFormProps = {
   uid: string | undefined;
@@ -33,44 +33,40 @@ export const PasswordResetConfirmForm = (props: PasswordResetConfirmFormProps) =
         navigate('/login');
       })
       .catch((err) => {
-        handleFormErrors(form, err);
+        setFormErrors(form, err);
       });
   }
 
   return (
-    <form className="PasswordResetConfirmForm" onSubmit={form.handleSubmit(onSubmit)}>
-      <div className="PasswordResetConfirmForm__field">
+    <form className="form" onSubmit={form.handleSubmit(onSubmit)}>
+      <div className="form-group">
+        <Label htmlFor="new_password1">New Password</Label>
         <Input
           autoFocus
-          fluid
           id="new_password1"
-          label="New Password"
           placeholder="New password"
           type="password"
           {...form.register('new_password1', { required: true })}
         />
-        {errors.new_password1 && <p className="form-error mt-2">{errors.new_password1.message}</p>}
+        {errors.new_password1 && <div className="form-error">{errors.new_password1.message}</div>}
       </div>
-      <div className="PasswordResetConfirmForm__field">
+      <div className="form-group">
+        <Label htmlFor="new_password2">New Password (Again)</Label>
         <Input
-          fluid
           id="new_password2"
-          label="New Password (Again)"
           placeholder="New password (Again)"
           type="password"
           {...form.register('new_password2', { required: true })}
         />
-        <p className="text-muted-foreground mt-2 text-xs">
+        <div className="text-muted-foreground text-xs">
           Passwords must be at least 8 characters, with at least one number and one letter.
-        </p>
-        {errors.new_password2 && <p className="form-error mt-2">{errors.new_password2.message}</p>}
+        </div>
+        {errors.new_password2 && <div className="form-error">{errors.new_password2.message}</div>}
       </div>
-      {errors.root && <p className="form-error">{errors.root.message}</p>}
-      <div className="PasswordResetConfirmForm__actions">
-        <Button className="w-full" disabled={!form.formState.isValid} type="submit">
-          Update Password
-        </Button>
-      </div>
+      {errors.root && <div className="form-error">{errors.root.message}</div>}
+      <Button disabled={!form.formState.isValid} type="submit">
+        Update Password
+      </Button>
     </form>
   );
 };

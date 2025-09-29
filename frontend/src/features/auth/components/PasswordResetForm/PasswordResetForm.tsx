@@ -1,10 +1,10 @@
 import { Button } from '@/components/ui/button';
-import { http } from '@/http';
-import { Input } from '@/ui';
-import { handleFormErrors } from '@/utils/errors';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { http } from '@/lib/http';
+import { setFormErrors } from '@/utils/errors';
 import React from 'react';
 import { useForm } from 'react-hook-form';
-import './PasswordResetForm.scss';
 
 export type PasswordResetFormData = {
   email: string;
@@ -24,7 +24,7 @@ export const PasswordResetForm = () => {
         setSubmitted(true);
       })
       .catch((err) => {
-        handleFormErrors(form, err);
+        setFormErrors(form, err);
       });
   }
 
@@ -33,24 +33,16 @@ export const PasswordResetForm = () => {
   }
 
   return (
-    <form className="PasswordResetForm" onSubmit={form.handleSubmit(onSubmit)}>
-      <div className="PasswordResetForm__field">
-        <Input
-          autoFocus
-          fluid
-          label="Email"
-          placeholder="Email"
-          type="email"
-          {...form.register('email', { required: true })}
-        />
-        {errors.email && <p className="form-error mt-2">{errors.email.message}</p>}
+    <form className="form" onSubmit={form.handleSubmit(onSubmit)}>
+      <div className="form-group">
+        <Label htmlFor="email">Email</Label>
+        <Input autoFocus placeholder="Email" type="email" {...form.register('email', { required: true })} />
+        {errors.email && <div className="form-error">{errors.email.message}</div>}
       </div>
-      {errors.root && <p className="form-error">{errors.root.message}</p>}
-      <div className="PasswordResetForm__actions">
-        <Button className="w-full" disabled={!form.formState.isValid} type="submit">
-          Send Recovery Link
-        </Button>
-      </div>
+      {errors.root && <div className="form-error">{errors.root.message}</div>}
+      <Button disabled={!form.formState.isValid} type="submit">
+        Send Recovery Link
+      </Button>
     </form>
   );
 };

@@ -1,14 +1,19 @@
 import { AppointmentModel, ClientModel, TechnicianModel } from '@/api';
-import { Checkbox, IconButton, Select, Textarea, TimeInput, useToast } from '@/ui';
+import { toastError } from '@/utils/errors';
 import { orderByFirstName } from '@/utils/order';
 import { dayToString } from '@/utils/time';
 import clsx from 'clsx';
+import { AlertTriangle } from 'lucide-react';
 import React from 'react';
 import { Controller, useForm } from 'react-hook-form';
+import { TimeInput } from '../TimeInput/TimeInput';
 import { Badge } from '../ui/badge';
-import { Tooltip, TooltipContent, TooltipTrigger } from '../ui/tooltip';
-import './AppointmentForm.scss';
 import { Button } from '../ui/button';
+import { Checkbox } from '../ui/checkbox';
+import { Label } from '../ui/label';
+import { Select } from '../ui/select';
+import { Textarea } from '../ui/textarea';
+import { Tooltip, TooltipContent, TooltipTrigger } from '../ui/tooltip';
 
 export type AppointmentFormProps = {
   client: Client;
@@ -53,7 +58,6 @@ export const AppointmentForm = ({
   const [initialTechnicianSet, setInitialTechnicianSet] = React.useState(false);
 
   const form = useForm<AppointmentFormData>();
-  const toast = useToast();
 
   const startTime = form.watch('start_time');
   const endTime = form.watch('end_time');
@@ -230,7 +234,7 @@ export const AppointmentForm = ({
         onCreate?.(created.data as any as Appointment[]);
       })
       .catch((err) => {
-        toast.errorResponse(err);
+        toastError(err);
       });
   }
 
@@ -247,7 +251,7 @@ export const AppointmentForm = ({
         onUpdate?.(updated.data);
       })
       .catch((err) => {
-        toast.errorResponse(err);
+        toastError(err);
       });
   }
 
@@ -273,7 +277,7 @@ export const AppointmentForm = ({
         setConfirmDelete(false);
       })
       .catch((err) => {
-        toast.errorResponse(err);
+        toastError(err);
       });
   }
 
@@ -283,13 +287,13 @@ export const AppointmentForm = ({
 
   if (confirmDelete) {
     return (
-      <div className="AppointmentForm__confirmDelete">
+      <div className="flex flex-col gap-4">
         <p>
           Are you sure you want to delete this appointment?
           <br />
           This action cannot be undone.
         </p>
-        <div className="AppointmentForm__confirmDelete__actions">
+        <div className="flex items-center justify-end gap-4">
           <Button onClick={() => setConfirmDelete(false)} variant="ghost">
             Cancel
           </Button>
@@ -302,48 +306,42 @@ export const AppointmentForm = ({
   }
 
   return (
-    <form className="AppointmentForm" onSubmit={form.handleSubmit(onSubmit)}>
-      <div className="AppointmentForm__row">
-        <div className="Input__container">
-          <label>Client</label>
-          <Badge>
-            {client.first_name} {client.last_name}
-          </Badge>
-        </div>
+    <form className="form" onSubmit={form.handleSubmit(onSubmit)}>
+      <div className="form-group">
+        <Label>Client</Label>
+        <Badge>
+          {client.first_name} {client.last_name}
+        </Badge>
       </div>
       {client.notes && (
-        <div className="AppointmentForm__row AppointmentForm__row--notes">
-          <div className="Input__container">
-            <label>Client notes</label>
-            <div className="AppointmentForm__notes">{client.notes}</div>
+        <div className="form-group">
+          <Label>Client notes</Label>
+          <div className="max-h-24 w-full overflow-y-auto bg-gray-100 p-2 text-xs whitespace-pre-wrap">
+            {client.notes}
           </div>
         </div>
       )}
-      <div className="AppointmentForm__row">
-        <div className="Input__container">
-          <label>Day</label>
-          <p>{dayToString(day)}</p>
-        </div>
+      <div className="form-group">
+        <Label>Day</Label>
+        <div>{dayToString(day)}</div>
       </div>
-      <div className="AppointmentForm__row">
+      <div className="form-row">
         <Controller
           control={form.control}
           name="start_time"
           render={({ field }) => {
             return (
-              <TimeInput
-                inputProps={{
-                  fluid: true,
-                  id: 'start_time',
-                  label: 'Start time',
-                }}
-                min={overrideBlockTimes ? '08:00:00' : block.start_time}
-                max={overrideBlockTimes ? '20:00:00' : block.end_time}
-                onChange={(value) => {
-                  field.onChange(value);
-                }}
-                value={field.value}
-              />
+              <div className="form-group">
+                <Label htmlFor="start_time">Start time</Label>
+                <TimeInput
+                  min={overrideBlockTimes ? '08:00:00' : block.start_time}
+                  max={overrideBlockTimes ? '20:00:00' : block.end_time}
+                  onChange={(value) => {
+                    field.onChange(value);
+                  }}
+                  value={field.value}
+                />
+              </div>
             );
           }}
         />
@@ -352,87 +350,112 @@ export const AppointmentForm = ({
           name="end_time"
           render={({ field }) => {
             return (
-              <TimeInput
-                inputProps={{
-                  fluid: true,
-                  id: 'end_time',
-                  label: 'End time',
-                }}
-                min={overrideBlockTimes ? '08:00:00' : block.start_time}
-                max={overrideBlockTimes ? '20:00:00' : block.end_time}
-                onChange={(value) => {
-                  field.onChange(value);
-                }}
-                value={field.value}
-              />
+              <div className="form-group">
+                <Label htmlFor="end_time">End time</Label>
+                <TimeInput
+                  min={overrideBlockTimes ? '08:00:00' : block.start_time}
+                  max={overrideBlockTimes ? '20:00:00' : block.end_time}
+                  onChange={(value) => {
+                    field.onChange(value);
+                  }}
+                  value={field.value}
+                />
+              </div>
             );
           }}
         />
       </div>
-      <div className="AppointmentForm__row">
-        <div>
+      <div className="form-group">
+        <div className="flex items-center gap-2">
           <Checkbox
             checked={overrideBlockTimes}
-            inputSize="sm"
-            label="Override block times"
-            onChange={() => {
+            id="override_block_times"
+            onCheckedChange={() => {
               setOverrideBlockTimes((prev) => !prev);
             }}
           />
-          <p className="text-muted-foreground mt-2 text-xs">
-            Check to allow setting start and end times outside of the block times.
-          </p>
+          <Label htmlFor="override_block_times">Override block times</Label>
         </div>
+        <p className="text-muted-foreground text-xs">
+          Check to allow setting start and end times outside of the block times.
+        </p>
       </div>
-      <div>
-        <Checkbox inputSize="sm" label="In clinic" {...form.register('in_clinic')} />
+      <div className="form-group">
+        <div className="flex items-center gap-2">
+          <Controller
+            control={form.control}
+            name="in_clinic"
+            render={({ field }) => (
+              <Checkbox id="in_clinic" checked={field.value} onCheckedChange={() => field.onChange(!field.value)} />
+            )}
+          />
+          <Label htmlFor="in_clinic">In clinic</Label>
+        </div>
         {inClinic && availability && !availability.in_clinic && (
-          <div className="AppointmentForm__inClinicWarning">
-            <span className="material-symbols-outlined">warning</span> Client is not available in clinic
+          <div className="flex items-center gap-1 text-xs text-orange-700">
+            <AlertTriangle size="16" /> Client is not available in clinic
           </div>
         )}
         {!inClinic && availability && availability.in_clinic && (
-          <div className="AppointmentForm__inClinicWarning">
-            <span className="material-symbols-outlined">warning</span> Client is available in clinic
+          <div className="flex items-center gap-1 text-xs text-orange-700">
+            <AlertTriangle size="16" /> Client is available in clinic
           </div>
         )}
       </div>
-      <div>
-        <Checkbox inputSize="sm" label="Preschool/Adaptive" {...form.register('is_preschool_or_adaptive')} />
+      <div className="form-group">
+        <div className="flex items-center gap-2">
+          <Controller
+            control={form.control}
+            name="is_preschool_or_adaptive"
+            render={({ field }) => (
+              <Checkbox
+                id="is_preschool_or_adaptive"
+                checked={field.value}
+                onCheckedChange={() => field.onChange(!field.value)}
+              />
+            )}
+          />
+          <Label htmlFor="is_preschool_or_adaptive">Preschool/Adaptive</Label>
+        </div>
       </div>
-      <Select fluid label="Technician" {...form.register('technician', { required: true })}>
-        <option value="">Select a technician</option>
-        {(onlyShowRecommendedTechs ? availableTechnicians : allTechnicians).map((tech) => (
-          <option
-            key={tech.id}
-            className={clsx({
-              'AppointmentForm__technician--unavailable': !isTechnicianAvailable(tech.id),
-            })}
-            value={tech.id}
-          >
-            {tech.first_name} {tech.last_name} {!isTechnicianAvailable(tech.id) ? '⚠' : ''}
-          </option>
-        ))}
-      </Select>
-      <Checkbox
-        checked={onlyShowRecommendedTechs}
-        inputSize="sm"
-        label="Recommended Techs Only"
-        onChange={() => setOnlyShowRecommendedTechs(!onlyShowRecommendedTechs)}
-      />
+      <div className="form-group">
+        <Label htmlFor="technician">Technician</Label>
+        <Select id="technician" {...form.register('technician', { required: true })}>
+          <option value="">Select a technician</option>
+          {(onlyShowRecommendedTechs ? availableTechnicians : allTechnicians).map((tech) => (
+            <option
+              key={tech.id}
+              className={clsx({
+                'text-red-700': !isTechnicianAvailable(tech.id),
+              })}
+              value={tech.id}
+            >
+              {tech.first_name} {tech.last_name} {!isTechnicianAvailable(tech.id) ? '⚠' : ''}
+            </option>
+          ))}
+        </Select>
+      </div>
+      <div className="form-group">
+        <div className="flex items-center gap-2">
+          <Checkbox
+            checked={onlyShowRecommendedTechs}
+            id="only_show_recommended_techs"
+            onCheckedChange={() => setOnlyShowRecommendedTechs(!onlyShowRecommendedTechs)}
+          />
+          <Label htmlFor="only_show_recommended_techs">Recommended techs only</Label>
+        </div>
+      </div>
       {!instance && technician && (
         <Controller
           control={form.control}
           name="repeats"
           render={({ field }) => (
-            <div className="Input__container">
-              <label style={{ display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
-                Repeats
+            <>
+              <div className="flex items-center gap-2">
+                <Label>Repeats</Label>
                 <Tooltip>
                   <TooltipTrigger asChild>
-                    <IconButton radius="full" size="xs">
-                      <span className="material-symbols-outlined">help</span>
-                    </IconButton>
+                    <AlertTriangle size="16" />
                   </TooltipTrigger>
                   <TooltipContent>
                     <div className="w-70 text-xs">
@@ -443,7 +466,7 @@ export const AppointmentForm = ({
                     </div>
                   </TooltipContent>
                 </Tooltip>
-              </label>
+              </div>
               <div className="flex gap-1">
                 {['Mon', 'Tue', 'Wed', 'Thur', 'Fri'].map(
                   (dayStr, index) =>
@@ -469,17 +492,20 @@ export const AppointmentForm = ({
                     ),
                 )}
               </div>
-            </div>
+            </>
           )}
         />
       )}
-      <Textarea fluid label="Appointment notes" rows={6} {...form.register('notes')} />
-      <ul className="AppointmentForm__warnings">
+      <div className="form-group">
+        <Label htmlFor="notes">Appointment notes</Label>
+        <Textarea className="resize-none" id="notes" rows={6} {...form.register('notes')} />
+      </div>
+      <ul className="ml-4 list-disc text-xs text-red-700">
         {warnings.map((warning, index) => (
           <li key={index}>{warning}</li>
         ))}
       </ul>
-      <div className="AppointmentForm__actions">
+      <div className="flex items-center">
         {instance && (
           <Button
             onClick={() => {

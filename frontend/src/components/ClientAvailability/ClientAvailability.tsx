@@ -3,15 +3,17 @@ import { AvailabilityForm } from '@/components/AvailabilityForm/AvailabilityForm
 import { ClientForm } from '@/components/ClientForm/ClientForm';
 import { useBlocks } from '@/contexts/BlocksContext';
 import { useAuth } from '@/features/auth/contexts/AuthContext';
-import { Checkbox, Spinner } from '@/ui';
 import { isFullBlock } from '@/utils/appointments';
 import { skillLevelColor } from '@/utils/color';
 import { orderByFirstName } from '@/utils/order';
 import { checkTimeIntersection, formatTimeShort } from '@/utils/time';
 import clsx from 'clsx';
+import { Loader } from 'lucide-react';
 import React from 'react';
 import { Button } from '../ui/button';
+import { Checkbox } from '../ui/checkbox';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '../ui/dialog';
+import { Label } from '../ui/label';
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from '../ui/sheet';
 import './ClientAvailability.scss';
 
@@ -241,23 +243,28 @@ export const ClientAvailability = () => {
   }
 
   if (clientsLoading) {
-    return <Spinner className="mt-8" message="Loading clients..." />;
+    return (
+      <div className="mt-12 flex items-center justify-center">
+        <Loader className="h-8 w-8 animate-spin" />
+      </div>
+    );
   }
 
   return (
     <>
       <div className="mb-4 flex items-center justify-between gap-4">
-        <h2 className="text-2xl font-bold">Clients</h2>
+        <h2 className="text-xl font-bold">Clients</h2>
         {user?.is_superuser && (
           <Button onClick={() => setClientForm({ ...clientForm, open: true })}>Create Client</Button>
         )}
       </div>
-      <div className="mb-4 flex items-center gap-4">
+      <div className="mb-4 flex items-center gap-2">
         <Checkbox
           checked={showInClinicOnly}
-          onChange={() => setShowInClinicOnly(!showInClinicOnly)}
-          label="In clinic"
+          id="in_clinic"
+          onCheckedChange={() => setShowInClinicOnly(!showInClinicOnly)}
         />
+        <Label htmlFor="in_clinic">In clinic only</Label>
       </div>
       <table className="ClientAvailability__table">
         <thead>

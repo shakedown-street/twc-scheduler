@@ -1,8 +1,7 @@
 import { ClientsOverview } from '@/components/ClientsOverview/ClientsOverview';
 import { ClientTechnicianMatrix } from '@/components/ClientTechnicianMatrix/ClientTechnicianMatrix';
 import { TechniciansOverview } from '@/components/TechniciansOverview/TechniciansOverview';
-import { TabItem, Tabs } from '@/ui';
-import { Helmet } from 'react-helmet';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useSearchParams } from 'react-router-dom';
 
 export const Overview = () => {
@@ -20,29 +19,25 @@ export const Overview = () => {
 
   return (
     <>
-      <Helmet>
-        <title>Overview | Schedule Builder</title>
-      </Helmet>
+      <title>Overview | Schedule Builder</title>
       <div className="container mx-auto px-4">
         <div className="mt-4 mb-12">
-          <h1>Overview</h1>
-          <Tabs className="mb-4">
-            <TabItem active={getTab() === 'appointments'} onClick={() => setTab('appointments')}>
-              Appointments
-            </TabItem>
-            <TabItem active={getTab() === 'matrix'} onClick={() => setTab('matrix')}>
-              Matrix
-            </TabItem>
-          </Tabs>
-          <div>
-            {getTab() === 'appointments' && (
+          <h1 className="mb-4 text-2xl font-bold">Overview</h1>
+          <Tabs onValueChange={setTab} value={getTab()}>
+            <TabsList>
+              <TabsTrigger value="appointments">Appointments</TabsTrigger>
+              <TabsTrigger value="matrix">Matrix</TabsTrigger>
+            </TabsList>
+            <TabsContent value="appointments">
               <div className="flex gap-2">
                 <ClientsOverview />
                 <TechniciansOverview />
               </div>
-            )}
-            {getTab() === 'matrix' && <ClientTechnicianMatrix />}
-          </div>
+            </TabsContent>
+            <TabsContent value="matrix">
+              <ClientTechnicianMatrix />
+            </TabsContent>
+          </Tabs>
         </div>
       </div>
     </>

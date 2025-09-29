@@ -1,5 +1,5 @@
 import { Button } from '@/components/ui/button';
-import { http } from '@/http';
+import { http } from '@/lib/http';
 import { useGoogleLogin } from '@react-oauth/google';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';

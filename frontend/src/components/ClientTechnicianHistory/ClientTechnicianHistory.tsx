@@ -1,8 +1,8 @@
 import { ClientModel } from '@/api';
 import { useAuth } from '@/features/auth/contexts/AuthContext';
-import { Spinner } from '@/ui';
 import { skillLevelColor } from '@/utils/color';
 import { orderByFirstName } from '@/utils/order';
+import { Loader } from 'lucide-react';
 import React from 'react';
 import { ClientForm } from '../ClientForm/ClientForm';
 import { Badge } from '../ui/badge';
@@ -92,7 +92,11 @@ export const ClientTechnicianHistory = () => {
   }
 
   if (clientsLoading) {
-    return <Spinner className="mt-8" message="Loading clients..." />;
+    return (
+      <div className="mt-12 flex items-center justify-center">
+        <Loader className="h-8 w-8 animate-spin" />
+      </div>
+    );
   }
 
   return (

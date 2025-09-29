@@ -2,10 +2,6 @@
 @import '@/scss/mixins';
 
 .AppointmentHover {
-  display: flex;
-  flex-direction: column;
-  font-size: 0.875rem;
-
   &__row {
     align-items: center;
     padding: 0.5rem 0;

@@ -1,7 +1,7 @@
 import { ClientModel, TechnicianModel } from '@/api';
 import { useAuth } from '@/features/auth/contexts/AuthContext';
-import { Spinner } from '@/ui';
 import { orderByFirstName } from '@/utils/order';
+import { Loader } from 'lucide-react';
 import React from 'react';
 import { ClientForm } from '../ClientForm/ClientForm';
 import { TechnicianForm } from '../TechnicianForm/TechnicianForm';
@@ -144,7 +144,11 @@ export const ClientTechnicianMatrix = () => {
   }
 
   if (loadingClients || loadingTechnicians) {
-    return <Spinner className="mt-8" message="Loading matrix..." />;
+    return (
+      <div className="mt-12 flex items-center justify-center">
+        <Loader className="h-8 w-8 animate-spin" />
+      </div>
+    );
   }
 
   return (

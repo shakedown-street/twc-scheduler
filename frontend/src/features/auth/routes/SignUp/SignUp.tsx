@@ -1,15 +1,12 @@
-import { Helmet } from 'react-helmet';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Link } from 'react-router-dom';
 import { GoogleSSOButton } from '../../components/GoogleSSOButton/GoogleSSOButton';
 import { SignUpForm } from '../../components/SignUpForm/SignUpForm';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
 export const SignUp = () => {
   return (
     <>
-      <Helmet>
-        <title>Sign Up | Schedule Builder</title>
-      </Helmet>
+      <title>Sign Up | Schedule Builder</title>
       <div className="container mx-auto px-4">
         <div className="centerPage">
           <Card>

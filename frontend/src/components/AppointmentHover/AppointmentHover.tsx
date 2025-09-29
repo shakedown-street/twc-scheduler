@@ -1,8 +1,10 @@
 import { AppointmentModel } from '@/api';
 import { dayToString, formatTime } from '@/utils/time';
 import clsx from 'clsx';
+import { Calendar, User } from 'lucide-react';
 import React from 'react';
 import { Badge } from '../ui/badge';
+import { Label } from '../ui/label';
 import './AppointmentHover.scss';
 
 export type AppointmentHoverProps = {
@@ -19,19 +21,19 @@ export const AppointmentHover = ({ appointment }: AppointmentHoverProps) => {
   }, []);
 
   return (
-    <div className="AppointmentHover">
+    <div className="flex flex-col">
       <div className="AppointmentHover__row">
-        <label>
-          <span className="material-symbols-outlined">person</span> Client:
-        </label>
+        <Label>
+          <User size="16" /> Client:
+        </Label>
         <Badge>
           {appointment.client?.first_name} {appointment.client?.last_name}
         </Badge>
       </div>
       <div className="AppointmentHover__row">
-        <label>
-          <span className="material-symbols-outlined">engineering</span> Technician:
-        </label>
+        <Label>
+          <User size="16" /> Technician:
+        </Label>
         <Badge
           style={{
             background: appointment.technician?.bg_color,
@@ -42,9 +44,9 @@ export const AppointmentHover = ({ appointment }: AppointmentHoverProps) => {
         </Badge>
       </div>
       <div className="AppointmentHover__row">
-        <label>
-          <span className="material-symbols-outlined">calendar_today</span> Time:
-        </label>
+        <Label>
+          <Calendar size="16" /> Time:
+        </Label>
         <div>
           {dayToString(appointment.day, 'medium')} from {formatTime(appointment.start_time)} to{' '}
           {formatTime(appointment.end_time)}

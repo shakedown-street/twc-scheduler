@@ -1,22 +1,19 @@
 import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
-import { http } from '@/http';
-import { useToast } from '@/ui';
+import { http } from '@/lib/http';
+import { toastError } from '@/utils/errors';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
-import './ImpersonationWarning.scss';
 
 export const ImpersonationWarning = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
-  const toast = useToast();
 
   const impersonate = localStorage.getItem('impersonate');
 
   function clickStop() {
     http
       .post('/api/token-auth/logout/')
-      .catch((err) => toast.errorResponse(err))
+      .catch((err) => toastError(err))
       .finally(() => {
         navigate('/');
         localStorage.removeItem('impersonate');

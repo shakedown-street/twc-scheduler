@@ -1,12 +1,13 @@
 import { UserModel } from '@/api';
 import logo from '@/assets/logo.avif';
 import { useAuth } from '@/features/auth/contexts/AuthContext';
-import { http } from '@/http';
-import { IconButton, SearchPopover, useToast } from '@/ui';
+import { http } from '@/lib/http';
+import { toastError } from '@/utils/errors';
 import clsx from 'clsx';
-import { IdCard, LogOut, Settings, User } from 'lucide-react';
+import { IdCard, LogOut, Menu, Settings, User } from 'lucide-react';
 import React from 'react';
 import { Link, NavLink, useNavigate } from 'react-router-dom';
+import { SearchPopover } from '../SearchPopover/SearchPopover';
 import { SettingsDialog } from '../SettingsDialog/SettingsDialog';
 import { Button } from '../ui/button';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '../ui/dialog';
@@ -19,7 +20,6 @@ export const Nav = () => {
 
   const navigate = useNavigate();
   const { user, setUser } = useAuth();
-  const toast = useToast();
 
   function impersonate(user: User) {
     UserModel.detailAction(user.id, 'impersonate', 'get').then((res) => {
@@ -33,7 +33,7 @@ export const Nav = () => {
     http
       .post('/api/token-auth/logout/')
       .then()
-      .catch((err) => toast.errorResponse(err))
+      .catch((err) => toastError(err))
       .finally(() => {
         localStorage.removeItem('token');
         localStorage.removeItem('impersonate');
@@ -61,9 +61,9 @@ export const Nav = () => {
     return (
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <IconButton>
-            <span className="material-symbols-outlined">menu</span>
-          </IconButton>
+          <Button size="icon" variant="ghost">
+            <Menu />
+          </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
           <DropdownMenuItem onClick={() => navigate('/profile')}>
@@ -145,7 +145,6 @@ export const Nav = () => {
                 </NavLink>
               </div>
             )}
-            {/* <div className="Nav__spacer"></div> */}
             {!user ? renderAuthLinks() : renderUserMenu()}
           </div>
         </div>
@@ -171,7 +170,6 @@ export const Nav = () => {
           />
         </DialogContent>
       </Dialog>
-
       <Dialog open={settingsDialogOpen} onOpenChange={(open) => setSettingsDialogOpen(open)}>
         <DialogContent>
           <DialogHeader>

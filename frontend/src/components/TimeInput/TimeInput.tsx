@@ -1,19 +1,17 @@
+import { Input } from '@/components/ui/input';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { cn } from '@/lib/utils';
 import { formatTime, generateTimeSlots } from '@/utils/time';
-import clsx from 'clsx';
 import React from 'react';
-import { Input, InputProps } from '../Input/Input';
-import './TimeInput.scss';
 
-export type TimeInputProps = {
-  inputProps?: Omit<InputProps, 'readOnly' | 'value' | 'iconTrailing'>;
+export type TimeInputProps = React.ComponentProps<'input'> & {
   min: string;
   max: string;
   onChange: (value: string) => void;
   value: string;
 };
 
-export const TimeInput = ({ inputProps, min, max, onChange, value }: TimeInputProps) => {
+export const TimeInput = ({ min, max, onChange, value }: TimeInputProps) => {
   const timeSlots = React.useMemo(() => {
     return generateTimeSlots(min, max, 15, true);
   }, [min, max]);
@@ -22,16 +20,16 @@ export const TimeInput = ({ inputProps, min, max, onChange, value }: TimeInputPr
     <>
       <Popover>
         <PopoverTrigger asChild>
-          <Input iconTrailing="schedule" readOnly type="text" value={formatTime(value)} {...inputProps} />
+          <Input readOnly type="text" value={formatTime(value)} />
         </PopoverTrigger>
         <PopoverContent>
-          <div className="TimeInput__popover">
-            <div className="TimeInput__slots">
+          <div className="max-h-40 overflow-y-auto">
+            <div className="flex flex-col">
               {timeSlots.map((slot) => {
                 return (
                   <div
                     key={slot}
-                    className={clsx('TimeInput__slot', { 'TimeInput__slot--active': slot === value })}
+                    className={cn('pointer p-1', { 'bg-primary text-white': slot === value })}
                     onClick={() => onChange(slot)}
                   >
                     {formatTime(slot)}

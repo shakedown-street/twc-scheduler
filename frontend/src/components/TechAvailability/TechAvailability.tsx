@@ -3,15 +3,17 @@ import { AvailabilityForm } from '@/components/AvailabilityForm/AvailabilityForm
 import { TechnicianForm } from '@/components/TechnicianForm/TechnicianForm';
 import { useBlocks } from '@/contexts/BlocksContext';
 import { useAuth } from '@/features/auth/contexts/AuthContext';
-import { Checkbox, Spinner } from '@/ui';
 import { isFullBlock } from '@/utils/appointments';
 import { skillLevelColor } from '@/utils/color';
 import { orderByFirstName } from '@/utils/order';
 import { checkTimeIntersection, formatTimeShort } from '@/utils/time';
 import clsx from 'clsx';
+import { Loader } from 'lucide-react';
 import React from 'react';
 import { Button } from '../ui/button';
+import { Checkbox } from '../ui/checkbox';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '../ui/dialog';
+import { Label } from '../ui/label';
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from '../ui/sheet';
 import './TechAvailability.scss';
 
@@ -244,19 +246,24 @@ export const TechAvailability = () => {
   }
 
   if (techniciansLoading) {
-    return <Spinner className="mt-8" message="Loading technicians" />;
+    return (
+      <div className="mt-12 flex items-center justify-center">
+        <Loader className="h-8 w-8 animate-spin" />
+      </div>
+    );
   }
 
   return (
     <>
       <div className="mb-4 flex items-center justify-between gap-4">
-        <h2 className="text-2xl font-bold">Technicians</h2>
+        <h2 className="text-xl font-bold">Technicians</h2>
         {user?.is_superuser && (
           <Button onClick={() => setTechnicianForm({ ...technicianForm, open: true })}>Create Technician</Button>
         )}
       </div>
-      <div className="mb-4 flex items-center gap-4">
-        <Checkbox checked={showSubOnly} onChange={() => setShowSubOnly(!showSubOnly)} label="Sub only" />
+      <div className="mb-4 flex items-center gap-2">
+        <Checkbox checked={showSubOnly} id="sub_nly" onCheckedChange={() => setShowSubOnly(!showSubOnly)} />
+        <Label htmlFor="sub_nly">Sub only</Label>
       </div>
       <table className="TechAvailability__table">
         <thead>

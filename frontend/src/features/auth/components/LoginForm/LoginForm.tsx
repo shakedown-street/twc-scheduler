@@ -1,14 +1,14 @@
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { http } from '@/http';
-import { Input } from '@/ui';
-import { handleFormErrors } from '@/utils/errors';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { http } from '@/lib/http';
+import { setFormErrors } from '@/utils/errors';
 import React from 'react';
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import { ResendVerifyEmail } from '../ResendVerifyEmail/ResendVerifyEmail';
-import './LoginForm.scss';
 
 export type LoginFormData = {
   username: string;
@@ -34,7 +34,7 @@ export const LoginForm = () => {
       })
       .catch((err) => {
         form.resetField('password');
-        handleFormErrors(form, err);
+        setFormErrors(form, err);
 
         const { detail } = err.response.data;
         if (detail && detail.includes('verification')) {
@@ -45,36 +45,32 @@ export const LoginForm = () => {
 
   return (
     <>
-      <form className="LoginForm" onSubmit={form.handleSubmit(onSubmit)}>
-        <div className="LoginForm__field">
+      <form className="form" onSubmit={form.handleSubmit(onSubmit)}>
+        <div className="form-group">
+          <Label htmlFor="username">Email</Label>
           <Input
             autoFocus
-            fluid
             id="username"
-            label="Email"
             placeholder="Email"
             type="email"
             {...form.register('username', { required: true })}
           />
-          {errors.username && <p className="form-error mt-2">{errors.username.message}</p>}
+          {errors.username && <div className="form-error">{errors.username.message}</div>}
         </div>
-        <div className="LoginForm__field">
+        <div className="form-group">
+          <Label htmlFor="password">Password</Label>
           <Input
-            fluid
             id="password"
-            label="Password"
             placeholder="Password"
             type="password"
             {...form.register('password', { required: true })}
           />
-          {errors.password && <p className="form-error mt-2">{errors.password.message}</p>}
+          {errors.password && <div className="form-error">{errors.password.message}</div>}
         </div>
-        {errors.root && <p className="form-error">{errors.root.message}</p>}
-        <div className="LoginForm__actions">
-          <Button className="w-full" disabled={!form.formState.isValid} type="submit">
-            Login
-          </Button>
-        </div>
+        {errors.root && <div className="form-error">{errors.root.message}</div>}
+        <Button disabled={!form.formState.isValid} type="submit">
+          Login
+        </Button>
       </form>
       <Dialog open={resendVerifyOpen} onOpenChange={setResendVerifyOpen}>
         <DialogContent>

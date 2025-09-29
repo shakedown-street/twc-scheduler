@@ -1,5 +1,4 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Helmet } from 'react-helmet';
 import { useParams } from 'react-router-dom';
 import { PasswordResetConfirmForm } from '../../components/PasswordResetConfirmForm/PasswordResetConfirmForm';
 
@@ -8,9 +7,7 @@ export const PasswordResetConfirm = () => {
 
   return (
     <>
-      <Helmet>
-        <title>Password Reset | Schedule Builder</title>
-      </Helmet>
+      <title>Password Reset | Schedule Builder</title>
       <div className="container mx-auto px-4">
         <div className="centerPage">
           <Card>

@@ -1,10 +1,15 @@
 import { TechnicianModel } from '@/api';
-import { Input, Textarea, Toggle, useToast } from '@/ui';
+import { toastError } from '@/utils/errors';
+import { Info } from 'lucide-react';
 import React from 'react';
-import { useForm } from 'react-hook-form';
+import { Controller, useForm } from 'react-hook-form';
 import { Badge } from '../ui/badge';
 import { Button } from '../ui/button';
-import './TechnicianForm.scss';
+import { Checkbox } from '../ui/checkbox';
+import { Input } from '../ui/input';
+import { Label } from '../ui/label';
+import { Textarea } from '../ui/textarea';
+import { Tooltip, TooltipContent, TooltipTrigger } from '../ui/tooltip';
 
 export type TechnicianFormProps = {
   technician?: Technician;
@@ -31,7 +36,6 @@ export const TechnicianForm = ({ technician, onCancel, onCreate, onDelete, onUpd
   const [confirmDelete, setConfirmDelete] = React.useState(false);
 
   const form = useForm<TechnicianFormData>();
-  const toast = useToast();
 
   const backgroundColor = form.watch('bg_color');
   const textColor = form.watch('text_color');
@@ -68,7 +72,7 @@ export const TechnicianForm = ({ technician, onCancel, onCreate, onDelete, onUpd
         setConfirmDelete(false);
       })
       .catch((err) => {
-        toast.errorResponse(err);
+        toastError(err);
       });
   }
 
@@ -79,7 +83,7 @@ export const TechnicianForm = ({ technician, onCancel, onCreate, onDelete, onUpd
           onUpdate?.(updated.data);
         })
         .catch((err) => {
-          toast.errorResponse(err);
+          toastError(err);
         });
       return;
     }
@@ -88,19 +92,19 @@ export const TechnicianForm = ({ technician, onCancel, onCreate, onDelete, onUpd
         onCreate?.(created.data);
       })
       .catch((err) => {
-        toast.errorResponse(err);
+        toastError(err);
       });
   }
 
   if (confirmDelete) {
     return (
-      <div className="TechnicianForm__confirmDelete">
-        <p>
+      <div className="flex flex-col gap-4">
+        <div>
           Are you sure you want to delete {technician?.first_name} {technician?.last_name}?
           <br />
           This action cannot be undone.
-        </p>
-        <div className="TechnicianForm__confirmDelete__actions">
+        </div>
+        <div className="flex items-center justify-end gap-4">
           <Button onClick={() => setConfirmDelete(false)} variant="ghost">
             Cancel
           </Button>
@@ -113,68 +117,100 @@ export const TechnicianForm = ({ technician, onCancel, onCreate, onDelete, onUpd
   }
 
   return (
-    <form className="TechnicianForm" onSubmit={form.handleSubmit(onSubmit)}>
-      <div className="TechnicianForm__row">
-        <Input fluid id="first_name" label="First Name" {...form.register('first_name', { required: true })} />
-        <Input fluid id="last_name" label="Last Name" {...form.register('last_name', { required: true })} />
-      </div>
-      <div className="TechnicianForm__row">
-        <Input
-          fluid
-          id="requested_hours"
-          label="Requested Hours Per Week"
-          type="number"
-          {...form.register('requested_hours', { required: true })}
-        />
-        <Input
-          fluid
-          id="max_hours_per_day"
-          label="Max Hours Per Day"
-          type="number"
-          {...form.register('max_hours_per_day', { required: true })}
-        />
-      </div>
-      <div>
-        <Input
-          id="skill_level"
-          label="Skill Level"
-          min={1}
-          max={3}
-          type="number"
-          {...form.register('skill_level', { required: true })}
-        />
-        <div className="text-muted-foreground mt-1 text-xs">Skill level from 1-3</div>
-      </div>
-      <Toggle label="Spanish Speaking" {...form.register('spanish_speaking')} />
-      <Toggle label="Manually Maxed Out" {...form.register('is_manually_maxed_out')} />
-      <p className="text-muted-foreground text-xs">
-        If checked, this technician will be considered maxed out on sessions regardless of their total hours.
-      </p>
-      <div className="TechnicianForm__row">
-        <div className="Input__container">
-          <label htmlFor="bg_color">BG Color</label>
-          <input id="bg_color" type="color" {...form.register('bg_color', { required: true })} />
+    <form className="form" onSubmit={form.handleSubmit(onSubmit)}>
+      <div className="form-row">
+        <div className="form-group">
+          <Label htmlFor="first_name">First Name</Label>
+          <Input id="first_name" {...form.register('first_name', { required: true })} />
         </div>
-        <div className="Input__container">
-          <label htmlFor="text_color">Font Color</label>
-          <input id="text_color" type="color" {...form.register('text_color', { required: true })} />
+        <div className="form-group">
+          <Label htmlFor="last_name">Last Name</Label>
+          <Input id="last_name" {...form.register('last_name', { required: true })} />
         </div>
-        {backgroundColor && textColor && (
-          <div className="Input__container">
-            <label>Preview</label>
-            <Badge
-              style={{
-                background: backgroundColor,
-                color: textColor,
-              }}
-            >
-              Preview
-            </Badge>
-          </div>
-        )}
       </div>
-      <Textarea rows={3} fluid label="Notes" style={{ resize: 'none' }} {...form.register('notes')} />
-      <div className="TechnicianForm__actions">
+      <div className="form-row">
+        <div className="form-group">
+          <Label htmlFor="requested_hours">Requested Hours Per Week</Label>
+          <Input id="requested_hours" type="number" {...form.register('requested_hours', { required: true })} />
+        </div>
+        <div className="form-group">
+          <Label htmlFor="max_hours_per_day">Max Hours Per Day</Label>
+          <Input id="max_hours_per_day" type="number" {...form.register('max_hours_per_day', { required: true })} />
+        </div>
+      </div>
+      <div className="form-group">
+        <Label htmlFor="skill_level">Skill Level</Label>
+        <Input id="skill_level" min={1} max={3} type="number" {...form.register('skill_level', { required: true })} />
+        <div className="text-muted-foreground text-xs">Skill level from 1-3</div>
+      </div>
+      <div className="form-group">
+        <div className="flex items-center gap-2">
+          <Controller
+            control={form.control}
+            name="spanish_speaking"
+            render={({ field }) => (
+              <Checkbox
+                checked={field.value}
+                id="spanish_speaking"
+                onCheckedChange={() => field.onChange(!field.value)}
+              />
+            )}
+          />
+          <Label htmlFor="spanish_speaking">Spanish Speaking</Label>
+        </div>
+      </div>
+      <div className="form-group">
+        <div className="flex items-center gap-2">
+          <Controller
+            control={form.control}
+            name="is_manually_maxed_out"
+            render={({ field }) => (
+              <Checkbox
+                checked={field.value}
+                id="is_manually_maxed_out"
+                onCheckedChange={() => field.onChange(!field.value)}
+              />
+            )}
+          />
+          <Label htmlFor="is_manually_maxed_out">
+            Manually Maxed Out
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Info size="16" />
+              </TooltipTrigger>
+              <TooltipContent className="w-64">
+                If checked, this technician will be considered maxed out on sessions regardless of their total hours.
+              </TooltipContent>
+            </Tooltip>
+          </Label>
+        </div>
+      </div>
+      <div className="form-row">
+        <div className="form-group">
+          <Label htmlFor="bg_color">BG Color</Label>
+          <Input id="bg_color" type="color" {...form.register('bg_color', { required: true })} />
+        </div>
+        <div className="form-group">
+          <Label htmlFor="text_color">Font Color</Label>
+          <Input id="text_color" type="color" {...form.register('text_color', { required: true })} />
+        </div>
+        <div className="form-group">
+          <Label>Preview</Label>
+          <Badge
+            style={{
+              background: backgroundColor,
+              color: textColor,
+            }}
+          >
+            Preview
+          </Badge>
+        </div>
+      </div>
+      <div className="form-group">
+        <Label htmlFor="notes">Notes</Label>
+        <Textarea className="resize-none" id="notes" rows={3} {...form.register('notes')} />
+      </div>
+      <div className="flex items-center gap-4">
         {technician && (
           <Button onClick={clickDelete} type="button" variant="destructive">
             Delete

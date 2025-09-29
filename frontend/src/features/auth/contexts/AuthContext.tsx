@@ -1,5 +1,5 @@
 import { UserModel } from '@/api';
-import { Spinner } from '@/ui';
+import { Loader } from 'lucide-react';
 import React from 'react';
 
 export type AuthContextType = {
@@ -43,7 +43,11 @@ export const AuthProvider = (props: AuthProviderProps) => {
   }
 
   if (userLoading) {
-    return <Spinner className="mt-8" message="Loading..." />;
+    return (
+      <div className="mt-12 flex items-center justify-center">
+        <Loader className="h-8 w-8 animate-spin" />
+      </div>
+    );
   }
 
   return (

@@ -1,4 +1,4 @@
-import { BaseModel } from '@/http';
+import { BaseModel } from '@/lib/http';
 
 export const AppointmentModel = new BaseModel<Appointment>('/api/appointments/');
 export const AvailabilityModel = new BaseModel<Availability>('/api/availabilities/');

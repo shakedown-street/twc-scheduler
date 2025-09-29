@@ -1,11 +1,16 @@
 import { AvailabilityModel, ClientModel, TechnicianModel } from '@/api';
-import { Checkbox, TimeInput, useToast } from '@/ui';
+import { toastError } from '@/utils/errors';
 import { dayToString } from '@/utils/time';
+import { Info } from 'lucide-react';
 import React from 'react';
 import { Controller, useForm } from 'react-hook-form';
+import { TimeInput } from '../TimeInput/TimeInput';
 import { Badge } from '../ui/badge';
-import './AvailabilityForm.scss';
 import { Button } from '../ui/button';
+import { Checkbox } from '../ui/checkbox';
+import { Label } from '../ui/label';
+import { Tooltip, TooltipContent, TooltipTrigger } from '../ui/tooltip';
+import './AvailabilityForm.scss';
 
 export type AvailabilityFormProps = {
   instance?: Availability;
@@ -40,7 +45,6 @@ export const AvailabilityForm = ({
   const [confirmDelete, setConfirmDelete] = React.useState(false);
 
   const form = useForm<AvailabilityFormData>();
-  const toast = useToast();
 
   React.useEffect(() => {
     if (instance) {
@@ -82,7 +86,7 @@ export const AvailabilityForm = ({
         onCreate?.(object, created.data);
       })
       .catch((err) => {
-        toast.errorResponse(err);
+        toastError(err);
       });
   }
 
@@ -97,7 +101,7 @@ export const AvailabilityForm = ({
         onUpdate?.(object, updated.data);
       })
       .catch((err) => {
-        toast.errorResponse(err);
+        toastError(err);
       });
   }
 
@@ -123,7 +127,7 @@ export const AvailabilityForm = ({
         setConfirmDelete(false);
       })
       .catch((err) => {
-        toast.errorResponse(err);
+        toastError(err);
       });
   }
 
@@ -148,8 +152,8 @@ export const AvailabilityForm = ({
   }
 
   return (
-    <form className="AvailabilityForm" onSubmit={form.handleSubmit(onSubmit)}>
-      <div className="AvailabilityForm__row">
+    <form className="form" onSubmit={form.handleSubmit(onSubmit)}>
+      <div className="form-row">
         <div className="Input__container">
           <label className="capitalize">{contentType}</label>
           {contentType === 'client' && (
@@ -169,31 +173,29 @@ export const AvailabilityForm = ({
           )}
         </div>
       </div>
-      <div className="AvailabilityForm__row">
+      <div className="form-row">
         <div className="Input__container">
           <label>Day</label>
           <p>{dayToString(day)}</p>
         </div>
       </div>
-      <div className="AvailabilityForm__row">
+      <div className="form-row">
         <Controller
           control={form.control}
           name="start_time"
           render={({ field }) => {
             return (
-              <TimeInput
-                inputProps={{
-                  fluid: true,
-                  id: 'start_time',
-                  label: 'Start time',
-                }}
-                min={initialStartTime}
-                max={initialEndTime}
-                onChange={(value) => {
-                  field.onChange(value);
-                }}
-                value={field.value}
-              />
+              <div className="form-group">
+                <Label htmlFor="start_time">Start time</Label>
+                <TimeInput
+                  min={initialStartTime}
+                  max={initialEndTime}
+                  onChange={(value) => {
+                    field.onChange(value);
+                  }}
+                  value={field.value}
+                />
+              </div>
             );
           }}
         />
@@ -202,31 +204,59 @@ export const AvailabilityForm = ({
           name="end_time"
           render={({ field }) => {
             return (
-              <TimeInput
-                inputProps={{
-                  fluid: true,
-                  id: 'end_time',
-                  label: 'End time',
-                }}
-                min={initialStartTime}
-                max={initialEndTime}
-                onChange={(value) => {
-                  field.onChange(value);
-                }}
-                value={field.value}
-              />
+              <div className="form-group">
+                <Label htmlFor="end_time">End time</Label>
+                <TimeInput
+                  min={initialStartTime}
+                  max={initialEndTime}
+                  onChange={(value) => {
+                    field.onChange(value);
+                  }}
+                  value={field.value}
+                />
+              </div>
             );
           }}
         />
       </div>
-      {contentType === 'client' && <Checkbox label="In clinic" {...form.register('in_clinic')} />}
+
+      {contentType === 'client' && (
+        <div className="form-group">
+          <div className="flex items-center gap-2">
+            <Controller
+              control={form.control}
+              name="in_clinic"
+              render={({ field }) => (
+                <Checkbox id="in_clinic" checked={field.value} onCheckedChange={() => field.onChange(!field.value)} />
+              )}
+            />
+            <Label htmlFor="in_clinic">In clinic</Label>
+          </div>
+        </div>
+      )}
       {contentType === 'technician' && (
-        <div>
-          <Checkbox label="As sub only" {...form.register('is_sub')} />
-          <p className="text-muted-foreground mt-2 text-xs">
-            Check this box to indicate that this technician is only available to sub for other technicians during this
-            time, and not for their own appointments.
-          </p>
+        <div className="form-group">
+          <div className="flex items-center gap-2">
+            <Controller
+              control={form.control}
+              name="is_sub"
+              render={({ field }) => (
+                <Checkbox checked={field.value} id="is_sub" onCheckedChange={() => field.onChange(!field.value)} />
+              )}
+            />
+            <Label htmlFor="is_sub">
+              As sub only
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Info size="16" />
+                </TooltipTrigger>
+                <TooltipContent className="w-64">
+                  Check this box to indicate that this technician is only available to sub for other technicians during
+                  this time, and not for their own appointments.
+                </TooltipContent>
+              </Tooltip>
+            </Label>
+          </div>
         </div>
       )}
       <div className="AvailabilityForm__actions">

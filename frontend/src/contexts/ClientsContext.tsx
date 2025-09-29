@@ -1,6 +1,6 @@
 import { ClientModel } from '@/api';
-import { Spinner } from '@/ui';
 import { orderByFirstName } from '@/utils/order';
+import { Loader } from 'lucide-react';
 import React from 'react';
 
 // Not in use ATM
@@ -124,7 +124,11 @@ export const ClientsProvider = (props: ClientsProviderProps) => {
   }
 
   if (loading) {
-    return <Spinner className="mt-8" message="Loading clients..." />;
+    return (
+      <div className="mt-12 flex items-center justify-center">
+        <Loader className="h-8 w-8 animate-spin" />
+      </div>
+    );
   }
 
   return (

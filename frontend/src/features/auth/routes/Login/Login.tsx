@@ -1,13 +1,10 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Helmet } from 'react-helmet';
 import { LoginForm } from '../../components/LoginForm/LoginForm';
 
 export const Login = () => {
   return (
     <>
-      <Helmet>
-        <title>Login | Schedule Builder</title>
-      </Helmet>
+      <title>Login | Schedule Builder</title>
       <div className="container mx-auto px-4">
         <div className="centerPage">
           <Card>

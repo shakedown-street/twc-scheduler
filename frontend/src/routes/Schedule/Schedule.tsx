@@ -6,15 +6,14 @@ import { TherapyAppointmentForm } from '@/components/TherapyAppointmentForm/Ther
 import { TimeSlotTable } from '@/components/TimeSlotTable/TimeSlotTable';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet';
+import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useBlocks } from '@/contexts/BlocksContext';
 import { useAuth } from '@/features/auth/contexts/AuthContext';
-import { Spinner, TabItem, Tabs } from '@/ui';
 import { orderByFirstName } from '@/utils/order';
 import { dayToString } from '@/utils/time';
+import { Loader } from 'lucide-react';
 import React from 'react';
-import { Helmet } from 'react-helmet';
 import { useSearchParams } from 'react-router-dom';
-import './Schedule.scss';
 
 export const Schedule = () => {
   const [clients, setClients] = React.useState<Client[]>([]);
@@ -264,34 +263,28 @@ export const Schedule = () => {
   }
 
   if (clientsLoading) {
-    return <Spinner className="mt-8" message="Loading clients..." />;
+    return (
+      <div className="mt-12 flex items-center justify-center">
+        <Loader className="h-8 w-8 animate-spin" />
+      </div>
+    );
   }
 
   return (
     <>
-      <Helmet>
-        <title>Schedule | Schedule Builder</title>
-      </Helmet>
+      <title>Schedule | Schedule Builder</title>
       <div className="container mx-auto px-4">
         <div className="mt-4 mb-12">
-          <h1>Schedule</h1>
-          <div className="Schedule__header">
-            <Tabs>
-              <TabItem active={getDay() === 0} onClick={() => setDay(0)}>
-                Monday
-              </TabItem>
-              <TabItem active={getDay() === 1} onClick={() => setDay(1)}>
-                Tuesday
-              </TabItem>
-              <TabItem active={getDay() === 2} onClick={() => setDay(2)}>
-                Wednesday
-              </TabItem>
-              <TabItem active={getDay() === 3} onClick={() => setDay(3)}>
-                Thursday
-              </TabItem>
-              <TabItem active={getDay() === 4} onClick={() => setDay(4)}>
-                Friday
-              </TabItem>
+          <h1 className="mb-4 text-2xl font-bold">Schedule</h1>
+          <div className="sticky top-0 mb-4 flex items-center justify-between bg-white">
+            <Tabs onValueChange={(value) => setDay(parseInt(value))} value={getDay().toString()}>
+              <TabsList>
+                <TabsTrigger value="0">Monday</TabsTrigger>
+                <TabsTrigger value="1">Tuesday</TabsTrigger>
+                <TabsTrigger value="2">Wednesday</TabsTrigger>
+                <TabsTrigger value="3">Thursday</TabsTrigger>
+                <TabsTrigger value="4">Friday</TabsTrigger>
+              </TabsList>
             </Tabs>
             <Button onClick={() => setTechnicianDayOverviewOpen(true)} variant="outline">
               {dayToString(getDay())} Technician Overview

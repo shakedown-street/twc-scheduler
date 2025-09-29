@@ -1,9 +1,12 @@
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { http } from '@/http';
-import { debounceRef } from '@/utils/debounce';
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
+import { http } from '@/lib/http';
+import { useDebounce } from '@/utils/debounce';
 import { Loader } from 'lucide-react';
 import React from 'react';
-import { Input } from '../Input/Input';
+import { Input } from '../ui/input';
+import { Label } from '../ui/label';
+import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover';
 
 export type SearchPopoverProps = {
   endpoint: string;
@@ -27,7 +30,7 @@ export const SearchPopover = ({
   const [matches, setMatches] = React.useState<any[]>([]);
   const [matchesLoading, setMatchesLoading] = React.useState(false);
 
-  const debouncedSearch = debounceRef((value: string) => {
+  const debouncedSearch = useDebounce((value: string) => {
     setMatchesLoading(true);
     http
       .get(`${endpoint}?${parameter}=${value}`)
@@ -77,9 +80,9 @@ export const SearchPopover = ({
       <Popover open={popoverOpen} onOpenChange={setPopoverOpen}>
         {trigger && <PopoverTrigger asChild>{trigger}</PopoverTrigger>}
         <PopoverContent className="p-4">
-          <label className="mb-2" htmlFor="search">
+          <Label className="mb-2" htmlFor="search">
             {searchLabel ? searchLabel : 'Search'}
-          </label>
+          </Label>
           <Input
             autoFocus
             className="w-full"
