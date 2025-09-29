@@ -47,12 +47,12 @@ The Schedule Builder is a specialized web application designed to efficiently ma
 
 ### Frontend Stack
 
-- **Framework**: React 18 with TypeScript
+- **Framework**: React 19 with TypeScript
 - **Build Tool**: Vite
 - **State Management**: React Context API
-- **Routing**: React Router v6
-- **UI Components**: Custom UI library with some RadixUI primatives
-- **Styling**: SCSS
+- **Routing**: React Router v7
+- **Styling**: TailwindCSS and SCSS
+- **UI Components**: shadcn/ui
 - **HTTP Client**: Axios
 
 ## Key Technical Features
