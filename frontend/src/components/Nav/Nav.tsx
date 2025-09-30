@@ -1,9 +1,21 @@
 import { UserModel } from '@/api';
 import logoSmall from '@/assets/logo-small.png';
+import { useSchedules } from '@/contexts/SchedulesContext';
 import { useAuth } from '@/features/auth/contexts/AuthContext';
 import { http } from '@/lib/http';
 import { toastError } from '@/utils/errors';
-import { ArrowLeftRight, Calendar, CalendarCheck, IdCard, List, LogOut, Menu, Settings, User } from 'lucide-react';
+import {
+  ArrowLeftRight,
+  Calendar,
+  CalendarCheck,
+  CalendarCog,
+  IdCard,
+  List,
+  LogOut,
+  Menu,
+  Settings,
+  User,
+} from 'lucide-react';
 import React from 'react';
 import { Link, NavLink, useNavigate } from 'react-router';
 import { SearchPopover } from '../SearchPopover/SearchPopover';
@@ -11,7 +23,7 @@ import { SettingsDialog } from '../SettingsDialog/SettingsDialog';
 import { Button } from '../ui/button';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '../ui/dialog';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '../ui/dropdown-menu';
-import { NativeSelect } from '../ui/native-select';
+import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover';
 
 export const Nav = () => {
   const [impersonateDialogOpen, setImpersonateDialogOpen] = React.useState(false);
@@ -19,6 +31,29 @@ export const Nav = () => {
 
   const navigate = useNavigate();
   const { user, setUser } = useAuth();
+  const { schedules } = useSchedules();
+
+  function selectedScheduleName() {
+    const scheduleId = localStorage.getItem('schedule');
+    if (!scheduleId) {
+      return 'Current Schedule';
+    }
+    const schedule = schedules.find((s) => s.id === scheduleId);
+    if (!schedule) {
+      return 'Current Schedule';
+    }
+    return schedule.name;
+  }
+
+  function switchToCurrentSchedule() {
+    localStorage.removeItem('schedule');
+    window.location.reload();
+  }
+
+  function switchToSchedule(schedule: Schedule) {
+    localStorage.setItem('schedule', schedule.id);
+    window.location.reload();
+  }
 
   function impersonate(user: User) {
     UserModel.detailAction(user.id, 'impersonate', 'get').then((res) => {
@@ -129,7 +164,39 @@ export const Nav = () => {
           )}
           <div className="flex-1"></div>
           <div className="flex items-center gap-2">
-            <NativeSelect></NativeSelect>
+            <Popover>
+              <PopoverTrigger asChild>
+                <Button variant="outline">
+                  <CalendarCog />
+                  {selectedScheduleName()}
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent>
+                <div className="text-muted-foreground text-sm font-medium">Switch to Schedule</div>
+                <div className="my-2 max-h-40 overflow-y-auto">
+                  <ul>
+                    <li
+                      className="hover:bg-accent hover:text-accent-foreground block w-full rounded-md p-2 text-sm"
+                      onClick={switchToCurrentSchedule}
+                    >
+                      Current Schedule <span className="text-muted-foreground">(default)</span>
+                    </li>
+                    {schedules.map((schedule) => (
+                      <li
+                        key={schedule.id}
+                        className="hover:bg-accent hover:text-accent-foreground block w-full rounded-md p-2 text-sm"
+                        onClick={() => switchToSchedule(schedule)}
+                      >
+                        {schedule.name}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+                <Button asChild className="w-full" variant="outline">
+                  <Link to="/manage-schedules">Manage Schedules</Link>
+                </Button>
+              </PopoverContent>
+            </Popover>
             {!user ? renderAuthLinks() : renderUserMenu()}
           </div>
         </div>
