@@ -6,3 +6,5 @@ services:
       context: .
       dockerfile: Dockerfile
     command: npm run build
+    volumes:
+      - /srv/static/schedule_builder/dist:/frontend/dist:z
