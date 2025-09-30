@@ -20,5 +20,7 @@ class ScheduleMiddleware:
         else:
             request.schedule = None
 
+        print(request.headers)
+
         response = self.get_response(request)
         return response
