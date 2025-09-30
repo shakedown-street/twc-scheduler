@@ -9,7 +9,7 @@ import { Button } from '../ui/button';
 import { Checkbox } from '../ui/checkbox';
 import { Input } from '../ui/input';
 import { Label } from '../ui/label';
-import { Select } from '../ui/select';
+import { NativeSelect } from '../ui/native-select';
 import { Textarea } from '../ui/textarea';
 import { Tooltip, TooltipContent } from '../ui/tooltip';
 
@@ -235,13 +235,13 @@ export const ClientForm = ({ client, onCancel, onCreate, onDelete, onUpdate }: C
       {technicians.length > 0 && (
         <div className="form-group">
           <Label htmlFor="past_technicians">Past Technicians</Label>
-          <Select className="h-30" id="past_technicians" multiple {...form.register('past_technicians')}>
+          <NativeSelect className="h-30" id="past_technicians" multiple {...form.register('past_technicians')}>
             {technicians.map((technician) => (
               <option key={technician.id} value={technician.id}>
                 {technician.first_name} {technician.last_name}
               </option>
             ))}
-          </Select>
+          </NativeSelect>
           <div className="text-muted-foreground text-xs">
             Hold down “Control”, or “Command” on a Mac, to select more than one.
           </div>

@@ -11,7 +11,7 @@ import { Badge } from '../ui/badge';
 import { Button } from '../ui/button';
 import { Checkbox } from '../ui/checkbox';
 import { Label } from '../ui/label';
-import { Select } from '../ui/select';
+import { NativeSelect } from '../ui/native-select';
 import { Textarea } from '../ui/textarea';
 import { Tooltip, TooltipContent, TooltipTrigger } from '../ui/tooltip';
 
@@ -427,7 +427,7 @@ export const AppointmentForm = ({
       </div>
       <div className="form-group">
         <Label htmlFor="technician">Technician</Label>
-        <Select id="technician" {...form.register('technician', { required: true })}>
+        <NativeSelect id="technician" {...form.register('technician', { required: true })}>
           <option value="">Select a technician</option>
           {(onlyShowRecommendedTechs ? availableTechnicians : allTechnicians).map((tech) => (
             <option
@@ -440,7 +440,7 @@ export const AppointmentForm = ({
               {tech.first_name} {tech.last_name} {!isTechnicianAvailable(tech.id) ? '⚠' : ''}
             </option>
           ))}
-        </Select>
+        </NativeSelect>
       </div>
       <div className="form-group">
         <div className="flex items-center gap-2">

@@ -11,6 +11,7 @@ import { SettingsDialog } from '../SettingsDialog/SettingsDialog';
 import { Button } from '../ui/button';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '../ui/dialog';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '../ui/dropdown-menu';
+import { NativeSelect } from '../ui/native-select';
 
 export const Nav = () => {
   const [impersonateDialogOpen, setImpersonateDialogOpen] = React.useState(false);
@@ -127,7 +128,10 @@ export const Nav = () => {
             </div>
           )}
           <div className="flex-1"></div>
-          {!user ? renderAuthLinks() : renderUserMenu()}
+          <div className="flex items-center gap-2">
+            <NativeSelect></NativeSelect>
+            {!user ? renderAuthLinks() : renderUserMenu()}
+          </div>
         </div>
       </div>
       <Dialog open={impersonateDialogOpen} onOpenChange={(open) => setImpersonateDialogOpen(open)}>

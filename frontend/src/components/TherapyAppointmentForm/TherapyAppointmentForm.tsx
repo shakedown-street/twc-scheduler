@@ -7,7 +7,7 @@ import { TimeInput } from '../TimeInput/TimeInput';
 import { Badge } from '../ui/badge';
 import { Button } from '../ui/button';
 import { Label } from '../ui/label';
-import { Select } from '../ui/select';
+import { NativeSelect } from '../ui/native-select';
 import { Textarea } from '../ui/textarea';
 
 export type TherapyAppointmentFormProps = {
@@ -201,12 +201,12 @@ export const TherapyAppointmentForm = ({
       </div>
       <div className="form-group">
         <Label id="therapy_type">Therapy Type</Label>
-        <Select id="therapy_type" {...form.register('therapy_type', { required: true })}>
+        <NativeSelect id="therapy_type" {...form.register('therapy_type', { required: true })}>
           <option value="">Select a type</option>
           <option value="ot">Occupational Therapy</option>
           <option value="st">Speech Therapy</option>
           <option value="mh">Mental Health</option>
-        </Select>
+        </NativeSelect>
       </div>
       <div className="form-group">
         <Label htmlFor="notes">Notes</Label>
