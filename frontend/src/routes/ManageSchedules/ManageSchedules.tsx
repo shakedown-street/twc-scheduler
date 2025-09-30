@@ -80,6 +80,10 @@ export const ManageSchedules = () => {
     });
   }
 
+  function cancelEdit() {
+    setEditing(undefined);
+  }
+
   function updateSchedule(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
 
@@ -208,7 +212,7 @@ export const ManageSchedules = () => {
                 </Label>
               </div>
             </div>
-            <div className="flex justify-between">
+            <div className="flex justify-end gap-2">
               <Button onClick={cancelCreate} type="button" variant="ghost">
                 Cancel
               </Button>
@@ -237,7 +241,10 @@ export const ManageSchedules = () => {
                 value={editing?.name}
               />
             </div>
-            <div className="flex justify-end">
+            <div className="flex justify-end gap-2">
+              <Button onClick={cancelEdit} type="button" variant="ghost">
+                Cancel
+              </Button>
               <Button type="submit">Save</Button>
             </div>
           </form>
