@@ -1,3 +1,4 @@
+from django.db import transaction
 from rest_framework import serializers
 
 from .models import (
@@ -12,9 +13,52 @@ from .models import (
 
 
 class ScheduleSerializer(serializers.ModelSerializer):
+    copy_from_current = serializers.BooleanField(
+        write_only=True,
+        required=False,
+        default=False,
+    )
+
     class Meta:
         model = Schedule
         fields = "__all__"
+
+    def create(self, validated_data):
+        with transaction.atomic():
+            copy = validated_data.pop("copy_from_current", False)
+
+            schedule = super().create(validated_data)
+
+            if copy:
+                current_availabilities = Availability.objects.filter(schedule=None)
+                current_appointments = Appointment.objects.filter(schedule=None)
+                current_therapy_appointments = TherapyAppointment.objects.filter(
+                    schedule=None
+                )
+
+                new_availabilities = []
+                for availability in current_availabilities:
+                    availability.pk = None
+                    availability.schedule = schedule
+                    new_availabilities.append(availability)
+
+                new_appointments = []
+                for appointment in current_appointments:
+                    appointment.pk = None
+                    appointment.schedule = schedule
+                    new_appointments.append(appointment)
+
+                new_therapy_appointments = []
+                for therapy_appointment in current_therapy_appointments:
+                    therapy_appointment.pk = None
+                    therapy_appointment.schedule = schedule
+                    new_therapy_appointments.append(therapy_appointment)
+
+                Availability.objects.bulk_create(new_availabilities)
+                Appointment.objects.bulk_create(new_appointments)
+                TherapyAppointment.objects.bulk_create(new_therapy_appointments)
+
+            return schedule
 
 
 class ClientBasicSerializer(serializers.ModelSerializer):

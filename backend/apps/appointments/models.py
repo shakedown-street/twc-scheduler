@@ -222,7 +222,7 @@ class Availability(UUIDPrimaryKeyMixin, TimestampMixin):
     )
 
     class Meta:
-        ordering = ["content_type", "object_id", "day", "start_time"]
+        ordering = ["schedule", "content_type", "object_id", "day", "start_time"]
         verbose_name_plural = "Availabilities"
         unique_together = ["content_type", "object_id", "schedule", "day", "start_time"]
 
@@ -256,7 +256,7 @@ class Appointment(UUIDPrimaryKeyMixin, TimestampMixin):
     )
 
     class Meta:
-        ordering = ["client", "technician", "day", "start_time"]
+        ordering = ["schedule", "client", "technician", "day", "start_time"]
         unique_together = ["client", "schedule", "day", "start_time"]
 
     def __str__(self):
@@ -299,7 +299,7 @@ class TherapyAppointment(UUIDPrimaryKeyMixin, TimestampMixin):
     )
 
     class Meta:
-        ordering = ["client", "day", "start_time"]
+        ordering = ["schedule", "client", "day", "start_time"]
         unique_together = ["client", "schedule", "day", "start_time"]
 
     def __str__(self):
