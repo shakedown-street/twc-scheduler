@@ -65,9 +65,7 @@ class Technician(UUIDPrimaryKeyMixin, TimestampMixin):
     def total_hours_available(self, schedule: Schedule = None):
         total_minutes = sum(
             [
-                get_difference_in_minutes(
-                    availability.start_time, availability.end_time
-                )
+                availability.duration
                 for availability in self.availabilities.filter(schedule=schedule)
             ]
         )
@@ -79,9 +77,7 @@ class Technician(UUIDPrimaryKeyMixin, TimestampMixin):
         for day in range(7):
             total_minutes = sum(
                 [
-                    get_difference_in_minutes(
-                        appointment.start_time, appointment.end_time
-                    )
+                    appointment.duration
                     for appointment in self.appointments.filter(
                         schedule=schedule,
                         day=day,
@@ -95,7 +91,7 @@ class Technician(UUIDPrimaryKeyMixin, TimestampMixin):
     def total_hours(self, schedule: Schedule = None):
         total_minutes = sum(
             [
-                get_difference_in_minutes(appointment.start_time, appointment.end_time)
+                appointment.duration
                 for appointment in self.appointments.filter(
                     schedule=schedule,
                 )
@@ -151,9 +147,7 @@ class Client(UUIDPrimaryKeyMixin, TimestampMixin):
     def total_hours_available(self, schedule: Schedule = None):
         total_minutes = sum(
             [
-                get_difference_in_minutes(
-                    availability.start_time, availability.end_time
-                )
+                availability.duration
                 for availability in self.availabilities.filter(
                     schedule=schedule,
                 )
@@ -167,9 +161,7 @@ class Client(UUIDPrimaryKeyMixin, TimestampMixin):
         for day in range(7):
             total_minutes = sum(
                 [
-                    get_difference_in_minutes(
-                        appointment.start_time, appointment.end_time
-                    )
+                    appointment.duration
                     for appointment in self.appointments.filter(
                         schedule=schedule,
                         day=day,
@@ -183,7 +175,7 @@ class Client(UUIDPrimaryKeyMixin, TimestampMixin):
     def total_hours(self, schedule: Schedule = None):
         total_minutes = sum(
             [
-                get_difference_in_minutes(appointment.start_time, appointment.end_time)
+                appointment.duration
                 for appointment in self.appointments.filter(schedule=schedule)
             ]
         )
@@ -229,6 +221,10 @@ class Availability(UUIDPrimaryKeyMixin, TimestampMixin):
     def __str__(self):
         return f"{self.object} - D{self.day} ({self.start_time}-{self.end_time})"
 
+    @property
+    def duration(self):
+        return get_difference_in_minutes(self.start_time, self.end_time)
+
 
 class Appointment(UUIDPrimaryKeyMixin, TimestampMixin):
     client = models.ForeignKey(
@@ -261,6 +257,10 @@ class Appointment(UUIDPrimaryKeyMixin, TimestampMixin):
 
     def __str__(self):
         return f"{self.client} - {self.technician} - D{self.day} {self.start_time} - {self.end_time}"
+
+    @property
+    def duration(self):
+        return get_difference_in_minutes(self.start_time, self.end_time)
 
 
 class TherapyAppointment(UUIDPrimaryKeyMixin, TimestampMixin):
@@ -307,6 +307,10 @@ class TherapyAppointment(UUIDPrimaryKeyMixin, TimestampMixin):
 
     def get_therapy_type_display(self):
         return dict(self.THERAPY_TYPE_CHOICES).get(self.therapy_type, "Unknown")
+
+    @property
+    def duration(self):
+        return get_difference_in_minutes(self.start_time, self.end_time)
 
 
 # Register the models with auditlog

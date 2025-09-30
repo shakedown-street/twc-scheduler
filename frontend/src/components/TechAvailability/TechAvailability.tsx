@@ -5,6 +5,7 @@ import { useBlocks } from '@/contexts/BlocksContext';
 import { useAuth } from '@/features/auth/contexts/AuthContext';
 import { isFullBlock } from '@/utils/appointments';
 import { skillLevelColor } from '@/utils/color';
+import { availableHours } from '@/utils/computedProperties';
 import { orderByFirstName } from '@/utils/order';
 import { checkTimeIntersection, formatTimeShort } from '@/utils/time';
 import clsx from 'clsx';
@@ -56,7 +57,6 @@ export const TechAvailability = () => {
       TechnicianModel.all({
         page_size: 1000,
         expand_availabilities: true,
-        expand_properties: true,
       })
         .then((technicians) => {
           setTechnicians(orderByFirstName<Technician>(technicians));
@@ -82,10 +82,7 @@ export const TechAvailability = () => {
   }
 
   function totalAvailableHours() {
-    return technicians.reduce(
-      (total, technician) => total + (technician.computed_properties?.total_hours_available || 0),
-      0,
-    );
+    return technicians.reduce((total, technician) => total + (availableHours(technician) || 0), 0);
   }
 
   function getBlockAvailability(technician: Technician, day: number, block: Block) {
@@ -317,7 +314,7 @@ export const TechAvailability = () => {
                 {technician.spanish_speaking && <Check className="text-green-700" size="14" />}
               </td>
               <td>{technician.requested_hours}</td>
-              <td>{technician.computed_properties?.total_hours_available}</td>
+              <td>{availableHours(technician)}</td>
               {renderAvailabilities(technician)}
             </tr>
           ))}

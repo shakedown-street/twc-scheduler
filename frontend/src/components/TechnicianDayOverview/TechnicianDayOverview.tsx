@@ -3,6 +3,7 @@ import { useBlocks } from '@/contexts/BlocksContext';
 import { useAuth } from '@/features/auth/contexts/AuthContext';
 import { getBlockAppointments, getBlockAvailabilities } from '@/utils/appointments';
 import { skillLevelColor, striped } from '@/utils/color';
+import { hours, hoursByDay, isMaxedOnSessions } from '@/utils/computedProperties';
 import { orderByFirstName } from '@/utils/order';
 import { dayToString } from '@/utils/time';
 import { Check, Loader } from 'lucide-react';
@@ -37,7 +38,6 @@ export const TechnicianDayOverview = ({ day }: TechnicianDayOverviewProps) => {
       page_size: 1000,
       expand_appointments: true,
       expand_availabilities: true,
-      expand_properties: true,
     })
       .then((technicians) => {
         setTechnicians(orderByFirstName<Technician>(technicians));
@@ -121,7 +121,7 @@ export const TechnicianDayOverview = ({ day }: TechnicianDayOverviewProps) => {
       let background = 'black';
       let color = '#22c55e'; // tw-green-500
       let letter = 'A';
-      if (technician.computed_properties?.is_maxed_on_sessions) {
+      if (isMaxedOnSessions(technician)) {
         background = 'black';
         color = '#ef4444'; // tw-red-500
         letter = 'M';
@@ -237,18 +237,18 @@ export const TechnicianDayOverview = ({ day }: TechnicianDayOverviewProps) => {
                   {technician.first_name} {technician.last_name}
                 </a>
               </td>
-              <td style={{ textAlign: 'center' }}>{technician.computed_properties?.total_hours_by_day[day]}</td>
-              <td style={{ textAlign: 'center' }}>{technician.computed_properties?.total_hours}</td>
+              <td style={{ textAlign: 'center' }}>{hoursByDay(technician, day)}</td>
+              <td style={{ textAlign: 'center' }}>{hours(technician)}</td>
               <td style={{ textAlign: 'center' }}>{technician.requested_hours}</td>
               <td
                 style={{
                   background: 'black',
-                  color: technician.computed_properties?.is_maxed_on_sessions ? '#ef4444' : '#22c55e', // tw-red-500 : tw-green-500
+                  color: isMaxedOnSessions(technician) ? '#ef4444' : '#22c55e', // tw-red-500 : tw-green-500
                   fontWeight: 'bold',
                   textAlign: 'center',
                 }}
               >
-                {technician.computed_properties?.is_maxed_on_sessions ? 'M' : 'A'}
+                {isMaxedOnSessions(technician) ? 'M' : 'A'}
               </td>
               {blocks.map((block, blockIndex) => (
                 <React.Fragment key={block.id}>{renderBlock(technician, block, blockIndex)}</React.Fragment>

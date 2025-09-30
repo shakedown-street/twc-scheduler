@@ -3,6 +3,7 @@ import { useBlocks } from '@/contexts/BlocksContext';
 import { useAuth } from '@/features/auth/contexts/AuthContext';
 import { getBlockAppointments, getBlockAvailabilities } from '@/utils/appointments';
 import { dayColor, skillLevelColor, striped } from '@/utils/color';
+import { hours, hoursByDay, isMaxedOnSessions } from '@/utils/computedProperties';
 import { orderByFirstName } from '@/utils/order';
 import { Check, Info, Loader } from 'lucide-react';
 import React from 'react';
@@ -42,7 +43,6 @@ export const TechniciansOverview = ({ isSubList = false, showLegend = true }: Te
         page_size: 1000,
         expand_appointments: true,
         expand_availabilities: true,
-        expand_properties: true,
       })
         .then((technicians) => {
           setTechnicians(orderByFirstName<Technician>(technicians));
@@ -64,24 +64,15 @@ export const TechniciansOverview = ({ isSubList = false, showLegend = true }: Te
   }, []);
 
   function totalHoursByDay(day: number) {
-    return technicians.reduce(
-      (acc, technician) =>
-        acc + (technician.computed_properties ? technician.computed_properties.total_hours_by_day[day] : 0),
-      0,
-    );
+    return technicians.reduce((acc, technician) => acc + hoursByDay(technician, day), 0);
   }
 
   function totalHours() {
-    return technicians.reduce(
-      (acc, technician) => acc + (technician.computed_properties ? technician.computed_properties.total_hours : 0),
-      0,
-    );
+    return technicians.reduce((acc, technician) => acc + hours(technician), 0);
   }
 
   function displayTotalHoursByDay(technician: Technician, day: number) {
-    return technician.computed_properties!.total_hours_by_day[day] > 0
-      ? technician.computed_properties!.total_hours_by_day[day]
-      : '-';
+    return hoursByDay(technician, day) > 0 ? hoursByDay(technician, day) : '-';
   }
 
   function totalRequestedHours() {
@@ -92,12 +83,7 @@ export const TechniciansOverview = ({ isSubList = false, showLegend = true }: Te
     return technicians.reduce((acc, technician) => {
       const appointments = getBlockAppointments(technician.appointments || [], day, block) || [];
       const availabilities = getBlockAvailabilities(technician.availabilities || [], day, block) || [];
-      return (
-        acc +
-        (appointments.length < 1 && availabilities.length > 0 && !technician.computed_properties?.is_maxed_on_sessions
-          ? 1
-          : 0)
-      );
+      return acc + (appointments.length < 1 && availabilities.length > 0 && !isMaxedOnSessions(technician) ? 1 : 0);
     }, 0);
   }
 
@@ -210,7 +196,7 @@ export const TechniciansOverview = ({ isSubList = false, showLegend = true }: Te
       let background = 'black';
       let color = '#22c55e'; // tw-green-500
       let letter = 'A';
-      if (technician.computed_properties?.is_maxed_on_sessions) {
+      if (isMaxedOnSessions(technician)) {
         background = 'black';
         color = '#ef4444'; // tw-red-500
         letter = 'M';
@@ -435,17 +421,17 @@ export const TechniciansOverview = ({ isSubList = false, showLegend = true }: Te
                     <td style={{ textAlign: 'center' }}>{displayTotalHoursByDay(technician, 2)}</td>
                     <td style={{ textAlign: 'center' }}>{displayTotalHoursByDay(technician, 3)}</td>
                     <td style={{ textAlign: 'center' }}>{displayTotalHoursByDay(technician, 4)}</td>
-                    <td style={{ textAlign: 'center' }}>{technician.computed_properties?.total_hours}</td>
+                    <td style={{ textAlign: 'center' }}>{hours(technician)}</td>
                     <td style={{ textAlign: 'center' }}>{technician.requested_hours}</td>
                     <td
                       style={{
                         background: 'black',
-                        color: technician.computed_properties?.is_maxed_on_sessions ? '#ef4444' : '#22c55e', // tw-red-500 : tw-green-500
+                        color: isMaxedOnSessions(technician) ? '#ef4444' : '#22c55e', // tw-red-500 : tw-green-500
                         fontWeight: 'bold',
                         textAlign: 'center',
                       }}
                     >
-                      {technician.computed_properties?.is_maxed_on_sessions ? 'M' : 'A'}
+                      {isMaxedOnSessions(technician) ? 'M' : 'A'}
                     </td>
                   </>
                 )}

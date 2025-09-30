@@ -29,7 +29,7 @@ export const ClientTechnicianHistory = () => {
     const fetchClients = () => {
       ClientModel.all({
         page_size: 1000,
-        expand_technicians: true,
+        expand_current_technicians: true,
       }).then((clients) => {
         setClients(orderByFirstName<Client>(clients));
         setClientsLoading(false);
@@ -140,7 +140,7 @@ export const ClientTechnicianHistory = () => {
                 >
                   {client.req_skill_level}
                 </td>
-                <td>{displayTechnicians(client.current_technicians)}</td>
+                <td>{client.current_technicians && displayTechnicians(client.current_technicians)}</td>
                 <td>{displayTechnicians(client.past_technicians)}</td>
                 <td>{client.sub_notes}</td>
               </tr>

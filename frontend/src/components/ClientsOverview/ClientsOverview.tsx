@@ -3,6 +3,7 @@ import { useBlocks } from '@/contexts/BlocksContext';
 import { useAuth } from '@/features/auth/contexts/AuthContext';
 import { getBlockAppointments, getBlockAvailabilities } from '@/utils/appointments';
 import { dayColor, skillLevelColor, striped } from '@/utils/color';
+import { hours, hoursByDay, isMaxedOnSessions } from '@/utils/computedProperties';
 import { orderByFirstName } from '@/utils/order';
 import { Check, Info, Loader } from 'lucide-react';
 import React from 'react';
@@ -53,7 +54,6 @@ export const ClientsOverview = () => {
         page_size: 1000,
         expand_appointments: true,
         expand_availabilities: true,
-        expand_properties: true,
       })
         .then((clients) => {
           setClients(orderByFirstName<Client>(clients));
@@ -75,23 +75,15 @@ export const ClientsOverview = () => {
   }, []);
 
   function totalHoursByDay(day: number) {
-    return clients.reduce(
-      (acc, client) => acc + (client.computed_properties ? client.computed_properties.total_hours_by_day[day] : 0),
-      0,
-    );
+    return clients.reduce((acc, client) => acc + hoursByDay(client, day), 0);
   }
 
   function totalHours() {
-    return clients.reduce(
-      (acc, client) => acc + (client.computed_properties ? client.computed_properties.total_hours : 0),
-      0,
-    );
+    return clients.reduce((acc, client) => acc + hours(client), 0);
   }
 
   function displayTotalHoursByDay(client: Client, day: number) {
-    return client.computed_properties!.total_hours_by_day[day] > 0
-      ? client.computed_properties!.total_hours_by_day[day]
-      : '-';
+    return hoursByDay(client, day) > 0 ? hoursByDay(client, day) : '-';
   }
 
   function totalRequestedHours() {
@@ -102,12 +94,7 @@ export const ClientsOverview = () => {
     return clients.reduce((acc, client) => {
       const appointments = getBlockAppointments(client.appointments || [], day, block) || [];
       const availabilities = getBlockAvailabilities(client.availabilities || [], day, block) || [];
-      return (
-        acc +
-        (appointments.length < 1 && availabilities.length > 0 && !client.computed_properties?.is_maxed_on_sessions
-          ? 1
-          : 0)
-      );
+      return acc + (appointments.length < 1 && availabilities.length > 0 && !isMaxedOnSessions(client) ? 1 : 0);
     }, 0);
   }
 
@@ -272,7 +259,7 @@ export const ClientsOverview = () => {
     // Render availability blocks
     if (blockAvailabilities.length > 0) {
       let background = 'black';
-      if (client.computed_properties?.is_maxed_on_sessions) {
+      if (isMaxedOnSessions(client)) {
         background = 'black';
       }
       return (
@@ -285,13 +272,13 @@ export const ClientsOverview = () => {
             background,
             borderLeftWidth,
             borderRightWidth,
-            color: client.computed_properties?.is_maxed_on_sessions ? '#ef4444' : '#22c55e', // tw-red-500 : tw-green-500
+            color: isMaxedOnSessions(client) ? '#ef4444' : '#22c55e', // tw-red-500 : tw-green-500
             cursor: 'pointer',
             textAlign: 'center',
             fontWeight: 'bold',
           }}
         >
-          {client.computed_properties?.is_maxed_on_sessions ? 'M' : 'A'}
+          {isMaxedOnSessions(client) ? 'M' : 'A'}
         </td>
       );
     }
@@ -452,17 +439,17 @@ export const ClientsOverview = () => {
                 <td style={{ textAlign: 'center' }}>{displayTotalHoursByDay(client, 2)}</td>
                 <td style={{ textAlign: 'center' }}>{displayTotalHoursByDay(client, 3)}</td>
                 <td style={{ textAlign: 'center' }}>{displayTotalHoursByDay(client, 4)}</td>
-                <td style={{ textAlign: 'center' }}>{client.computed_properties!.total_hours}</td>
+                <td style={{ textAlign: 'center' }}>{hours(client)}</td>
                 <td style={{ textAlign: 'center' }}>{client.prescribed_hours}</td>
                 <td
                   style={{
                     background: 'black',
-                    color: client.computed_properties?.is_maxed_on_sessions ? '#ef4444' : '#22c55e', // tw-red-500 : tw-green-500
+                    color: isMaxedOnSessions(client) ? '#ef4444' : '#22c55e', // tw-red-500 : tw-green-500
                     fontWeight: 'bold',
                     textAlign: 'center',
                   }}
                 >
-                  {client.computed_properties?.is_maxed_on_sessions ? 'M' : 'A'}
+                  {isMaxedOnSessions(client) ? 'M' : 'A'}
                 </td>
                 {days.map((day) => (
                   <React.Fragment key={day}>

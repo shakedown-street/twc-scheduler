@@ -87,6 +87,7 @@ class AppointmentSerializer(serializers.ModelSerializer):
     def to_representation(self, instance):
         data = super().to_representation(instance)
 
+        data["duration"] = instance.duration
         data["client"] = ClientBasicSerializer(
             instance.client, context=self.context
         ).data
@@ -155,6 +156,13 @@ class AvailabilitySerializer(serializers.ModelSerializer):
 
         return super().create(validated_data)
 
+    def to_representation(self, instance):
+        data = super().to_representation(instance)
+
+        data["duration"] = instance.duration
+
+        return data
+
 
 class BlockSerialzier(serializers.ModelSerializer):
     class Meta:
@@ -200,21 +208,22 @@ class ClientSerializer(serializers.ModelSerializer):
                 context=self.context,
             ).data
 
-        # Serialize current technicians from appointments
-        current_technician_ids = instance.appointments.filter(
-            schedule=request.schedule,
-        ).values_list(
-            "technician__id",
-            flat=True,
-        )
-        current_technicians_qs = Technician.objects.filter(
-            id__in=current_technician_ids,
-        ).distinct()
-        data["current_technicians"] = TechnicianBasicSerializer(
-            current_technicians_qs,
-            many=True,
-            context=self.context,
-        ).data
+        if request and request.query_params.get("expand_current_technicians"):
+            # Serialize current technicians from appointments
+            current_technician_ids = instance.appointments.filter(
+                schedule=request.schedule,
+            ).values_list(
+                "technician__id",
+                flat=True,
+            )
+            current_technicians_qs = Technician.objects.filter(
+                id__in=current_technician_ids,
+            ).distinct()
+            data["current_technicians"] = TechnicianBasicSerializer(
+                current_technicians_qs,
+                many=True,
+                context=self.context,
+            ).data
 
         # Serialize past technicians
         data["past_technicians"] = TechnicianBasicSerializer(

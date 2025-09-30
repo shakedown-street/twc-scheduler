@@ -1,5 +1,6 @@
 import { useAuth } from '@/features/auth/contexts/AuthContext';
 import { skillLevelColor, striped } from '@/utils/color';
+import { hours, hoursByDay, isMaxedOnSessions } from '@/utils/computedProperties';
 import {
   addMinutes,
   dayToString,
@@ -9,11 +10,11 @@ import {
   isOnTheHour,
   removeMinutes,
 } from '@/utils/time';
+import { Check } from 'lucide-react';
 import React from 'react';
 import { AppointmentHover } from '../AppointmentHover/AppointmentHover';
 import { HoverCard, HoverCardContent, HoverCardTrigger } from '../ui/hover-card';
 import './TimeSlotTable.scss';
-import { Check } from 'lucide-react';
 
 export type TimeSlotTableProps = {
   blocks: Block[];
@@ -276,18 +277,18 @@ export const TimeSlotTable = ({
             >
               {client.req_spanish_speaking && <Check className="text-green-700" size="14" />}
             </td>
-            <td style={{ textAlign: 'center' }}>{client.computed_properties?.total_hours_by_day[day]}</td>
-            <td style={{ textAlign: 'center' }}>{client.computed_properties?.total_hours}</td>
+            <td style={{ textAlign: 'center' }}>{hoursByDay(client, day)}</td>
+            <td style={{ textAlign: 'center' }}>{hours(client)}</td>
             <td style={{ textAlign: 'center' }}>{client.prescribed_hours}</td>
             <td
               style={{
                 background: 'black',
-                color: client.computed_properties?.is_maxed_on_sessions ? '#ef4444' : '#22c55e', // tw-red-500 : tw-green-500
+                color: isMaxedOnSessions(client) ? '#ef4444' : '#22c55e', // tw-red-500 : tw-green-500
                 fontWeight: 'bold',
                 textAlign: 'center',
               }}
             >
-              {client.computed_properties?.is_maxed_on_sessions ? 'M' : 'A'}
+              {isMaxedOnSessions(client) ? 'M' : 'A'}
             </td>
             {timeSlots.map((slot) => renderTimeSlot(slot, client))}
           </tr>

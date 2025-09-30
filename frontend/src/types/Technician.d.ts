@@ -16,10 +16,4 @@ type Technician = {
   // Sometimes available
   appointments?: Appointment[];
   availabilities?: Availability[];
-  computed_properties?: {
-    total_hours_available: number;
-    total_hours: number;
-    total_hours_by_day: number[];
-    is_maxed_on_sessions: boolean;
-  };
 };

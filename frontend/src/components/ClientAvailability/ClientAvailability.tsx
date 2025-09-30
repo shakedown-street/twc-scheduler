@@ -5,6 +5,7 @@ import { useBlocks } from '@/contexts/BlocksContext';
 import { useAuth } from '@/features/auth/contexts/AuthContext';
 import { isFullBlock } from '@/utils/appointments';
 import { skillLevelColor } from '@/utils/color';
+import { availableHours } from '@/utils/computedProperties';
 import { orderByFirstName } from '@/utils/order';
 import { checkTimeIntersection, formatTimeShort } from '@/utils/time';
 import clsx from 'clsx';
@@ -56,7 +57,6 @@ export const ClientAvailability = () => {
       ClientModel.all({
         page_size: 1000,
         expand_availabilities: true,
-        expand_properties: true,
       })
         .then((clients) => {
           setClients(orderByFirstName<Client>(clients));
@@ -82,7 +82,7 @@ export const ClientAvailability = () => {
   }
 
   function totalAvailableHours() {
-    return clients.reduce((total, client) => total + (client.computed_properties?.total_hours_available || 0), 0);
+    return clients.reduce((total, client) => total + (availableHours(client) || 0), 0);
   }
 
   function getBlockAvailability(client: Client, day: number, block: Block) {
@@ -324,7 +324,7 @@ export const ClientAvailability = () => {
                 {client.is_onboarding && <Check className="text-green-700" size="14" />}
               </td>
               <td>{client.prescribed_hours}</td>
-              <td>{client.computed_properties?.total_hours_available}</td>
+              <td>{availableHours(client)}</td>
               {renderAvailabilities(client)}
             </tr>
           ))}

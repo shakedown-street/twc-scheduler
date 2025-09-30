@@ -9,4 +9,5 @@ type Availability = {
   end_time: string;
   in_clinic: boolean;
   is_sub: boolean;
+  duration: number;
 };

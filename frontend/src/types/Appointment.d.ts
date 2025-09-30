@@ -8,6 +8,7 @@ type Appointment = {
   in_clinic: boolean;
   is_preschool_or_adaptive: boolean;
   notes: string;
+  duration: number;
 
   // Sometimes available
   technician?: Technician;
