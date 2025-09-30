@@ -10,6 +10,7 @@ import { NotFound } from './routes/NotFound/NotFound';
 import { Overview } from './routes/Overview/Overview';
 import { Schedule } from './routes/Schedule/Schedule';
 import { SubList } from './routes/SubList/SubList';
+import { ManageSchedules } from './routes/ManageSchedules/ManageSchedules';
 
 export type AuthGuardProps = {
   children: React.ReactNode;
@@ -87,6 +88,14 @@ export const routes: RouteObject[] = [
         element: (
           <AuthGuard>
             <SubList />
+          </AuthGuard>
+        ),
+      },
+      {
+        path: '/manage-schedules',
+        element: (
+          <AuthGuard>
+            <ManageSchedules />
           </AuthGuard>
         ),
       },
