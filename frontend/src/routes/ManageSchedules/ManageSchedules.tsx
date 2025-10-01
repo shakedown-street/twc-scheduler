@@ -21,11 +21,10 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Tooltip, TooltipContent } from '@/components/ui/tooltip';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { useSchedule } from '@/contexts/ScheduleContext';
 import { cn } from '@/lib/utils';
 import { formatDateTime } from '@/utils/format';
-import { TooltipTrigger } from '@radix-ui/react-tooltip';
 import { Info, MoreHorizontal, Plus } from 'lucide-react';
 import React from 'react';
 import { toast } from 'sonner';

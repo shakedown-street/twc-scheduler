@@ -12,7 +12,7 @@ type Client = {
   notes: string;
   sub_notes: string;
   past_technicians: Technician[];
-  is_manually_maxed_out?: boolean;
+  is_manually_maxed_out: boolean;
 
   // Sometimes available
   appointments?: Appointment[];

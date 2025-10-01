@@ -1,28 +1,27 @@
 import { UserModel } from '@/api';
 import logoSmall from '@/assets/logo-small.png';
 import { useSchedule } from '@/contexts/ScheduleContext';
+import { useTheme } from '@/contexts/ThemeContext';
 import { useAuth } from '@/features/auth/contexts/AuthContext';
 import { http } from '@/lib/http';
 import { toastError } from '@/utils/errors';
-import {
-  ArrowLeftRight,
-  Calendar,
-  CalendarCheck,
-  CalendarCog,
-  IdCard,
-  List,
-  LogOut,
-  Menu,
-  Settings,
-  User,
-} from 'lucide-react';
+import { ArrowLeftRight, Calendar, CalendarCheck, CalendarCog, List, LogOut, Menu } from 'lucide-react';
 import React from 'react';
 import { Link, NavLink, useNavigate } from 'react-router';
 import { SearchPopover } from '../SearchPopover/SearchPopover';
 import { SettingsDialog } from '../SettingsDialog/SettingsDialog';
 import { Button } from '../ui/button';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '../ui/dialog';
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '../ui/dropdown-menu';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuPortal,
+  DropdownMenuSub,
+  DropdownMenuSubContent,
+  DropdownMenuSubTrigger,
+  DropdownMenuTrigger,
+} from '../ui/dropdown-menu';
 import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover';
 
 export const Nav = () => {
@@ -30,6 +29,7 @@ export const Nav = () => {
   const [settingsDialogOpen, setSettingsDialogOpen] = React.useState(false);
 
   const navigate = useNavigate();
+  const { setTheme } = useTheme();
   const { user, setUser } = useAuth();
   const { schedules } = useSchedule();
 
@@ -100,20 +100,21 @@ export const Nav = () => {
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
-          <DropdownMenuItem onClick={() => navigate('/profile')}>
-            <User />
-            Profile
-          </DropdownMenuItem>
+          <DropdownMenuItem onClick={() => navigate('/profile')}>Profile</DropdownMenuItem>
           {user?.is_superuser && (
-            <DropdownMenuItem onClick={() => setImpersonateDialogOpen(true)}>
-              <IdCard />
-              Impersonate
-            </DropdownMenuItem>
+            <DropdownMenuItem onClick={() => setImpersonateDialogOpen(true)}>Impersonate</DropdownMenuItem>
           )}
-          <DropdownMenuItem onClick={() => setSettingsDialogOpen(true)}>
-            <Settings />
-            Settings
-          </DropdownMenuItem>
+          <DropdownMenuItem onClick={() => setSettingsDialogOpen(true)}>Settings</DropdownMenuItem>
+          <DropdownMenuSub>
+            <DropdownMenuSubTrigger>Theme</DropdownMenuSubTrigger>
+            <DropdownMenuPortal>
+              <DropdownMenuSubContent>
+                <DropdownMenuItem onClick={() => setTheme('light')}>Light</DropdownMenuItem>
+                <DropdownMenuItem onClick={() => setTheme('dark')}>Dark</DropdownMenuItem>
+                <DropdownMenuItem onClick={() => setTheme('system')}>System</DropdownMenuItem>
+              </DropdownMenuSubContent>
+            </DropdownMenuPortal>
+          </DropdownMenuSub>
           <DropdownMenuItem onClick={() => logout()}>
             <LogOut />
             Logout

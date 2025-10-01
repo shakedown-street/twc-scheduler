@@ -10,13 +10,13 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
+  AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { cn } from '@/lib/utils';
 import { setFormErrors, toastError } from '@/utils/errors';
-import { AlertDialogTrigger } from '@radix-ui/react-alert-dialog';
 import React from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';

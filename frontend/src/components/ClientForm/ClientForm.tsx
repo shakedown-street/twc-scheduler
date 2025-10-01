@@ -1,7 +1,6 @@
 import { ClientModel } from '@/api';
 import { useSchedule } from '@/contexts/ScheduleContext';
 import { toastError } from '@/utils/errors';
-import { TooltipTrigger } from '@radix-ui/react-tooltip';
 import { Info } from 'lucide-react';
 import React from 'react';
 import { Controller, useForm } from 'react-hook-form';
@@ -11,7 +10,7 @@ import { Input } from '../ui/input';
 import { Label } from '../ui/label';
 import { NativeSelect } from '../ui/native-select';
 import { Textarea } from '../ui/textarea';
-import { Tooltip, TooltipContent } from '../ui/tooltip';
+import { Tooltip, TooltipContent, TooltipTrigger } from '../ui/tooltip';
 
 export type ClientFormProps = {
   client?: Client;
@@ -56,7 +55,7 @@ export const ClientForm = ({ client, onCancel, onCreate, onDelete, onUpdate }: C
       notes: client.notes,
       sub_notes: client.sub_notes,
       past_technicians: client.past_technicians.map((tech) => tech.id),
-      is_manually_maxed_out: client.is_manually_maxed_out || false,
+      is_manually_maxed_out: client.is_manually_maxed_out,
     });
   }, [client, form]);
 

@@ -54,7 +54,7 @@ export const TechnicianForm = ({ technician, onCancel, onCreate, onDelete, onUpd
       skill_level: technician.skill_level,
       spanish_speaking: technician.spanish_speaking,
       notes: technician.notes,
-      is_manually_maxed_out: technician.is_manually_maxed_out || false,
+      is_manually_maxed_out: technician.is_manually_maxed_out,
     });
   }, [technician, form]);
 
