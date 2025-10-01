@@ -177,7 +177,7 @@ export const Nav = () => {
                   <div className="my-2 max-h-40 overflow-y-auto">
                     <ul>
                       <li
-                        className="hover:bg-accent hover:text-accent-foreground block w-full rounded-md p-2 text-sm"
+                        className="hover:bg-accent hover:text-accent-foreground block w-full rounded-md p-2 text-sm font-bold"
                         onClick={switchToCurrentSchedule}
                       >
                         Current Schedule <span className="text-muted-foreground">(default)</span>

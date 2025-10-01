@@ -23,7 +23,7 @@ export const TimeInput = ({ min, max, onChange, value }: TimeInputProps) => {
           <Input readOnly type="text" value={formatTime(value)} />
         </PopoverTrigger>
         <PopoverContent>
-          <div className="max-h-40 overflow-y-auto">
+          <div className="max-h-40 overflow-y-auto" onWheel={(e) => e.stopPropagation()}>
             <div className="flex flex-col">
               {timeSlots.map((slot) => {
                 return (
