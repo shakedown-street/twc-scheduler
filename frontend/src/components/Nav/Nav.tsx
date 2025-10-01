@@ -164,39 +164,41 @@ export const Nav = () => {
           )}
           <div className="flex-1"></div>
           <div className="flex items-center gap-2">
-            <Popover>
-              <PopoverTrigger asChild>
-                <Button variant="outline">
-                  <CalendarCog />
-                  {selectedScheduleName()}
-                </Button>
-              </PopoverTrigger>
-              <PopoverContent>
-                <div className="text-muted-foreground text-sm font-medium">Switch to Schedule</div>
-                <div className="my-2 max-h-40 overflow-y-auto">
-                  <ul>
-                    <li
-                      className="hover:bg-accent hover:text-accent-foreground block w-full rounded-md p-2 text-sm"
-                      onClick={switchToCurrentSchedule}
-                    >
-                      Current Schedule <span className="text-muted-foreground">(default)</span>
-                    </li>
-                    {schedules.map((schedule) => (
+            {user && (
+              <Popover>
+                <PopoverTrigger asChild>
+                  <Button variant="outline">
+                    <CalendarCog />
+                    {selectedScheduleName()}
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent>
+                  <div className="text-muted-foreground text-sm font-medium">Switch to Schedule</div>
+                  <div className="my-2 max-h-40 overflow-y-auto">
+                    <ul>
                       <li
-                        key={schedule.id}
                         className="hover:bg-accent hover:text-accent-foreground block w-full rounded-md p-2 text-sm"
-                        onClick={() => switchToSchedule(schedule)}
+                        onClick={switchToCurrentSchedule}
                       >
-                        {schedule.name}
+                        Current Schedule <span className="text-muted-foreground">(default)</span>
                       </li>
-                    ))}
-                  </ul>
-                </div>
-                <Button asChild className="w-full" variant="outline">
-                  <Link to="/manage-schedules">Manage Schedules</Link>
-                </Button>
-              </PopoverContent>
-            </Popover>
+                      {schedules.map((schedule) => (
+                        <li
+                          key={schedule.id}
+                          className="hover:bg-accent hover:text-accent-foreground block w-full rounded-md p-2 text-sm"
+                          onClick={() => switchToSchedule(schedule)}
+                        >
+                          {schedule.name}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                  <Button asChild className="w-full" variant="outline">
+                    <Link to="/manage-schedules">Manage Schedules</Link>
+                  </Button>
+                </PopoverContent>
+              </Popover>
+            )}
             {!user ? renderAuthLinks() : renderUserMenu()}
           </div>
         </div>

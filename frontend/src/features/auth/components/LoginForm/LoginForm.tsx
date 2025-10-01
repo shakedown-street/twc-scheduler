@@ -11,6 +11,7 @@ import { useNavigate } from 'react-router';
 import { useAuth } from '../../contexts/AuthContext';
 import { GoogleSSOButton } from '../GoogleSSOButton/GoogleSSOButton';
 import { ResendVerifyEmail } from '../ResendVerifyEmail/ResendVerifyEmail';
+import { useSchedules } from '@/contexts/SchedulesContext';
 
 export type LoginFormData = {
   username: string;
@@ -24,6 +25,7 @@ export const LoginForm = () => {
   const navigate = useNavigate();
 
   const { setUser } = useAuth();
+  const { fetchSchedules } = useSchedules();
 
   const { errors } = form.formState;
 
@@ -32,6 +34,7 @@ export const LoginForm = () => {
       const res = await http.post('/api/token-auth/', data);
       localStorage.setItem('token', res.data.token);
       setUser(res.data.user);
+      await fetchSchedules();
       navigate('/');
     } catch (err) {
       form.resetField('password');

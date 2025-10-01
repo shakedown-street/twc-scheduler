@@ -5,6 +5,7 @@ import { Loader } from 'lucide-react';
 import React from 'react';
 
 export type SchedulesProviderContext = {
+  fetchSchedules: () => Promise<void>;
   schedules: Schedule[];
   setSchedules: React.Dispatch<React.SetStateAction<Schedule[]>>;
 };
@@ -21,14 +22,19 @@ export const SchedulesProvider = (props: SchedulesProviderProps) => {
 
   React.useEffect(() => {
     setLoading(true);
-    ScheduleModel.all()
+    fetchSchedules();
+  }, []);
+
+  async function fetchSchedules() {
+    setLoading(true);
+    await ScheduleModel.all()
       .then((schedules) => {
         setSchedules(schedules);
       })
       .finally(() => {
         setLoading(false);
       });
-  }, []);
+  }
 
   if (loading) {
     return (
@@ -38,7 +44,11 @@ export const SchedulesProvider = (props: SchedulesProviderProps) => {
     );
   }
 
-  return <SchedulesContext.Provider value={{ schedules, setSchedules }}>{props.children}</SchedulesContext.Provider>;
+  return (
+    <SchedulesContext.Provider value={{ fetchSchedules, schedules, setSchedules }}>
+      {props.children}
+    </SchedulesContext.Provider>
+  );
 };
 
 export const useSchedules = () => {
