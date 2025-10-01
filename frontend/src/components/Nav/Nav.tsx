@@ -5,7 +5,7 @@ import { useTheme } from '@/contexts/ThemeContext';
 import { useAuth } from '@/features/auth/contexts/AuthContext';
 import { http } from '@/lib/http';
 import { toastError } from '@/utils/errors';
-import { ArrowLeftRight, Calendar, CalendarCheck, CalendarCog, List, LogOut, Menu } from 'lucide-react';
+import { ArrowLeftRight, Calendar, CalendarCheck, CalendarCog, List, Menu } from 'lucide-react';
 import React from 'react';
 import { Link, NavLink, useNavigate } from 'react-router';
 import { SearchPopover } from '../SearchPopover/SearchPopover';
@@ -115,10 +115,7 @@ export const Nav = () => {
               </DropdownMenuSubContent>
             </DropdownMenuPortal>
           </DropdownMenuSub>
-          <DropdownMenuItem onClick={() => logout()}>
-            <LogOut />
-            Logout
-          </DropdownMenuItem>
+          <DropdownMenuItem onClick={() => logout()}>Logout</DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
     );
