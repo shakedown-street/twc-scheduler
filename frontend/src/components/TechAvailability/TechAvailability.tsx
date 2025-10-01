@@ -1,16 +1,15 @@
 import { TechnicianModel } from '@/api';
 import { AvailabilityForm } from '@/components/AvailabilityForm/AvailabilityForm';
 import { TechnicianForm } from '@/components/TechnicianForm/TechnicianForm';
-import { useBlocks } from '@/contexts/BlocksContext';
+import { useSchedule } from '@/contexts/ScheduleContext';
 import { useAuth } from '@/features/auth/contexts/AuthContext';
 import { cn } from '@/lib/utils';
 import { isFullBlock } from '@/utils/appointments';
 import { skillLevelColor } from '@/utils/color';
 import { availableHours } from '@/utils/computedProperties';
-import { orderByFirstName } from '@/utils/order';
 import { checkTimeIntersection, formatTimeShort } from '@/utils/time';
 import clsx from 'clsx';
-import { AlertTriangle, ArrowLeftRight, Check, Loader } from 'lucide-react';
+import { AlertTriangle, ArrowLeftRight, Check } from 'lucide-react';
 import React from 'react';
 import { Button } from '../ui/button';
 import { Checkbox } from '../ui/checkbox';
@@ -35,8 +34,6 @@ const TableCell = ({ children, className, ...props }: React.ComponentProps<'td'>
 };
 
 export const TechAvailability = () => {
-  const [technicians, setTechnicians] = React.useState<Technician[]>([]);
-  const [techniciansLoading, setTechniciansLoading] = React.useState(true);
   const [showSubOnly, setShowSubOnly] = React.useState(false);
   const [technicianForm, setTechnicianForm] = React.useState<{
     open: boolean;
@@ -62,36 +59,9 @@ export const TechAvailability = () => {
   });
 
   const { user } = useAuth();
-  const { blocks } = useBlocks();
+  const { blocks, technicians, setTechnicians } = useSchedule();
 
   const days = [0, 1, 2, 3, 4];
-
-  React.useEffect(() => {
-    setTechniciansLoading(true);
-
-    const fetchTechnicians = () => {
-      TechnicianModel.all({
-        page_size: 1000,
-        expand_availabilities: true,
-      })
-        .then((technicians) => {
-          setTechnicians(orderByFirstName<Technician>(technicians));
-        })
-        .finally(() => {
-          setTechniciansLoading(false);
-        });
-    };
-
-    // Poll every minute
-    const pollInterval = setInterval(() => {
-      fetchTechnicians();
-    }, 60 * 1000);
-
-    // Initial fetch
-    fetchTechnicians();
-
-    return () => clearInterval(pollInterval);
-  }, []);
 
   function totalRequestedHours() {
     return technicians.reduce((total, technician) => total + (technician.requested_hours || 0), 0);
@@ -246,14 +216,6 @@ export const TechAvailability = () => {
           {countTechniciansAvailableForBlock(day, block)}
         </TableCell>
       )),
-    );
-  }
-
-  if (techniciansLoading) {
-    return (
-      <div className="mt-12 flex items-center justify-center">
-        <Loader className="h-8 w-8 animate-spin" />
-      </div>
     );
   }
 

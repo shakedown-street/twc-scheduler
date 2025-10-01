@@ -1,6 +1,6 @@
 import { UserModel } from '@/api';
 import logoSmall from '@/assets/logo-small.png';
-import { useSchedules } from '@/contexts/SchedulesContext';
+import { useSchedule } from '@/contexts/ScheduleContext';
 import { useAuth } from '@/features/auth/contexts/AuthContext';
 import { http } from '@/lib/http';
 import { toastError } from '@/utils/errors';
@@ -31,7 +31,7 @@ export const Nav = () => {
 
   const navigate = useNavigate();
   const { user, setUser } = useAuth();
-  const { schedules } = useSchedules();
+  const { schedules } = useSchedule();
 
   function selectedScheduleName() {
     const scheduleId = localStorage.getItem('schedule');

@@ -1,8 +1,6 @@
-import { ClientModel, TechnicianModel } from '@/api';
+import { useSchedule } from '@/contexts/ScheduleContext';
 import { useAuth } from '@/features/auth/contexts/AuthContext';
 import { cn } from '@/lib/utils';
-import { orderByFirstName } from '@/utils/order';
-import { Loader } from 'lucide-react';
 import React from 'react';
 import { ClientForm } from '../ClientForm/ClientForm';
 import { TechnicianForm } from '../TechnicianForm/TechnicianForm';
@@ -28,10 +26,6 @@ const TableCell = ({ children, className, ...props }: React.ComponentProps<'td'>
 };
 
 export const ClientTechnicianMatrix = () => {
-  const [clients, setClients] = React.useState<Client[]>([]);
-  const [loadingClients, setLoadingClients] = React.useState(true);
-  const [technicians, setTechnicians] = React.useState<Technician[]>([]);
-  const [loadingTechnicians, setLoadingTechnicians] = React.useState(true);
   const [hoveredColumn, setHoveredColumn] = React.useState<number>();
 
   const [clientForm, setClientForm] = React.useState<{
@@ -50,28 +44,7 @@ export const ClientTechnicianMatrix = () => {
   });
 
   const { user } = useAuth();
-
-  React.useEffect(() => {
-    ClientModel.all({
-      page_size: 1000,
-      expand_appointments: true,
-    })
-      .then((clients) => {
-        setClients(orderByFirstName<Client>(clients));
-      })
-      .finally(() => {
-        setLoadingClients(false);
-      });
-    TechnicianModel.all({
-      page_size: 1000,
-    })
-      .then((technicians) => {
-        setTechnicians(orderByFirstName<Technician>(technicians));
-      })
-      .finally(() => {
-        setLoadingTechnicians(false);
-      });
-  }, []);
+  const { clients, setClients, technicians, setTechnicians } = useSchedule();
 
   function countAppointments(client: Client, technician: Technician) {
     if (!client.appointments) {
@@ -160,14 +133,6 @@ export const ClientTechnicianMatrix = () => {
 
   function handleColumnHoverLeave() {
     setHoveredColumn(undefined);
-  }
-
-  if (loadingClients || loadingTechnicians) {
-    return (
-      <div className="mt-12 flex items-center justify-center">
-        <Loader className="h-8 w-8 animate-spin" />
-      </div>
-    );
   }
 
   return (

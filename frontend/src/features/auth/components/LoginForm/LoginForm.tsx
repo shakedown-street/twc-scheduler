@@ -3,6 +3,7 @@ import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { useSchedule } from '@/contexts/ScheduleContext';
 import { http } from '@/lib/http';
 import { handleDetailError, setFormErrors } from '@/utils/errors';
 import React from 'react';
@@ -11,7 +12,6 @@ import { useNavigate } from 'react-router';
 import { useAuth } from '../../contexts/AuthContext';
 import { GoogleSSOButton } from '../GoogleSSOButton/GoogleSSOButton';
 import { ResendVerifyEmail } from '../ResendVerifyEmail/ResendVerifyEmail';
-import { useSchedules } from '@/contexts/SchedulesContext';
 
 export type LoginFormData = {
   username: string;
@@ -25,7 +25,7 @@ export const LoginForm = () => {
   const navigate = useNavigate();
 
   const { setUser } = useAuth();
-  const { fetchSchedules } = useSchedules();
+  const { fetchSchedule } = useSchedule();
 
   const { errors } = form.formState;
 
@@ -34,7 +34,7 @@ export const LoginForm = () => {
       const res = await http.post('/api/token-auth/', data);
       localStorage.setItem('token', res.data.token);
       setUser(res.data.user);
-      await fetchSchedules();
+      await fetchSchedule();
       navigate('/');
     } catch (err) {
       form.resetField('password');

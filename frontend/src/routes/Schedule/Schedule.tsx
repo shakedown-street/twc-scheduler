@@ -1,4 +1,3 @@
-import { ClientModel } from '@/api';
 import { AppointmentForm } from '@/components/AppointmentForm/AppointmentForm';
 import { ClientForm } from '@/components/ClientForm/ClientForm';
 import { TechnicianDayOverview } from '@/components/TechnicianDayOverview/TechnicianDayOverview';
@@ -7,17 +6,13 @@ import { TimeSlotTable } from '@/components/TimeSlotTable/TimeSlotTable';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { useBlocks } from '@/contexts/BlocksContext';
+import { useSchedule } from '@/contexts/ScheduleContext';
 import { useAuth } from '@/features/auth/contexts/AuthContext';
-import { orderByFirstName } from '@/utils/order';
 import { dayToString } from '@/utils/time';
-import { Loader } from 'lucide-react';
 import React from 'react';
 import { useSearchParams } from 'react-router';
 
 export const Schedule = () => {
-  const [clients, setClients] = React.useState<Client[]>([]);
-  const [clientsLoading, setClientsLoading] = React.useState(true);
   const [technicianDayOverviewOpen, setTechnicianDayOverviewOpen] = React.useState(false);
   const [appointmentForm, setAppointmentForm] = React.useState<{
     open: boolean;
@@ -57,7 +52,7 @@ export const Schedule = () => {
 
   const [searchParams, setSearchParams] = useSearchParams();
   const { user } = useAuth();
-  const { blocks } = useBlocks();
+  const { blocks, clients, setClients } = useSchedule();
 
   function getDay() {
     const day = searchParams.get('day');
@@ -68,34 +63,6 @@ export const Schedule = () => {
     searchParams.set('day', `${day}`);
     setSearchParams(searchParams);
   }
-
-  React.useEffect(() => {
-    setClientsLoading(true);
-
-    const fetchClients = () => {
-      ClientModel.all({
-        page_size: 1000,
-        expand_appointments: true,
-        expand_availabilities: true,
-      })
-        .then((clients) => {
-          setClients(orderByFirstName<Client>(clients));
-        })
-        .finally(() => {
-          setClientsLoading(false);
-        });
-    };
-
-    // Poll every minute
-    const pollInterval = setInterval(() => {
-      fetchClients();
-    }, 60 * 1000);
-
-    // Initial fetch
-    fetchClients();
-
-    return () => clearInterval(pollInterval);
-  }, []);
 
   function openAppointmentForm(
     client: Client,
@@ -261,58 +228,48 @@ export const Schedule = () => {
     closeClientForm();
   }
 
-  if (clientsLoading) {
-    return (
-      <div className="mt-12 flex items-center justify-center">
-        <Loader className="h-8 w-8 animate-spin" />
-      </div>
-    );
-  }
-
   return (
     <>
       <title>Schedule | Schedule Builder</title>
-      <div className="container mx-auto px-4">
-        <div className="mt-4 mb-12">
-          <h1 className="mb-2 text-2xl font-bold">Schedule</h1>
-          <div className="bg-background sticky top-0 z-1 flex items-center justify-between py-2">
-            <Tabs onValueChange={(value) => setDay(parseInt(value))} value={getDay().toString()}>
-              <TabsList>
-                <TabsTrigger value="0">Monday</TabsTrigger>
-                <TabsTrigger value="1">Tuesday</TabsTrigger>
-                <TabsTrigger value="2">Wednesday</TabsTrigger>
-                <TabsTrigger value="3">Thursday</TabsTrigger>
-                <TabsTrigger value="4">Friday</TabsTrigger>
-              </TabsList>
-            </Tabs>
-            <Button onClick={() => setTechnicianDayOverviewOpen(true)} variant="outline">
-              {dayToString(getDay())} Technician Overview
-            </Button>
-          </div>
-          <p className="text-muted-foreground mb-2 text-xs">
-            <b>NOTE</b>: Click any time slot while holding the "Shift" key to add/remove OT, ST, and MH appointments
-          </p>
-          <TimeSlotTable
-            blocks={blocks}
-            clients={clients}
-            day={getDay()}
-            onClickClient={(client) => {
-              if (!user?.is_superuser) {
-                return;
-              }
-              openClientForm(client);
-            }}
-            onClickAvailabilitySlot={(client, block, availability) => {
-              openAppointmentForm(client, getDay(), block, availability);
-            }}
-            onClickAppointmentSlot={(client, block, appointment, availability) => {
-              openAppointmentForm(client, getDay(), block, availability, appointment);
-            }}
-            onShiftClick={(client, time, therapyAppointment) => {
-              openTherapyAppointmentForm(client, getDay(), time, therapyAppointment);
-            }}
-          />
+      <div className="container mx-auto mt-4 mb-12 px-4">
+        <h1 className="mb-2 text-2xl font-bold">Schedule</h1>
+        <div className="bg-background sticky top-0 z-1 flex items-center justify-between py-2">
+          <Tabs onValueChange={(value) => setDay(parseInt(value))} value={getDay().toString()}>
+            <TabsList>
+              <TabsTrigger value="0">Monday</TabsTrigger>
+              <TabsTrigger value="1">Tuesday</TabsTrigger>
+              <TabsTrigger value="2">Wednesday</TabsTrigger>
+              <TabsTrigger value="3">Thursday</TabsTrigger>
+              <TabsTrigger value="4">Friday</TabsTrigger>
+            </TabsList>
+          </Tabs>
+          <Button onClick={() => setTechnicianDayOverviewOpen(true)} variant="outline">
+            {dayToString(getDay())} Technician Overview
+          </Button>
         </div>
+        <p className="text-muted-foreground mb-2 text-xs">
+          <b>NOTE</b>: Click any time slot while holding the "Shift" key to add/remove OT, ST, and MH appointments
+        </p>
+        <TimeSlotTable
+          blocks={blocks}
+          clients={clients}
+          day={getDay()}
+          onClickClient={(client) => {
+            if (!user?.is_superuser) {
+              return;
+            }
+            openClientForm(client);
+          }}
+          onClickAvailabilitySlot={(client, block, availability) => {
+            openAppointmentForm(client, getDay(), block, availability);
+          }}
+          onClickAppointmentSlot={(client, block, appointment, availability) => {
+            openAppointmentForm(client, getDay(), block, availability, appointment);
+          }}
+          onShiftClick={(client, time, therapyAppointment) => {
+            openTherapyAppointmentForm(client, getDay(), time, therapyAppointment);
+          }}
+        />
       </div>
       <Sheet
         open={appointmentForm.open}

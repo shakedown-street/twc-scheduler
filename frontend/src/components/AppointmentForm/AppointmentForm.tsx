@@ -1,4 +1,5 @@
-import { AppointmentModel, ClientModel, TechnicianModel } from '@/api';
+import { AppointmentModel, ClientModel } from '@/api';
+import { useSchedule } from '@/contexts/ScheduleContext';
 import { toastError } from '@/utils/errors';
 import { orderByFirstName } from '@/utils/order';
 import { dayToString } from '@/utils/time';
@@ -50,7 +51,6 @@ export const AppointmentForm = ({
   const [availableTechnicians, setAvailableTechnicians] = React.useState<Technician[]>([]);
   const [availableTechniciansLoaded, setAvailableTechniciansLoaded] = React.useState(false);
   const [onlyShowRecommendedTechs, setOnlyShowRecommendedTechs] = React.useState(true);
-  const [allTechnicians, setAllTechnicians] = React.useState<Technician[]>([]);
   const [repeatableAppointmentDays, setRepeatableAppointmentDays] = React.useState<number[]>([]);
   const [warnings, setWarnings] = React.useState<string[]>([]);
   const [confirmDelete, setConfirmDelete] = React.useState(false);
@@ -58,16 +58,12 @@ export const AppointmentForm = ({
   const [initialTechnicianSet, setInitialTechnicianSet] = React.useState(false);
 
   const form = useForm<AppointmentFormData>();
+  const { technicians } = useSchedule();
 
   const startTime = form.watch('start_time');
   const endTime = form.watch('end_time');
   const technician = form.watch('technician');
   const inClinic = form.watch('in_clinic');
-
-  React.useEffect(() => {
-    // Fetch all technicians on mount
-    getAllTechnicians();
-  }, []);
 
   React.useEffect(() => {
     // Reset form values when the instance, availability, or block changes
@@ -176,14 +172,6 @@ export const AppointmentForm = ({
       .finally(() => {
         setAvailableTechniciansLoaded(true);
       });
-  }
-
-  function getAllTechnicians() {
-    TechnicianModel.all({
-      page_size: 1000,
-    }).then((technicians) => {
-      setAllTechnicians(orderByFirstName<Technician>(technicians));
-    });
   }
 
   function getRepeatableAppointmentDays() {
@@ -429,7 +417,7 @@ export const AppointmentForm = ({
         <Label htmlFor="technician">Technician</Label>
         <NativeSelect id="technician" {...form.register('technician', { required: true })}>
           <option value="">Select a technician</option>
-          {(onlyShowRecommendedTechs ? availableTechnicians : allTechnicians).map((tech) => (
+          {(onlyShowRecommendedTechs ? availableTechnicians : technicians).map((tech) => (
             <option
               key={tech.id}
               className={clsx({

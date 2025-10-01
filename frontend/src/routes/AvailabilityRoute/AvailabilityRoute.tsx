@@ -19,22 +19,20 @@ export const AvailabilityRoute = () => {
   return (
     <>
       <title>Availability | Schedule Builder</title>
-      <div className="container mx-auto px-4">
-        <div className="mt-4 mb-12">
-          <h1 className="mb-4 text-2xl font-bold">Availability</h1>
-          <Tabs onValueChange={setTab} value={getTab()}>
-            <TabsList>
-              <TabsTrigger value="clients">Clients</TabsTrigger>
-              <TabsTrigger value="technicians">Technicians</TabsTrigger>
-            </TabsList>
-            <TabsContent value="clients">
-              <ClientAvailability />
-            </TabsContent>
-            <TabsContent value="technicians">
-              <TechAvailability />
-            </TabsContent>
-          </Tabs>
-        </div>
+      <div className="container mx-auto mt-4 mb-12 px-4">
+        <h1 className="mb-4 text-2xl font-bold">Availability</h1>
+        <Tabs onValueChange={setTab} value={getTab()}>
+          <TabsList>
+            <TabsTrigger value="clients">Clients</TabsTrigger>
+            <TabsTrigger value="technicians">Technicians</TabsTrigger>
+          </TabsList>
+          <TabsContent value="clients">
+            <ClientAvailability />
+          </TabsContent>
+          <TabsContent value="technicians">
+            <TechAvailability />
+          </TabsContent>
+        </Tabs>
       </div>
     </>
   );

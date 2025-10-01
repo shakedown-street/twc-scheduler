@@ -1,12 +1,10 @@
-import { ClientModel } from '@/api';
-import { useBlocks } from '@/contexts/BlocksContext';
+import { useSchedule } from '@/contexts/ScheduleContext';
 import { useAuth } from '@/features/auth/contexts/AuthContext';
 import { cn } from '@/lib/utils';
 import { getBlockAppointments, getBlockAvailabilities } from '@/utils/appointments';
 import { dayColor, skillLevelColor, striped } from '@/utils/color';
 import { hours, hoursByDay, isMaxedOnSessions } from '@/utils/computedProperties';
-import { orderByFirstName } from '@/utils/order';
-import { Check, Info, Loader } from 'lucide-react';
+import { Check, Info } from 'lucide-react';
 import React from 'react';
 import { AppointmentForm } from '../AppointmentForm/AppointmentForm';
 import { AppointmentHover } from '../AppointmentHover/AppointmentHover';
@@ -35,8 +33,6 @@ const TableCell = ({ children, className, ...props }: React.ComponentProps<'td'>
 };
 
 export const ClientsOverview = () => {
-  const [clients, setClients] = React.useState<Client[]>([]);
-  const [clientsLoading, setClientsLoading] = React.useState(true);
   const [appointmentForm, setAppointmentForm] = React.useState<{
     open: boolean;
     client?: Client;
@@ -61,37 +57,9 @@ export const ClientsOverview = () => {
   });
 
   const { user } = useAuth();
-  const { blocks } = useBlocks();
+  const { blocks, clients, setClients } = useSchedule();
 
   const days = [0, 1, 2, 3, 4];
-
-  React.useEffect(() => {
-    setClientsLoading(true);
-
-    const fetchClients = () => {
-      ClientModel.all({
-        page_size: 1000,
-        expand_appointments: true,
-        expand_availabilities: true,
-      })
-        .then((clients) => {
-          setClients(orderByFirstName<Client>(clients));
-        })
-        .finally(() => {
-          setClientsLoading(false);
-        });
-    };
-
-    // Poll every minute
-    const pollInterval = setInterval(() => {
-      fetchClients();
-    }, 60 * 1000);
-
-    // Initial fetch
-    fetchClients();
-
-    return () => clearInterval(pollInterval);
-  }, []);
 
   function totalHoursByDay(day: number) {
     return clients.reduce((acc, client) => acc + hoursByDay(client, day), 0);
@@ -340,14 +308,6 @@ export const ClientsOverview = () => {
           </div>
           <span>Preschool/adaptive</span>
         </div>
-      </div>
-    );
-  }
-
-  if (clientsLoading) {
-    return (
-      <div className="mt-12 flex items-center justify-center">
-        <Loader className="h-8 w-8 animate-spin" />
       </div>
     );
   }

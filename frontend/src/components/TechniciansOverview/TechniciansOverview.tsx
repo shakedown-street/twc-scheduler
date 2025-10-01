@@ -1,18 +1,16 @@
-import { TechnicianModel } from '@/api';
-import { useBlocks } from '@/contexts/BlocksContext';
+import { useSchedule } from '@/contexts/ScheduleContext';
 import { useAuth } from '@/features/auth/contexts/AuthContext';
+import { cn } from '@/lib/utils';
 import { getBlockAppointments, getBlockAvailabilities } from '@/utils/appointments';
 import { dayColor, skillLevelColor, striped } from '@/utils/color';
 import { hours, hoursByDay, isMaxedOnSessions } from '@/utils/computedProperties';
-import { orderByFirstName } from '@/utils/order';
-import { Check, Info, Loader } from 'lucide-react';
+import { Check, Info } from 'lucide-react';
 import React from 'react';
 import { AppointmentHover } from '../AppointmentHover/AppointmentHover';
 import { TechnicianForm } from '../TechnicianForm/TechnicianForm';
 import { Button } from '../ui/button';
 import { HoverCard, HoverCardContent, HoverCardTrigger } from '../ui/hover-card';
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from '../ui/sheet';
-import { cn } from '@/lib/utils';
 
 const TableHeader = ({ children, className, ...props }: React.ComponentProps<'th'>) => {
   return (
@@ -39,8 +37,6 @@ export type TechniciansOverviewProps = {
 };
 
 export const TechniciansOverview = ({ isSubList = false, showLegend = true }: TechniciansOverviewProps) => {
-  const [technicians, setTechnicians] = React.useState<Technician[]>([]);
-  const [techniciansLoading, setTechniciansLoading] = React.useState(true);
   const [technicianForm, setTechnicianForm] = React.useState<{
     open: boolean;
     technician?: Technician;
@@ -50,37 +46,9 @@ export const TechniciansOverview = ({ isSubList = false, showLegend = true }: Te
   });
 
   const { user } = useAuth();
-  const { blocks } = useBlocks();
+  const { blocks, technicians, setTechnicians } = useSchedule();
 
   const days = [0, 1, 2, 3, 4];
-
-  React.useEffect(() => {
-    setTechniciansLoading(true);
-
-    const fetchTechnicians = () => {
-      TechnicianModel.all({
-        page_size: 1000,
-        expand_appointments: true,
-        expand_availabilities: true,
-      })
-        .then((technicians) => {
-          setTechnicians(orderByFirstName<Technician>(technicians));
-        })
-        .finally(() => {
-          setTechniciansLoading(false);
-        });
-    };
-
-    // Poll every minute
-    const pollInterval = setInterval(() => {
-      fetchTechnicians();
-    }, 60 * 1000);
-
-    // Initial fetch
-    fetchTechnicians();
-
-    return () => clearInterval(pollInterval);
-  }, []);
 
   function totalHoursByDay(day: number) {
     return technicians.reduce((acc, technician) => acc + hoursByDay(technician, day), 0);
@@ -311,14 +279,6 @@ export const TechniciansOverview = ({ isSubList = false, showLegend = true }: Te
           </div>
           <span>Preschool/adaptive</span>
         </div>
-      </div>
-    );
-  }
-
-  if (techniciansLoading) {
-    return (
-      <div className="mt-12 flex items-center justify-center">
-        <Loader className="h-8 w-8 animate-spin" />
       </div>
     );
   }

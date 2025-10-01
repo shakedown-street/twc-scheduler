@@ -5,13 +5,11 @@ export const SubList = () => {
   return (
     <>
       <title>Sub List | Schedule Builder</title>
-      <div className="container mx-auto px-4">
-        <div className="mt-4 mb-12">
-          <h1 className="mb-4 text-2xl font-bold">Sub List</h1>
-          <div className="flex items-start gap-4">
-            <TechniciansOverview isSubList showLegend={false} />
-            <ClientTechnicianHistory />
-          </div>
+      <div className="container mx-auto mt-4 mb-12 px-4">
+        <h1 className="mb-4 text-2xl font-bold">Sub List</h1>
+        <div className="flex items-start gap-4">
+          <TechniciansOverview isSubList showLegend={false} />
+          <ClientTechnicianHistory />
         </div>
       </div>
     </>

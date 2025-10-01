@@ -22,7 +22,7 @@ import {
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Tooltip, TooltipContent } from '@/components/ui/tooltip';
-import { useSchedules } from '@/contexts/SchedulesContext';
+import { useSchedule } from '@/contexts/ScheduleContext';
 import { cn } from '@/lib/utils';
 import { formatDateTime } from '@/utils/format';
 import { TooltipTrigger } from '@radix-ui/react-tooltip';
@@ -47,7 +47,7 @@ export const ManageSchedules = () => {
   const [editing, setEditing] = React.useState<Schedule>();
   const [deleting, setDeleting] = React.useState<Schedule>();
 
-  const { schedules, setSchedules } = useSchedules();
+  const { schedules, setSchedules } = useSchedule();
 
   function switchToSchedule(schedule: Schedule) {
     localStorage.setItem('schedule', schedule.id);

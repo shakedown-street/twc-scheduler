@@ -1,6 +1,6 @@
-import { ClientModel, TechnicianModel } from '@/api';
+import { ClientModel } from '@/api';
+import { useSchedule } from '@/contexts/ScheduleContext';
 import { toastError } from '@/utils/errors';
-import { orderByFirstName } from '@/utils/order';
 import { TooltipTrigger } from '@radix-ui/react-tooltip';
 import { Info } from 'lucide-react';
 import React from 'react';
@@ -37,9 +37,9 @@ export type ClientFormData = {
 
 export const ClientForm = ({ client, onCancel, onCreate, onDelete, onUpdate }: ClientFormProps) => {
   const [confirmDelete, setConfirmDelete] = React.useState(false);
-  const [technicians, setTechnicians] = React.useState<Technician[]>([]);
 
   const form = useForm<ClientFormData>();
+  const { technicians } = useSchedule();
 
   React.useEffect(() => {
     if (!client) {
@@ -59,14 +59,6 @@ export const ClientForm = ({ client, onCancel, onCreate, onDelete, onUpdate }: C
       is_manually_maxed_out: client.is_manually_maxed_out || false,
     });
   }, [client, form]);
-
-  React.useEffect(() => {
-    TechnicianModel.all({
-      page_size: 1000,
-    }).then((technicians) => {
-      setTechnicians(orderByFirstName<Technician>(technicians));
-    });
-  }, []);
 
   function clickDelete() {
     setConfirmDelete(true);

@@ -1,9 +1,7 @@
-import { ClientModel } from '@/api';
+import { useSchedule } from '@/contexts/ScheduleContext';
 import { useAuth } from '@/features/auth/contexts/AuthContext';
 import { cn } from '@/lib/utils';
 import { skillLevelColor } from '@/utils/color';
-import { orderByFirstName } from '@/utils/order';
-import { Loader } from 'lucide-react';
 import React from 'react';
 import { ClientForm } from '../ClientForm/ClientForm';
 import { Badge } from '../ui/badge';
@@ -26,9 +24,6 @@ const TableCell = ({ children, className, ...props }: React.ComponentProps<'td'>
 };
 
 export const ClientTechnicianHistory = () => {
-  const [clients, setClients] = React.useState<Client[]>([]);
-  const [clientsLoading, setClientsLoading] = React.useState(true);
-
   const [clientForm, setClientForm] = React.useState<{
     open: boolean;
     client?: Client;
@@ -38,30 +33,7 @@ export const ClientTechnicianHistory = () => {
   });
 
   const { user } = useAuth();
-
-  React.useEffect(() => {
-    setClientsLoading(true);
-
-    const fetchClients = () => {
-      ClientModel.all({
-        page_size: 1000,
-        expand_current_technicians: true,
-      }).then((clients) => {
-        setClients(orderByFirstName<Client>(clients));
-        setClientsLoading(false);
-      });
-    };
-
-    // Poll every minute
-    const pollInterval = setInterval(() => {
-      fetchClients();
-    }, 60 * 1000);
-
-    // Initial fetch
-    fetchClients();
-
-    return () => clearInterval(pollInterval);
-  }, []);
+  const { clients, setClients } = useSchedule();
 
   function openClientForm(client: Client | undefined = undefined) {
     setClientForm({
@@ -103,14 +75,6 @@ export const ClientTechnicianHistory = () => {
             {t.first_name} {t.last_name}
           </Badge>
         ))}
-      </div>
-    );
-  }
-
-  if (clientsLoading) {
-    return (
-      <div className="mt-12 flex items-center justify-center">
-        <Loader className="h-8 w-8 animate-spin" />
       </div>
     );
   }

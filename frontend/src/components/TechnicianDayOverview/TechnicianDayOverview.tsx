@@ -1,13 +1,11 @@
-import { TechnicianModel } from '@/api';
-import { useBlocks } from '@/contexts/BlocksContext';
+import { useSchedule } from '@/contexts/ScheduleContext';
 import { useAuth } from '@/features/auth/contexts/AuthContext';
 import { cn } from '@/lib/utils';
 import { getBlockAppointments, getBlockAvailabilities } from '@/utils/appointments';
 import { skillLevelColor, striped } from '@/utils/color';
 import { hours, hoursByDay, isMaxedOnSessions } from '@/utils/computedProperties';
-import { orderByFirstName } from '@/utils/order';
 import { dayToString } from '@/utils/time';
-import { Check, Loader } from 'lucide-react';
+import { Check } from 'lucide-react';
 import React from 'react';
 import { AppointmentHover } from '../AppointmentHover/AppointmentHover';
 import { TechnicianForm } from '../TechnicianForm/TechnicianForm';
@@ -38,8 +36,6 @@ export type TechnicianDayOverviewProps = {
 };
 
 export const TechnicianDayOverview = ({ day }: TechnicianDayOverviewProps) => {
-  const [technicians, setTechnicians] = React.useState<Technician[]>([]);
-  const [techniciansLoading, setTechniciansLoading] = React.useState(true);
   const [technicianForm, setTechnicianForm] = React.useState<{
     open: boolean;
     technician?: Technician;
@@ -49,22 +45,7 @@ export const TechnicianDayOverview = ({ day }: TechnicianDayOverviewProps) => {
   });
 
   const { user } = useAuth();
-  const { blocks } = useBlocks();
-
-  React.useEffect(() => {
-    setTechniciansLoading(true);
-    TechnicianModel.all({
-      page_size: 1000,
-      expand_appointments: true,
-      expand_availabilities: true,
-    })
-      .then((technicians) => {
-        setTechnicians(orderByFirstName<Technician>(technicians));
-      })
-      .finally(() => {
-        setTechniciansLoading(false);
-      });
-  }, []);
+  const { blocks, technicians, setTechnicians } = useSchedule();
 
   function openTechnicianForm(technician: Technician | undefined = undefined) {
     setTechnicianForm({
@@ -178,13 +159,6 @@ export const TechnicianDayOverview = ({ day }: TechnicianDayOverviewProps) => {
           borderRightWidth,
         }}
       ></TableCell>
-    );
-  }
-  if (techniciansLoading) {
-    return (
-      <div className="mt-12 flex items-center justify-center">
-        <Loader className="h-8 w-8 animate-spin" />
-      </div>
     );
   }
 

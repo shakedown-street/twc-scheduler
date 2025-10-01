@@ -1,15 +1,14 @@
 import { ClientModel } from '@/api';
 import { AvailabilityForm } from '@/components/AvailabilityForm/AvailabilityForm';
 import { ClientForm } from '@/components/ClientForm/ClientForm';
-import { useBlocks } from '@/contexts/BlocksContext';
+import { useSchedule } from '@/contexts/ScheduleContext';
 import { useAuth } from '@/features/auth/contexts/AuthContext';
 import { cn } from '@/lib/utils';
 import { isFullBlock } from '@/utils/appointments';
 import { skillLevelColor } from '@/utils/color';
 import { availableHours } from '@/utils/computedProperties';
-import { orderByFirstName } from '@/utils/order';
 import { checkTimeIntersection, formatTimeShort } from '@/utils/time';
-import { AlertTriangle, Check, Loader, MapPin } from 'lucide-react';
+import { AlertTriangle, Check, MapPin } from 'lucide-react';
 import React from 'react';
 import { Button } from '../ui/button';
 import { Checkbox } from '../ui/checkbox';
@@ -34,8 +33,6 @@ const TableCell = ({ children, className, ...props }: React.ComponentProps<'td'>
 };
 
 export const ClientAvailability = () => {
-  const [clients, setClients] = React.useState<Client[]>([]);
-  const [clientsLoading, setClientsLoading] = React.useState(true);
   const [showInClinicOnly, setShowInClinicOnly] = React.useState(false);
   const [clientForm, setClientForm] = React.useState<{
     open: boolean;
@@ -61,36 +58,9 @@ export const ClientAvailability = () => {
   });
 
   const { user } = useAuth();
-  const { blocks } = useBlocks();
+  const { blocks, clients, setClients } = useSchedule();
 
   const days = [0, 1, 2, 3, 4];
-
-  React.useEffect(() => {
-    setClientsLoading(true);
-
-    const fetchClients = () => {
-      ClientModel.all({
-        page_size: 1000,
-        expand_availabilities: true,
-      })
-        .then((clients) => {
-          setClients(orderByFirstName<Client>(clients));
-        })
-        .finally(() => {
-          setClientsLoading(false);
-        });
-    };
-
-    // Poll every minute
-    const pollInterval = setInterval(() => {
-      fetchClients();
-    }, 60 * 1000);
-
-    // Initial fetch
-    fetchClients();
-
-    return () => clearInterval(pollInterval);
-  }, []);
 
   function totalPrescribedHours() {
     return clients.reduce((total, client) => total + (client.prescribed_hours || 0), 0);
@@ -177,6 +147,8 @@ export const ClientAvailability = () => {
   function refetchClient(client: Client) {
     return ClientModel.get(client.id, {
       expand_availabilities: true,
+      expand_appointments: true,
+      expand_current_technicians: true,
     }).then((clientUpdated) => {
       setClients((prev) =>
         prev.map((c) => {
@@ -245,14 +217,6 @@ export const ClientAvailability = () => {
           {countClientsAvailableForBlock(day, block)}
         </TableCell>
       )),
-    );
-  }
-
-  if (clientsLoading) {
-    return (
-      <div className="mt-12 flex items-center justify-center">
-        <Loader className="h-8 w-8 animate-spin" />
-      </div>
     );
   }
 
