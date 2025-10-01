@@ -1,4 +1,5 @@
 import { useAuth } from '@/features/auth/contexts/AuthContext';
+import { cn } from '@/lib/utils';
 import { skillLevelColor, striped } from '@/utils/color';
 import { hours, hoursByDay, isMaxedOnSessions } from '@/utils/computedProperties';
 import {
@@ -14,7 +15,22 @@ import { Check } from 'lucide-react';
 import React from 'react';
 import { AppointmentHover } from '../AppointmentHover/AppointmentHover';
 import { HoverCard, HoverCardContent, HoverCardTrigger } from '../ui/hover-card';
-import './TimeSlotTable.scss';
+
+const TableHeader = ({ children, className, ...props }: React.ComponentProps<'th'>) => {
+  return (
+    <th className={cn('border border-black p-1 text-left text-[10px] select-none', className)} {...props}>
+      {children}
+    </th>
+  );
+};
+
+const TableCell = ({ children, className, ...props }: React.ComponentProps<'td'>) => {
+  return (
+    <td className={cn('border border-black p-1 text-center text-xs select-none', className)} {...props}>
+      {children}
+    </td>
+  );
+};
 
 export type TimeSlotTableProps = {
   blocks: Block[];
@@ -175,7 +191,7 @@ export const TimeSlotTable = ({
 
     if (slotAppointment) {
       const hoverTrigger = (
-        <td
+        <TableCell
           className="relative w-8 text-center font-bold text-white uppercase"
           style={{
             borderLeft: isOnTheHour(time) ? '2px solid black' : undefined,
@@ -187,7 +203,7 @@ export const TimeSlotTable = ({
         >
           {renderSlotCorner(slotAppointment)}
           {slotText(time, client)}
-        </td>
+        </TableCell>
       );
 
       if (user?.hover_cards_enabled) {
@@ -205,7 +221,7 @@ export const TimeSlotTable = ({
     }
 
     return (
-      <td
+      <TableCell
         key={time}
         className="relative w-8 text-center font-bold text-white uppercase"
         style={{
@@ -217,12 +233,12 @@ export const TimeSlotTable = ({
         }}
       >
         {slotText(time, client)}
-      </td>
+      </TableCell>
     );
   }
 
   return (
-    <table className="TimeSlotTable">
+    <table className="w-full border-collapse">
       <colgroup>
         <col />
         {timeSlots.map((slot) => (
@@ -231,15 +247,15 @@ export const TimeSlotTable = ({
       </colgroup>
       <thead>
         <tr>
-          <th title="Client"></th>
-          <th title="Skill level requirement"></th>
-          <th title="Spanish speaker">Spa</th>
-          <th title="Day hours">{dayToString(day, 'medium')}</th>
-          <th title="Week hours">Week</th>
-          <th title="Hours prescribed">Rx</th>
-          <th title="Available"></th>
+          <TableHeader title="Client"></TableHeader>
+          <TableHeader title="Skill level requirement"></TableHeader>
+          <TableHeader title="Spanish speaker">Spa</TableHeader>
+          <TableHeader title="Day hours">{dayToString(day, 'medium')}</TableHeader>
+          <TableHeader title="Week hours">Week</TableHeader>
+          <TableHeader title="Hours prescribed">Rx</TableHeader>
+          <TableHeader title="Available"></TableHeader>
           {timeSlots.map((slot) => (
-            <th
+            <TableHeader
               key={slot}
               style={{
                 borderLeft: isOnTheHour(slot) ? '2px solid black' : undefined,
@@ -249,14 +265,14 @@ export const TimeSlotTable = ({
               }}
             >
               {formatTimeTimeline(slot)}
-            </th>
+            </TableHeader>
           ))}
         </tr>
       </thead>
       <tbody>
         {clients.map((client) => (
-          <tr key={client.id}>
-            <td className="text-nowrap">
+          <tr key={client.id} className="hover:bg-border">
+            <TableCell className="text-nowrap">
               <a
                 className="text-primary cursor-pointer"
                 onClick={() => {
@@ -265,31 +281,27 @@ export const TimeSlotTable = ({
               >
                 {client.first_name} {client.last_name}
               </a>
-            </td>
-            <td style={{ background: skillLevelColor(client.req_skill_level), color: 'black', textAlign: 'center' }}>
-              {client.req_skill_level}
-            </td>
-            <td
-              style={{
-                textAlign: 'center',
-                verticalAlign: 'middle',
-              }}
+            </TableCell>
+            <TableCell
+              className="text-center text-black"
+              style={{ background: skillLevelColor(client.req_skill_level) }}
             >
+              {client.req_skill_level}
+            </TableCell>
+            <TableCell className="text-center align-middle">
               {client.req_spanish_speaking && <Check className="text-green-700" size="14" />}
-            </td>
-            <td style={{ textAlign: 'center' }}>{hoursByDay(client, day)}</td>
-            <td style={{ textAlign: 'center' }}>{hours(client)}</td>
-            <td style={{ textAlign: 'center' }}>{client.prescribed_hours}</td>
-            <td
-              style={{
-                background: 'black',
-                color: isMaxedOnSessions(client) ? '#ef4444' : '#22c55e', // tw-red-500 : tw-green-500
-                fontWeight: 'bold',
-                textAlign: 'center',
-              }}
+            </TableCell>
+            <TableCell className="text-center">{hoursByDay(client, day)}</TableCell>
+            <TableCell className="text-center">{hours(client)}</TableCell>
+            <TableCell className="text-center">{client.prescribed_hours}</TableCell>
+            <TableCell
+              className={cn('bg-black text-center font-bold', {
+                'text-red-500': isMaxedOnSessions(client),
+                'text-green-500': !isMaxedOnSessions(client),
+              })}
             >
               {isMaxedOnSessions(client) ? 'M' : 'A'}
-            </td>
+            </TableCell>
             {timeSlots.map((slot) => renderTimeSlot(slot, client))}
           </tr>
         ))}

@@ -1,6 +1,7 @@
 import { ClientModel } from '@/api';
 import { useBlocks } from '@/contexts/BlocksContext';
 import { useAuth } from '@/features/auth/contexts/AuthContext';
+import { cn } from '@/lib/utils';
 import { getBlockAppointments, getBlockAvailabilities } from '@/utils/appointments';
 import { dayColor, skillLevelColor, striped } from '@/utils/color';
 import { hours, hoursByDay, isMaxedOnSessions } from '@/utils/computedProperties';
@@ -13,7 +14,25 @@ import { ClientForm } from '../ClientForm/ClientForm';
 import { Button } from '../ui/button';
 import { HoverCard, HoverCardContent, HoverCardTrigger } from '../ui/hover-card';
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from '../ui/sheet';
-import './ClientsOverview.scss';
+
+const TableHeader = ({ children, className, ...props }: React.ComponentProps<'th'>) => {
+  return (
+    <th
+      className={cn('border border-black p-1 text-left text-[10px] [writing-mode:vertical-rl]', className)}
+      {...props}
+    >
+      {children}
+    </th>
+  );
+};
+
+const TableCell = ({ children, className, ...props }: React.ComponentProps<'td'>) => {
+  return (
+    <td className={cn('border border-black p-1 text-left text-xs', className)} {...props}>
+      {children}
+    </td>
+  );
+};
 
 export const ClientsOverview = () => {
   const [clients, setClients] = React.useState<Client[]>([]);
@@ -226,8 +245,8 @@ export const ClientsOverview = () => {
       }
 
       const hoverTrigger = (
-        <td
-          className="ClientsOverview__slot"
+        <TableCell
+          className="relative cursor-pointer"
           onClick={() => {
             clickSlot(client, day, block);
           }}
@@ -235,11 +254,12 @@ export const ClientsOverview = () => {
             background,
             borderLeftWidth,
             borderRightWidth,
-            cursor: 'pointer',
           }}
         >
-          {appointment.is_preschool_or_adaptive && <div className="ClientsOverview__slot__corner">PA</div>}
-        </td>
+          {appointment.is_preschool_or_adaptive && (
+            <div className="absolute top-0 right-0 bg-black p-0.5 text-[8px] leading-none text-white">PA</div>
+          )}
+        </TableCell>
       );
 
       if (user?.hover_cards_enabled) {
@@ -258,69 +278,65 @@ export const ClientsOverview = () => {
 
     // Render availability blocks
     if (blockAvailabilities.length > 0) {
-      let background = 'black';
-      if (isMaxedOnSessions(client)) {
-        background = 'black';
-      }
       return (
-        <td
+        <TableCell
           key={block.id}
+          className={cn('cursor-pointer bg-black text-center font-bold', {
+            'text-red-500': isMaxedOnSessions(client),
+            'text-green-500': !isMaxedOnSessions(client),
+          })}
           onClick={() => {
             clickSlot(client, day, block);
           }}
           style={{
-            background,
             borderLeftWidth,
             borderRightWidth,
-            color: isMaxedOnSessions(client) ? '#ef4444' : '#22c55e', // tw-red-500 : tw-green-500
-            cursor: 'pointer',
-            textAlign: 'center',
-            fontWeight: 'bold',
           }}
         >
           {isMaxedOnSessions(client) ? 'M' : 'A'}
-        </td>
+        </TableCell>
       );
     }
 
     // Render unavailable blocks
     return (
-      <td
+      <TableCell
         key={block.id}
+        className="bg-neutral-700"
         style={{
-          background: '#404040', // tw-neutral-700
           borderLeftWidth,
           borderRightWidth,
         }}
-      ></td>
+      ></TableCell>
     );
   }
 
   function renderLegend() {
     return (
-      <div className="ClientsOverview__legend">
-        <div className="ClientsOverview__legend__example">
-          <div className="ClientsOverview__legend__example__color bg-neutral-700"></div>
+      <div className="flex flex-col gap-1 text-xs">
+        <div className="flex items-center gap-1">
+          <div className="h-6 w-6 border border-black bg-neutral-700"></div>
           <span>Unavailable</span>
         </div>
-        <div className="ClientsOverview__legend__example">
-          <div className="ClientsOverview__legend__example__color bg-black text-green-500">A</div>
+        <div className="flex items-center gap-1">
+          <div className="flex h-6 w-6 items-center justify-center border border-black bg-black font-bold text-green-500">
+            A
+          </div>
           <span>Available</span>
         </div>
-        <div className="ClientsOverview__legend__example">
-          <div className="ClientsOverview__legend__example__color bg-black text-red-500">M</div>
+        <div className="flex items-center gap-1">
+          <div className="flex h-6 w-6 items-center justify-center border border-black bg-black font-bold text-red-500">
+            M
+          </div>
           <span>Maxed on sessions</span>
         </div>
-        <div className="ClientsOverview__legend__example">
-          <div
-            className="ClientsOverview__legend__example__color"
-            style={{ background: striped('black', 'white') }}
-          ></div>
+        <div className="flex items-center gap-1">
+          <div className="h-6 w-6 border border-black" style={{ background: striped('black', 'white') }}></div>
           <span>In clinic</span>
         </div>
-        <div className="ClientsOverview__legend__example">
-          <div className="ClientsOverview__legend__example__color bg-background">
-            <div className="ClientsOverview__legend__example__color__corner">PA</div>
+        <div className="flex items-center gap-1">
+          <div className="bg-background relative h-6 w-6 border border-black">
+            <div className="absolute top-0 right-0 bg-black p-0.5 text-[8px] leading-none font-bold text-white">PA</div>
           </div>
           <span>Preschool/adaptive</span>
         </div>
@@ -348,7 +364,7 @@ export const ClientsOverview = () => {
           </HoverCardTrigger>
           <HoverCardContent align="start">{renderLegend()}</HoverCardContent>
         </HoverCard>
-        <table className="ClientsOverview">
+        <table className="w-full border-collapse">
           <colgroup>
             <col width="24px" />
             <col width="24px" />
@@ -372,33 +388,34 @@ export const ClientsOverview = () => {
           </colgroup>
           <thead>
             <tr>
-              <th></th>
-              <th title="Skill level requirement"></th>
-              <th title="Spanish speaker">Spa</th>
-              <th title="Client"></th>
-              <th>Mon</th>
-              <th>Tue</th>
-              <th>Wed</th>
-              <th>Thu</th>
-              <th>Fri</th>
-              <th title="Week hours">Week</th>
-              <th title="Hours prescribed">Rx</th>
-              <th title="Available"></th>
+              <TableHeader></TableHeader>
+              <TableHeader title="Skill level requirement"></TableHeader>
+              <TableHeader title="Spanish speaker">Spa</TableHeader>
+              <TableHeader title="Client"></TableHeader>
+              <TableHeader>Mon</TableHeader>
+              <TableHeader>Tue</TableHeader>
+              <TableHeader>Wed</TableHeader>
+              <TableHeader>Thu</TableHeader>
+              <TableHeader>Fri</TableHeader>
+              <TableHeader title="Week hours">Week</TableHeader>
+              <TableHeader title="Hours prescribed">Rx</TableHeader>
+              <TableHeader title="Available"></TableHeader>
               {['M', 'T', 'W', 'TH', 'F'].map((day, dayIndex) => (
                 <React.Fragment key={day}>
                   {blocks.map((block, blockIndex) => (
-                    <th
+                    <TableHeader
                       key={block.id}
+                      className={cn('border-x text-black', {
+                        'border-l-6': blockIndex === 0,
+                        'border-r-6': blockIndex === blocks.length - 1,
+                      })}
                       style={{
                         background: dayColor(dayIndex),
-                        borderLeftWidth: blockIndex === 0 ? '6px' : '1px',
-                        borderRightWidth: blockIndex === blocks.length - 1 ? '6px' : '1px',
-                        color: 'black',
                       }}
                     >
                       {day}
                       {blockIndex + 1}
-                    </th>
+                    </TableHeader>
                   ))}
                 </React.Fragment>
               ))}
@@ -406,22 +423,18 @@ export const ClientsOverview = () => {
           </thead>
           <tbody>
             {clients.map((client, index) => (
-              <tr key={client.id}>
-                <td style={{ textAlign: 'center' }}>{index + 1}</td>
-                <td
-                  style={{ background: skillLevelColor(client.req_skill_level), color: 'black', textAlign: 'center' }}
+              <tr key={client.id} className="even:bg-muted hover:bg-border">
+                <TableCell className="text-center">{index + 1}</TableCell>
+                <TableCell
+                  className="text-center text-black"
+                  style={{ background: skillLevelColor(client.req_skill_level) }}
                 >
                   {client.req_skill_level}
-                </td>
-                <td
-                  style={{
-                    textAlign: 'center',
-                    verticalAlign: 'middle',
-                  }}
-                >
+                </TableCell>
+                <TableCell className="text-center align-middle">
                   {client.req_spanish_speaking && <Check className="text-green-700" size="14" />}
-                </td>
-                <td className="text-nowrap">
+                </TableCell>
+                <TableCell className="text-nowrap">
                   <a
                     className="text-primary cursor-pointer"
                     onClick={() => {
@@ -433,24 +446,22 @@ export const ClientsOverview = () => {
                   >
                     {client.first_name} {client.last_name}
                   </a>
-                </td>
-                <td style={{ textAlign: 'center' }}>{displayTotalHoursByDay(client, 0)}</td>
-                <td style={{ textAlign: 'center' }}>{displayTotalHoursByDay(client, 1)}</td>
-                <td style={{ textAlign: 'center' }}>{displayTotalHoursByDay(client, 2)}</td>
-                <td style={{ textAlign: 'center' }}>{displayTotalHoursByDay(client, 3)}</td>
-                <td style={{ textAlign: 'center' }}>{displayTotalHoursByDay(client, 4)}</td>
-                <td style={{ textAlign: 'center' }}>{hours(client)}</td>
-                <td style={{ textAlign: 'center' }}>{client.prescribed_hours}</td>
-                <td
-                  style={{
-                    background: 'black',
-                    color: isMaxedOnSessions(client) ? '#ef4444' : '#22c55e', // tw-red-500 : tw-green-500
-                    fontWeight: 'bold',
-                    textAlign: 'center',
-                  }}
+                </TableCell>
+                <TableCell className="text-center">{displayTotalHoursByDay(client, 0)}</TableCell>
+                <TableCell className="text-center">{displayTotalHoursByDay(client, 1)}</TableCell>
+                <TableCell className="text-center">{displayTotalHoursByDay(client, 2)}</TableCell>
+                <TableCell className="text-center">{displayTotalHoursByDay(client, 3)}</TableCell>
+                <TableCell className="text-center">{displayTotalHoursByDay(client, 4)}</TableCell>
+                <TableCell className="text-center">{hours(client)}</TableCell>
+                <TableCell className="text-center">{client.prescribed_hours}</TableCell>
+                <TableCell
+                  className={cn('bg-black text-center font-bold', {
+                    'text-red-500': isMaxedOnSessions(client),
+                    'text-green-500': !isMaxedOnSessions(client),
+                  })}
                 >
                   {isMaxedOnSessions(client) ? 'M' : 'A'}
-                </td>
+                </TableCell>
                 {days.map((day) => (
                   <React.Fragment key={day}>
                     {blocks.map((block, blockIndex) => (
@@ -462,46 +473,39 @@ export const ClientsOverview = () => {
             ))}
           </tbody>
           <tfoot>
-            <tr>
-              <td colSpan={4} style={{ textAlign: 'center' }}>
+            <tr className="hover:bg-border">
+              <TableCell className="text-center" colSpan={4}>
                 Total
-              </td>
-              <td style={{ textAlign: 'center' }}>{totalHoursByDay(0)}</td>
-              <td style={{ textAlign: 'center' }}>{totalHoursByDay(1)}</td>
-              <td style={{ textAlign: 'center' }}>{totalHoursByDay(2)}</td>
-              <td style={{ textAlign: 'center' }}>{totalHoursByDay(3)}</td>
-              <td style={{ textAlign: 'center' }}>{totalHoursByDay(4)}</td>
-              <td style={{ textAlign: 'center' }}>{totalHours()}</td>
-              <td style={{ textAlign: 'center' }}>{totalRequestedHours()}</td>
-              <td></td>
+              </TableCell>
+              <TableCell className="text-center">{totalHoursByDay(0)}</TableCell>
+              <TableCell className="text-center">{totalHoursByDay(1)}</TableCell>
+              <TableCell className="text-center">{totalHoursByDay(2)}</TableCell>
+              <TableCell className="text-center">{totalHoursByDay(3)}</TableCell>
+              <TableCell className="text-center">{totalHoursByDay(4)}</TableCell>
+              <TableCell className="text-center">{totalHours()}</TableCell>
+              <TableCell className="text-center">{totalRequestedHours()}</TableCell>
+              <TableCell></TableCell>
               {['M', 'T', 'W', 'TH', 'F'].map((day, dayIndex) => (
                 <React.Fragment key={day}>
                   {blocks.map((block, blockIndex) => (
-                    <td
+                    <TableCell
                       key={block.id}
-                      style={{
-                        borderLeftWidth: blockIndex === 0 ? '6px' : '1px',
-                        borderRightWidth: blockIndex === blocks.length - 1 ? '6px' : '1px',
-                        textAlign: 'center',
-                      }}
+                      className={cn('border-x text-center', {
+                        'border-l-6': blockIndex === 0,
+                        'border-r-6': blockIndex === blocks.length - 1,
+                      })}
                     >
                       {availableClientsCount(dayIndex, block)}
-                    </td>
+                    </TableCell>
                   ))}
                 </React.Fragment>
               ))}
             </tr>
             <tr>
-              <td colSpan={12}></td>
-              <td
-                colSpan={15}
-                style={{
-                  borderLeftWidth: '6px',
-                  borderRightWidth: '6px',
-                }}
-              >
+              <TableCell colSpan={12}></TableCell>
+              <TableCell colSpan={15} className="border-x-6">
                 Total Available
-              </td>
+              </TableCell>
             </tr>
           </tfoot>
         </table>

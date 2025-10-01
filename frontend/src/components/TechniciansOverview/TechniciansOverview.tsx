@@ -12,7 +12,26 @@ import { TechnicianForm } from '../TechnicianForm/TechnicianForm';
 import { Button } from '../ui/button';
 import { HoverCard, HoverCardContent, HoverCardTrigger } from '../ui/hover-card';
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from '../ui/sheet';
-import './TechniciansOverview.scss';
+import { cn } from '@/lib/utils';
+
+const TableHeader = ({ children, className, ...props }: React.ComponentProps<'th'>) => {
+  return (
+    <th
+      className={cn('border border-black p-1 text-left text-[10px] [writing-mode:vertical-rl]', className)}
+      {...props}
+    >
+      {children}
+    </th>
+  );
+};
+
+const TableCell = ({ children, className, ...props }: React.ComponentProps<'td'>) => {
+  return (
+    <td className={cn('border border-black p-1 text-left text-xs', className)} {...props}>
+      {children}
+    </td>
+  );
+};
 
 export type TechniciansOverviewProps = {
   isSubList?: boolean;
@@ -124,34 +143,29 @@ export const TechniciansOverview = ({ isSubList = false, showLegend = true }: Te
     // Render sub list blocks
     if (isSubList) {
       if (isAvailableToSub) {
-        const background = '#1d4ed8'; // tw-blue-700
-        const color = 'white';
         return (
-          <td
+          <TableCell
             key={block.id}
+            className="bg-blue-700 text-center font-bold text-white"
             style={{
-              background,
               borderLeftWidth,
               borderRightWidth,
-              color,
-              textAlign: 'center',
-              fontWeight: 'bold',
             }}
           >
             S
-          </td>
+          </TableCell>
         );
       }
 
       return (
-        <td
+        <TableCell
           key={block.id}
+          className="bg-neutral-700"
           style={{
-            background: '#404040', // tw-neutral-700
             borderLeftWidth,
             borderRightWidth,
           }}
-        ></td>
+        ></TableCell>
       );
     }
 
@@ -165,16 +179,18 @@ export const TechniciansOverview = ({ isSubList = false, showLegend = true }: Te
       }
 
       const hoverTrigger = (
-        <td
-          className="TechniciansOverview__slot"
+        <TableCell
+          className="relative cursor-pointer"
           style={{
             background,
             borderLeftWidth,
             borderRightWidth,
           }}
         >
-          {appointment.is_preschool_or_adaptive && <div className="TechniciansOverview__slot__corner">PA</div>}
-        </td>
+          {appointment.is_preschool_or_adaptive && (
+            <div className="absolute top-0 right-0 bg-black p-0.5 text-[8px] leading-none text-white">PA</div>
+          )}
+        </TableCell>
       );
 
       if (user?.hover_cards_enabled) {
@@ -207,45 +223,46 @@ export const TechniciansOverview = ({ isSubList = false, showLegend = true }: Te
         letter = 'S';
       }
       return (
-        <td
+        <TableCell
           key={block.id}
+          className={cn('text-center font-bold')}
           style={{
             background,
             borderLeftWidth,
             borderRightWidth,
             color,
-            textAlign: 'center',
-            fontWeight: 'bold',
           }}
         >
           {letter}
-        </td>
+        </TableCell>
       );
     }
 
     // Render unavailable blocks
     return (
-      <td
+      <TableCell
         key={block.id}
+        className="bg-neutral-700"
         style={{
-          background: '#404040', // tw-neutral-700
           borderLeftWidth,
           borderRightWidth,
         }}
-      ></td>
+      ></TableCell>
     );
   }
 
   function renderLegend() {
     if (isSubList) {
       return (
-        <div className="TechniciansOverview__legend">
-          <div className="TechniciansOverview__legend__example">
-            <div className="TechniciansOverview__legend__example__color bg-neutral-700"></div>
+        <div className="flex flex-col gap-1">
+          <div className="flex items-center gap-1 text-xs">
+            <div className="flex h-6 w-6 items-center justify-center border border-black bg-neutral-700"></div>
             <span>Unavailable</span>
           </div>
-          <div className="TechniciansOverview__legend__example">
-            <div className="TechniciansOverview__legend__example__color bg-blue-700 text-white">S</div>
+          <div className="flex items-center gap-1 text-xs">
+            <div className="flex h-6 w-6 items-center justify-center border border-black bg-blue-700 font-bold text-white">
+              A
+            </div>
             <span>Available to sub</span>
           </div>
         </div>
@@ -253,41 +270,44 @@ export const TechniciansOverview = ({ isSubList = false, showLegend = true }: Te
     }
 
     return (
-      <div className="TechniciansOverview__legend">
-        <div className="TechniciansOverview__legend__example">
-          <div className="TechniciansOverview__legend__example__color bg-neutral-700"></div>
+      <div className="flex flex-col gap-1 text-xs">
+        <div className="flex items-center gap-1">
+          <div className="h-6 w-6 border border-black bg-neutral-700"></div>
           <span>Unavailable</span>
         </div>
-        <div className="TechniciansOverview__legend__example">
-          <div className="TechniciansOverview__legend__example__color bg-black text-green-500">A</div>
+        <div className="flex items-center gap-1">
+          <div className="flex h-6 w-6 items-center justify-center border border-black bg-black font-bold text-green-500">
+            A
+          </div>
           <span>Available</span>
         </div>
-        <div className="TechniciansOverview__legend__example">
-          <div className="TechniciansOverview__legend__example__color bg-blue-700 text-white">S</div>
+        <div className="flex items-center gap-1">
+          <div className="flex h-6 w-6 items-center justify-center border border-black bg-blue-700 font-bold text-white">
+            S
+          </div>
           <span>Available to sub</span>
         </div>
-        <div className="TechniciansOverview__legend__example">
-          <div className="TechniciansOverview__legend__example__color bg-black text-red-500">M</div>
+        <div className="flex items-center gap-1">
+          <div className="flex h-6 w-6 items-center justify-center border border-black bg-black font-bold text-red-500">
+            M
+          </div>
           <span>Maxed on sessions</span>
         </div>
-        <div className="TechniciansOverview__legend__example">
-          <div className="TechniciansOverview__legend__example__color bg-green-700"></div>
+        <div className="flex items-center gap-1">
+          <div className="h-6 w-6 border border-black bg-green-700"></div>
           <span>Has session</span>
         </div>
-        <div className="TechniciansOverview__legend__example">
-          <div className="TechniciansOverview__legend__example__color bg-yellow-500"></div>
+        <div className="flex items-center gap-1">
+          <div className="h-6 w-6 border border-black bg-yellow-500"></div>
           <span>Client onboarding</span>
         </div>
-        <div className="TechniciansOverview__legend__example">
-          <div
-            className="TechniciansOverview__legend__example__color"
-            style={{ background: striped('black', 'white') }}
-          ></div>
+        <div className="flex items-center gap-1">
+          <div className="h-6 w-6 border border-black" style={{ background: striped('black', 'white') }}></div>
           <span>In clinic</span>
         </div>
-        <div className="TechniciansOverview__legend__example">
-          <div className="TechniciansOverview__legend__example__color bg-background">
-            <div className="TechniciansOverview__legend__example__color__corner">PA</div>
+        <div className="flex items-center gap-1">
+          <div className="bg-background relative h-6 w-6 border border-black">
+            <div className="absolute top-0 right-0 bg-black p-0.5 text-[8px] leading-none font-bold text-white">PA</div>
           </div>
           <span>Preschool/adaptive</span>
         </div>
@@ -317,7 +337,7 @@ export const TechniciansOverview = ({ isSubList = false, showLegend = true }: Te
             <HoverCardContent align="start">{renderLegend()}</HoverCardContent>
           </HoverCard>
         )}
-        <table className="TechniciansOverview">
+        <table className="w-full border-collapse">
           <colgroup>
             <col width="24px" />
             <col width="24px" />
@@ -345,37 +365,38 @@ export const TechniciansOverview = ({ isSubList = false, showLegend = true }: Te
           </colgroup>
           <thead>
             <tr>
-              <th></th>
-              <th title="Skill level"></th>
-              <th title="Spanish speaker">Spa</th>
-              <th title="Technician"></th>
+              <TableHeader></TableHeader>
+              <TableHeader title="Skill level"></TableHeader>
+              <TableHeader title="Spanish speaker">Spa</TableHeader>
+              <TableHeader title="Technician"></TableHeader>
               {!isSubList && (
                 <>
-                  <th>Mon</th>
-                  <th>Tue</th>
-                  <th>Wed</th>
-                  <th>Thu</th>
-                  <th>Fri</th>
-                  <th title="Week hours">Week</th>
-                  <th title="Hours requested">Req</th>
-                  <th title="Available"></th>
+                  <TableHeader>Mon</TableHeader>
+                  <TableHeader>Tue</TableHeader>
+                  <TableHeader>Wed</TableHeader>
+                  <TableHeader>Thu</TableHeader>
+                  <TableHeader>Fri</TableHeader>
+                  <TableHeader title="Week hours">Week</TableHeader>
+                  <TableHeader title="Hours requested">Req</TableHeader>
+                  <TableHeader title="Available"></TableHeader>
                 </>
               )}
               {['M', 'T', 'W', 'TH', 'F'].map((day, dayIndex) => (
                 <React.Fragment key={day}>
                   {blocks.map((block, blockIndex) => (
-                    <th
+                    <TableHeader
                       key={block.id}
+                      className={cn('border-x text-black', {
+                        'border-l-6': blockIndex === 0,
+                        'border-r-6': blockIndex === blocks.length - 1,
+                      })}
                       style={{
                         background: dayColor(dayIndex),
-                        borderLeftWidth: blockIndex === 0 ? '6px' : '1px',
-                        borderRightWidth: blockIndex === blocks.length - 1 ? '6px' : '1px',
-                        color: 'black',
                       }}
                     >
                       {day}
                       {blockIndex + 1}
-                    </th>
+                    </TableHeader>
                   ))}
                 </React.Fragment>
               ))}
@@ -383,24 +404,26 @@ export const TechniciansOverview = ({ isSubList = false, showLegend = true }: Te
           </thead>
           <tbody>
             {technicians.map((technician, index) => (
-              <tr key={technician.id}>
-                <td style={{ background: technician.bg_color, color: technician.text_color, textAlign: 'center' }}>
+              <tr key={technician.id} className="even:bg-muted hover:bg-border">
+                <TableCell
+                  className="text-center"
+                  style={{ background: technician.bg_color, color: technician.text_color }}
+                >
                   {index + 1}
-                </td>
-                <td
-                  style={{ background: skillLevelColor(technician.skill_level), color: 'black', textAlign: 'center' }}
+                </TableCell>
+                <TableCell
+                  className="text-center text-black"
+                  style={{ background: skillLevelColor(technician.skill_level) }}
                 >
                   {technician.skill_level}
-                </td>
-                <td
-                  style={{
-                    textAlign: 'center',
-                    verticalAlign: 'middle',
-                  }}
-                >
+                </TableCell>
+                <TableCell className="text-center align-middle">
                   {technician.spanish_speaking && <Check className="text-green-700" size="14" />}
-                </td>
-                <td className="text-nowrap" style={{ background: technician.bg_color, color: technician.text_color }}>
+                </TableCell>
+                <TableCell
+                  className="text-nowrap"
+                  style={{ background: technician.bg_color, color: technician.text_color }}
+                >
                   <a
                     className="cursor-pointer"
                     onClick={() => {
@@ -413,26 +436,24 @@ export const TechniciansOverview = ({ isSubList = false, showLegend = true }: Te
                   >
                     {technician.first_name} {technician.last_name}
                   </a>
-                </td>
+                </TableCell>
                 {!isSubList && (
                   <>
-                    <td style={{ textAlign: 'center' }}>{displayTotalHoursByDay(technician, 0)}</td>
-                    <td style={{ textAlign: 'center' }}>{displayTotalHoursByDay(technician, 1)}</td>
-                    <td style={{ textAlign: 'center' }}>{displayTotalHoursByDay(technician, 2)}</td>
-                    <td style={{ textAlign: 'center' }}>{displayTotalHoursByDay(technician, 3)}</td>
-                    <td style={{ textAlign: 'center' }}>{displayTotalHoursByDay(technician, 4)}</td>
-                    <td style={{ textAlign: 'center' }}>{hours(technician)}</td>
-                    <td style={{ textAlign: 'center' }}>{technician.requested_hours}</td>
-                    <td
-                      style={{
-                        background: 'black',
-                        color: isMaxedOnSessions(technician) ? '#ef4444' : '#22c55e', // tw-red-500 : tw-green-500
-                        fontWeight: 'bold',
-                        textAlign: 'center',
-                      }}
+                    <TableCell className="text-center">{displayTotalHoursByDay(technician, 0)}</TableCell>
+                    <TableCell className="text-center">{displayTotalHoursByDay(technician, 1)}</TableCell>
+                    <TableCell className="text-center">{displayTotalHoursByDay(technician, 2)}</TableCell>
+                    <TableCell className="text-center">{displayTotalHoursByDay(technician, 3)}</TableCell>
+                    <TableCell className="text-center">{displayTotalHoursByDay(technician, 4)}</TableCell>
+                    <TableCell className="text-center">{hours(technician)}</TableCell>
+                    <TableCell className="text-center">{technician.requested_hours}</TableCell>
+                    <TableCell
+                      className={cn('bg-black text-center font-bold', {
+                        'text-red-500': isMaxedOnSessions(technician),
+                        'text-green-500': !isMaxedOnSessions(technician),
+                      })}
                     >
                       {isMaxedOnSessions(technician) ? 'M' : 'A'}
-                    </td>
+                    </TableCell>
                   </>
                 )}
                 {days.map((day) => (
@@ -447,46 +468,39 @@ export const TechniciansOverview = ({ isSubList = false, showLegend = true }: Te
           </tbody>
           {!isSubList && (
             <tfoot>
-              <tr>
-                <td colSpan={4} style={{ textAlign: 'center' }}>
+              <tr className="hover:bg-border">
+                <TableCell className="text-center" colSpan={4}>
                   Total
-                </td>
-                <td style={{ textAlign: 'center' }}>{totalHoursByDay(0)}</td>
-                <td style={{ textAlign: 'center' }}>{totalHoursByDay(1)}</td>
-                <td style={{ textAlign: 'center' }}>{totalHoursByDay(2)}</td>
-                <td style={{ textAlign: 'center' }}>{totalHoursByDay(3)}</td>
-                <td style={{ textAlign: 'center' }}>{totalHoursByDay(4)}</td>
-                <td style={{ textAlign: 'center' }}>{totalHours()}</td>
-                <td style={{ textAlign: 'center' }}>{totalRequestedHours()}</td>
-                <td></td>
+                </TableCell>
+                <TableCell className="text-center">{totalHoursByDay(0)}</TableCell>
+                <TableCell className="text-center">{totalHoursByDay(1)}</TableCell>
+                <TableCell className="text-center">{totalHoursByDay(2)}</TableCell>
+                <TableCell className="text-center">{totalHoursByDay(3)}</TableCell>
+                <TableCell className="text-center">{totalHoursByDay(4)}</TableCell>
+                <TableCell className="text-center">{totalHours()}</TableCell>
+                <TableCell className="text-center">{totalRequestedHours()}</TableCell>
+                <TableCell></TableCell>
                 {['M', 'T', 'W', 'TH', 'F'].map((day, dayIndex) => (
                   <React.Fragment key={day}>
                     {blocks.map((block, blockIndex) => (
-                      <td
+                      <TableCell
                         key={block.id}
-                        style={{
-                          borderLeftWidth: blockIndex === 0 ? '6px' : '1px',
-                          borderRightWidth: blockIndex === blocks.length - 1 ? '6px' : '1px',
-                          textAlign: 'center',
-                        }}
+                        className={cn('border-x text-center', {
+                          'border-l-6': blockIndex === 0,
+                          'border-r-6': blockIndex === blocks.length - 1,
+                        })}
                       >
                         {availableTechsCount(dayIndex, block)}
-                      </td>
+                      </TableCell>
                     ))}
                   </React.Fragment>
                 ))}
               </tr>
               <tr>
-                <td colSpan={12}></td>
-                <td
-                  colSpan={15}
-                  style={{
-                    borderLeftWidth: '6px',
-                    borderRightWidth: '6px',
-                  }}
-                >
+                <TableCell colSpan={12}></TableCell>
+                <TableCell colSpan={15} className="border-x-6">
                   Total Available
-                </td>
+                </TableCell>
               </tr>
             </tfoot>
           )}

@@ -1,12 +1,31 @@
 import { ClientModel, TechnicianModel } from '@/api';
 import { useAuth } from '@/features/auth/contexts/AuthContext';
+import { cn } from '@/lib/utils';
 import { orderByFirstName } from '@/utils/order';
 import { Loader } from 'lucide-react';
 import React from 'react';
 import { ClientForm } from '../ClientForm/ClientForm';
 import { TechnicianForm } from '../TechnicianForm/TechnicianForm';
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from '../ui/sheet';
-import './ClientTechnicianMatrix.scss';
+
+const TableHeader = ({ children, className, ...props }: React.ComponentProps<'th'>) => {
+  return (
+    <th
+      className={cn('border border-black p-1 text-left text-[10px] [writing-mode:vertical-rl]', className)}
+      {...props}
+    >
+      {children}
+    </th>
+  );
+};
+
+const TableCell = ({ children, className, ...props }: React.ComponentProps<'td'>) => {
+  return (
+    <td className={cn('border border-black p-1 text-center text-xs', className)} {...props}>
+      {children}
+    </td>
+  );
+};
 
 export const ClientTechnicianMatrix = () => {
   const [clients, setClients] = React.useState<Client[]>([]);
@@ -153,13 +172,13 @@ export const ClientTechnicianMatrix = () => {
 
   return (
     <>
-      <table className="ClientTechnicianMatrix">
+      <table className="border-collapse">
         <thead>
           <tr>
-            <th></th>
-            <th></th>
+            <TableHeader></TableHeader>
+            <TableHeader></TableHeader>
             {technicians.map((technician, index) => (
-              <th
+              <TableHeader
                 key={technician.id}
                 onMouseEnter={() => handleColumnHoverEnter(index)}
                 onMouseLeave={() => handleColumnHoverLeave()}
@@ -180,9 +199,9 @@ export const ClientTechnicianMatrix = () => {
                 >
                   {technician.first_name} {technician.last_name}
                 </a>
-              </th>
+              </TableHeader>
             ))}
-            <th>Total # of Techs</th>
+            <TableHeader>Total # of Techs</TableHeader>
           </tr>
         </thead>
         <tbody>
@@ -191,9 +210,9 @@ export const ClientTechnicianMatrix = () => {
 
             return (
               <React.Fragment key={client.id}>
-                <tr>
-                  <td>{index + 1}</td>
-                  <td className="text-nowrap" style={{ textAlign: 'left' }}>
+                <tr className="hover:bg-border">
+                  <TableCell>{index + 1}</TableCell>
+                  <TableCell className="text-left text-nowrap">
                     <a
                       className="text-primary cursor-pointer"
                       onClick={() => {
@@ -205,36 +224,34 @@ export const ClientTechnicianMatrix = () => {
                     >
                       {client.first_name} {client.last_name}
                     </a>
-                  </td>
+                  </TableCell>
                   {technicians.map((technician, technicianIndex) => {
                     const count = countAppointments(client, technician);
+                    const bgColor =
+                      count > 0 ? technician.bg_color : hoveredColumn === technicianIndex ? 'var(--border)' : undefined;
+
                     return (
-                      <td
+                      <TableCell
                         key={technician.id}
                         onMouseEnter={() => handleColumnHoverEnter(technicianIndex)}
                         onMouseLeave={() => handleColumnHoverLeave()}
                         style={{
-                          background:
-                            count > 0
-                              ? technician.bg_color
-                              : hoveredColumn === technicianIndex
-                                ? 'var(--border)'
-                                : undefined,
+                          background: bgColor,
                           color: count > 0 ? technician.text_color : undefined,
                         }}
                       >
                         {count > 0 ? count : ''}
-                      </td>
+                      </TableCell>
                     );
                   })}
-                  <td
+                  <TableCell
+                    className="text-black"
                     style={{
                       background: getTotalTechsColor(total),
-                      color: 'black',
                     }}
                   >
                     {total > 0 ? total : ''}
-                  </td>
+                  </TableCell>
                 </tr>
               </React.Fragment>
             );

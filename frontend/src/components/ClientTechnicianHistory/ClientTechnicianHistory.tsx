@@ -1,5 +1,6 @@
 import { ClientModel } from '@/api';
 import { useAuth } from '@/features/auth/contexts/AuthContext';
+import { cn } from '@/lib/utils';
 import { skillLevelColor } from '@/utils/color';
 import { orderByFirstName } from '@/utils/order';
 import { Loader } from 'lucide-react';
@@ -7,7 +8,22 @@ import React from 'react';
 import { ClientForm } from '../ClientForm/ClientForm';
 import { Badge } from '../ui/badge';
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from '../ui/sheet';
-import './ClientTechnicianHistory.scss';
+
+const TableHeader = ({ children, className, ...props }: React.ComponentProps<'th'>) => {
+  return (
+    <th className={cn('border border-black p-1 text-left text-[10px]', className)} {...props}>
+      {children}
+    </th>
+  );
+};
+
+const TableCell = ({ children, className, ...props }: React.ComponentProps<'td'>) => {
+  return (
+    <td className={cn('border border-black p-1 align-top text-xs', className)} {...props}>
+      {children}
+    </td>
+  );
+};
 
 export const ClientTechnicianHistory = () => {
   const [clients, setClients] = React.useState<Client[]>([]);
@@ -101,8 +117,8 @@ export const ClientTechnicianHistory = () => {
 
   return (
     <>
-      <div className="ClientTechnicianHistory__container">
-        <table className="ClientTechnicianHistory">
+      <div className="max-h-200 overflow-auto">
+        <table className="border-collapse">
           <colgroup>
             <col />
             <col />
@@ -112,17 +128,17 @@ export const ClientTechnicianHistory = () => {
           </colgroup>
           <thead>
             <tr>
-              <th>Client</th>
-              <th>Rating</th>
-              <th>Current Technicians</th>
-              <th>Past Technicians</th>
-              <th>Sub Notes</th>
+              <TableHeader>Client</TableHeader>
+              <TableHeader>Rating</TableHeader>
+              <TableHeader>Current Technicians</TableHeader>
+              <TableHeader>Past Technicians</TableHeader>
+              <TableHeader>Sub Notes</TableHeader>
             </tr>
           </thead>
           <tbody>
             {clients.map((client) => (
-              <tr key={client.id}>
-                <td className="text-nowrap">
+              <tr key={client.id} className="even:bg-muted hover:bg-border">
+                <TableCell className="text-nowrap">
                   <a
                     className="text-primary cursor-pointer"
                     onClick={() => {
@@ -134,18 +150,18 @@ export const ClientTechnicianHistory = () => {
                   >
                     {client.first_name} {client.last_name}
                   </a>
-                </td>
-                <td
-                  style={{ background: skillLevelColor(client.req_skill_level), color: 'black', textAlign: 'center' }}
+                </TableCell>
+                <TableCell
+                  className="text-center text-black"
+                  style={{ background: skillLevelColor(client.req_skill_level) }}
                 >
                   {client.req_skill_level}
-                </td>
-                <td>{client.current_technicians && displayTechnicians(client.current_technicians)}</td>
-                <td>{displayTechnicians(client.past_technicians)}</td>
-                <td>{client.sub_notes}</td>
+                </TableCell>
+                <TableCell>{client.current_technicians && displayTechnicians(client.current_technicians)}</TableCell>
+                <TableCell>{displayTechnicians(client.past_technicians)}</TableCell>
+                <TableCell className="text-xs whitespace-pre-wrap">{client.sub_notes}</TableCell>
               </tr>
             ))}
-            <tr></tr>
           </tbody>
         </table>
       </div>

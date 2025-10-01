@@ -3,12 +3,12 @@ import { AvailabilityForm } from '@/components/AvailabilityForm/AvailabilityForm
 import { ClientForm } from '@/components/ClientForm/ClientForm';
 import { useBlocks } from '@/contexts/BlocksContext';
 import { useAuth } from '@/features/auth/contexts/AuthContext';
+import { cn } from '@/lib/utils';
 import { isFullBlock } from '@/utils/appointments';
 import { skillLevelColor } from '@/utils/color';
 import { availableHours } from '@/utils/computedProperties';
 import { orderByFirstName } from '@/utils/order';
 import { checkTimeIntersection, formatTimeShort } from '@/utils/time';
-import clsx from 'clsx';
 import { AlertTriangle, Check, Loader, MapPin } from 'lucide-react';
 import React from 'react';
 import { Button } from '../ui/button';
@@ -16,7 +16,22 @@ import { Checkbox } from '../ui/checkbox';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '../ui/dialog';
 import { Label } from '../ui/label';
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from '../ui/sheet';
-import './ClientAvailability.scss';
+
+const TableHeader = ({ children, className, ...props }: React.ComponentProps<'th'>) => {
+  return (
+    <th className={cn('border border-black p-1 text-left text-[10px]', className)} {...props}>
+      {children}
+    </th>
+  );
+};
+
+const TableCell = ({ children, className, ...props }: React.ComponentProps<'td'>) => {
+  return (
+    <td className={cn('border border-black p-1 text-xs', className)} {...props}>
+      {children}
+    </td>
+  );
+};
 
 export const ClientAvailability = () => {
   const [clients, setClients] = React.useState<Client[]>([]);
@@ -182,11 +197,11 @@ export const ClientAvailability = () => {
         const blockAvailability = getBlockAvailability(client, day, block);
 
         return (
-          <td
+          <TableCell
             key={block.id}
-            className={clsx('ClientAvailability__table__block', {
-              'ClientAvailability__table__block--first': index === 0,
-              'ClientAvailability__table__block--last': index === blocks.length - 1,
+            className={cn('w-18 cursor-pointer bg-gray-400 text-black', {
+              'border-l-6': index === 0,
+              'border-r-6': index === blocks.length - 1,
             })}
             style={{
               background: blockAvailability ? block.color : undefined,
@@ -211,7 +226,7 @@ export const ClientAvailability = () => {
                 {!isFullBlock(blockAvailability, block) && <AlertTriangle className="text-red-700" size="14" />}
               </div>
             )}
-          </td>
+          </TableCell>
         );
       }),
     );
@@ -220,16 +235,15 @@ export const ClientAvailability = () => {
   function renderBlockTotals() {
     return days.map((day) =>
       blocks.map((block) => (
-        <td
+        <TableCell
           key={block.id}
-          className={clsx('ClientAvailability__table__block__count', {
-            'ClientAvailability__table__block--first': block.id === 1,
-            'ClientAvailability__table__block--last': block.id === blocks.length,
+          className={cn('bg-green-100 text-right text-black', {
+            'border-l-6': block.id === 1,
+            'border-r-6': block.id === blocks.length,
           })}
-          style={{ textAlign: 'right' }}
         >
           {countClientsAvailableForBlock(day, block)}
-        </td>
+        </TableCell>
       )),
     );
   }
@@ -258,41 +272,41 @@ export const ClientAvailability = () => {
         />
         <Label htmlFor="in_clinic_filter">In clinic only</Label>
       </div>
-      <table className="ClientAvailability__table">
+      <table className="w-full border-collapse">
         <thead>
           <tr>
-            <th className="ClientAvailability__table--vertical"></th>
-            <th title="Client" className="ClientAvailability__table--vertical"></th>
-            <th title="Skill level requirement" className="ClientAvailability__table--vertical">
+            <TableHeader className="[writing-mode:vertical-rl]"></TableHeader>
+            <TableHeader title="Client" className="[writing-mode:vertical-rl]"></TableHeader>
+            <TableHeader title="Skill level requirement" className="[writing-mode:vertical-rl]">
               Rating
-            </th>
-            <th title="Spanish speaker" className="ClientAvailability__table--vertical">
+            </TableHeader>
+            <TableHeader title="Spanish speaker" className="[writing-mode:vertical-rl]">
               Spa
-            </th>
-            <th title="Evaluation done" className="ClientAvailability__table--vertical">
+            </TableHeader>
+            <TableHeader title="Evaluation done" className="[writing-mode:vertical-rl]">
               Eval
-            </th>
-            <th title="Currently onboarding" className="ClientAvailability__table--vertical">
+            </TableHeader>
+            <TableHeader title="Currently onboarding" className="[writing-mode:vertical-rl]">
               Onboard
-            </th>
-            <th title="Prescribed hours" className="ClientAvailability__table--vertical">
+            </TableHeader>
+            <TableHeader title="Prescribed hours" className="[writing-mode:vertical-rl]">
               Rx
-            </th>
-            <th title="Total available hours" className="ClientAvailability__table--vertical">
+            </TableHeader>
+            <TableHeader title="Total available hours" className="[writing-mode:vertical-rl]">
               Avail
-            </th>
+            </TableHeader>
             {days.map((day) => (
-              <th className="ClientAvailability__table__boldBorder" key={day} colSpan={blocks.length}>
+              <TableHeader className="border-x-6" key={day} colSpan={blocks.length}>
                 {['Mon', 'Tue', 'Wed', 'Thu', 'Fri'][day]}
-              </th>
+              </TableHeader>
             ))}
           </tr>
         </thead>
         <tbody>
           {clients.map((client, index) => (
-            <tr key={client.id}>
-              <td>{index + 1}</td>
-              <td className="text-nowrap">
+            <tr key={client.id} className="hover:bg-border">
+              <TableCell>{index + 1}</TableCell>
+              <TableCell className="text-nowrap">
                 <a
                   className="text-primary cursor-pointer"
                   onClick={() => {
@@ -304,36 +318,35 @@ export const ClientAvailability = () => {
                 >
                   {client.first_name} {client.last_name}
                 </a>
-              </td>
-              <td
+              </TableCell>
+              <TableCell
+                className="text-center text-black"
                 style={{
                   background: skillLevelColor(client.req_skill_level),
-                  color: 'black',
-                  textAlign: 'center',
                 }}
               >
                 {client.req_skill_level}
-              </td>
-              <td style={{ textAlign: 'center' }}>
+              </TableCell>
+              <TableCell className="text-center">
                 {client.req_spanish_speaking && <Check className="text-green-700" size="14" />}
-              </td>
-              <td style={{ textAlign: 'center' }}>
+              </TableCell>
+              <TableCell className="text-center">
                 {client.eval_done && <Check className="text-green-700" size="14" />}
-              </td>
-              <td style={{ textAlign: 'center' }}>
+              </TableCell>
+              <TableCell className="text-center">
                 {client.is_onboarding && <Check className="text-green-700" size="14" />}
-              </td>
-              <td>{client.prescribed_hours}</td>
-              <td>{availableHours(client)}</td>
+              </TableCell>
+              <TableCell>{client.prescribed_hours}</TableCell>
+              <TableCell>{availableHours(client)}</TableCell>
               {renderAvailabilities(client)}
             </tr>
           ))}
         </tbody>
         <tfoot>
-          <tr>
-            <td colSpan={6}></td>
-            <td>{totalPrescribedHours()}</td>
-            <td>{totalAvailableHours()}</td>
+          <tr className="hover:bg-border">
+            <TableCell colSpan={6}></TableCell>
+            <TableCell>{totalPrescribedHours()}</TableCell>
+            <TableCell>{totalAvailableHours()}</TableCell>
             {renderBlockTotals()}
           </tr>
         </tfoot>

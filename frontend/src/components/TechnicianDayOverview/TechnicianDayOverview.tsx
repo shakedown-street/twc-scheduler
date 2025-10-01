@@ -1,6 +1,7 @@
 import { TechnicianModel } from '@/api';
 import { useBlocks } from '@/contexts/BlocksContext';
 import { useAuth } from '@/features/auth/contexts/AuthContext';
+import { cn } from '@/lib/utils';
 import { getBlockAppointments, getBlockAvailabilities } from '@/utils/appointments';
 import { skillLevelColor, striped } from '@/utils/color';
 import { hours, hoursByDay, isMaxedOnSessions } from '@/utils/computedProperties';
@@ -12,7 +13,25 @@ import { AppointmentHover } from '../AppointmentHover/AppointmentHover';
 import { TechnicianForm } from '../TechnicianForm/TechnicianForm';
 import { HoverCard, HoverCardContent, HoverCardTrigger } from '../ui/hover-card';
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from '../ui/sheet';
-import './TechnicianDayOverview.scss';
+
+const TableHeader = ({ children, className, ...props }: React.ComponentProps<'th'>) => {
+  return (
+    <th
+      className={cn('border border-black p-1 text-left text-[10px] [writing-mode:vertical-rl]', className)}
+      {...props}
+    >
+      {children}
+    </th>
+  );
+};
+
+const TableCell = ({ children, className, ...props }: React.ComponentProps<'td'>) => {
+  return (
+    <td className={cn('border border-black p-1 text-left text-xs', className)} {...props}>
+      {children}
+    </td>
+  );
+};
 
 export type TechnicianDayOverviewProps = {
   day: number;
@@ -90,16 +109,18 @@ export const TechnicianDayOverview = ({ day }: TechnicianDayOverviewProps) => {
       }
 
       const hoverTrigger = (
-        <td
-          className="TechnicianDayOverview__slot"
+        <TableCell
+          className="relative"
           style={{
             background,
             borderLeftWidth,
             borderRightWidth,
           }}
         >
-          {appointment.is_preschool_or_adaptive && <div className="TechnicianDayOverview__slot__corner">PA</div>}
-        </td>
+          {appointment.is_preschool_or_adaptive && (
+            <div className="absolute top-0 right-0 bg-black p-0.5 text-[8px] leading-none text-white">PA</div>
+          )}
+        </TableCell>
       );
 
       if (user?.hover_cards_enabled) {
@@ -132,32 +153,31 @@ export const TechnicianDayOverview = ({ day }: TechnicianDayOverviewProps) => {
         letter = 'S';
       }
       return (
-        <td
+        <TableCell
           key={block.id}
+          className="text-center font-bold"
           style={{
             background,
             borderLeftWidth,
             borderRightWidth,
             color,
-            textAlign: 'center',
-            fontWeight: 'bold',
           }}
         >
           {letter}
-        </td>
+        </TableCell>
       );
     }
 
     // Render unavailable blocks
     return (
-      <td
+      <TableCell
         key={block.id}
+        className="bg-neutral-700"
         style={{
-          background: '#404040', // tw-neutral-700
           borderLeftWidth,
           borderRightWidth,
         }}
-      ></td>
+      ></TableCell>
     );
   }
   if (techniciansLoading) {
@@ -170,7 +190,7 @@ export const TechnicianDayOverview = ({ day }: TechnicianDayOverviewProps) => {
 
   return (
     <>
-      <table className="TechnicianDayOverview">
+      <table className="w-full border-collapse">
         <colgroup>
           <col width="24px" />
           <col width="24px" />
@@ -186,44 +206,50 @@ export const TechnicianDayOverview = ({ day }: TechnicianDayOverviewProps) => {
         </colgroup>
         <thead>
           <tr>
-            <th></th>
-            <th title="Skill level"></th>
-            <th title="Spanish speaker">Spa</th>
-            <th title="Technician"></th>
-            <th title="Day hours">{dayToString(day, 'medium')}</th>
-            <th title="Week hours">Week</th>
-            <th title="Hours requested">Req</th>
-            <th title="Available"></th>
+            <TableHeader></TableHeader>
+            <TableHeader title="Skill level"></TableHeader>
+            <TableHeader title="Spanish speaker">Spa</TableHeader>
+            <TableHeader title="Technician"></TableHeader>
+            <TableHeader title="Day hours">{dayToString(day, 'medium')}</TableHeader>
+            <TableHeader title="Week hours">Week</TableHeader>
+            <TableHeader title="Hours requested">Req</TableHeader>
+            <TableHeader title="Available"></TableHeader>
             {blocks.map((block, blockIndex) => (
-              <th
+              <TableHeader
                 key={block.id}
+                className={cn('border-x text-black', {
+                  'border-l-6': blockIndex === 0,
+                  'border-r-6': blockIndex === blocks.length - 1,
+                })}
                 style={{
                   background: block.color,
-                  borderLeftWidth: blockIndex === 0 ? '6px' : '1px',
-                  borderRightWidth: blockIndex === blocks.length - 1 ? '6px' : '1px',
                 }}
-              ></th>
+              ></TableHeader>
             ))}
           </tr>
         </thead>
         <tbody>
           {technicians.map((technician, index) => (
-            <tr key={technician.id}>
-              <td style={{ background: technician.bg_color, color: technician.text_color, textAlign: 'center' }}>
-                {index + 1}
-              </td>
-              <td style={{ background: skillLevelColor(technician.skill_level), color: 'black', textAlign: 'center' }}>
-                {technician.skill_level}
-              </td>
-              <td
-                style={{
-                  textAlign: 'center',
-                  verticalAlign: 'middle',
-                }}
+            <tr key={technician.id} className="even:bg-muted hover:bg-border">
+              <TableCell
+                className="text-center"
+                style={{ background: technician.bg_color, color: technician.text_color }}
               >
+                {index + 1}
+              </TableCell>
+              <TableCell
+                className="text-center text-black"
+                style={{ background: skillLevelColor(technician.skill_level) }}
+              >
+                {technician.skill_level}
+              </TableCell>
+              <TableCell className="text-center align-middle">
                 {technician.spanish_speaking && <Check className="text-green-700" size="14" />}
-              </td>
-              <td className="text-nowrap" style={{ background: technician.bg_color, color: technician.text_color }}>
+              </TableCell>
+              <TableCell
+                className="text-nowrap"
+                style={{ background: technician.bg_color, color: technician.text_color }}
+              >
                 <a
                   className="cursor-pointer"
                   onClick={() => {
@@ -236,20 +262,18 @@ export const TechnicianDayOverview = ({ day }: TechnicianDayOverviewProps) => {
                 >
                   {technician.first_name} {technician.last_name}
                 </a>
-              </td>
-              <td style={{ textAlign: 'center' }}>{hoursByDay(technician, day)}</td>
-              <td style={{ textAlign: 'center' }}>{hours(technician)}</td>
-              <td style={{ textAlign: 'center' }}>{technician.requested_hours}</td>
-              <td
-                style={{
-                  background: 'black',
-                  color: isMaxedOnSessions(technician) ? '#ef4444' : '#22c55e', // tw-red-500 : tw-green-500
-                  fontWeight: 'bold',
-                  textAlign: 'center',
-                }}
+              </TableCell>
+              <TableCell className="text-center">{hoursByDay(technician, day)}</TableCell>
+              <TableCell className="text-center">{hours(technician)}</TableCell>
+              <TableCell className="text-center">{technician.requested_hours}</TableCell>
+              <TableCell
+                className={cn('bg-black text-center font-bold', {
+                  'text-red-500': isMaxedOnSessions(technician),
+                  'text-green-500': !isMaxedOnSessions(technician),
+                })}
               >
                 {isMaxedOnSessions(technician) ? 'M' : 'A'}
-              </td>
+              </TableCell>
               {blocks.map((block, blockIndex) => (
                 <React.Fragment key={block.id}>{renderBlock(technician, block, blockIndex)}</React.Fragment>
               ))}

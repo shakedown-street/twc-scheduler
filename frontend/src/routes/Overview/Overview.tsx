@@ -20,25 +20,23 @@ export const Overview = () => {
   return (
     <>
       <title>Overview | Schedule Builder</title>
-      <div className="container mx-auto px-4">
-        <div className="mt-4 mb-12">
-          <h1 className="mb-4 text-2xl font-bold">Overview</h1>
-          <Tabs onValueChange={setTab} value={getTab()}>
-            <TabsList>
-              <TabsTrigger value="appointments">Appointments</TabsTrigger>
-              <TabsTrigger value="matrix">Matrix</TabsTrigger>
-            </TabsList>
-            <TabsContent value="appointments">
-              <div className="flex gap-2">
-                <ClientsOverview />
-                <TechniciansOverview />
-              </div>
-            </TabsContent>
-            <TabsContent value="matrix">
-              <ClientTechnicianMatrix />
-            </TabsContent>
-          </Tabs>
-        </div>
+      <div className="container mx-auto mt-4 mb-12 px-4">
+        <h1 className="mb-4 text-2xl font-bold">Overview</h1>
+        <Tabs onValueChange={setTab} value={getTab()}>
+          <TabsList>
+            <TabsTrigger value="appointments">Appointments</TabsTrigger>
+            <TabsTrigger value="matrix">Matrix</TabsTrigger>
+          </TabsList>
+          <TabsContent value="appointments">
+            <div className="flex gap-2">
+              <ClientsOverview />
+              <TechniciansOverview />
+            </div>
+          </TabsContent>
+          <TabsContent value="matrix">
+            <ClientTechnicianMatrix />
+          </TabsContent>
+        </Tabs>
       </div>
     </>
   );

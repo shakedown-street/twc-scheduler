@@ -3,6 +3,7 @@ import { AvailabilityForm } from '@/components/AvailabilityForm/AvailabilityForm
 import { TechnicianForm } from '@/components/TechnicianForm/TechnicianForm';
 import { useBlocks } from '@/contexts/BlocksContext';
 import { useAuth } from '@/features/auth/contexts/AuthContext';
+import { cn } from '@/lib/utils';
 import { isFullBlock } from '@/utils/appointments';
 import { skillLevelColor } from '@/utils/color';
 import { availableHours } from '@/utils/computedProperties';
@@ -16,7 +17,22 @@ import { Checkbox } from '../ui/checkbox';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '../ui/dialog';
 import { Label } from '../ui/label';
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from '../ui/sheet';
-import './TechAvailability.scss';
+
+const TableHeader = ({ children, className, ...props }: React.ComponentProps<'th'>) => {
+  return (
+    <th className={cn('border border-black p-1 text-left text-[10px]', className)} {...props}>
+      {children}
+    </th>
+  );
+};
+
+const TableCell = ({ children, className, ...props }: React.ComponentProps<'td'>) => {
+  return (
+    <td className={cn('border border-black p-1 text-xs', className)} {...props}>
+      {children}
+    </td>
+  );
+};
 
 export const TechAvailability = () => {
   const [technicians, setTechnicians] = React.useState<Technician[]>([]);
@@ -182,11 +198,11 @@ export const TechAvailability = () => {
         const blockAvailability = getBlockAvailability(technician, day, block);
 
         return (
-          <td
+          <TableCell
             key={block.id}
-            className={clsx('TechAvailability__table__block', {
-              'TechAvailability__table__block--first': index === 0,
-              'TechAvailability__table__block--last': index === blocks.length - 1,
+            className={clsx('w-18 cursor-pointer bg-gray-400 text-black', {
+              'border-l-6': index === 0,
+              'border-r-6': index === blocks.length - 1,
             })}
             style={{
               background: blockAvailability ? block.color : undefined,
@@ -211,7 +227,7 @@ export const TechAvailability = () => {
                 {!isFullBlock(blockAvailability, block) && <AlertTriangle className="text-red-700" size="14" />}
               </div>
             )}
-          </td>
+          </TableCell>
         );
       }),
     );
@@ -220,16 +236,15 @@ export const TechAvailability = () => {
   function renderBlockTotals() {
     return days.map((day) =>
       blocks.map((block) => (
-        <td
+        <TableCell
           key={block.id}
-          className={clsx('TechAvailability__table__block__count', {
-            'TechAvailability__table__block--first': block.id === 1,
-            'TechAvailability__table__block--last': block.id === blocks.length,
+          className={clsx('bg-green-100 text-right text-black', {
+            'border-l-6': block.id === 1,
+            'border-r-6': block.id === blocks.length,
           })}
-          style={{ textAlign: 'right' }}
         >
           {countTechniciansAvailableForBlock(day, block)}
-        </td>
+        </TableCell>
       )),
     );
   }
@@ -254,35 +269,35 @@ export const TechAvailability = () => {
         <Checkbox checked={showSubOnly} id="is_sub_filter" onCheckedChange={() => setShowSubOnly(!showSubOnly)} />
         <Label htmlFor="is_sub_filter">Sub only</Label>
       </div>
-      <table className="TechAvailability__table">
+      <table className="w-full border-collapse">
         <thead>
           <tr>
-            <th className="ClientAvailability__table--vertical"></th>
-            <th className="ClientAvailability__table--vertical" title="Technician"></th>
-            <th className="ClientAvailability__table--vertical" title="Skill level">
+            <TableHeader className="[writing-mode:vertical-rl]"></TableHeader>
+            <TableHeader className="[writing-mode:vertical-rl]" title="Technician"></TableHeader>
+            <TableHeader className="[writing-mode:vertical-rl]" title="Skill level">
               Rating
-            </th>
-            <th className="ClientAvailability__table--vertical" title="Spanish speaker">
+            </TableHeader>
+            <TableHeader className="[writing-mode:vertical-rl]" title="Spanish speaker">
               Spa
-            </th>
-            <th className="ClientAvailability__table--vertical" title="Requested hours">
+            </TableHeader>
+            <TableHeader className="[writing-mode:vertical-rl]" title="Requested hours">
               Req
-            </th>
-            <th className="ClientAvailability__table--vertical" title="Total available hours">
+            </TableHeader>
+            <TableHeader className="[writing-mode:vertical-rl]" title="Total available hours">
               Avail
-            </th>
+            </TableHeader>
             {days.map((day) => (
-              <th key={day} colSpan={blocks.length} className="TechAvailability__table__boldBorder">
+              <TableHeader key={day} colSpan={blocks.length} className="border-x-6">
                 {['Mon', 'Tue', 'Wed', 'Thu', 'Fri'][day]}
-              </th>
+              </TableHeader>
             ))}
           </tr>
         </thead>
         <tbody>
           {technicians.map((technician, index) => (
-            <tr key={technician.id}>
-              <td>{index + 1}</td>
-              <td
+            <tr key={technician.id} className="hover:bg-border">
+              <TableCell>{index + 1}</TableCell>
+              <TableCell
                 className="text-nowrap"
                 style={{
                   background: technician.bg_color,
@@ -300,30 +315,29 @@ export const TechAvailability = () => {
                 >
                   {technician.first_name} {technician.last_name}
                 </a>
-              </td>
-              <td
+              </TableCell>
+              <TableCell
+                className="text-center text-black"
                 style={{
                   background: skillLevelColor(technician.skill_level),
-                  color: 'black',
-                  textAlign: 'center',
                 }}
               >
                 {technician.skill_level}
-              </td>
-              <td style={{ textAlign: 'center' }}>
+              </TableCell>
+              <TableCell className="text-center">
                 {technician.spanish_speaking && <Check className="text-green-700" size="14" />}
-              </td>
-              <td>{technician.requested_hours}</td>
-              <td>{availableHours(technician)}</td>
+              </TableCell>
+              <TableCell>{technician.requested_hours}</TableCell>
+              <TableCell>{availableHours(technician)}</TableCell>
               {renderAvailabilities(technician)}
             </tr>
           ))}
         </tbody>
         <tfoot>
-          <tr>
-            <td colSpan={4}></td>
-            <td>{totalRequestedHours()}</td>
-            <td>{totalAvailableHours()}</td>
+          <tr className="hover:bg-border">
+            <TableCell colSpan={4}></TableCell>
+            <TableCell>{totalRequestedHours()}</TableCell>
+            <TableCell>{totalAvailableHours()}</TableCell>
             {renderBlockTotals()}
           </tr>
         </tfoot>
