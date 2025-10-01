@@ -143,7 +143,7 @@ export const FileDropArea = ({
         <div className="flex flex-col items-center justify-center gap-2">
           <div className="font-medium">Drop files here</div>
           <div className="text-sm">or</div>
-          <Button onClick={openFileInput} size="sm" variant="outline">
+          <Button onClick={openFileInput} size="sm" type="button" variant="outline">
             Browse Files
           </Button>
         </div>
@@ -161,7 +161,7 @@ export const FileDropArea = ({
               )}
               <div className="flex-1 text-xs">{file.name}</div>
               {showFileSize && <div className="text-xs text-nowrap">{formatBytes(file.size, 1)}</div>}
-              <Button onClick={() => handleRemoveFile(index)} size="icon" variant="ghost">
+              <Button onClick={() => handleRemoveFile(index)} size="icon" type="button" variant="ghost">
                 <X />
               </Button>
             </li>

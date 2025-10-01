@@ -245,7 +245,7 @@ export const ClientForm = ({ client, onCancel, onCreate, onDelete, onUpdate }: C
           </Button>
         )}
         <div className="flex-1"></div>
-        <Button onClick={() => onCancel?.()} variant="ghost">
+        <Button onClick={() => onCancel?.()} type="button" variant="ghost">
           Cancel
         </Button>
         <Button disabled={!form.formState.isValid} type="submit">
