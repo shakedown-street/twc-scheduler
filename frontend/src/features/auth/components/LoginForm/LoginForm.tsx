@@ -34,7 +34,7 @@ export const LoginForm = () => {
       const res = await http.post('/api/token-auth/', data);
       localStorage.setItem('token', res.data.token);
       setUser(res.data.user);
-      await fetchSchedule();
+      await fetchSchedule(true);
       navigate('/');
     } catch (err) {
       form.resetField('password');

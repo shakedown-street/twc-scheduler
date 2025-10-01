@@ -14,7 +14,7 @@ export type ScheduleContextType = {
   setClients: React.Dispatch<React.SetStateAction<Client[]>>;
   technicians: Technician[];
   setTechnicians: React.Dispatch<React.SetStateAction<Technician[]>>;
-  fetchSchedule: () => Promise<void>;
+  fetchSchedule: (withLoader: boolean) => Promise<void>;
 };
 
 export const ScheduleContext = React.createContext<ScheduleContextType | undefined>(undefined);
@@ -33,11 +33,11 @@ export const ScheduleProvider = (props: ScheduleProviderProps) => {
   React.useEffect(() => {
     // Poll every minute
     const pollInterval = setInterval(() => {
-      fetchSchedule();
+      fetchSchedule(false);
     }, 60 * 1000);
 
     // Initial fetch
-    fetchSchedule();
+    fetchSchedule(true);
 
     return () => clearInterval(pollInterval);
   }, []);
@@ -74,7 +74,10 @@ export const ScheduleProvider = (props: ScheduleProviderProps) => {
     });
   };
 
-  async function fetchSchedule() {
+  async function fetchSchedule(withLoader: boolean) {
+    if (withLoader) {
+      setLoading(true);
+    }
     await Promise.all([fetchSchedules(), fetchBlocks(), fetchClients(), fetchTechnicians()]).finally(() => {
       setLoading(false);
     });
@@ -82,8 +85,9 @@ export const ScheduleProvider = (props: ScheduleProviderProps) => {
 
   if (loading) {
     return (
-      <div className="mt-12 flex items-center justify-center">
+      <div className="flex h-screen flex-col items-center justify-center gap-4">
         <Loader className="h-8 w-8 animate-spin" />
+        <div className="text-muted-foreground">Loading schedule...</div>
       </div>
     );
   }

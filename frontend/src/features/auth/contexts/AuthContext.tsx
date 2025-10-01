@@ -47,8 +47,9 @@ export const AuthProvider = (props: AuthProviderProps) => {
 
   if (userLoading) {
     return (
-      <div className="flex h-screen items-center justify-center">
+      <div className="flex h-screen flex-col items-center justify-center gap-4">
         <Loader className="h-8 w-8 animate-spin" />
+        <div className="text-muted-foreground">Loading auth...</div>
       </div>
     );
   }
