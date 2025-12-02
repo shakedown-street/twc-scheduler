@@ -38,21 +38,48 @@ class ScheduleSerializer(serializers.ModelSerializer):
 
                 new_availabilities = []
                 for availability in current_availabilities:
-                    availability.pk = None
-                    availability.schedule = schedule
-                    new_availabilities.append(availability)
+                    new_availabilities.append(
+                        Availability(
+                            content_type=availability.content_type,
+                            object_id=availability.object_id,
+                            day=availability.day,
+                            start_time=availability.start_time,
+                            end_time=availability.end_time,
+                            is_sub=availability.is_sub,
+                            in_clinic=availability.in_clinic,
+                            schedule=schedule,
+                        )
+                    )
 
                 new_appointments = []
                 for appointment in current_appointments:
-                    appointment.pk = None
-                    appointment.schedule = schedule
-                    new_appointments.append(appointment)
+                    new_appointments.append(
+                        Appointment(
+                            client=appointment.client,
+                            technician=appointment.technician,
+                            day=appointment.day,
+                            start_time=appointment.start_time,
+                            end_time=appointment.end_time,
+                            in_clinic=appointment.in_clinic,
+                            is_preschool_or_adaptive=appointment.is_preschool_or_adaptive,
+                            notes=appointment.notes,
+                            schedule=schedule,
+                        )
+                    )
 
                 new_therapy_appointments = []
                 for therapy_appointment in current_therapy_appointments:
-                    therapy_appointment.pk = None
-                    therapy_appointment.schedule = schedule
-                    new_therapy_appointments.append(therapy_appointment)
+                    new_therapy_appointments.append(
+                        TherapyAppointment(
+                            client=therapy_appointment.client,
+                            therapy_type=therapy_appointment.therapy_type,
+                            day=therapy_appointment.day,
+                            start_time=therapy_appointment.start_time,
+                            end_time=therapy_appointment.end_time,
+                            notes=therapy_appointment.notes,
+                            schedule=schedule,
+                        )
+                    )
 
                 Availability.objects.bulk_create(new_availabilities)
                 Appointment.objects.bulk_create(new_appointments)
