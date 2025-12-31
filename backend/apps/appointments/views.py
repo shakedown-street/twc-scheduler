@@ -1,4 +1,5 @@
 from django.contrib.contenttypes.models import ContentType
+from django.db import transaction
 from rest_framework import exceptions, mixins, viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
@@ -6,6 +7,12 @@ from rest_framework.response import Response
 from apps.accounts.permissions import (
     IsSuperUserOrReadOnly,
     IsSuperUserOrReadOnlyAuthenticated,
+)
+from apps.appointments.models import (
+    Appointment,
+    Availability,
+    Schedule,
+    TherapyAppointment,
 )
 
 from .matcher import (
@@ -41,6 +48,88 @@ class ScheduleViewSet(viewsets.ModelViewSet):
     permission_classes = [
         IsSuperUserOrReadOnlyAuthenticated,
     ]
+
+    @action(detail=True, methods=["post"])
+    def promote_to_current(self, request, pk=None):
+        """
+        Promote this schedule to be the new main schedule (schedule=None),
+        archiving the current main schedule records into a new schedule.
+        """
+
+        archive_name = request.data.get("archive_name")
+        if not archive_name:
+            raise exceptions.ParseError("Archive name is required.")
+
+        try:
+            sandbox_schedule = self.get_object()
+        except Schedule.DoesNotExist:
+            raise exceptions.NotFound("Schedule not found.")
+
+        with transaction.atomic():
+            archive_schedule = Schedule.objects.create(name=archive_name)
+
+            # Move all current schedule records (schedule=None) to the archive
+            for model in [Availability, Appointment, TherapyAppointment]:
+                model.objects.filter(schedule=None).update(schedule=archive_schedule)
+
+            # Copy all records from the sandbox schedule to main (schedule=None)
+            # Availabilities
+            availabilities = Availability.objects.filter(schedule=sandbox_schedule)
+            avail_objs = [
+                Availability(
+                    content_type=a.content_type,
+                    object_id=a.object_id,
+                    day=a.day,
+                    start_time=a.start_time,
+                    end_time=a.end_time,
+                    is_sub=a.is_sub,
+                    in_clinic=a.in_clinic,
+                    schedule=None,
+                )
+                for a in availabilities
+            ]
+            Availability.objects.bulk_create(avail_objs)
+
+            # Appointments
+            appointments = Appointment.objects.filter(schedule=sandbox_schedule)
+            appt_objs = [
+                Appointment(
+                    client=a.client,
+                    technician=a.technician,
+                    day=a.day,
+                    start_time=a.start_time,
+                    end_time=a.end_time,
+                    in_clinic=a.in_clinic,
+                    is_preschool_or_adaptive=a.is_preschool_or_adaptive,
+                    notes=a.notes,
+                    schedule=None,
+                )
+                for a in appointments
+            ]
+            Appointment.objects.bulk_create(appt_objs)
+
+            # Therapy Appointments
+            therapy_appointments = TherapyAppointment.objects.filter(
+                schedule=sandbox_schedule
+            )
+            therapy_objs = [
+                TherapyAppointment(
+                    client=a.client,
+                    therapy_type=a.therapy_type,
+                    day=a.day,
+                    start_time=a.start_time,
+                    end_time=a.end_time,
+                    notes=a.notes,
+                    schedule=None,
+                )
+                for a in therapy_appointments
+            ]
+            TherapyAppointment.objects.bulk_create(therapy_objs)
+
+        return Response(
+            f"Schedule '{sandbox_schedule.name}' promoted to current. Current main archived as '{archive_name}'.",
+            status=200,
+        )
 
 
 class AppointmentViewSet(viewsets.ModelViewSet):

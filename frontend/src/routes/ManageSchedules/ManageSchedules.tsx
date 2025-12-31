@@ -11,7 +11,7 @@ import {
 } from '@/components/ui/alert-dialog';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -24,6 +24,7 @@ import { Label } from '@/components/ui/label';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { useSchedule } from '@/contexts/ScheduleContext';
 import { cn } from '@/lib/utils';
+import { toastError } from '@/utils/errors';
 import { formatDateTime } from '@/utils/format';
 import { Info, MoreHorizontal, Plus } from 'lucide-react';
 import React from 'react';
@@ -45,6 +46,8 @@ export const ManageSchedules = () => {
   });
   const [editing, setEditing] = React.useState<Schedule>();
   const [deleting, setDeleting] = React.useState<Schedule>();
+  const [promoting, setPromoting] = React.useState<Schedule>();
+  const [archiveName, setArchiveName] = React.useState('');
 
   const { schedules, setSchedules } = useSchedule();
 
@@ -112,6 +115,30 @@ export const ManageSchedules = () => {
     });
   }
 
+  function promoteSchedule(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+
+    if (!promoting) {
+      return;
+    }
+
+    if (archiveName.trim().length < 1) {
+      toast.error('Archive name is required');
+      return;
+    }
+
+    ScheduleModel.detailAction(promoting.id, 'promote_to_current', 'post', {
+      archive_name: archiveName,
+    })
+      .then(() => {
+        localStorage.removeItem('schedule');
+        window.location.reload();
+      })
+      .catch((e) => {
+        toastError(e);
+      });
+  }
+
   return (
     <>
       <title>Manage Schedules | Schedule Builder</title>
@@ -154,6 +181,9 @@ export const ManageSchedules = () => {
                               Delete
                             </DropdownMenuItem>
                             <DropdownMenuSeparator />
+                            <DropdownMenuItem onClick={() => setPromoting(schedule)}>
+                              Promote to Current
+                            </DropdownMenuItem>
                             <DropdownMenuItem onClick={() => switchToSchedule(schedule)}>
                               Switch to Schedule
                             </DropdownMenuItem>
@@ -263,6 +293,39 @@ export const ManageSchedules = () => {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
+      <Dialog open={!!promoting} onOpenChange={() => setPromoting(undefined)}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Promote {promoting?.name} to Current</DialogTitle>
+            <DialogDescription>
+              Promoting a schedule will make it the new current schedule. The existing current schedule will be archived
+              under the name you provide below.
+            </DialogDescription>
+          </DialogHeader>
+          <form className="form" onSubmit={(e) => promoteSchedule(e)}>
+            <div className="form-group">
+              <Label htmlFor="archive_name">Archive Name</Label>
+              <Input
+                id="archive_name"
+                onChange={(e) => {
+                  setArchiveName(e.target.value);
+                }}
+                placeholder="Name"
+                value={archiveName}
+              />
+              <p className="text-muted-foreground text-sm">This will be the name of the archived current schedule.</p>
+            </div>
+            <div className="flex justify-end gap-2">
+              <Button onClick={() => setPromoting(undefined)} type="button" variant="ghost">
+                Cancel
+              </Button>
+              <Button disabled={!archiveName} type="submit">
+                Promote
+              </Button>
+            </div>
+          </form>
+        </DialogContent>
+      </Dialog>
     </>
   );
 };
