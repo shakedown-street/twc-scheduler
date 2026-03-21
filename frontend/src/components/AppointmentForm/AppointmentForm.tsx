@@ -13,6 +13,7 @@ import { Button } from '../ui/button';
 import { Checkbox } from '../ui/checkbox';
 import { Label } from '../ui/label';
 import { NativeSelect } from '../ui/native-select';
+import { Spinner } from '../ui/spinner';
 import { Textarea } from '../ui/textarea';
 import { Tooltip, TooltipContent, TooltipTrigger } from '../ui/tooltip';
 
@@ -207,47 +208,46 @@ export const AppointmentForm = ({
     });
   }
 
-  function createAppointment(data: AppointmentFormData) {
+  async function onSubmit(data: AppointmentFormData) {
+    if (instance) {
+      await updateAppointment(data);
+    } else {
+      await createAppointment(data);
+    }
+  }
+
+  async function createAppointment(data: AppointmentFormData) {
     if (!client) {
       return;
     }
-    AppointmentModel.create({
-      client: client?.id,
-      day,
-      ...data,
-    })
-      .then((created) => {
-        // NOTE: The appointment create endpoint returns an array instead of a single
-        // appointment, to support repeat appointments
-        onCreate?.(created.data as unknown as Appointment[]);
-      })
-      .catch((err) => {
-        toastError(err);
+    try {
+      const created = await AppointmentModel.create({
+        client: client?.id,
+        day,
+        ...data,
       });
+
+      // NOTE: The appointment create endpoint returns an array instead of a single
+      // appointment, to support repeat appointments
+      onCreate?.(created.data as unknown as Appointment[]);
+    } catch (err) {
+      toastError(err);
+    }
   }
 
-  function updateAppointment(data: AppointmentFormData) {
+  async function updateAppointment(data: AppointmentFormData) {
     if (!client || !instance) {
       return;
     }
-    AppointmentModel.update(instance.id, {
-      client: client?.id,
-      day,
-      ...data,
-    })
-      .then((updated) => {
-        onUpdate?.(updated.data);
-      })
-      .catch((err) => {
-        toastError(err);
+    try {
+      const updated = await AppointmentModel.update(instance.id, {
+        client: client?.id,
+        day,
+        ...data,
       });
-  }
-
-  function onSubmit(data: AppointmentFormData) {
-    if (instance) {
-      updateAppointment(data);
-    } else {
-      createAppointment(data);
+      onUpdate?.(updated.data);
+    } catch (err) {
+      toastError(err);
     }
   }
 
@@ -513,7 +513,8 @@ export const AppointmentForm = ({
           </Button>
         )}
         <div className="flex-1"></div>
-        <Button disabled={!form.formState.isValid} type="submit">
+        <Button disabled={!form.formState.isValid || form.formState.isSubmitting} type="submit">
+          {form.formState.isSubmitting && <Spinner />}
           {instance ? 'Update' : 'Create'}
         </Button>
       </div>

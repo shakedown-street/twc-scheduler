@@ -10,6 +10,7 @@ import { Button } from '../ui/button';
 import { Checkbox } from '../ui/checkbox';
 import { Label } from '../ui/label';
 import { Tooltip, TooltipContent, TooltipTrigger } from '../ui/tooltip';
+import { Spinner } from '../ui/spinner';
 
 export type AvailabilityFormProps = {
   instance?: Availability;
@@ -70,45 +71,42 @@ export const AvailabilityForm = ({
     throw new Error('Invalid content type');
   }
 
-  function createAvailability(data: AvailabilityFormData) {
+  async function onSubmit(data: AvailabilityFormData) {
+    if (instance) {
+      await updateAvailability(data);
+    } else {
+      await createAvailability(data);
+    }
+  }
+
+  async function createAvailability(data: AvailabilityFormData) {
     if (!object) {
       return;
     }
     const model = getModelForContentType();
 
-    model
-      .detailAction(object.id, 'create_availability', 'post', {
+    try {
+      const created = await model.detailAction(object.id, 'create_availability', 'post', {
         day,
         ...data,
-      })
-      .then((created) => {
-        onCreate?.(object, created.data);
-      })
-      .catch((err) => {
-        toastError(err);
       });
+      onCreate?.(object, created.data);
+    } catch (err) {
+      toastError(err);
+    }
   }
 
-  function updateAvailability(data: AvailabilityFormData) {
+  async function updateAvailability(data: AvailabilityFormData) {
     if (!object || !instance) {
       return;
     }
-    AvailabilityModel.update(instance.id, {
-      ...data,
-    })
-      .then((updated) => {
-        onUpdate?.(object, updated.data);
-      })
-      .catch((err) => {
-        toastError(err);
+    try {
+      const updated = await AvailabilityModel.update(instance.id, {
+        ...data,
       });
-  }
-
-  function onSubmit(data: AvailabilityFormData) {
-    if (instance) {
-      updateAvailability(data);
-    } else {
-      createAvailability(data);
+      onUpdate?.(object, updated.data);
+    } catch (err) {
+      toastError(err);
     }
   }
 
@@ -266,7 +264,8 @@ export const AvailabilityForm = ({
           </Button>
         )}
         <div className="flex-1"></div>
-        <Button disabled={!form.formState.isValid} type="submit">
+        <Button disabled={!form.formState.isValid || form.formState.isSubmitting} type="submit">
+          {form.formState.isSubmitting && <Spinner />}
           {instance ? 'Update' : 'Create'}
         </Button>
       </div>

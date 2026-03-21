@@ -8,6 +8,7 @@ import { Button } from '../ui/button';
 import { Checkbox } from '../ui/checkbox';
 import { Input } from '../ui/input';
 import { Label } from '../ui/label';
+import { Spinner } from '../ui/spinner';
 import { Textarea } from '../ui/textarea';
 import { Tooltip, TooltipContent, TooltipTrigger } from '../ui/tooltip';
 
@@ -76,24 +77,33 @@ export const TechnicianForm = ({ technician, onCancel, onCreate, onDelete, onUpd
       });
   }
 
-  function onSubmit(data: TechnicianFormData) {
+  async function onSubmit(data: TechnicianFormData) {
     if (technician) {
-      TechnicianModel.update(technician.id, data)
-        .then((updated) => {
-          onUpdate?.(updated.data);
-        })
-        .catch((err) => {
-          toastError(err);
-        });
+      await updateTechnician(data);
+    } else {
+      await createTechnician(data);
+    }
+  }
+
+  async function createTechnician(data: TechnicianFormData) {
+    try {
+      const created = await TechnicianModel.create(data);
+      onCreate?.(created.data);
+    } catch (err) {
+      toastError(err);
+    }
+  }
+
+  async function updateTechnician(data: TechnicianFormData) {
+    if (!technician) {
       return;
     }
-    TechnicianModel.create(data)
-      .then((created) => {
-        onCreate?.(created.data);
-      })
-      .catch((err) => {
-        toastError(err);
-      });
+    try {
+      const updated = await TechnicianModel.update(technician.id, data);
+      onUpdate?.(updated.data);
+    } catch (err) {
+      toastError(err);
+    }
   }
 
   if (confirmDelete) {
@@ -220,7 +230,8 @@ export const TechnicianForm = ({ technician, onCancel, onCreate, onDelete, onUpd
         <Button onClick={() => onCancel?.()} type="button" variant="ghost">
           Cancel
         </Button>
-        <Button disabled={!form.formState.isValid} type="submit">
+        <Button disabled={!form.formState.isValid || !form.formState.isSubmitting} type="submit">
+          {form.formState.isSubmitting && <Spinner />}
           Save
         </Button>
       </div>

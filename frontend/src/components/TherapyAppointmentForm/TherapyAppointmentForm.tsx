@@ -8,6 +8,7 @@ import { Badge } from '../ui/badge';
 import { Button } from '../ui/button';
 import { Label } from '../ui/label';
 import { NativeSelect } from '../ui/native-select';
+import { Spinner } from '../ui/spinner';
 import { Textarea } from '../ui/textarea';
 
 export type TherapyAppointmentFormProps = {
@@ -59,45 +60,43 @@ export const TherapyAppointmentForm = ({
     }
   }, [instance, initialStartTime, form]);
 
-  function createTherapyAppointment(data: TherapyAppointmentFormData) {
+  async function onSubmit(data: TherapyAppointmentFormData) {
+    if (instance) {
+      await updateTherapyAppointment(data);
+    } else {
+      await createTherapyAppointment(data);
+    }
+  }
+
+  async function createTherapyAppointment(data: TherapyAppointmentFormData) {
     if (!client) {
       return;
     }
-    TherapyAppointmentModel.create({
-      client: client?.id,
-      day,
-      ...data,
-    })
-      .then((created) => {
-        onCreate?.(created.data);
-      })
-      .catch((err) => {
-        toastError(err);
+    try {
+      const created = await TherapyAppointmentModel.create({
+        client: client?.id,
+        day,
+        ...data,
       });
+      onCreate?.(created.data);
+    } catch (err) {
+      toastError(err);
+    }
   }
 
-  function updateTherapyAppointment(data: TherapyAppointmentFormData) {
+  async function updateTherapyAppointment(data: TherapyAppointmentFormData) {
     if (!client || !instance) {
       return;
     }
-    TherapyAppointmentModel.update(instance.id, {
-      client: client?.id,
-      day,
-      ...data,
-    })
-      .then((updated) => {
-        onUpdate?.(updated.data);
-      })
-      .catch((err) => {
-        toastError(err);
+    try {
+      const updated = await TherapyAppointmentModel.update(instance.id, {
+        client: client?.id,
+        day,
+        ...data,
       });
-  }
-
-  function onSubmit(data: TherapyAppointmentFormData) {
-    if (instance) {
-      updateTherapyAppointment(data);
-    } else {
-      createTherapyAppointment(data);
+      onUpdate?.(updated.data);
+    } catch (err) {
+      toastError(err);
     }
   }
 
@@ -224,7 +223,8 @@ export const TherapyAppointmentForm = ({
             Delete
           </Button>
         )}
-        <Button disabled={!form.formState.isValid} type="submit">
+        <Button disabled={!form.formState.isValid || form.formState.isSubmitting} type="submit">
+          {form.formState.isSubmitting && <Spinner />}
           {instance ? 'Update' : 'Create'}
         </Button>
       </div>

@@ -9,6 +9,7 @@ import { Checkbox } from '../ui/checkbox';
 import { Input } from '../ui/input';
 import { Label } from '../ui/label';
 import { NativeSelect } from '../ui/native-select';
+import { Spinner } from '../ui/spinner';
 import { Textarea } from '../ui/textarea';
 import { Tooltip, TooltipContent, TooltipTrigger } from '../ui/tooltip';
 
@@ -77,24 +78,33 @@ export const ClientForm = ({ client, onCancel, onCreate, onDelete, onUpdate }: C
       });
   }
 
-  function onSubmit(data: ClientFormData) {
+  async function onSubmit(data: ClientFormData) {
     if (client) {
-      ClientModel.update(client.id, data)
-        .then((updated) => {
-          onUpdate?.(updated.data);
-        })
-        .catch((err) => {
-          toastError(err);
-        });
+      await updateClient(data);
+    } else {
+      await createClient(data);
+    }
+  }
+
+  async function createClient(data: ClientFormData) {
+    try {
+      const created = await ClientModel.create(data);
+      onCreate?.(created.data);
+    } catch (err) {
+      toastError(err);
+    }
+  }
+
+  async function updateClient(data: ClientFormData) {
+    if (!client) {
       return;
     }
-    ClientModel.create(data)
-      .then((created) => {
-        onCreate?.(created.data);
-      })
-      .catch((err) => {
-        toastError(err);
-      });
+    try {
+      const updated = await ClientModel.update(client.id, data);
+      onUpdate?.(updated.data);
+    } catch (err) {
+      toastError(err);
+    }
   }
 
   if (confirmDelete) {
@@ -248,7 +258,8 @@ export const ClientForm = ({ client, onCancel, onCreate, onDelete, onUpdate }: C
         <Button onClick={() => onCancel?.()} type="button" variant="ghost">
           Cancel
         </Button>
-        <Button disabled={!form.formState.isValid} type="submit">
+        <Button disabled={!form.formState.isValid || form.formState.isSubmitting} type="submit">
+          {form.formState.isSubmitting && <Spinner />}
           Save
         </Button>
       </div>
