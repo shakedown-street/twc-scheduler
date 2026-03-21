@@ -7,17 +7,26 @@ type WithAppointments = {
 };
 
 export function availableHours(obj: WithAvailabilities) {
-  return obj.availabilities!.reduce((sum, availability) => sum + Math.round(availability.duration / 60), 0);
+  if (!obj.availabilities) {
+    return 0;
+  }
+  return obj.availabilities.reduce((sum, availability) => sum + Math.round(availability.duration / 60), 0);
 }
 
 export function hoursByDay(obj: WithAppointments, day: number) {
-  return obj
-    .appointments!.filter((appointment) => appointment.day === day)
+  if (!obj.appointments) {
+    return 0;
+  }
+  return obj.appointments
+    .filter((appointment) => appointment.day === day)
     .reduce((sum, appointment) => sum + Math.round(appointment.duration / 60), 0);
 }
 
 export function hours(obj: WithAppointments) {
-  return obj.appointments!.reduce((sum, appointment) => sum + Math.round(appointment.duration / 60), 0);
+  if (!obj.appointments) {
+    return 0;
+  }
+  return obj.appointments.reduce((sum, appointment) => sum + Math.round(appointment.duration / 60), 0);
 }
 
 export function isMaxedOnSessions(obj: Client | Technician) {
