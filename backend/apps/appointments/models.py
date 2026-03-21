@@ -4,6 +4,7 @@ from django.contrib.contenttypes.fields import GenericForeignKey, GenericRelatio
 from django.contrib.contenttypes.models import ContentType
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
+from django.db.models import Q, UniqueConstraint
 from encrypted_model_fields.fields import EncryptedCharField, EncryptedTextField
 from schedule_builder.mixins import TimestampMixin, UUIDPrimaryKeyMixin
 
@@ -216,7 +217,18 @@ class Availability(UUIDPrimaryKeyMixin, TimestampMixin):
     class Meta:
         ordering = ["schedule", "content_type", "object_id", "day", "start_time"]
         verbose_name_plural = "Availabilities"
-        unique_together = ["content_type", "object_id", "schedule", "day", "start_time"]
+        constraints = [
+            UniqueConstraint(
+                fields=["content_type", "object_id", "schedule", "day", "start_time"],
+                condition=Q(schedule__isnull=False),
+                name="availability_unique_with_schedule",
+            ),
+            UniqueConstraint(
+                fields=["content_type", "object_id", "day", "start_time"],
+                condition=Q(schedule__isnull=True),
+                name="availability_unique_without_schedule",
+            ),
+        ]
 
     def __str__(self):
         return f"{self.object} - D{self.day} ({self.start_time}-{self.end_time})"
@@ -253,7 +265,18 @@ class Appointment(UUIDPrimaryKeyMixin, TimestampMixin):
 
     class Meta:
         ordering = ["schedule", "client", "technician", "day", "start_time"]
-        unique_together = ["client", "schedule", "day", "start_time"]
+        constraints = [
+            UniqueConstraint(
+                fields=["client", "schedule", "day", "start_time"],
+                condition=Q(schedule__isnull=False),
+                name="appointment_unique_with_schedule",
+            ),
+            UniqueConstraint(
+                fields=["client", "day", "start_time"],
+                condition=Q(schedule__isnull=True),
+                name="appointment_unique_without_schedule",
+            ),
+        ]
 
     def __str__(self):
         return f"{self.client} - {self.technician} - D{self.day} {self.start_time} - {self.end_time}"
@@ -300,7 +323,18 @@ class TherapyAppointment(UUIDPrimaryKeyMixin, TimestampMixin):
 
     class Meta:
         ordering = ["schedule", "client", "day", "start_time"]
-        unique_together = ["client", "schedule", "day", "start_time"]
+        constraints = [
+            UniqueConstraint(
+                fields=["client", "schedule", "day", "start_time"],
+                condition=Q(schedule__isnull=False),
+                name="therapy_appointment_unique_with_schedule",
+            ),
+            UniqueConstraint(
+                fields=["client", "day", "start_time"],
+                condition=Q(schedule__isnull=True),
+                name="therapy_appointment_unique_without_schedule",
+            ),
+        ]
 
     def __str__(self):
         return f"{self.client} - {self.get_therapy_type_display()} - D{self.day} {self.start_time} - {self.end_time}"
