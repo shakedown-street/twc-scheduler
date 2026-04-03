@@ -26,5 +26,3 @@ shell:
 	./manage.py shell_plus
 urls:
 	./manage.py show_urls
-celery_worker:
-	DJANGO_SETTINGS_MODULE=schedule_builder.settings.dev celery -A schedule_builder worker -l info

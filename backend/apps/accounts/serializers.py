@@ -1,4 +1,3 @@
-from django.conf import settings
 from django.contrib.auth import authenticate, get_user_model
 from django.contrib.auth.password_validation import (
     validate_password as django_validate_password,
@@ -16,7 +15,6 @@ from apps.accounts.mailer import (
     send_verify_email,
 )
 from apps.accounts.utils import create_auth_token, delete_all_auth_tokens
-from apps.payments.utils import is_subscribed
 
 User = get_user_model()
 
@@ -79,11 +77,6 @@ class EmailUserSerializer(serializers.ModelSerializer):
 
     def to_representation(self, instance):
         data = super().to_representation(instance)
-
-        if settings.STRIPE_SECRET_KEY:
-            if self.context["request"].user == instance:
-                data["is_subscribed"] = is_subscribed(instance)
-
         return data
 
 

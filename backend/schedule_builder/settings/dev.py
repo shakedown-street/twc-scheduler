@@ -42,11 +42,3 @@ REST_FRAMEWORK["DEFAULT_AUTHENTICATION_CLASSES"].append(
 REST_FRAMEWORK["DEFAULT_RENDERER_CLASSES"].append(
     "rest_framework.renderers.BrowsableAPIRenderer"
 )
-
-
-# stripe
-
-STRIPE_CHECKOUT_RETURN_URL = (
-    f"{FRONTEND_URL}/checkout/success" + "?session_id={CHECKOUT_SESSION_ID}"
-)
-STRIPE_BILLING_PORTAL_RETURN_URL = f"{FRONTEND_URL}/profile"

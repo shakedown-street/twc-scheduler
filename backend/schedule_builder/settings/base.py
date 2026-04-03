@@ -65,11 +65,9 @@ INSTALLED_APPS = (
     "encrypted_model_fields",
     "knox",
     "rest_framework",
-    # "social_django",
     # Local Apps
     "apps.accounts",
     "apps.appointments",
-    # "apps.payments",
 )
 
 MIDDLEWARE = [
@@ -106,11 +104,6 @@ TEMPLATES = [
 WSGI_APPLICATION = "schedule_builder.wsgi.application"
 
 AUTH_USER_MODEL = "accounts.EmailUser"
-
-AUTHENTICATION_BACKENDS = [
-    "social_core.backends.google.GoogleOAuth2",
-    "django.contrib.auth.backends.ModelBackend",
-]
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
@@ -188,11 +181,6 @@ CACHES = {
 #        3RD PARTY SETTINGS        #
 ####################################
 
-
-# celery
-CELERY_BROKER_URL = "redis://keydb:6379"
-
-
 # djangorestframework
 
 REST_FRAMEWORK = {
@@ -224,31 +212,3 @@ FIELD_ENCRYPTION_KEY = os.environ.get(
     "FIELD_ENCRYPTION_KEY",
     "Z80Ja1Pn1AhFZmEnnMByEfZjVspYeAFs3jlb6IBQWFo=",  # DEVELOPMENT ONLY
 )
-
-
-# social-auth-app-django
-
-SOCIAL_AUTH_URL_NAMESPACE = "api-social-auth"
-
-SOCIAL_AUTH_ADMIN_USER_SEARCH_FIELDS = (
-    "first_name",
-    "last_name",
-    "email",
-)
-
-SOCIAL_AUTH_JSONFIELD_ENABLED = True
-
-SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = os.environ.get("GOOGLE_OAUTH2_KEY")
-SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = os.environ.get("GOOGLE_OAUTH2_SECRET")
-
-
-# stripe
-
-STRIPE_SECRET_KEY = os.environ.get("STRIPE_SECRET_KEY")
-STRIPE_WEBHOOK_SECRET = os.environ.get("STRIPE_WEBHOOK_SECRET")
-STRIPE_PRICE_ID = os.environ.get("STRIPE_PRICE_ID")
-
-if STRIPE_SECRET_KEY is not None:
-    import stripe
-
-    stripe.api_key = STRIPE_SECRET_KEY

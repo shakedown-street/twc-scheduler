@@ -1,9 +1,8 @@
 from django.contrib.auth import get_user_model, login
 from knox.views import LoginView as KnoxLoginView
-from rest_framework import exceptions, mixins, permissions, status, views, viewsets
-from rest_framework.decorators import action, api_view, permission_classes
+from rest_framework import mixins, permissions, status, views, viewsets
+from rest_framework.decorators import action
 from rest_framework.response import Response
-from social_django.utils import psa
 
 from apps.accounts.filters import EmailUserFilter
 from apps.accounts.permissions import EmailUserPermission, IsSuperUser
@@ -137,24 +136,3 @@ class VerifyEmailAPIView(views.APIView):
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response(status=status.HTTP_204_NO_CONTENT)
-
-
-@api_view(["POST"])
-@permission_classes([permissions.AllowAny])
-@psa()
-def social_auth(request, backend):
-    token = request.data.get("access_token")
-
-    try:
-        user = request.backend.do_auth(token)
-    except Exception as e:
-        raise exceptions.APIException(str(e))
-
-    _, token = create_auth_token(user)
-
-    return Response(
-        {
-            "user": EmailUserSerializer(user, context={"request": request}).data,
-            "token": token,
-        }
-    )

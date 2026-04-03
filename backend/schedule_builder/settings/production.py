@@ -29,24 +29,3 @@ CORS_ALLOWED_ORIGINS = [FRONTEND_URL]
 CORS_ALLOW_HEADERS = list(default_headers) + [
     "X-Schedule-ID",
 ]
-
-
-# stripe
-
-STRIPE_CHECKOUT_RETURN_URL = (
-    f"{FRONTEND_URL}/checkout/success" + "?session_id={CHECKOUT_SESSION_ID}"
-)
-STRIPE_BILLING_PORTAL_RETURN_URL = f"{FRONTEND_URL}/profile"
-
-
-# sentry
-
-SENTRY_DSN = os.environ.get("SENTRY_DSN", None)
-if SENTRY_DSN:
-    import sentry_sdk
-
-    sentry_sdk.init(
-        dsn=SENTRY_DSN,
-        traces_sample_rate=1.0,
-        profiles_sample_rate=1.0,
-    )
