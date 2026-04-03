@@ -6,7 +6,6 @@ import { Label } from '@/components/ui/label';
 import { setFormErrors } from '@/utils/errors';
 import React from 'react';
 import { useForm } from 'react-hook-form';
-import { GoogleSSOButton } from '../GoogleSSOButton/GoogleSSOButton';
 import { PasswordHint } from '../PasswordHint/PasswordHint';
 
 export type SignUpFormData = {
@@ -74,7 +73,6 @@ export const SignUpForm = () => {
       <Button disabled={!form.formState.isValid} type="submit">
         Sign Up
       </Button>
-      {import.meta.env.VITE_GOOGLE_OAUTH2_CLIENT_ID && <GoogleSSOButton />}
     </form>
   );
 };

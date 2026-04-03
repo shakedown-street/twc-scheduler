@@ -10,7 +10,6 @@ import React from 'react';
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router';
 import { useAuth } from '../../contexts/AuthContext';
-import { GoogleSSOButton } from '../GoogleSSOButton/GoogleSSOButton';
 import { ResendVerifyEmail } from '../ResendVerifyEmail/ResendVerifyEmail';
 
 export type LoginFormData = {
@@ -80,7 +79,6 @@ export const LoginForm = () => {
         <Button disabled={!form.formState.isValid} type="submit">
           Login
         </Button>
-        {import.meta.env.VITE_GOOGLE_OAUTH2_CLIENT_ID && <GoogleSSOButton />}
       </form>
       <Dialog open={resendVerifyOpen} onOpenChange={setResendVerifyOpen}>
         <DialogContent>
