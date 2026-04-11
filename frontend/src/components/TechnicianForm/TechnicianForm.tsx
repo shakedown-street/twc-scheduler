@@ -230,7 +230,7 @@ export const TechnicianForm = ({ technician, onCancel, onCreate, onDelete, onUpd
         <Button onClick={() => onCancel?.()} type="button" variant="ghost">
           Cancel
         </Button>
-        <Button disabled={!form.formState.isValid || !form.formState.isSubmitting} type="submit">
+        <Button disabled={!form.formState.isValid || form.formState.isSubmitting} type="submit">
           {form.formState.isSubmitting && <Spinner />}
           Save
         </Button>
